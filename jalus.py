@@ -13,11 +13,11 @@ db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017
 app, otps, wss = Sanic(__name__), {}, None
 app.config.update(dict(REQUEST_TIMEOUT=12, RESPONSE_TIMEOUT=12, asset_dir='/home/poorya/Pictures/estates',
 WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
-app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/apartment.jpg'), '/favicon.ico', name='redirect_ico')
-app.add_route(lambda _: response.redirect('app/Bootstrap.css'), '/static/bootstrap.min.css.map', name='redirect_css')
+app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
 app.add_route(lambda _: response.redirect('/properties/'), '/properties', name='properties_slash')
+min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
 @app.route('/static/<path:path>', methods=['GET'])
-async def static_file(r, path): return await response.file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', *urllib.parse.unquote(path).split('/')))
+async def static_file(r, path): return await response.file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', *urllib.parse.unquote(min_files.get(path, path)).split('/')))
 @app.listener('before_server_start')
 async def init_ones(sanic, loop): 
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
@@ -143,8 +143,8 @@ async def _smart_home_state(r, home, ):
         else: raise exceptions.NotFound()
 @app.get('/homes/<home>')
 async def _smart_home(r, home, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Home{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8')) 
-@app.get('/<page>')
-async def _page(r, page=None): page = 'home' if page == '' else page; return response.html((await render_template('base.html', {'title': {'home': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه'}[page], 'style': 'digikala'})).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'{page.capitalize()}.serv.html'))
+@app.get('/<page:path>')
+async def _page(r, page=None): page = 'jalus' if page == '' else page; return response.html((await render_template('base.html', {'title': {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه'}[page], 'style': 'digikala'})).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'{page.capitalize()}.serv.html'))
 
 if __name__ == '__main__':
     debug = True if '-d' in sys.argv or '--debug' in sys.argv else False
