@@ -114,13 +114,13 @@ class App extends React.Component {
       {jpeg: '/static/properties/tmpf_5.jpg', webp: '/static/properties/tmpf_5.webp', ratio: 26},
       {jpeg: '/static/properties/tmpg_6.jpg', webp: '/static/properties/tmpg_6.webp', ratio: 20},
     ], foot_logos: [
-      {svg: '/static/icon/jalus_host.svg', href: '/hosting'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
+      {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/hosting#smartkey'},
       {svg: '/static/icon/jalus_pay.svg', href: '/hosting#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
       {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/hosting#all'}
     ], potent: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, foods: {bread: {img: 0}, pizza: {img: 0}, rice: {img: 0}, fries: {img: 0}, chicken_bbq: {img: 0}, kebab: {img: 0}, falafel: {img: 0}}};
   } async componentDidMount() { let app = this;
-    let stories = await fetch('http://localhost:5000/stories/hosting'); if (stories.status < 300) {
+    let stories = await fetch('http://localhost:5000/stories/host'); if (stories.status < 300) {
       stories = await stories.json(); app.setState({stories: Object.keys(stories).map((story) => ({title: story.split('_')[1], jpeg: '/stories/' + story + '.jpg', href: story, resolutions: stories[story][0], ccs: stories[story][1], markers: stories[story][2]}))})
     }
     setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
@@ -165,6 +165,31 @@ class App extends React.Component {
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>اکثر سفرهای به اسکان های خصوصی و شخصی به صورت زمینی و خودرویی انجام می‌شود
           مسافران در روز اول اسکان با چالش هایی روبه‌رو می‌شوند که شامل حمام و نظافت. جست و جوی امکانات اسکان و طریقه لذت بردن از آن، و فهم اتمسفر آن مکان است.
           با ایجاد یک بوفه هوشند می‌توان تجربه هتل های آل ترکیه را برای مسافران فراهم کرد.</p>
+
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>ارزش افزوده برای مسافران جالوس</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>
+کار با جوشکاری و ساخت اسکلت آهنی آغاز می شود. سپس باغچه های متحرک به وسیله کابلها و بلبرینگ ها به اسکلت اضافه میشوند
+با آمدن مسولان و ناظران برای بازدید نقشه های ساخت گلخانه ارایه میشوند
+و به مرور اسکلت تبدیل به گلخانه با سقف صاف آماده برای تیغه چینی و تاق  نیمه شفاف می شود. و کماکان کاربری گلخانه حفظ می شود
+تا در مراحل بعدی نازک کاری صورت گیرد و زیبایی ساخت مورد توجه قرار گیرد.
+و هردوکاربرد سازه مد نظر قرار گیرد. با پایین آمدن گلدان های تخت فضا و سازه تبدیل به یک گلخانه مکانیزه و زیبا تبدیل می شود. و با 
+بالا رفتن گلدان ها کف و زیر گلدان ها با تاق همسطح می شود و جلو ورود نور از تاق را می گیرد در واقع جزیی از تاق شده و به زیبایی سازه کمک می کند
+</p>
+
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>ارزش افزوده برای مسافران جالوس</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>یخچال فریزر هوشمند غذا های نیمه آماده با کیفیت برای سرخ کردن و فراهم آوردن در ماکروفر و سرخکن و راحتی مسافران همراه است
+این یخچال های هوشمند به  سنسورهای اندازه گیری جرم و دوربین تجهیز شده اند و به صورت آنلاین میزان مصرف را اندازه می گیرند. و در پایان سفر میزان مصرف مسافران را اندازه گیری می کنند و مقدار باقی مانده به صورت نقد به حساب مسافر ریخته می شوند
+درون این یخچال ها تمام  خوردنی های و نوشیدنی های مشترک میان تمام کاربران با قیمت خرید به صورت عمده و کمترین هزینه برای رفاه مسافران فراهم می شود. 
+این موارد شامل 20 لیتر آبمعدنی 6 نوشابه خانواده
+و همچنین ظرف های درب دار سلیکونی شامل موارد پیتزا و پیراشکی نیمه منجمد و سیب زمینی و ناگت مرغ  و جوجه و کوبیده و دیگر غذا های پر  خواهان
+و همچنین پک  کاپ های بستنی و مزه ها و فینگرفود های آماده ای که در زمان مسافر صرفه جویی می کند.</p>
+
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>ارزش افزوده برای مسافران جالوس</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>با در آوردن یک ظرف درب دار و پلمپ حاوی غذای نیمه منجمد از یخچال فریزر هوشمند یخچال متوجه نوع و آیدی ظرف و غذای درون آن را شناسایی می کند.
+و تنظیمات سرخ کن را متناسب با آن قرار می دهد. تا بدون داشتن دانش طریقه فراهم آوردن غذا به حداقل برسد. و به راحتی با قرار دادن ظرف درون سرخکن و بست درب آن بعد از مدت معلوم شده در هر شرایطی غذای با کیفیت به دست مسافر برسد.
+به صورت می توان با ورود مسافرانی که ساعت ها در مسیر بوده اند تا به شمال ایران برسند غذای اتوماتیک فراهم کرد
+</p>
+
           <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'host'})}}>برای شروع همکاری وارد شوید</span>
         </div>
         {/* #macro modules/articles */}

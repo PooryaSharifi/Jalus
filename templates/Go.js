@@ -120,7 +120,7 @@ class App extends React.Component {
       {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/hosting#all'}
     ], potent: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, foods: {bread: {img: 0}, pizza: {img: 0}, rice: {img: 0}, fries: {img: 0}, chicken_bbq: {img: 0}, kebab: {img: 0}, falafel: {img: 0}}};
   } async componentDidMount() { let app = this;
-    let stories = await fetch('http://localhost:5000/stories/hosting'); if (stories.status < 300) {
+    let stories = await fetch('http://localhost:5000/stories/go'); if (stories.status < 300) {
       stories = await stories.json(); app.setState({stories: Object.keys(stories).map((story) => ({title: story.split('_')[1], jpeg: '/stories/' + story + '.jpg', href: story, resolutions: stories[story][0], ccs: stories[story][1], markers: stories[story][2]}))})
     }
     setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
@@ -132,7 +132,7 @@ class App extends React.Component {
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
         <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
-          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>میزبانی جالوس</h1>
+          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>جالوس رو</h1>
           <div class="w-full">
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
               <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
@@ -142,29 +142,21 @@ class App extends React.Component {
               </picture>
             </div>
           </div>
-          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>جالوس آژانس اجاره ویلا نیست!!</h2>
-          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>جالوس یک استاندارد برای رفاه و لذت بیشتر مسافران به وسیله تکنولوژی و ارائه خدمات نوین است.
-          هدف ایجاد رفا و تجربه بی نظیر از اسکان با مدیریت هزینه ها برای مسافر است، تجربه‌ای مانند هتل های All در ترکیه می‌باشد.
-          با استفاده از لوازم بهداشتی که به راحتی و با قیمت رقابتی در جالوس فراهم می‌شود. می‌توان آنرا به صورت رایگان تقدیم مسافر کرد.
-          و خیالش را از بابت نظافت و سلامت خود و محیط داخل اسکان راحت کرد</p>
-          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>کلید امن برای همه</h2>
-          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>کلید QrCode یک کلید ۵۱۲ بیتی با امنیت دوبرابر رمزگذاری ارزهای دیجیتالی است.
-          درون این کلید تاریخ ورود و خرود و نام مسافر به صورت رمزشده قرارگرفته تا همه مسافران باهمراه داشتن موبایل خود دراصل کلید ویلاوسکونت را داشته باشند
-          با فرارسیدن تاریخ انقضای کلید قفل درب دیگر توسط آن باز نخواهد شد.</p>
-          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>میزبان جالوس شو و همه چیزرو در دست بگیر</h2>
-          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>سیستم همکاری با جالوس شفاف‌تر از قرار دادن آگهی برروی دیوار برای صاحبان ویلا هاست
-          و از طرفی بی دقدقه تر و ایمن تر برای مسافران شما می‌باشد. 
-          مسافران ابتدا با سرچ در جالوس اطلاعات ویلای شما و تلفن شمارا مشاهده می‌کنند. سپس با مشاهد روزهای خالی بازه ورود و خروج خود را انتخاب می‌کنند.
-          و اقدام به ثبت سفارش می‌کنند. شماره تماس صاحب ویلا ازهمان ابتدا در دسترس مسافر قرار می‌گیرد تا به او امکان گفت و گو
-          و مکالمه و اطلاعات مورد نیاز داده شود. و حس اعتماد در مسافر شکل گیرد. همچنین اپراتورهای جالوس در خدمت مسافران قرار میگیرند تا شکل رسمی تر و قابل اعتمادتری به سیستم داده
-          سیستم رزرو و پرداخت و پول واریزی به صورت مستقیم به حساب صاحب ویلا از طریق کارت به کارت انتقال رمزارز صورت میگیرد.
-          با دریافت پیامک واریز پول به حساب صاحب خانه . او سایت را به روزرسانی و تاریخ مورد نظر را رزرو ویلای خود برای مسافر می‌کند. 
-          برای جلوگیری از بروز رزرو اسکان توسط چند مسافر به طور همزمان اپراتورها حظور دارند تا این فرایند را سرعت بخشند
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}></h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>
+
+          لذت تجربه راندن وسیله برقی در هوای معتدل ودر طبیعت بکر شمالی و یا ماسه های ساحلی می تواند کیفیت هر سفری را افزایش دهد.
+
           </p>
-          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>ارزش افزوده برای مسافران جالوس</h2>
-          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>اکثر سفرهای به اسکان های خصوصی و شخصی به صورت زمینی و خودرویی انجام می‌شود
-          مسافران در روز اول اسکان با چالش هایی روبه‌رو می‌شوند که شامل حمام و نظافت. جست و جوی امکانات اسکان و طریقه لذت بردن از آن، و فهم اتمسفر آن مکان است.
-          با ایجاد یک بوفه هوشند می‌توان تجربه هتل های آل ترکیه را برای مسافران فراهم کرد.</p>
+          
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>کلید امن برای همه</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>
+
+          همچنین به دلیل سهولت استفاده از آن در خرید ها و مسیر های کوتاه و متوسط بسیار پرکاربر و مفرح است.
+داشتن آن برای سرگرم کردن فرزندتان می تواند کام آن ها را بسیار شیرین کند.
+
+          </p>
+          
           <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'host'})}}>برای شروع همکاری وارد شوید</span>
         </div>
         {/* #macro modules/articles */}

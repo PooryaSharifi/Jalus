@@ -86,21 +86,6 @@ async def _otp(r, phone, otp=None):
 @app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
 async def _payment_receipt(r, date, src, dst, value): pass
 
-@app.get('/fill/<q>')
-async def _fill(r, q):
-    if q not in wild_polygons: polygons = []
-    else: polygons = wild[q][:4]
-    if q not in wild_features: features = []
-    else: filters = wild_filters[q][:4]
-    return response.json({'polygons': polygons, 'filters': filters})
-@app.get('/search/<polygon>')
-async def _search(r, polygon):
-    polygon = polygon.split(';'); polygon = [[float(dim) for dim in p.split(',')] for p in polygons]
-    filter = r.param['filter']; filter = json.loads(filter)
-    properties = await r.app.config['db']['keys'].find({'location': {'$geoWithin': {'$polygon': polygon}}, **filter}).to_list(None)
-    for pr in properties: del pr['_id']; del pr['_date']
-    return response.json(properties)
-
 @app.post('/potent')
 async def _append_potent(r, ):
     potent = {'datetime': str(datetime.now()).split('.')[0], 'user': r.form['user'][0], 'phone': r.form['phone'][0], 'interest': r.form['interest'][0], 'link': r.form['link'][0], 'lat': r.form['lat'][0], 'lng': r.form['lng'][0]}
@@ -123,11 +108,26 @@ async def _thumbnail(r, name_category):
         subprocess.run(' '.join(['ffmpeg', '-ss', '0', '-i', f'"{os.path.dirname(os.path.abspath(__file__))}/{max(names, key=lambda nm: chr(len(nm)) + str.casefold(nm))}"', '-vframes', '1', '-f', 'image2', '-vf', '"blackframe=0,metadata=select:key=lavfi.blackframe.pblack:value=50:function=less"', f'"{os.path.dirname(os.path.abspath(__file__))}/static/stories/{name}.jpg"']), shell=True, capture_output=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return await response.file(f'static/stories/{name}.jpg')
 
-@app.get('/properties/<home:path>')
-async def _properties_get(r, home=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Search{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8'))
-@app.post('/properties')
+@app.get('/fill/<q>')
+async def _fill(r, q):
+    if q not in wild_polygons: polygons = []
+    else: polygons = wild[q][:4]
+    if q not in wild_features: features = []
+    else: filters = wild_filters[q][:4]
+    return response.json({'polygons': polygons, 'filters': filters})
+@app.post('/properties')  # TODO will delete soon
 async def _properties(r, ):
     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties.yml', encoding='utf8') as f: return response.json(yaml.safe_load(f.read()))
+@app.post('/properties/<polygon_id>')
+async def _search(r, polygon_id):
+    if ',' not in polygon_id: pr = await r.app.config['db']['users'].find({'id': polygon_id}); del pr['_id']; del pr['_date']; return response.json(pr)
+    polygon = polygon.split(';'); polygon = [[float(dim) for dim in p.split(',')] for p in polygons]
+    filter = r.param['filter']; filter = json.loads(filter)
+    properties = await r.app.config['db']['users'].find({'location': {'$geoWithin': {'$polygon': polygon}}, **filter}).to_list(None)
+    for pr in properties: del pr['_id']; del pr['_date']
+    return response.json(properties)
+@app.get('/properties/<polygon_id:path>')
+async def _properties_get(r, polygon_id=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Search{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8'))
 
 @app.get('/homes/<home>/qr')
 async def _qr_(r, home):
