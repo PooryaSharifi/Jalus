@@ -173,11 +173,11 @@ class App extends React.Component {
     setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
   } render() { let app = this;
     return <div>
-      {this.state.potent ? ({/* #macro potent */}) : (<>
-        {/* #macro menu */}
+      {this.state.potent ? ({/* #macro modules/potent */}) : (<>
+        {/* #macro modules/menu */}
         <div style={{height: 105}}></div>
-        {/* #macro story */}
-        {/* #macro slider */}
+        {/* #macro modules/story */}
+        {/* #macro modules/slider */}
         <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>سبز دومظوره</h1>
           <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>بناهای باغی</h2>
@@ -195,12 +195,12 @@ class App extends React.Component {
   برای مشاهده نمونه کار و آشنایی بیشتر ثبت‌نام کنید تا همکاران ما با شما تماس بگیرند</p>
           <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'dual'})}}>برای شروع همکاری وارد شوید</span>
         </div>
-        {/* #macro articles */}
-        {/* #macro pr_list */}
-        {/* #macro club_banner */}
-        {/* #macro category */}
-        {/* #macro offer */}
-        {/* #macro foot */}
+        {/* #macro modules/articles */}
+        {/* #macro modules/pr_list */}
+        {/* #macro modules/club_banner */}
+        {/* #macro modules/category */}
+        {/* #macro modules/offer */}
+        {/* #macro modules/foot */}
       </>)}
     </div>
   }
