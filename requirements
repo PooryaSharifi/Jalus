@@ -1,5 +1,6 @@
 numpy
 scipy
 motor
+ujson
 sanic
 qrcode

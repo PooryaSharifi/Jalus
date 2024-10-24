@@ -10,7 +10,7 @@ from static import load_template, render_template
 from io import BytesIO, StringIO
 
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(__file__).split('.')[0].capitalize()
-app, otps, wss = Sanic(__name__), {}, None; app.blueprint(m3, url_prefix='/m3')
+app, otps, wss = Sanic(__name__), {}, None
 app.config.update(dict(REQUEST_TIMEOUT=12, RESPONSE_TIMEOUT=12, asset_dir='/home/poorya/Pictures/estates',
 WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/apartment.jpg'), '/favicon.ico', name='redirect_ico')

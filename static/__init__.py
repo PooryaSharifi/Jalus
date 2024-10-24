@@ -1,4 +1,5 @@
-import os, re
+import os, re, os.path, ujson as json, hmac, hashlib, numpy as np
+from scipy.spatial import Voronoi, SphericalVoronoi
 from sanic import response
 
 matcher = re.compile(r'/// #.* ///')
@@ -95,13 +96,20 @@ with open('static/origins', encoding='utf-8') as origins:
                 ids.add(id(origin))
         wild_origins[wild_key] = list(sorted(usub_origins, key=lambda x: x['order']))
     for k, sub_origins in origins.items(): wild_origins[k] = sub_origins
-with open('static/filters.json', encoding='utf-8') as filters:
-    filters = json.loads(filters.read()); wild_filters = {}
-    for filter in filters:
-        labels = filter['labels']; del filter['labels']
-        if len(key) > 2:
-            for wild_key in [key[:iwild] for iwild in range(2, len(key) - 1)]:
-                for wild_wild_key, i_wild_key in enumerate([wild_key[jwild:] for jwild in range(0, len(wild_key) - 2)]):
-                    if wild_wild_key not in wild_filters: wild_filters[wild_wild_key] = []
-                    wild_filters[wild_wild_key].extend([i_wild_key, filter])
-    for wild_key in wild_filters: filters = list(sorted(wild_filters[wild_key], key=lambda filter: filter[0])); filters = [filter[1] for filter in filters]; wild_filters[wild_key] = filters
+
+filters = [{
+    "labels": ["جادار"],
+    "rooms": {"$gt": 2}
+}, {
+    "labels": ["جادار"],
+    "rooms": {"$gt": 2}
+}]
+wild_filters = {}
+for filter in filters:
+    labels = filter['labels']; del filter['labels']
+    if len(key) > 2:
+        for wild_key in [key[:iwild] for iwild in range(2, len(key) - 1)]:
+            for wild_wild_key, i_wild_key in enumerate([wild_key[jwild:] for jwild in range(0, len(wild_key) - 2)]):
+                if wild_wild_key not in wild_filters: wild_filters[wild_wild_key] = []
+                wild_filters[wild_wild_key].extend([i_wild_key, filter])
+for wild_key in wild_filters: filters = list(sorted(wild_filters[wild_key], key=lambda filter: filter[0])); filters = [filter[1] for filter in filters]; wild_filters[wild_key] = filters
