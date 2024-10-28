@@ -3,13 +3,12 @@ from sanic import Sanic, Blueprint, response, exceptions
 from random import choice, randint, random
 from bson import ObjectId
 from datetime import datetime, timedelta
-from scipy.spatial import Voronoi, SphericalVoronoi
 from string import ascii_lowercase
 from base64 import (urlsafe_b64encode, urlsafe_b64decode)
-from static import load_template, render_template
+from static import load_template, render_template, wild_origins, wild_filters
 from io import BytesIO, StringIO
 
-db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(__file__).split('.')[0].capitalize()
+db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
 app, otps, wss = Sanic(__name__), {}, None
 app.config.update(dict(REQUEST_TIMEOUT=12, RESPONSE_TIMEOUT=12, asset_dir='/home/poorya/Pictures/estates',
 WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
