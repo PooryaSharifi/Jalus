@@ -27,6 +27,7 @@ def get_users():
     users.create_index([('source', 1), ('category', 1), ('date', 1)])
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
     users.create_index([('link', 1)], unique=True); users.create_index([('id', 1)], unique=True)
+    # users.update_many({}, {'$set': {'cart': 6037123412341234, 'gender': True, 'family': ''}}); assert 1 == 0
     print(f"{cs.FAIL}{cs.BOLD}Count All   : {users.count_documents({})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Detail: {users.count_documents({'detailed': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Phoned: {users.count_documents({'phoned': True})}{cs.ENDC}")
@@ -192,7 +193,7 @@ def pan(browser, city='isfahan', photo=True, log=True, rpm=10, cat=None):  # tod
         time.sleep(max(min(pan_cnt, 10) / rpm * 60 - (time.time() - t0), 0))
     return pan_cnt
 
-def dim(ad, asset_dir=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'Properties')):
+def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'properties')):
     if not asset_dir: asset_dir = os.path.dirname(os.path.abspath(__file__)) + '/images'
     _asset_dir, _id = asset_dir + '/' + ad['category'], urlparse(ad['link']).path.split('/')[-1]
     os.makedirs(_asset_dir, exist_ok=True)

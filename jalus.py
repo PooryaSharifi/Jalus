@@ -109,24 +109,26 @@ async def _thumbnail(r, name_category):
 
 @app.get('/fill/<q>')
 async def _fill(r, q):
-    if q not in wild_polygons: polygons = []
-    else: polygons = wild[q][:4]
-    if q not in wild_features: features = []
+    if q not in wild_origins: origins = []
+    else: origins = wild[q][:4]
+    if q not in wild_filters: filters = []
     else: filters = wild_filters[q][:4]
-    return response.json({'polygons': polygons, 'filters': filters})
-@app.post('/properties')  # TODO will delete soon
-async def _properties(r, ):
-    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties.yml', encoding='utf8') as f: return response.json(yaml.safe_load(f.read()))
-@app.post('/properties/<polygon_id>')
-async def _search(r, polygon_id):
-    if ',' not in polygon_id: pr = await r.app.config['db']['users'].find({'id': polygon_id}); del pr['_id']; del pr['_date']; return response.json(pr)
-    polygon = polygon.split(';'); polygon = [[float(dim) for dim in p.split(',')] for p in polygons]
-    filter = r.param['filter']; filter = json.loads(filter)
-    properties = await r.app.config['db']['users'].find({'location': {'$geoWithin': {'$polygon': polygon}}, **filter}).to_list(None)
-    for pr in properties: del pr['_id']; del pr['_date']
+    return response.json({'polygons': origins, 'filters': filters})
+# @app.post('/properties')  # TODO will delete soon
+# async def _properties(r, ):
+#     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties.yml', encoding='utf8') as f: return response.json(yaml.safe_load(f.read()))
+@app.post('/properties/<id_polygon_location:path>')
+async def _search(r, id_polygon_location=None):
+    body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True
+    if '/' in id_polygon_location: z, lat, lng = id_polygon_location.split('/'); ep = 180 ** -z; polygon = [[lng - ep, lat - ep], [lng - ep, lat + ep], [lng + ep, lat + ep], [lng + ep, lat - ep]]
+    if ';' in id_polygon_location: polygon = id_polygon_location.split(';'); polygon = [[float(dim) for dim in p.split(',')] for p in polygons]
+    if not id_polygon_location.strip(): properties = await r.app.config['db']['users'].find(body).to_list(None)
+    elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).to_list(None)
+    else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).to_list(None)
+    for pr in properties: pr['location'] = list(reversed(pr['loc']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(properties)
-@app.get('/properties/<polygon_id:path>')
-async def _properties_get(r, polygon_id=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Search{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8'))
+@app.get('/properties/<id_polygon_location:path>')
+async def _properties_get(r, id_polygon_location=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Search{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8'))
 
 @app.get('/homes/<home>/qr')
 async def _qr_(r, home):

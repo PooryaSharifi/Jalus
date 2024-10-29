@@ -8,7 +8,7 @@
   <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
   <title>جالوس: ویلا، نوشیدنی، صبحانه</title>
   <meta name="apple-mobile-web-app-title" content="جالوس: ویلا، نوشیدنی، صبحانه">
-  <link rel="apple-touch-icon" href="/static/app-icon.png" />
+  <link rel="apple-touch-icon" href="/static/icon/app-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
@@ -20,12 +20,12 @@
   <script src="/static/jDate.min.js"></script>
   <link rel="stylesheet" href="/static/leaflet.css" />
   <script src="/static/leaflet.js"></script>
-  <script src="/static/leaflet-hash.js"></script>
+  <!-- <script src="/static/leaflet-hash.js"></script> -->
   <style type="text/css">.leaflet-tile-container { pointer-events: auto; } .leaflet-control-attribution a {display: none;} .leaflet-control-zoom.leaflet-bar.leaflet-control {display: none;}
-  @font-face { font-weight: 300; src: url(/static/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-  @font-face { font-weight: 400; src: url(/static/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-  @font-face { font-weight: 500; src: url(/static/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-  @font-face { font-weight: 700; src: url(/static/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 300; src: url(/static/font/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 400; src: url(/static/font/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 500; src: url(/static/font/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 700; src: url(/static/font/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
   @font-face { font-weight: 400; src: url(/static/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
   .balcony::before {content: "\ea18"} .cabinet::before {content: "\ea19"} .parking::before {content: "\ea1c"} .telephone::before {content: "\e900"}
   * {box-sizing: border-box; font-family: IRANSans; font-weight: 400;} *.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
@@ -59,7 +59,7 @@
     const maxStat = [[-1, -54],[49, -16],[31, 43],[-31, 43],[-48, -16]], cStat = [49, 55];
     var map = L.map('map').setView([32.6509, 51.6637], 13);
     map.setMaxBounds([[-90, 23.826], [40.681, 63.325]]);
-    window.lyrs = [['lyrb', 'مات', '/static/lyrb/{z}_{x}_{y}.png'], ['lyry', 'ماهواره', '/static/lyry/{z}_{x}_{y}.jpeg'], ['lyrr', 'سفید', '/static/lyrr/{z}_{x}_{y}.png']];
+    window.lyrs = [['lyrb', 'مات', '/static/lyrb/{z}_{x}_{y}.png'], ['lyry', 'ماهواره', '/static/lyry/{z}_{x}_{y}.webp'], ['lyrr', 'سفید', '/static/lyrr/{z}_{x}_{y}.png']];
     window.lyr = L.tileLayer('/static/lyrb/{z}_{x}_{y}.png', {
       attribution: '',
       maxZoom: 14,
@@ -110,8 +110,8 @@
           if (k < arr[mid][0]) end = mid - 1; else start = mid + 1;
         } return arr[mid][0] < k ? [(!arr[mid][1] ? 1 : 0), mid] : [(arr[mid][1] ? 1 : 0), mid];
       } async componentDidMount() {
-        let r = await fetch('/properties', {method: 'POST'});
-        r = (await r.json()).properties;
+        let r = await fetch('/properties/', {method: 'POST'});
+        r = await r.json();
         window.markerClick = async (e) => { e.preventDefault(); e.stopPropagation();
           let ps = window.app.state.properties, target = e.target;
           if (target.tagName == 'SPAN') target = target.parentElement;
@@ -121,9 +121,9 @@
           }
         }; r.map((property, idx) => {
           property.icon = L.divIcon({className: 'custom-div-icon', iconSize: [108, 108], iconAnchor: [54, 54],
-            html: "<div id='" + property.id + "' style='background-image: linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url(" + property.images[0] + ")' class='lenz touchable' onclick='window.markerClick.apply(this, arguments)'>" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify().split('').map((ch, i, arr) => `<span style="display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.2em) rotate(${-(arr.length / 2 - i) * 8 + 20}deg); transform-origin: center 60px 0px; font-size: 1.15em; line-height: .8em; font-weight: 500">${ch}</span>`).join('') + "<span style='display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.3em) rotate(-" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').length * 4.4 + "deg); transform-origin: center 74px 0px; font-size: 1.15em; line-height: .15em; font-weight: 500;'>تومان</span></div>",
+            html: "<div id='" + property.id + "' style='background-image: linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url(/static/properties/" + property.images[0] + ")' class='lenz touchable' onclick='window.markerClick.apply(this, arguments)'>" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify().split('').map((ch, i, arr) => `<span style="display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.2em) rotate(${-(arr.length / 2 - i) * 8 + 20}deg); transform-origin: center 60px 0px; font-size: 1.15em; line-height: .8em; font-weight: 500">${ch}</span>`).join('') + "<span style='display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.3em) rotate(-" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').length * 4.4 + "deg); transform-origin: center 74px 0px; font-size: 1.15em; line-height: .15em; font-weight: 500;'>تومان</span></div>",
           }); L.marker(property.location, { icon: property.icon }).addTo(map);
-        })
+        });
         this.setState({properties: r.sort((p0, p1) => p1.stat[0] - p0.stat[0])}, () => {map.panTo(new L.LatLng(...this.state.properties[0].location), {animate: true, duration: .3, easeLinearity: .9})});
         for (var i = 1; i <= faNow[2]; i++) this.state.calendar.push([faNow[0], faNow[1], i]); var calendarBias = (dateObj.getDay() - (this.state.calendar.length - 1) + 2402) % 7;
         var flag = 0; for (var i = 1; flag < 4; i ++) {
@@ -198,11 +198,11 @@
               </use>
             </svg>
           </div> <div style={{opacity: '98%', position: 'fixed', right: 5, top: 60, minHeight: 50, width: 50, borderRadius: 16, zIndex: 798, backgroundColor: '#ffffff', overflow: 'hidden', padding: 3, paddingBottom: 0, cursor: 'pointer', height: this.state.expand_lyr ? 'auto' : 50}}>
-            <div style={{width: 44, height: 44, borderRadius: 14, overflow: 'hidden', position: 'relative', backgroundImage: `url(/static/${window.lyrs[this.state.lyr][0]}.png)`, backgroundSize: 'cover', backgroundPosition: '50% 50%'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) this.setState({expand_lyr: !this.state.expand_lyr})}}/>
+            <div style={{width: 44, height: 44, borderRadius: 14, overflow: 'hidden', position: 'relative', backgroundImage: `url(/static/icon/${window.lyrs[this.state.lyr][0]}.png)`, backgroundSize: 'cover', backgroundPosition: '50% 50%'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) this.setState({expand_lyr: !this.state.expand_lyr})}}/>
             <div style={{fontSize: '.7em', fontWeight: 500, textAlign: 'center', marginTop: -2, marginBottom: 2}}>{window.lyrs[this.state.lyr][1]}</div>
-            <div style={{width: 44, height: 44, borderRadius: 14, overflow: 'hidden', position: 'relative', backgroundImage: `url(/static/${this.state.lyr == 0 ? window.lyrs[1][0] : window.lyrs[0][0]}.png)`, backgroundSize: 'cover', backgroundPosition: '50% 50%'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) {window.lyr.setUrl(window.lyrs[this.state.lyr == 0 ? 1 : 0][2]); this.setState({lyr: this.state.lyr == 0 ? 1 : 0, expand_lyr: false})}}}/>
+            <div style={{width: 44, height: 44, borderRadius: 14, overflow: 'hidden', position: 'relative', backgroundImage: `url(/static/icon/${this.state.lyr == 0 ? window.lyrs[1][0] : window.lyrs[0][0]}.png)`, backgroundSize: 'cover', backgroundPosition: '50% 50%'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) {window.lyr.setUrl(window.lyrs[this.state.lyr == 0 ? 1 : 0][2]); this.setState({lyr: this.state.lyr == 0 ? 1 : 0, expand_lyr: false})}}}/>
             <div style={{fontSize: '.7em', fontWeight: 500, textAlign: 'center', marginTop: -2, marginBottom: 2}}>{this.state.lyr == 0 ? window.lyrs[1][1] : window.lyrs[0][1]}</div>
-            <div style={{width: 44, height: 44, borderRadius: 14, overflow: 'hidden', position: 'relative', backgroundImage: `url(/static/${this.state.lyr == 2 ? window.lyrs[1][0] : window.lyrs[2][0]}.png)`, backgroundSize: 'cover', backgroundPosition: '50% 50%'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) {window.lyr.setUrl(window.lyrs[this.state.lyr == 2 ? 1 : 2][2]); this.setState({lyr: this.state.lyr == 2 ? 1 : 2, expand_lyr: false})}}}/>
+            <div style={{width: 44, height: 44, borderRadius: 14, overflow: 'hidden', position: 'relative', backgroundImage: `url(/static/icon/${this.state.lyr == 2 ? window.lyrs[1][0] : window.lyrs[2][0]}.png)`, backgroundSize: 'cover', backgroundPosition: '50% 50%'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) {window.lyr.setUrl(window.lyrs[this.state.lyr == 2 ? 1 : 2][2]); this.setState({lyr: this.state.lyr == 2 ? 1 : 2, expand_lyr: false})}}}/>
             <div style={{fontSize: '.7em', fontWeight: 500, textAlign: 'center', marginTop: -2, marginBottom: 0}}>{this.state.lyr == 2 ? window.lyrs[1][1] : window.lyrs[2][1]}</div>
           </div> {this.state.searchExpand && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 899, backgroundColor: '#1111126A', padding: 14}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) this.setState({ordered: false})}}>
             <div className="scroll" style={{height: '100%', backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
@@ -212,7 +212,7 @@
             </div>
           </div>} {this.state.landing && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) this.setState({landing: false})}}>
             <div ref={(elem) => {window.show = elem;}} className="scroll" style={{backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
-              <div style={{flexShrink: 0, display: 'inline-block', backgroundImage: 'url(/static/hotel.webp)', backgroundSize: 'cover', backgroundPosition: 'center', height: 200, width: '100%'}}>
+              <div style={{flexShrink: 0, display: 'inline-block', backgroundImage: 'url(/static/icon/hotel.webp)', backgroundSize: 'cover', backgroundPosition: 'center', height: 200, width: '100%'}}>
                 <div style={{marginTop: 'calc(25% - 1.6rem + 10px)', fontSize: '1.6rem', paddingRight: '.9rem', paddingLeft: '.9rem', color: '#fff', whiteSpace: 'pre-line'}}> لذت تجربه ویلای هوشمند و سلف سرویس </div>
               </div>
               <div style={{paddingRight: '.9rem', paddingLeft: '.9rem'}}><span style={{display: 'inline-block', width: 6, height: 6, backgroundColor: 'black', borderRadius: 6, marginLeft: 6}}></span>در جالوس نوشیدنی سرد و گرم ۲۴ساعته و صبحانه به‌صورت مجانی سرو می‌شود</div>
@@ -220,15 +220,15 @@
               <div style={{paddingRight: '.9rem', paddingLeft: '.9rem'}}><span style={{display: 'inline-block', width: 6, height: 6, backgroundColor: 'black', borderRadius: 6, marginLeft: 6}}></span>{'درتقویم تاریخ سفرتان را انتخاب کنید > در نقشه به جست و جو بپردازید > باانتخاب گزینه رزرو و پرداخت مبلغ کلید وای‌فای تان را دریافت کنید'}</div>
               <div className="touchable" style={{padding: '13px 14px 15px 14px', color: 'white', backgroundColor: '#e31025', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.02em', margin: 9}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); this.setState({landing: false})}}>{'بستن'}</div>
             </div>
-          </div>} {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) this.setState({show: {}}, () => {window.history.replaceState({}, null, `/properties#${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`)})}}>
+          </div>} {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) this.setState({show: {}}, () => {window.history.replaceState({}, null, `/properties/${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`)})}}>
             <div ref={(elem) => {window.show = elem;}} className="scroll" style={{height: '100%', backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
               <div style={{paddingRight: '1em', direction: 'rtl', }}>
                 <div>
-                  <span class={this.state.ordered ? "bold" : "bold touchable"} style={{left: 'calc(0px)', top: '12px', position: 'relative', display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.05em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; this.setState({show: {}}, () => {window.history.replaceState({}, null, `/properties#${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`)})}}>+</span>
+                  <span class={this.state.ordered ? "bold" : "bold touchable"} style={{left: 'calc(0px)', top: '12px', position: 'relative', display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.05em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; this.setState({show: {}}, () => {window.history.replaceState({}, null, `/properties/${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`)})}}>+</span>
                   <span class="bold touchable" style={{left: 'calc(8px)', top: '10px', position: 'relative', display: 'inline-block', fontSize: '.95em', padding: 8, paddingBottom: 3, color: '#bb2d3b', float: 'left'}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.show.scrollTo(0, window.show.scrollHeight);}}>{this.state.ordered ? 'لغو' : 'سفارش'}</span>
                 </div>
               </div>
-              <div style={{marginTop: '1.05em', display: 'flex', flexDirection: 'row', overflowX: 'auto', direction: 'rtl'}}>{ this.state.show.images.map((im) => <div style={{flexShrink: 0, display: 'inline-block', backgroundImage: `url(${im})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 200, width: '100%'}}/>)}</div>
+              <div style={{marginTop: '1.05em', display: 'flex', flexDirection: 'row', overflowX: 'auto', direction: 'rtl'}}>{ this.state.show.images.map((im) => <div style={{flexShrink: 0, display: 'inline-block', backgroundImage: `url(/static/properties/${im})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 200, width: '100%'}}/>)}</div>
               <div style={{fontSize: '1.5rem', fontWeight: 500, lineHeight: 1.5, paddingTop: '.8em', paddingBottom: '.9em', paddingRight: '.75em'}}>{this.state.show.title}</div>
               <div style={{height: '2em', paddingLeft: '1.2em', paddingRight: '1.8em', paddingBottom: '.5em'}}><a style={{textDecoration: 'none' ,float: 'left', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={() => {window.open(`tel:${this.state.show.phone}`, '_self')}}>{('0' + this.state.show.phone.slice(3)).farsify()}</a><div style={{float: 'right'}}>تماس</div></div>
               {'options' in this.state.show && (<div style={{display: 'flex', flexFlow: 'row wrap'}}>
