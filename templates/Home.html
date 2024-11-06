@@ -290,6 +290,11 @@
           // r = await fetch(`/weathers/@${r.location.lat},${r.location.lng}`);
           // if (r.status === 200)
           //   this.setState({weather: await r.json()});
+          if (!this.state.session) window.location.href = `/properties/${r[i].home}`;
+          r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
+          if (r.status > 300) window.location.href = `/properties/${r[i].home}`;
+          r = await r.json(); for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) return;
+          window.location.href = `/properties/${r[i].home}`;
         } render() {
           return !this.state.loaded ? (
             <div style={{width: window.screen.width, height: window.screen.height, backgroundImage: `url(/static/cover.webp)`, backgroundSize: '20%', backgroundRepeat: 'no-repeat', backgroundPosition: '50% 50%'}}/>

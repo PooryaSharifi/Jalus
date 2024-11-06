@@ -3,9 +3,7 @@ from sanic import Sanic, Blueprint, response, exceptions
 from random import choice, randint, random
 from bson import ObjectId
 from datetime import datetime, timedelta
-from string import ascii_lowercase
-from base64 import (urlsafe_b64encode, urlsafe_b64decode)
-from static import load_template, render_template, wild_origins, wild_filters
+from static import load_template, render_template, wild_origins, wild_filters, decode, encode
 from io import BytesIO, StringIO
 
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
@@ -14,6 +12,7 @@ app.config.update(dict(REQUEST_TIMEOUT=12, RESPONSE_TIMEOUT=12, asset_dir='/home
 WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
 app.add_route(lambda _: response.redirect('/properties/'), '/properties', name='properties_slash')
+app.add_route(lambda _: response.redirect('/dome'), '/zome', name='zome_dome')
 min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
 @app.route('/static/<path:path>', methods=['GET'])
 async def static_file(r, path): return await response.file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', *urllib.parse.unquote(min_files.get(path, path)).split('/')))
@@ -82,6 +81,16 @@ async def _otp(r, phone, otp=None):
         # try: await wss.send(f'SMS {phone} {otps[phone]:04d}'); return response.json({'OK': True, 'otp':  otps[phone], 'ws': json.loads(await wss.recv())} if '-d' in sys.argv or '--debug' in sys.argv else json.loads(await wss.recv()))
         try: return response.json({'OK': True, 'otp':  otps[phone]})
         except: return response.json({'OK': False, 'otp':  otps[phone]} if '-d' in sys.argv or '--debug' in sys.argv else {'OK': False})
+@app.get("/otp")
+async def lite_otp(r, ):
+    global otp_list
+    for _ in range(600):
+        await asyncio.sleep(.1)
+        if len(otp_list) == 0: continue
+        otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.empty()
+        return response.text(otp_response)
+    otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.empty()
+    return response.text(otp_response)
 @app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
 async def _payment_receipt(r, date, src, dst, value): pass
 
@@ -109,14 +118,13 @@ async def _thumbnail(r, name_category):
 
 @app.get('/fill/<q>')
 async def _fill(r, q):
+    q = urllib.parse.unquote(q)
     if q not in wild_origins: origins = []
-    else: origins = wild[q][:4]
+    else: origins = wild_origins[q][:4]
+    for ori in origins: ori['polygon'] = ori['polygon'].tolist()
     if q not in wild_filters: filters = []
     else: filters = wild_filters[q][:4]
     return response.json({'polygons': origins, 'filters': filters})
-# @app.post('/properties')  # TODO will delete soon
-# async def _properties(r, ):
-#     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties.yml', encoding='utf8') as f: return response.json(yaml.safe_load(f.read()))
 @app.post('/properties/<id_polygon_location:path>')
 async def _search(r, id_polygon_location=None):
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True
@@ -125,7 +133,7 @@ async def _search(r, id_polygon_location=None):
     if not id_polygon_location.strip(): properties = await r.app.config['db']['users'].find(body).to_list(None)
     elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).to_list(None)
     else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).to_list(None)
-    for pr in properties: pr['location'] = list(reversed(pr['loc']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
+    for pr in properties: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
 async def _properties_get(r, id_polygon_location=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Search{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8'))
@@ -145,7 +153,7 @@ async def _smart_home_state(r, home, ):
 @app.get('/homes/<home>')
 async def _smart_home(r, home, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Home{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8')) 
 @app.get('/<page:path>')
-async def _page(r, page=None): page = 'jalus' if page == '' else page; return response.html((await render_template('base.html', {'title': {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه'}[page], 'style': 'digikala'})).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'{page.capitalize()}.serv.html'))
+async def _page(r, page=None): page = 'jalus' if page == '' else page; return response.html((await render_template('base.html', {'title': {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه', 'fold': 'جالوس تاشو', 'dome': 'جالوس زوم'}[page], 'style': 'digikala'})).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'{page.capitalize()}.serv.html'))
 
 if __name__ == '__main__':
     debug = True if '-d' in sys.argv or '--debug' in sys.argv else False

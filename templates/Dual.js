@@ -1,6 +1,6 @@
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), otp: false, keys: {}, slide: 3, slides: [
+    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, slide: 3, slides: [
       {webp: '/static/slides/Home_Booking.webp', 
       jpeg: '/static/slides/Home_Booking-80.jpg',
       title: 'بوکینگ هوشند', href: '#', state: {potent: true, potentInterest: 'dual'}},
@@ -153,22 +153,26 @@ class App extends React.Component {
       // {title: '', href: '/stories/15',
       // jpeg: ''},
     ], offers: [
-      {jpeg: '/static/properties/tmpa_0.jpg', webp: '/static/properties/tmpa_0.webp', ratio: 48},
-      {jpeg: '/static/properties/tmpb_1.jpg', webp: '/static/properties/tmpb_1.webp', ratio: 43},
-      {jpeg: '/static/properties/tmpc_2.jpg', webp: '/static/properties/tmpc_2.webp', ratio: 38},
-      {jpeg: '/static/properties/tmpd_3.jpg', webp: '/static/properties/tmpd_3.webp', ratio: 35},
-      {jpeg: '/static/properties/tmpe_4.jpg', webp: '/static/properties/tmpe_4.webp', ratio: 30},
-      {jpeg: '/static/properties/tmpf_5.jpg', webp: '/static/properties/tmpf_5.webp', ratio: 26},
-      {jpeg: '/static/properties/tmpg_6.jpg', webp: '/static/properties/tmpg_6.webp', ratio: 20},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 48},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 43},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 38},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 35},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 30},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 26},
+      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 20},
     ], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/hosting'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/hosting#smartkey'},
       {svg: '/static/icon/jalus_pay.svg', href: '/hosting#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
       {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/hosting#all'}
-    ], potent: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, foods: {bread: {img: 0}, pizza: {img: 0}, rice: {img: 0}, fries: {img: 0}, chicken_bbq: {img: 0}, kebab: {img: 0}, falafel: {img: 0}}};
+    ], potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, foods: {bread: {img: 0}, pizza: {img: 0}, rice: {img: 0}, fries: {img: 0}, chicken_bbq: {img: 0}, kebab: {img: 0}, falafel: {img: 0}}};
   } async componentDidMount() { let app = this;
     let stories = await fetch('http://localhost:5000/stories/greenhome'); if (stories.status < 300) {
       stories = await stories.json(); app.setState({stories: Object.keys(stories).map((story) => ({title: story.split('_')[1], jpeg: '/stories/' + story + '.jpg', href: story, resolutions: stories[story][0], ccs: stories[story][1], markers: stories[story][2]}))})
+    } let offers = await fetch('/properties/', {body: JSON.stringify({offer: {$gte: 5}}), method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); if (offers.status < 300) {
+      let offer_nt = 7, offer_avg = 0; offers = await offers.json();
+      for (var i = 0; i < offers.length; i ++) offer_avg += offers[i].offer;
+      offer_avg /= offers.length; offers = offers.filter((offer => offer.offer >= offer_avg && offer_nt -- > 0)); this.setState({offers: offers})
     }
     setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
   } render() { let app = this;

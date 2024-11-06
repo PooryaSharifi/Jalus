@@ -10,9 +10,8 @@
           <div style={{width: 66, height: 62, lineHeight: 0}}>
             <picture>
               <source type="image/webp" srcset="/static/icon/fresh.webp"/>
-              <source type="image/jpeg" srcset="/static/icon/fresh.png"/><img class="w-full inline-block"
-                src="/static/icon/fresh.png" width="66" height="62" style={{objectFit: 'contain'}}
-                alt="icon" title=""/>
+              <source type="image/jpeg" srcset="/static/icon/fresh.png"/>
+              <img class="w-full inline-block" src="/static/icon/fresh.png" width="66" height="62" style={{objectFit: 'contain'}} alt="icon" title=""/>
             </picture>
           </div>
           <div class="mx-2 lg:mx-5" style={{width: 250, height: 28, lineHeight: 0}}><img
@@ -22,7 +21,7 @@
         <div
           class="inline-flex items-center text-neutral-000 text-center mx-2 lg:mx-0 flex justify-center text-normal bg-fresh-700 styles_AmazingShortcut__badge__eIFZL Badge_Badge__QIekq Badge_Badge--medium__fP85d px-3 text-body2-strong"
           style={{color: 'var(--color-undefined)'}}>
-          <p class="inline-block  text-body1-strong text-white">تا {Math.max(...this.state.offers.map((offer) => (offer.ratio))).farsify()}٪ تخفیف</p>
+          <p class="inline-block  text-body1-strong text-white">تا {Math.max(...this.state.offers.map((offer) => (offer.offer))).farsify()}٪ تخفیف</p>
         </div>
       </div>
       <div class="flex items-center justify-between lg:justify-start mt-4 lg:mt-0 lg:mr-4 z-1">
@@ -32,14 +31,14 @@
               <div class="overflow-hidden rounded-circle">
                 <div style={{width: 64, height: 64, lineHeight: 0}}>
                   <picture>
-                    <source type="image/webp" srcset={offer.webp}/>
-                    <source type="image/jpeg" srcset={offer.jpg}/>
+                    <source type="image/webp" srcset={`/static/properties/${offer.images[0]}`}/>
+                    <source type="image/jpeg" srcset={`/static/properties/${offer.images[0]}`}/>
                     <img class="w-full inline-block" src={offer.jpg} width="64" height="64" style={{objectFit: 'fill'}} alt="پنیر پیتزا موزارلا شه وین - 2 کیلوگرم" title=""/>
                   </picture>
                 </div>
               </div>
               <div class="px-1 text-white rounded-large flex items-center justify-center ProductPrice_ProductPrice__discountWrapper__1Ru_1 bg-hint-object-error absolute right-0 bottom-0 z-1">
-                <span class="text-body2-strong" data-testid="price-discount-percent">{offer.ratio.farsify()}٪</span>
+                <span class="text-body2-strong" data-testid="price-discount-percent">{offer.offer.farsify()}٪</span>
               </div>
             </div>
           ))}

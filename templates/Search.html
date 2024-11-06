@@ -102,6 +102,12 @@
         } let binCalendar = []; calendar = [[4, 5], [7, 7], [9, 11], [25, 32]];
         for (var j = 0; j < calendar.length; j ++) { binCalendar.push([calendar[j][0], false]); binCalendar.push([calendar[j][1], true]); }
         this.state.show.calendarReserved = binCalendar; this.setState({show: this.state.show, landing: false}, () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`);});
+      } async checkPayed() { if (!this.state.session) return;
+        let r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
+        if (r.status < 300) {
+          r = await r.json(); for (var i = 0; i < r.length; i ++) this.state.keys[r[i].home] = r[i];
+          for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) window.location.href = `/home/${r[i].home}`;
+        }
       } binSearch(k) { if (!('calendarReserved' in this.state.show)) return 0;
         let start = 0, arr = this.state.show.calendarReserved; let end = arr.length - 1, mid;
         while (start <= end) {
@@ -136,9 +142,7 @@
           for (let h = 0; h < this.state.properties.length; h ++) {if (this.state.properties[h].id == window.location.pathname.split('/')[2])
             this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});}
         }
-        if (!this.state.session) return;
-        r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
-        if (r.status < 300) { r = await r.json(); for (var i = 0; i < r.length; i ++) this.state.keys[r[i].home] = r[i]}
+        await this.checkPayed();
         for (let h in this.state.keys) { let key = this.state.keys[h];
           if ('fix' in key && key.fix === false) {
             this.state.ordered = true; var i = 0;

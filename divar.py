@@ -23,17 +23,22 @@ class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE,
     '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
 def get_users():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
-    users.create_index([('loc', '2dsphere')])
+    users.create_index([('location', '2dsphere')])
     users.create_index([('source', 1), ('category', 1), ('date', 1)])
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
     users.create_index([('link', 1)], unique=True); users.create_index([('id', 1)], unique=True)
-    # users.update_many({}, {'$set': {'cart': 6037123412341234, 'gender': True, 'family': ''}}); assert 1 == 0
     print(f"{cs.FAIL}{cs.BOLD}Count All   : {users.count_documents({})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Detail: {users.count_documents({'detailed': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Phoned: {users.count_documents({'phoned': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Imaged: {users.count_documents({'imaged': True})}{cs.ENDC}")
     # users.delete_many({})
     return users
+
+def rnd_necessities():
+    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
+    for user in users.find({'detailed': True, 'location': {'$exists': True}}):
+        users.update_one({'_id': user['_id']}, {'$set': {'cart': 6037123412341234, 'stat': [random.random() for _ in range(5)], 'offer': random.choice([0, 0, 0, 5, 5, random.randint(6, 39)]), 
+        'family': random.choice(['قادری', 'محمدی', 'زارعی', 'نخجیری', 'حسینی']), 'gender': True if random.random() < .7 else False, 'sms': 9300345496, 'price': random.randint(4, 40) * 100000}})
 
 categories = [f'{ft}-{et}' for ft in ['buy', 'rent'] for et in ['apartment', 'villa', 'old-house'] + ['office', 'store', 'industrial-agricultural-property']]
 categories.remove('rent-old-house')
@@ -160,11 +165,11 @@ def pan(browser, city='isfahan', photo=True, log=True, rpm=10, cat=None):  # tod
                 for sub in bottoms: subtitles.append(sub.get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا')); 
                 break
             if not subtitles: print(traceback.format_exc()); assert 1 == 0
-            loc = list(reversed(wild_origins[city][0]['loc']))
+            loc = list(reversed(wild_origins[city][0]['location']))
             print(f"{cs.WARNING}{cs.BOLD}Pan {pan_cnt}:{cs.ENDC} {cs.OKCYAN}{refs[0].split('/')[-1]}{cs.ENDC} {title} {cs.CGREY}{subtitles[0]}{cs.ENDC}")
-            with open('../divar_pan.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump({'title': title, 'category': cat, 'subtitles': subtitles, 'link': refs[0], 'loc': loc, 'pan_date': pan_date}, default_flow_style=False, indent=2, allow_unicode=True))
+            # with open('../divar_pan.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump({'title': title, 'category': cat, 'subtitles': subtitles, 'link': refs[0], 'loc': loc, 'pan_date': pan_date}, default_flow_style=False, indent=2, allow_unicode=True))
             pds.append({
-                'title': title, 'category': cat, 'subtitles': subtitles, 'id': refs[0].split('/')[-1], 'link': refs[0], 'loc': {'type': 'Point', 'coordinates': loc}, 'pan_date': pan_date,
+                'title': title, 'category': cat, 'subtitles': subtitles, 'id': refs[0].split('/')[-1], 'link': refs[0], 'location': {'type': 'Point', 'coordinates': loc}, 'pan_date': pan_date,
                 'pan_cnt': (pan_cnt := pan_cnt + 1), 'source': 'divar', 'maker': True, 'detailed': False, 'imaged': False, 'phoned': False, 'score': 0., 'synced': False,
             })
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
@@ -258,16 +263,16 @@ def dad(browser, user):
         lat_lng = urlparse(lat_lng.get_attribute('href'))
         lat, lng = lat_lng.query.split('&')
         lat, lng = float(lat.split('=')[1]), float(lng.split('=')[1])
-        user['loc'] = {'type': 'Point', 'coordinates': [lng, lat]}
+        user['location'] = {'type': 'Point', 'coordinates': [lng, lat]}
     except: pass
-        # if 'loc' not in user or not user['loc']:
+        # if 'location' not in user or not user['location']:
         #     for loc in user['subtitle'].split('،'):
         #         if (loc := loc.strip()) in wild_origins:
-        #             # user['loc'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['loc']))}
+        #             # user['location'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['location']))}
         #             break
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
     print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 15. else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
-    with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
+    # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
 def phone(browser, user):
@@ -282,7 +287,7 @@ def phone(browser, user):
         user['phoned'] = True
         user['phoned_date'] = datetime.now()
         print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} {cs.OKCYAN}{eng_phone},{user['phone']}{cs.ENDC} {user['title']} {cs.CGREY}{user['score']:.2f}{cs.ENDC}")
-        with open('../divar_phone.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
+        # with open('../divar_phone.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
         return {'phone': user['phone'], 'phoned': user['phoned'], 'phoned_date': user['phoned_date']}
     except:
         try:
@@ -412,7 +417,7 @@ if __name__ == '__main__':
     else:
         users = ['wYCHa2QQ', 'wYJjQnAg', 'gYhK77DW'] # print(r.modified_count, r.matched_count) # users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': False, 'detailed': True, '_images': {'$exists': True, '$ne': []}}}, {'$sample': {'size': 1000}}])); users = sorted(users, key=lambda u: -u['score']); print(users[len(users) // 2]['score'])
         for u in users:
-            u = {'_id': ObjectId(), 'link': f'https://divar.ir/v/_/{u}', 'title': None, 'category': 'rent-temporary', 'pan_date': None, 'pan_cnt': 0, 'divar_date': None, 'subtitle': None, 'loc': None, 'source': 'divar', 'maker': True, 'detailed': False, 'imaged': False, 'phoned': False, 'score': 0.0, 'synced': False}
+            u = {'_id': ObjectId(), 'link': f'https://divar.ir/v/_/{u}', 'title': None, 'category': 'rent-temporary', 'pan_date': None, 'pan_cnt': 0, 'divar_date': None, 'subtitle': None, 'location': None, 'source': 'divar', 'maker': True, 'detailed': False, 'imaged': False, 'phoned': False, 'score': 0.0, 'synced': False}
             browser = random_browser(headless=False, otp=True)
             browser.get(f"{u['link']}")
             dad(browser, u)

@@ -9,40 +9,41 @@
       </div>
       <a class="" href="/">
         <div class="transform transition-all duration-500 ease-out" style={{width: 100, lineHeight: 0}}>
-          <img class="w-full inline-block" src={`/static/logo/jalus_${this.state.potentInterest ? this.state.potentInterest : 'white'}_red.svg`} width="100" style={{objectFit: 'contain'}} alt="لوگوی دیجیکالا" title=""/>
+          <img class="w-full inline-block" src={`/static/icon/jalus_${this.state.potentInterest ? this.state.potentInterest : 'white'}_red.svg`} width="100" style={{objectFit: 'contain'}} alt="لوگوی جالوس" title=""/>
         </div>
       </a>
     </div>
     <div class="w-full">
       <h1 class="text-h4 text-neutral-900 text-right w-full mt-4">{{'': 'ورود | ثبت‌نام', 'dual': 'خانه سبز دومنظوره', 'hosting': 'صاحبخونه', 'rebuild': 'بازسازی'}[this.state.potentInterest]}</h1>
       <p class="text-body-2 text-neutral-700 mt-4 text-right w-full">سلام!</p>
-      <p class="text-body-2 text-neutral-700 mb-4 text-right w-full">لطفا شماره موبایل یا ایمیل خود را وارد کنید</p>
+      <p class="text-body-2 text-neutral-700 mb-4 text-right w-full">لطفا شماره موبایل خود را وارد کنید</p>
       <form>
         <label class="FormComponentFrame_FormComponentFrame__PIUpy w-full FormComponentFrame_FormComponentFrame--normal__TQSOm">
           <div class="FormComponentFrame_FormComponentFrame__input-container__BHc4I px-2 flex items-center Input_InputWrapper--error__GDWAB relative text-neutral-800 bg-neutral-100 lg:bg-neutral-000 Input_InputWrapper__d_4kf">
             <div class="grow text-body-3">
-              <input class="px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--secondary__w_vGF text-subtitle w-full py-5 lg:py-2 rounded-medium" autoFocus type="text" name="username" autocomplete="off" value={this.state.potentPhone} onChange={async (e) => {this.setState({potentPhone: e.target.value})}} 
-              onKeyPress={async (e) => {if(e.key === 'Enter') { 
-                if (this.state.potentInterest === '') { let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/`); if (r.status < 300) {if (!this.state.potentPhone) return; r = await r.json(); console.log(r); this.setState({otp: true});} } 
+              <input class="px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--secondary__w_vGF text-subtitle w-full py-5 lg:py-2 rounded-medium" autoFocus type="text" name="username" autocomplete="off" disabled={this.state.otp ? true : false} value={this.state.potentPhone} onChange={async (e) => {this.setState({potentPhone: e.target.value})}} 
+              onKeyPress={async (e) => {if(e.key === 'Enter') { if (!this.state.potentPhone.trim()) return;
+                if (this.state.potentInterest === '') { let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/`); if (r.status < 300) {if (!this.state.potentPhone) return; r = await r.json(); this.setState({otp: true});} } 
                 else { let body = new FormData(); body.append('user', '_'); body.append('phone', this.state.potentPhone); body.append('interest', this.state.potentInterest); body.append('link', '/properties/_'); body.append('lat', .0); body.append('lng', .0); await fetch('/potent', {method: 'post', body: body})}}}}/>
             </div>
           </div>
           <p class="text-body-2 text-hint-text-error">لطفا این قسمت را خالی نگذارید</p>
-        </label>
-        {this.state.otp ? <label style={{marginTop: 5}} class="FormComponentFrame_FormComponentFrame__PIUpy w-full FormComponentFrame_FormComponentFrame--normal__TQSOm">
-          <div class="FormComponentFrame_FormComponentFrame__input-container__BHc4I px-2 flex items-center Input_InputWrapper--error__GDWAB relative text-neutral-800 bg-neutral-100 lg:bg-neutral-000 Input_InputWrapper__d_4kf">
-            <div class="grow text-body-3">
-              <input class="px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--secondary__w_vGF text-subtitle w-full py-5 lg:py-2 rounded-medium" autoFocus type="text" name="username" autocomplete="off" value={this.state.potentPhone} onChange={async (e) => {this.setState({potentPhone: e.target.value})}} 
-              onKeyPress={async (e) => {if(e.target.value.length == 4) {let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/${e.target.value.trim().deFarsify()}`); if (r.status < 300) {r = await r.json(); if (r.OK) {setCookie('session', r.session); setCookie('phone', this.state.potentPhone); this.setState({session: r.session}, async () => {if (!this.state.show.isEmpty() && this.state.ordered && this.state.calendarRange[0] != -1) {
-                let r = await fetch(`/key/${this.state.show.id}/_/${this.state.calendar[this.state.calendarRange[0]].join('-')}/${this.state.calendar[this.state.calendarRange[1]].join('-')}`, {method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}}); if (r.status >= 300 || !(await r.json()).OK) this.setState({ordered: !this.state.ordered})}})}}}}}/>
+          {this.state.otp ? <>
+            <div class="FormComponentFrame_FormComponentFrame__input-container__BHc4I px-2 flex items-center Input_InputWrapper--error__GDWAB relative text-neutral-800 bg-neutral-100 lg:bg-neutral-000 Input_InputWrapper__d_4kf">
+              <div class="grow text-body-3">
+                <input class="px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--secondary__w_vGF text-subtitle w-full py-5 lg:py-2 rounded-medium" autoFocus type="text" name="username" autocomplete="off" value={this.state.potentOtp} onChange={async (e) => {this.setState({potentOtp: e.target.value}, async () => { if (this.state.potentOtp.length == 4) {
+                  let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/${e.target.value.trim().deFarsify()}`);
+                  if (r.status < 300) {r = await r.json(); if (r.OK) {setCookie('session', r.session); setCookie('phone', this.state.potentPhone.trim().deFarsify()); this.setState({phone: this.state.potentPhone.trim().deFarsify(), session: r.session, potent: false})}}
+                }})}}/>
+              </div>
             </div>
-          </div>
-          <p class="text-body-2 text-hint-text-error">لطفا کد چهاررقمی پیامک شده را وارد کنید</p>
-        </label> : null}
+            <p class="text-body-2 text-hint-text-error">لطفا کد چهاررقمی پیامک شده را وارد کنید</p>
+          </> : null}
+        </label>
         <button class="relative flex items-center user-select-none styles_btn__Q4MvL text-button-1 styles_btn--large__1Muai styles_btn--primary__y0GEv rounded-medium w-full mt-6 lg:mt-8 text-button-1" type="submit" data-cro-id="login-register" onClick={async (e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();  
           if (this.state.potentInterest === '') {
-            if (this.state.otp && e.target.value.length == 4) { let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/${e.target.value.trim().deFarsify()}`); if (r.status < 300) {r = await r.json(); if (r.OK) {setCookie('session', r.session); setCookie('phone', this.state.potentPhone); this.setState({session: r.session}, async () => {if (!this.state.show.isEmpty() && this.state.ordered && this.state.calendarRange[0] != -1) {
-              let r = await fetch(`/key/${this.state.show.id}/_/${this.state.calendar[this.state.calendarRange[0]].join('-')}/${this.state.calendar[this.state.calendarRange[1]].join('-')}`, {method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}}); if (r.status >= 300 || !(await r.json()).OK) this.setState({ordered: !this.state.ordered})}})}}
+            if (this.state.otp && this.state.potentOtp.length == 4) { let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/${e.target.value.trim().deFarsify()}`);
+              if (r.status < 300) {r = await r.json(); if (r.OK) {setCookie('session', r.session); setCookie('phone', this.state.potentPhone.trim().deFarsify()); this.setState({phone: this.state.potentPhone.trim().deFarsify(), session: r.session, potent: false})}}
             } else { let r = await fetch(`/otp/${this.state.potentPhone.trim().deFarsify()}/`); if (r.status < 300) {if (!this.state.potentPhone) return; r = await r.json(); console.log(r); this.setState({otp: true});} }
           } else { let body = new FormData(); body.append('user', '_'); body.append('phone', this.state.potentPhone); body.append('interest', this.state.potentInterest); body.append('link', '/properties/_'); body.append('lat', .0); body.append('lng', .0); await fetch('/potent', {method: 'post', body: body}) }}}>
           <div class="flex items-center justify-center styles_btn__loading__d5Rcc">

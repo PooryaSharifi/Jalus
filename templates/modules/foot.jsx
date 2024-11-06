@@ -363,8 +363,8 @@
             <div style={{width: 75, height: 75, lineHeight: 0}}>
               <picture>
                 <source type="image/webp" srcset="/static/icon/rezi.webp"/>
-                <source type="image/jpeg" srcset="/statics/icon/rezi.png"/><img class="w-full inline-block"
-                  src="/statics/icon/rezi.png" width="75" height="75" style={{objectFit: 'contain'}}
+                <source type="image/jpeg" srcset="/static/icon/rezi.png"/><img class="w-full inline-block"
+                  src="/static/icon/rezi.png" width="75" height="75" style={{objectFit: 'contain'}}
                   alt="نشان ملی ثبت" title=""/>
               </picture>
             </div>
@@ -373,8 +373,8 @@
             <div style={{width: 75, height: 75, lineHeight: 0}}>
               <picture>
                 <source type="image/webp" srcset="/static/icon/kasbokar.webp"/>
-                <source type="image/jpeg" srcset="/statics/img/png/kasbokar.png"/><img class="w-full inline-block"
-                  src="/statics/img/png/kasbokar.png" width="75" height="75" style={{objectFit: 'contain'}}
+                <source type="image/jpeg" srcset="/static/icon/kasbokar.png"/><img class="w-full inline-block"
+                  src="/static/icon/kasbokar.png" width="75" height="75" style={{objectFit: 'contain'}}
                   alt="نماد کسب و کار های مجازی" title=""/>
               </picture>
             </div>

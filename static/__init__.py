@@ -1,4 +1,6 @@
 import os, re, os.path, ujson as json, hmac, hashlib, numpy as np
+from base64 import (urlsafe_b64encode, urlsafe_b64decode)
+from string import ascii_lowercase
 from scipy.spatial import Voronoi, SphericalVoronoi
 from sanic import response
 
@@ -101,15 +103,22 @@ filters = [{
     "labels": ["جادار"],
     "rooms": {"$gt": 2}
 }, {
-    "labels": ["جادار"],
-    "rooms": {"$gt": 2}
+    "labels": ["دربستی"],
+    "rooms": {"$gt": 3}
+}, {
+    "labels": ["تخفیف"],
+    "offer": {"$gte": 5}
+}, {
+    "labels": ['جنگلی'],
+    "options": {"$contains": "جنگلی"}
 }]
 wild_filters = {}
-for filter in filters:
-    labels = filter['labels']; del filter['labels']
-    if len(key) > 2:
-        for wild_key in [key[:iwild] for iwild in range(2, len(key) - 1)]:
-            for wild_wild_key, i_wild_key in enumerate([wild_key[jwild:] for jwild in range(0, len(wild_key) - 2)]):
-                if wild_wild_key not in wild_filters: wild_filters[wild_wild_key] = []
-                wild_filters[wild_wild_key].extend([i_wild_key, filter])
-for wild_key in wild_filters: filters = list(sorted(wild_filters[wild_key], key=lambda filter: filter[0])); filters = [filter[1] for filter in filters]; wild_filters[wild_key] = filters
+for q in filters:
+    labels = q['labels']
+    for key in labels:
+        if len(key) > 2:
+            for wild_key in [key[:iwild] for iwild in range(2, len(key) + 1)]:
+                for i_wild_key, wild_wild_key in enumerate([wild_key[jwild:] for jwild in range(0, len(wild_key) - 1)]):
+                    if wild_wild_key not in wild_filters: wild_filters[wild_wild_key] = []
+                    wild_filters[wild_wild_key].append([i_wild_key, q])
+for wild_key in wild_filters: filters = list(sorted(wild_filters[wild_key], key=lambda qp: qp[0])); filters = [q[1] for q in filters]; wild_filters[wild_key] = filters

@@ -299,7 +299,7 @@
             </div>
           </div>
           <div class="flex items-center justify-end">
-            <a class="styles_Link__RMyqc" onClick={() => {this.setState({potent: true, potentInterest: ''})}}>
+            <a class="styles_Link__RMyqc" onClick={() => {if (this.state.session) {delCookie('phone'); delCookie('session'); this.setState({'phone': '', 'session': ''})} else this.setState({potent: true, potentInterest: ''})}}>
               <button class="relative flex items-center user-select-none styles_btn__Q4MvL text-button-2 styles_btn--medium__4GoNC styles_btn--neutralOutlined__mLWvq styles_btn--black__xj6Mt rounded-medium whitespace-nowrap shrink-0 ml-2 lg:ml-0" data-cro-id="header-profile">
                 <div class="flex items-center justify-center styles_btn__loading__d5Rcc"><svg width="24" height="24" id="e302pyQgejw1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
                     <path class="styles_Loading__circle1__K7HNJ"
@@ -316,9 +316,12 @@
                 <div class="flex items-center justify-center relative grow">
                   <div class="flex ml-2"><svg style={{width: 24, height: 24, fill: 'var(--color-icon-high-emphasis)'}}>
                       <use xlinkHref="#registerationSignIn">
-                        <symbol id="registerationSignIn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M16 15h-2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v2h2V7a4 4 0 00-4-4H6a4 4 0 00-4 4v10a4 4 0 004 4h6a4 4 0 004-4v-2zm6-4H9.414l2.293-2.293-1.414-1.414-4 4a1 1 0 000 1.414l4 4 1.414-1.414L9.414 13H22v-2z" clip-rule="evenodd"></path></symbol>
+                        <symbol id="registerationSignIn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          {this.state.session ? <path fill-rule="evenodd" d="M14,12h-2v2c0,1.1-.9,2-2,2h-6c-1.1,0-2-.9-2-2V4c0-1.1.9-2,2-2h6c1.1,0,2,.9,2,2v2h2v-2c0-2.21-1.79-4-4-4h-6C1.79,0,0,1.79,0,4v10c0,2.21,1.79,4,4,4h6c2.21,0,4-1.79,4-4v-2ZM7,10h12.59l-2.29,2.29,1.41,1.41,4-4c.39-.39.39-1.02,0-1.41l-4-4-1.41,1.41,2.29,2.29H7v2Z" clip-rule="evenodd"></path> :
+                            <path fill-rule="evenodd" d="M16 15h-2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v2h2V7a4 4 0 00-4-4H6a4 4 0 00-4 4v10a4 4 0 004 4h6a4 4 0 004-4v-2zm6-4H9.414l2.293-2.293-1.414-1.414-4 4a1 1 0 000 1.414l4 4 1.414-1.414L9.414 13H22v-2z" clip-rule="evenodd"></path>}
+                        </symbol>
                       </use>
-                    </svg></div>ورود | ثبت‌نام
+                    </svg></div>{this.state.session ? `خروج | ${this.state.phone}` : 'ورود | ثبت‌نام'}
                 </div>
               </button></a><span
               class="bg-neutral-200 mx-3 hidden lg:block styles_BaseLayoutHeaderUserSection__divider__5TsZs"></span>
