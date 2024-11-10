@@ -1,19 +1,25 @@
-import os, re, os.path, ujson as json, hmac, hashlib, numpy as np
+import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob
 from base64 import (urlsafe_b64encode, urlsafe_b64decode)
 from string import ascii_lowercase
 from scipy.spatial import Voronoi, SphericalVoronoi
 from sanic import response
 
+template_titles = {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه', 'fold': 'جالوس تاشو', 'dome': 'جالوس زوم'}
 matcher = re.compile(r'/// #.* ///')
 def replace_target(match, d): target = match.group(); return d.get(target, target)
 
-async def load_template(name): print(f"{os.path.dirname(os.path.dirname(os.path.abspath(__file__)))}/templates/{name}"); return (await response.file(f"{os.path.dirname(os.path.dirname(os.path.abspath(__file__)))}/templates/{name}")).body.decode('utf-8')
-async def _render_template(name, d): return re.sub( matcher, lambda match: replace_target(match, d), await load_template(name) )
+async def load_template(name): return (await response.file(f"{os.path.dirname(os.path.dirname(os.path.abspath(__file__)))}/templates/{name}")).body.decode('utf-8')
+async def _render_template(name, d): return re.sub( matcher, lambda match: replace_target(match, d), await load_template(name))
 async def render_template(name, d): 
     template = await load_template(name)
     for k, v in d.items(): template = template.replace(f'/// #{k} ///', v)
     for match in re.findall(r'{[/][*] #macro .+ [*][/]}', template): template = template.replace(match, await load_template(match[3:-3].strip().split(' ')[-1] + '.jsx'))
     return template
+async def util_debabel():
+    for page in glob.glob(f'{os.path.dirname(os.path.dirname(__file__))}/templates/*.*'):
+        if page[-4:] == 'html': page = await load_template(os.path.basename(page))
+        else: page = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
+        print(page)
 
 class OctetJWK:
     def __init__(self, key: bytes, kid=None, **options): self.key, self.kid, self.options = key, kid, {k: v for k, v in options.items() if k in {'use', 'key_ops', 'alg', 'x5u', 'x5c', 'x5t', 'x5t#s256'}}
@@ -122,3 +128,5 @@ for q in filters:
                     if wild_wild_key not in wild_filters: wild_filters[wild_wild_key] = []
                     wild_filters[wild_wild_key].append([i_wild_key, q])
 for wild_key in wild_filters: filters = list(sorted(wild_filters[wild_key], key=lambda qp: qp[0])); filters = [q[1] for q in filters]; wild_filters[wild_key] = filters
+
+if __name__ == '__main__': asyncio.new_event_loop().run_until_complete(globals()[f'util_{sys.argv[1]}']())

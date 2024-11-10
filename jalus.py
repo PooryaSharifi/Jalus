@@ -3,7 +3,7 @@ from sanic import Sanic, Blueprint, response, exceptions
 from random import choice, randint, random
 from bson import ObjectId
 from datetime import datetime, timedelta
-from static import load_template, render_template, wild_origins, wild_filters, decode, encode
+from static import load_template, render_template, wild_origins, wild_filters, decode, encode, template_variables
 from io import BytesIO, StringIO
 
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
@@ -153,7 +153,7 @@ async def _smart_home_state(r, home, ):
 @app.get('/homes/<home>')
 async def _smart_home(r, home, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Home{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8')) 
 @app.get('/<page:path>')
-async def _page(r, page=None): page = 'jalus' if page == '' else page; return response.html((await render_template('base.html', {'title': {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه', 'fold': 'جالوس تاشو', 'dome': 'جالوس زوم'}[page], 'style': 'digikala'})).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'{page.capitalize()}.serv.html'))
+async def _page(r, page=None): page = 'jalus' if page == '' else page; return response.html((await render_template('base.html', template_variables)).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 
 if __name__ == '__main__':
     debug = True if '-d' in sys.argv or '--debug' in sys.argv else False
