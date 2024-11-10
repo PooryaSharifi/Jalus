@@ -4,3 +4,4 @@ motor
 ujson
 sanic
 qrcode
+PyYAML
