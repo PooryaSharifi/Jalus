@@ -1,4 +1,4 @@
-import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob
+import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob, tempfile, subprocess
 from base64 import (urlsafe_b64encode, urlsafe_b64decode)
 from string import ascii_lowercase
 from scipy.spatial import Voronoi, SphericalVoronoi
@@ -17,9 +17,19 @@ async def render_template(name, d):
     return template
 async def util_debabel():
     for page in glob.glob(f'{os.path.dirname(os.path.dirname(__file__))}/templates/*.*'):
-        if page[-4:] == 'html': page = await load_template(os.path.basename(page))
-        else: page = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
-        print(page)
+        if page[-4:] == 'html': file = await load_template(os.path.basename(page))
+        else: file = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
+        file = file.replace('<script src="/static/babel.min.js"></script>', '')
+        jsx = re.findall(r'<script type="text/babel">(?:\n.*)*</script>', file)
+        fd, jsx_tmp = tempfile.mkstemp(suffix='.jsx', prefix='tmp')
+        _, js_tmp = tempfile.mkstemp(suffix='.js', prefix='tmp')
+        try:
+            with os.fdopen(fd, 'w') as f: f.write(jsx[0])
+            subprocess.Popen(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # subprocess.check_output(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True).decode()
+            with open(js_tmp) as f: file.replace(jsx[0], f'<script>{f.read()}</script>')
+        finally: os.remove(jsx_tmp); os.remove(js_tmp)
+        break
 
 class OctetJWK:
     def __init__(self, key: bytes, kid=None, **options): self.key, self.kid, self.options = key, kid, {k: v for k, v in options.items() if k in {'use', 'key_ops', 'alg', 'x5u', 'x5c', 'x5t', 'x5t#s256'}}
