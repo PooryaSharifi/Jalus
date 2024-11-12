@@ -27,7 +27,8 @@ async def util_debabel():
             with os.fdopen(fd, 'w') as f: f.write(jsx[0])
             subprocess.Popen(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             # subprocess.check_output(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True).decode()
-            with open(js_tmp) as f: file.replace(jsx[0], f'<script>{f.read()}</script>')
+            with open(js_tmp) as f: file = file.replace(jsx[0], f'<script>{f.read()}</script>')
+            with open(, 'w') as f: f.write(file)
         finally: os.remove(jsx_tmp); os.remove(js_tmp)
         break
 
