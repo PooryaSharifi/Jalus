@@ -7,7 +7,7 @@ from static import load_template, render_template, wild_origins, wild_filters, d
 from io import BytesIO, StringIO
 
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
-app, otps, wss = Sanic(__name__), {}, None
+app, otps, wss, otp_list = Sanic(__name__), {}, None, []
 app.config.update(dict(REQUEST_TIMEOUT=12, RESPONSE_TIMEOUT=12, asset_dir='/home/poorya/Pictures/estates',
 WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
@@ -77,19 +77,16 @@ async def _otp(r, phone, otp=None):
     if otp: return response.json({'OK': True, 'session': encode(json.dumps({'phone': phone, 'exp': str(datetime.now() + timedelta(days=180)).split()[0]}).encode())}) if phone in otps and otps[phone] == int(otp.lstrip('0')) else response.json({'OK': False})
     else:
         otps[phone] = (phone * 137 * (datetime.now().hour + 1)) % 10000; 
-        if not wss: return response.json({'OK': False, 'otp':  otps[phone]} if '-d' in sys.argv or '--debug' in sys.argv else {'OK': False})
-        # try: await wss.send(f'SMS {phone} {otps[phone]:04d}'); return response.json({'OK': True, 'otp':  otps[phone], 'ws': json.loads(await wss.recv())} if '-d' in sys.argv or '--debug' in sys.argv else json.loads(await wss.recv()))
-        try: return response.json({'OK': True, 'otp':  otps[phone]})
+        try: otp_list.appen([str(phone), f'{otps[phone]:04d}']); return response.json({'OK': True, 'otp':  otps[phone], 'ws': json.loads(await wss.recv())} if '-d' in sys.argv or '--debug' in sys.argv else json.loads(await wss.recv()))
         except: return response.json({'OK': False, 'otp':  otps[phone]} if '-d' in sys.argv or '--debug' in sys.argv else {'OK': False})
 @app.get("/otp")
 async def lite_otp(r, ):
-    global otp_list
     for _ in range(600):
         await asyncio.sleep(.1)
         if len(otp_list) == 0: continue
-        otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.empty()
+        otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.clear()
         return response.text(otp_response)
-    otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.empty()
+    otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.clear()
     return response.text(otp_response)
 @app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
 async def _payment_receipt(r, date, src, dst, value): pass
