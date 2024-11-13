@@ -1,11 +1,13 @@
 import re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode
 from sanic import Sanic, Blueprint, response, exceptions
+from sanic.worker.manager import WorkerManager
 from random import choice, randint, random
 from bson import ObjectId
 from datetime import datetime, timedelta
 from static import load_template, render_template, wild_origins, wild_filters, decode, encode, template_titles
 from io import BytesIO, StringIO
 
+WorkerManager.THRESHOLD = 1200
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
 app, otps, wss, otp_list = Sanic(__name__), {}, None, []
 app.config.update(dict(REQUEST_TIMEOUT=12, RESPONSE_TIMEOUT=12, asset_dir='/home/poorya/Pictures/estates',
