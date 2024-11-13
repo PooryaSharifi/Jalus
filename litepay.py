@@ -34,12 +34,12 @@ def pay():
             body = ' '.join(sms[6:]).strip()
             numbers = body.replace(',', '').replace('،', '')
             numbers = re.findall(r'\+\d+', numbers)
-            if numbers: requests.get(f'http://192.168.0.54:5000/pay/{str(datetime.now()).split('.')[0]}/9300345495/{phone}/{numbers[0]}')
+            if numbers: requests.get(f'http://192.168.0.54:5000/pay/{str(datetime.now()).split('.')[0]}/9300345495/{phone}/{numbers[0][1:]}')
         time.sleep(10)
 
 def otp():
     while True:
-        otp_list = requests.get(f'http://192.168.0.54:5000/otp').text.strip('\n').split('\n'); otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
-        for phone, otp in otp_list: print(phone, otp); sync_single_tty(); subprocess.Popen(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL)
+        otp_list = requests.get(f'https://jalus.ir/otp').text.strip('\n').split('\n'); otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
+        for phone, otp in otp_list: sync_single_tty(); subprocess.Popen(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL)
 
 if __name__ == '__main__': globals()[sys.argv[1]]()
