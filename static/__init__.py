@@ -24,13 +24,12 @@ async def util_debabel():
         fd, jsx_tmp = tempfile.mkstemp(suffix='.jsx', prefix='tmp')
         _, js_tmp = tempfile.mkstemp(suffix='.js', prefix='tmp')
         try:
-            with os.fdopen(fd, 'w') as f: f.write(jsx[0])
-            subprocess.Popen(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            # subprocess.check_output(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True).decode()
-            with open(js_tmp) as f: file = file.replace(jsx[0], f'<script>{f.read()}</script>')
-            with open(, 'w') as f: f.write(file)
+            with os.fdopen(fd, 'w', encoding='utf-8') as f: f.write(jsx[0].replace('<script type="text/babel">', '').replace('</script>', ''))
+            # subprocess.Popen(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            output = subprocess.check_output(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True).decode()
+            with open(js_tmp, encoding='utf-8') as f: file = file.replace(jsx[0], f'<script>{f.read()}</script>')
+            with open(page.replace(os.path.basename(page), f'serv/{os.path.basename(page).split('.')[0]}.html'), 'w', encoding='utf-8') as f: f.write(file)
         finally: os.remove(jsx_tmp); os.remove(js_tmp)
-        break
 
 class OctetJWK:
     def __init__(self, key: bytes, kid=None, **options): self.key, self.kid, self.options = key, kid, {k: v for k, v in options.items() if k in {'use', 'key_ops', 'alg', 'x5u', 'x5c', 'x5t', 'x5t#s256'}}

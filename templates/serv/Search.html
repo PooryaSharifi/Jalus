@@ -8,7 +8,7 @@
   <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
   <title>جالوس: ویلا، نوشیدنی، صبحانه</title>
   <meta name="apple-mobile-web-app-title" content="جالوس: ویلا، نوشیدنی، صبحانه">
-  <link rel="apple-touch-icon" href="/static/app-icon.webp" />
+  <link rel="apple-touch-icon" href="/static/icon/app-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
@@ -16,202 +16,333 @@
   <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
   <script src="/static/react.production.min.js" crossorigin></script>
   <script src="/static/react-dom.production.min.js" crossorigin></script>
+  
   <script src="/static/jDate.min.js"></script>
   <link rel="stylesheet" href="/static/leaflet.css" />
   <script src="/static/leaflet.js"></script>
-  <script src="/static/leaflet-hash.js"></script>
+  <!-- <script src="/static/leaflet-hash.js"></script> -->
   <style type="text/css">.leaflet-tile-container { pointer-events: auto; } .leaflet-control-attribution a {display: none;} .leaflet-control-zoom.leaflet-bar.leaflet-control {display: none;}
-  @font-face { font-weight: 300; src: url(/static/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-  @font-face { font-weight: 400; src: url(/static/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-  @font-face { font-weight: 500; src: url(/static/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-  @font-face { font-weight: 700; src: url(/static/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 300; src: url(/static/font/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 400; src: url(/static/font/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 500; src: url(/static/font/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+  @font-face { font-weight: 700; src: url(/static/font/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
   @font-face { font-weight: 400; src: url(/static/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
   .balcony::before {content: "\ea18"} .cabinet::before {content: "\ea19"} .parking::before {content: "\ea1c"} .telephone::before {content: "\e900"}
-  * {box-sizing: border-box; font-family: IRANSans; font-weight: 400;}
-  *.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
+  * {box-sizing: border-box; font-family: IRANSans; font-weight: 400;} *.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
   table.table-hover tbody {cursor: pointer} .pin::before {content: ''; display: inline-block; position: absolute; height: 0; width: 0; border-color: white #fff0 #fff0 #fff0; border-style: solid; border-width: 5px 5px 0px 5px; bottom: 19px; left: 10px}
   .touchable { cursor: pointer !important; transition: 0.07s ease-in-out !important; } .touchable:active { opacity: .2 !important; }
   .column:not(:first-child):not(:nth-child(3n+1))::before {border-left: 1px solid rgba(0,0,0,.12); content: ""; height: 40px; position: absolute; right: 0; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%);}
-  hr.divider { background-color: rgba(0,0,0,.12); border: none; box-sizing: border-box; height: 1px; margin: 0 .65em;}
-  .scroll { -ms-overflow-style: none; scrollbar-width: none; } .scroll::-webkit-scrollbar { display: none; }
-  .lenz {overflow: hidden; border-radius: 50%; height: 100%; width: 100%; background-position: center; background-size: cover; border: none; box-shadow: 0 0 16px -1px #3e3f41ad inset, 0 0 4px -1px #ffffff79; color: white; font-weight: 500; text-align: center;}
-  </style>
+  hr.divider { background-color: rgba(0,0,0,.12); border: none; box-sizing: border-box; height: 1px; margin: 0 .65em;} input.none:focus{outline: none; border-color: inherit; -webkit-box-shadow: none; box-shadow: none;}
+  .scroll { -ms-overflow-style: none; scrollbar-width: none; } .scroll::-webkit-scrollbar { display: none; } div.p {font-size: 1.1rem; padding-right: .9rem; padding-left: .9rem; text-align: justify;  text-justify: inter-word; line-height: 2; color: rgba(0,0,0,.87); white-space: pre-line}
+  .lenz {overflow: hidden; border-radius: 50%; height: 100%; width: 100%; background-position: center; background-size: cover; border: none; box-shadow: 0 0 16px -1px #3e3f41ad inset, 0 0 4px -1px #ffffff79; color: white; font-weight: 500; text-align: center;}</style>
 </head>
 <body style="height:100%;margin:0;padding:0;background-color: #212333;">
   <div id="map" style="height: calc(100% - 127px); opacity: 1"></div>
   <div id="app" style="height: calc(127px)"></div>
-  <script>function setCookie(name, value) {
-    var expires = "";
-    var date = new Date();
-    date.setTime(date.getTime() + 180 * 24 * 60 * 60 * 1000);
-    expires = "; expires=" + date.toUTCString();
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  <script>"use strict";
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _construct(t, e, r) { if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments); var o = [null]; o.push.apply(o, e); var p = new (t.bind.apply(t, o))(); return r && _setPrototypeOf(p, r.prototype), p; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _createSuper(t) { var r = _isNativeReflectConstruct(); return function () { var e, o = _getPrototypeOf(t); if (r) { var s = _getPrototypeOf(this).constructor; e = Reflect.construct(o, arguments, s); } else e = o.apply(this, arguments); return _possibleConstructorReturn(this, e); }; }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function setCookie(name, value) {
+  var expires = "";
+  var date = new Date();
+  date.setTime(date.getTime() + 180 * 24 * 60 * 60 * 1000);
+  expires = "; expires=" + date.toUTCString();
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+function cookie(name) {
+  var nameEQ = name + "=",
+    ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
   }
-  function cookie(name) {
-    var nameEQ = name + "=",
-      ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-  }
-  function delCookie(name) {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  }
-  var dateObj = new Date(),
-    now = [dateObj.getUTCFullYear(), dateObj.getUTCMonth() + 1, dateObj.getUTCDate()];
-  const faNow = jDate.gregorianToJalali(now[0], now[1], now[2]);
-  const faTable = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-  const deFaTable = {
-    '۰': 0,
-    '۱': 1,
-    '۲': 2,
-    '۳': 3,
-    '۴': 4,
-    '۵': 5,
-    '۶': 6,
-    '۷': 7,
-    '۸': 8,
-    '۹': 9,
-    '٠': 0,
-    '١': 1,
-    '٢': 2,
-    '٣': 3,
-    '٤': 4,
-    '٥': 5,
-    '٦': 6,
-    '٧': 7,
-    '٨': 8,
-    '٩': 9
-  };
-  let categories = [];
-  ['buy', 'rent'].map(ft => {
-    ['apartment', 'villa', 'old-house', 'office', 'store', 'industrial-agricultural-property'].map(et => {
-      categories.push(`${ft}-${et}`);
+}
+function delCookie(name) {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+var dateObj = new Date(),
+  now = [dateObj.getUTCFullYear(), dateObj.getUTCMonth() + 1, dateObj.getUTCDate()];
+var faNow = jDate.gregorianToJalali(now[0], now[1], now[2]);
+var faTable = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+var deFaTable = {
+  '۰': 0,
+  '۱': 1,
+  '۲': 2,
+  '۳': 3,
+  '۴': 4,
+  '۵': 5,
+  '۶': 6,
+  '۷': 7,
+  '۸': 8,
+  '۹': 9,
+  '٠': 0,
+  '١': 1,
+  '٢': 2,
+  '٣': 3,
+  '٤': 4,
+  '٥': 5,
+  '٦': 6,
+  '٧': 7,
+  '٨': 8,
+  '٩': 9
+};
+var categories = [];
+['buy', 'rent'].map(function (ft) {
+  ['apartment', 'villa', 'old-house', 'office', 'store', 'industrial-agricultural-property'].map(function (et) {
+    categories.push("".concat(ft, "-").concat(et));
+  });
+});
+categories = categories.filter(function (e) {
+  return e !== 'rent-old-house';
+});
+['temporary-suite-apartment', 'temporary-villa', 'temporary-workspace'].map(function (et) {
+  return categories.push("rent-".concat(et));
+});
+categories.push('contribution-construction');
+categories.push('pre-sell-home');
+var icons = {
+  'بالکن': 'balcony',
+  'انباری': 'cabinet',
+  'پارکینگ': 'parking'
+};
+var maxStat = [[-1, -54], [49, -16], [31, 43], [-31, 43], [-48, -16]],
+  cStat = [49, 55];
+var map = L.map('map').setView([32.6509, 51.6637], 13);
+map.setMaxBounds([[-90, 23.826], [40.681, 63.325]]);
+window.lyrs = [['lyrb', 'مات', '/static/lyrb/{z}_{x}_{y}.png'], ['lyry', 'ماهواره', '/static/lyry/{z}_{x}_{y}.webp'], ['lyrr', 'سفید', '/static/lyrr/{z}_{x}_{y}.png']];
+window.lyr = L.tileLayer('/static/lyrb/{z}_{x}_{y}.png', {
+  attribution: '',
+  maxZoom: 14,
+  maxNativeZoom: 14,
+  zoomControl: false
+  // crs: L.CRS.Simple,
+});
+window.lyr.addTo(map);
+var hash = L.hash(map);
+Object.defineProperty(String.prototype, 'capitalize', {
+  value: function value() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  },
+  enumerable: false
+});
+Object.defineProperty(String.prototype, 'farsify', {
+  value: function value() {
+    return this.split('').map(function (ch) {
+      return ch >= '0' && ch <= '9' ? faTable[parseInt(ch)] : ch;
+    }).join('');
+  },
+  enumerable: false
+});
+Object.defineProperty(Number.prototype, 'farsify', {
+  value: function value() {
+    return ('' + this).split('').map(function (ch) {
+      return ch >= '0' && ch <= '9' ? faTable[parseInt(ch)] : ch;
+    }).join('');
+  },
+  enumerable: false
+});
+Object.defineProperty(String.prototype, 'deFarsify', {
+  value: function value() {
+    return this.split('').map(function (ch) {
+      return ch in deFaTable ? deFaTable[ch] : ch;
+    }).join('');
+  },
+  enumerable: false
+});
+Object.defineProperty(Object.prototype, 'isEmpty', {
+  value: function value() {
+    return Object.keys(this).length === 0 && Object.getPrototypeOf(this) === Object.prototype;
+  },
+  enumerable: false
+});
+var App = /*#__PURE__*/function (_React$Component) {
+  _inherits(App, _React$Component);
+  var _super = _createSuper(App);
+  function App(props) {
+    var _this;
+    _classCallCheck(this, App);
+    _this = _super.call(this, props); // condition: Clear, Cloudy, Rainy, Snowy
+    /* delCookie('phone'); delCookie('session'); */
+    var landing = parseInt(cookie('landing') | 0);
+    landing = ++landing % 5;
+    setCookie('landing', landing);
+    _this.state = {
+      searchExpand: false,
+      searchInput: '',
+      searchLocations: [],
+      searchProperties: [],
+      searchFeatures: [],
+      expand_lyr: false,
+      lyr: 0,
+      landing: landing == 1,
+      properties: [],
+      property: 0,
+      category: null,
+      stat: 0,
+      show: {},
+      calendared: false,
+      calendar: [],
+      calendarBias: 0,
+      calendarRange: [-1, -1],
+      ordered: false,
+      phone: cookie('phone'),
+      session: cookie('session'),
+      otp: false,
+      keys: {}
+    };
+    var app = _assertThisInitialized(_this);
+    window.app = _assertThisInitialized(_this);
+    _this.checkReserved = _this.checkReserved.bind(_assertThisInitialized(_this));
+    _this.binSearch = _this.binSearch.bind(_assertThisInitialized(_this));
+    _this.calendar = _this.calendar.bind(_assertThisInitialized(_this));
+    Object.defineProperty(String.prototype, 'translate', {
+      value: function value() {
+        return !app.state.trans ? this : tr_table[this.toLowerCase()];
+      },
+      enumerable: false
     });
-  });
-  categories = categories.filter(e => e !== 'rent-old-house');
-  ['temporary-suite-apartment', 'temporary-villa', 'temporary-workspace'].map(et => categories.push(`rent-${et}`));
-  categories.push('contribution-construction');
-  categories.push('pre-sell-home');
-  const icons = {
-    'بالکن': 'balcony',
-    'انباری': 'cabinet',
-    'پارکینگ': 'parking'
-  };
-  const maxStat = [[-1, -54], [49, -16], [31, 43], [-31, 43], [-48, -16]],
-    cStat = [49, 55];
-  var map = L.map('map').setView([32.6509, 51.6637], 13);
-  map.setMaxBounds([[-90, 23.826], [40.681, 63.325]]);
-  L.tileLayer('/static/tiles/{z}_{x}_{y}.webp', {
-    attribution: '',
-    maxZoom: 14,
-    maxNativeZoom: 14,
-    zoomControl: false
-    // crs: L.CRS.Simple,
-  }).addTo(map);
-  var hash = L.hash(map);
-  Object.defineProperty(String.prototype, 'capitalize', {
+    return _this;
+  }
+  _createClass(App, [{
+    key: "checkReserved",
     value: function () {
-      return this.charAt(0).toUpperCase() + this.slice(1);
-    },
-    enumerable: false
-  });
-  Object.defineProperty(String.prototype, 'farsify', {
-    value: function () {
-      return this.split('').map(ch => ch >= '0' && ch <= '9' ? faTable[parseInt(ch)] : ch).join('');
-    },
-    enumerable: false
-  });
-  Object.defineProperty(Number.prototype, 'farsify', {
-    value: function () {
-      return ('' + this).split('').map(ch => ch >= '0' && ch <= '9' ? faTable[parseInt(ch)] : ch).join('');
-    },
-    enumerable: false
-  });
-  Object.defineProperty(String.prototype, 'deFarsify', {
-    value: function () {
-      return this.split('').map(ch => ch in deFaTable ? deFaTable[ch] : ch).join('');
-    },
-    enumerable: false
-  });
-  Object.defineProperty(Object.prototype, 'isEmpty', {
-    value: function () {
-      return Object.keys(this).length === 0 && Object.getPrototypeOf(this) === Object.prototype;
-    },
-    enumerable: false
-  });
-  class App extends React.Component {
-    constructor(props) {
-      super(props); // condition: Clear, Cloudy, Rainy, Snowy
-      delCookie('phone');
-      delCookie('session');
-      this.state = {
-        landing: true,
-        properties: [],
-        property: 0,
-        category: null,
-        stat: 0,
-        show: {},
-        calendared: false,
-        calendar: [],
-        calendarBias: 0,
-        calendarRange: [-1, -1],
-        ordered: false,
-        phone: cookie('phone'),
-        session: cookie('session'),
-        otp: false,
-        keys: {}
-      };
-      let app = this;
-      window.app = this;
-      this.checkReserved = this.checkReserved.bind(this);
-      this.binSearch = this.binSearch.bind(this);
-      this.calendar = this.calendar.bind(this);
-      Object.defineProperty(String.prototype, 'translate', {
-        value: function () {
-          return !app.state.trans ? this : tr_table[this.toLowerCase()];
-        },
-        enumerable: false
-      });
-    }
-    async checkReserved() {
-      if ('calendarReserved' in this.state.show) return;
-      let r = await fetch(`/key/${this.state.show.id}`);
-      r = await r.json();
-      let calendar = [];
-      for (var j = 0; j < r.length; j++) {
-        let key = r[j];
-        calendar.push([-1, -1]);
-        for (var i = 0; i < this.state.calendar.length; i++) {
-          if (this.state.calendar[i].join('-') == key.head) calendar[calendar.length - 1][0] = i;
-          if (this.state.calendar[i].join('-') == key.tail) calendar[calendar.length - 1][1] = i;
-        }
-        if (calendar.length > 1 && calendar[calendar.length - 1][0] - calendar[calendar.length - 2][1] === 1) {
-          calendar[calendar.length - 2][1] = calendar[calendar.length - 1][1];
-          calendar.pop();
-        }
+      var _checkReserved = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var _this2 = this;
+        var r, calendar, j, key, i, binCalendar;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              if (!('calendarReserved' in this.state.show)) {
+                _context.next = 2;
+                break;
+              }
+              return _context.abrupt("return");
+            case 2:
+              _context.next = 4;
+              return fetch("/key/".concat(this.state.show.id));
+            case 4:
+              r = _context.sent;
+              _context.next = 7;
+              return r.json();
+            case 7:
+              r = _context.sent;
+              calendar = [];
+              for (j = 0; j < r.length; j++) {
+                key = r[j];
+                calendar.push([-1, -1]);
+                for (i = 0; i < this.state.calendar.length; i++) {
+                  if (this.state.calendar[i].join('-') == key.head) calendar[calendar.length - 1][0] = i;
+                  if (this.state.calendar[i].join('-') == key.tail) calendar[calendar.length - 1][1] = i;
+                }
+                if (calendar.length > 1 && calendar[calendar.length - 1][0] - calendar[calendar.length - 2][1] === 1) {
+                  calendar[calendar.length - 2][1] = calendar[calendar.length - 1][1];
+                  calendar.pop();
+                }
+              }
+              binCalendar = [];
+              calendar = [[4, 5], [7, 7], [9, 11], [25, 32]];
+              for (j = 0; j < calendar.length; j++) {
+                binCalendar.push([calendar[j][0], false]);
+                binCalendar.push([calendar[j][1], true]);
+              }
+              this.state.show.calendarReserved = binCalendar;
+              this.setState({
+                show: this.state.show,
+                landing: false
+              }, function () {
+                window.history.replaceState({}, null, "/properties/".concat(_this2.state.show.id));
+              });
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this);
+      }));
+      function checkReserved() {
+        return _checkReserved.apply(this, arguments);
       }
-      let binCalendar = [];
-      calendar = [[4, 5], [7, 7], [9, 11], [25, 32]];
-      for (var j = 0; j < calendar.length; j++) {
-        binCalendar.push([calendar[j][0], false]);
-        binCalendar.push([calendar[j][1], true]);
+      return checkReserved;
+    }()
+  }, {
+    key: "checkPayed",
+    value: function () {
+      var _checkPayed = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var r, i;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              if (this.state.session) {
+                _context2.next = 2;
+                break;
+              }
+              return _context2.abrupt("return");
+            case 2:
+              _context2.next = 4;
+              return fetch('/key', {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': this.state.session
+                }
+              });
+            case 4:
+              r = _context2.sent;
+              if (!(r.status < 300)) {
+                _context2.next = 11;
+                break;
+              }
+              _context2.next = 8;
+              return r.json();
+            case 8:
+              r = _context2.sent;
+              for (i = 0; i < r.length; i++) this.state.keys[r[i].home] = r[i];
+              for (i = 0; i < r.length; i++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) window.location.href = "/home/".concat(r[i].home);
+            case 11:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function checkPayed() {
+        return _checkPayed.apply(this, arguments);
       }
-      this.state.show.calendarReserved = binCalendar;
-      this.setState({
-        show: this.state.show,
-        landing: false
-      }, () => {
-        window.history.replaceState({}, null, `/properties/${this.state.show.id}`);
-      });
-    }
-    binSearch(k) {
+      return checkPayed;
+    }()
+  }, {
+    key: "binSearch",
+    value: function binSearch(k) {
       if (!('calendarReserved' in this.state.show)) return 0;
-      let start = 0,
+      var start = 0,
         arr = this.state.show.calendarReserved;
-      let end = arr.length - 1,
+      var end = arr.length - 1,
         mid;
       while (start <= end) {
         mid = Math.floor((start + end) / 2);
@@ -220,117 +351,224 @@
       }
       return arr[mid][0] < k ? [!arr[mid][1] ? 1 : 0, mid] : [arr[mid][1] ? 1 : 0, mid];
     }
-    async componentDidMount() {
-      let r = await fetch('/properties', {
-        method: 'POST'
-      });
-      r = (await r.json()).properties;
-      window.markerClick = async e => {
-        e.preventDefault();
-        e.stopPropagation();
-        let ps = window.app.state.properties,
-          target = e.target;
-        if (target.tagName == 'SPAN') target = target.parentElement;
-        for (var i = 0; i < ps.length; i++) if (ps[i].id == target.id) {
-          window.history.replaceState({}, null, `/properties/${ps[i].id}`);
-          window.app.setState({
-            show: ps[i],
-            landing: false
-          });
-          window.app.checkReserved();
-          break;
-        }
-      };
-      r.map((property, idx) => {
-        property.icon = L.divIcon({
-          className: 'custom-div-icon',
-          iconSize: [108, 108],
-          iconAnchor: [54, 54],
-          html: "<div id='" + property.id + "' style='background-image: url(" + property.images[0] + ")' class='lenz touchable' onclick='window.markerClick.apply(this, arguments)'>" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify().split('').map((ch, i, arr) => `<span style="display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.2em) rotate(${-(arr.length / 2 - i) * 8 + 20}deg); transform-origin: center 60px 0px; font-size: 1.15em; line-height: .8em; font-weight: 500">${ch}</span>`).join('') + "<span style='display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.3em) rotate(-" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').length * 4.4 + "deg); transform-origin: center 74px 0px; font-size: 1.15em; line-height: .15em; font-weight: 500;'>تومان</span></div>"
-        });
-        L.marker(property.location, {
-          icon: property.icon
-        }).addTo(map);
-      });
-      this.setState({
-        properties: r.sort((p0, p1) => p1.stat[0] - p0.stat[0])
-      }, () => {
-        map.panTo(new L.LatLng(...this.state.properties[0].location), {
-          animate: true,
-          duration: .3,
-          easeLinearity: .9
-        });
-      });
-      for (var i = 1; i <= faNow[2]; i++) this.state.calendar.push([faNow[0], faNow[1], i]);
-      var calendarBias = (dateObj.getDay() - (this.state.calendar.length - 1) + 2402) % 7;
-      var flag = 0;
-      for (var i = 1; flag < 4; i++) {
-        dateObj.setDate(dateObj.getDate() + 1);
-        now = [dateObj.getUTCFullYear(), dateObj.getUTCMonth() + 1, dateObj.getUTCDate()];
-        now = jDate.gregorianToJalali(now[0], now[1], now[2]);
-        if (now[1] !== this.state.calendar[this.state.calendar.length - 1][1]) flag += 1;
-        this.state.calendar.push([now[0], now[1], now[2]]);
-      }
-      this.state.calendar.pop();
-      this.setState({
-        calendar: this.state.calendar,
-        calendarBias: calendarBias
-      });
-      if (window.location.pathname.split('/').length == 3) {
-        for (let h = 0; h < this.state.properties.length; h++) {
-          if (this.state.properties[h].id == window.location.pathname.split('/')[2]) this.setState({
-            show: this.state.properties[h],
-            landing: false
-          }, async () => {
-            map.panTo(new L.LatLng(...this.state.properties[h].location));
-            window.history.replaceState({}, null, `/properties/${this.state.show.id}`);
-            window.app.checkReserved();
-          });
-        }
-      }
-      if (!this.state.session) return;
-      r = await fetch('/key', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': this.state.session
-        }
-      });
-      if (r.status < 300) {
-        r = await r.json();
-        for (var i = 0; i < r.length; i++) this.state.keys[r[i].home] = r[i];
-      }
-      for (let h in this.state.keys) {
-        let key = this.state.keys[h];
-        if ('fix' in key && key.fix === false) {
-          this.state.ordered = true;
-          var i = 0;
-          for (i = 0; i < this.state.calendar.length; i++) {
-            if (this.state.calendar[i].join('-') == key.head) this.state.calendarRange[0] = i;
-            if (this.state.calendar[i].join('-') == key.tail) this.state.calendarRange[1] = i;
+  }, {
+    key: "componentDidMount",
+    value: function () {
+      var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        var _this3 = this;
+        var r, i, calendarBias, flag, _loop, h, _h, key;
+        return _regeneratorRuntime().wrap(function _callee6$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.next = 2;
+              return fetch('/properties/', {
+                method: 'POST'
+              });
+            case 2:
+              r = _context7.sent;
+              _context7.next = 5;
+              return r.json();
+            case 5:
+              r = _context7.sent;
+              window.markerClick = /*#__PURE__*/function () {
+                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e) {
+                  var ps, target, i;
+                  return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+                    while (1) switch (_context3.prev = _context3.next) {
+                      case 0:
+                        e.preventDefault();
+                        e.stopPropagation();
+                        ps = window.app.state.properties, target = e.target;
+                        if (target.tagName == 'SPAN') target = target.parentElement;
+                        i = 0;
+                      case 5:
+                        if (!(i < ps.length)) {
+                          _context3.next = 14;
+                          break;
+                        }
+                        if (!(ps[i].id == target.id)) {
+                          _context3.next = 11;
+                          break;
+                        }
+                        window.history.replaceState({}, null, "/properties/".concat(ps[i].id));
+                        window.app.setState({
+                          show: ps[i],
+                          landing: false
+                        });
+                        window.app.checkReserved();
+                        return _context3.abrupt("break", 14);
+                      case 11:
+                        i++;
+                        _context3.next = 5;
+                        break;
+                      case 14:
+                      case "end":
+                        return _context3.stop();
+                    }
+                  }, _callee3);
+                }));
+                return function (_x) {
+                  return _ref.apply(this, arguments);
+                };
+              }();
+              r.map(function (property, idx) {
+                property.icon = L.divIcon({
+                  className: 'custom-div-icon',
+                  iconSize: [108, 108],
+                  iconAnchor: [54, 54],
+                  html: "<div id='" + property.id + "' style='background-image: linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), url(/static/properties/" + property.images[0] + ")' class='lenz touchable' onclick='window.markerClick.apply(this, arguments)'>" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify().split('').map(function (ch, i, arr) {
+                    return "<span style=\"display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.2em) rotate(".concat(-(arr.length / 2 - i) * 8 + 20, "deg); transform-origin: center 60px 0px; font-size: 1.15em; line-height: .8em; font-weight: 500\">").concat(ch, "</span>");
+                  }).join('') + "<span style='display: inline-block; position: absolute; bottom: auto; left: 50%; transform: translateX(-.3em) rotate(-" + String(property.price).replace(/(\d)(?=(\d{3})+$)/g, '$1,').length * 4.4 + "deg); transform-origin: center 74px 0px; font-size: 1.15em; line-height: .15em; font-weight: 500;'>تومان</span></div>"
+                });
+                L.marker(property.location, {
+                  icon: property.icon
+                }).addTo(map);
+              });
+              this.setState({
+                properties: r.sort(function (p0, p1) {
+                  return p1.stat[0] - p0.stat[0];
+                })
+              }, function () {
+                map.panTo(_construct(L.LatLng, _toConsumableArray(_this3.state.properties[0].location)), {
+                  animate: true,
+                  duration: .3,
+                  easeLinearity: .9
+                });
+              });
+              for (i = 1; i <= faNow[2]; i++) this.state.calendar.push([faNow[0], faNow[1], i]);
+              calendarBias = (dateObj.getDay() - (this.state.calendar.length - 1) + 2402) % 7;
+              flag = 0;
+              for (i = 1; flag < 4; i++) {
+                dateObj.setDate(dateObj.getDate() + 1);
+                now = [dateObj.getUTCFullYear(), dateObj.getUTCMonth() + 1, dateObj.getUTCDate()];
+                now = jDate.gregorianToJalali(now[0], now[1], now[2]);
+                if (now[1] !== this.state.calendar[this.state.calendar.length - 1][1]) flag += 1;
+                this.state.calendar.push([now[0], now[1], now[2]]);
+              }
+              this.state.calendar.pop();
+              this.setState({
+                calendar: this.state.calendar,
+                calendarBias: calendarBias
+              });
+              if (!(window.location.pathname.split('/').length == 3)) {
+                _context7.next = 23;
+                break;
+              }
+              _loop = /*#__PURE__*/_regeneratorRuntime().mark(function _loop(h) {
+                return _regeneratorRuntime().wrap(function _loop$(_context5) {
+                  while (1) switch (_context5.prev = _context5.next) {
+                    case 0:
+                      if (_this3.state.properties[h].id == window.location.pathname.split('/')[2]) _this3.setState({
+                        show: _this3.state.properties[h],
+                        landing: false
+                      }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+                        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                          while (1) switch (_context4.prev = _context4.next) {
+                            case 0:
+                              map.panTo(_construct(L.LatLng, _toConsumableArray(_this3.state.properties[h].location)));
+                              window.history.replaceState({}, null, "/properties/".concat(_this3.state.show.id));
+                              window.app.checkReserved();
+                            case 3:
+                            case "end":
+                              return _context4.stop();
+                          }
+                        }, _callee4);
+                      })));
+                    case 1:
+                    case "end":
+                      return _context5.stop();
+                  }
+                }, _loop);
+              });
+              h = 0;
+            case 18:
+              if (!(h < this.state.properties.length)) {
+                _context7.next = 23;
+                break;
+              }
+              return _context7.delegateYield(_loop(h), "t0", 20);
+            case 20:
+              h++;
+              _context7.next = 18;
+              break;
+            case 23:
+              _context7.next = 25;
+              return this.checkPayed();
+            case 25:
+              _context7.t1 = _regeneratorRuntime().keys(this.state.keys);
+            case 26:
+              if ((_context7.t2 = _context7.t1()).done) {
+                _context7.next = 43;
+                break;
+              }
+              _h = _context7.t2.value;
+              key = this.state.keys[_h];
+              if (!('fix' in key && key.fix === false)) {
+                _context7.next = 41;
+                break;
+              }
+              this.state.ordered = true;
+              i = 0;
+              for (i = 0; i < this.state.calendar.length; i++) {
+                if (this.state.calendar[i].join('-') == key.head) this.state.calendarRange[0] = i;
+                if (this.state.calendar[i].join('-') == key.tail) this.state.calendarRange[1] = i;
+              }
+              i = 0;
+            case 34:
+              if (!(i < this.state.properties.length)) {
+                _context7.next = 40;
+                break;
+              }
+              if (!(this.state.properties[i].id == key.home)) {
+                _context7.next = 37;
+                break;
+              }
+              return _context7.abrupt("break", 40);
+            case 37:
+              i++;
+              _context7.next = 34;
+              break;
+            case 40:
+              this.setState({
+                calendarRange: this.state.calendarRange,
+                ordered: this.state.ordered,
+                show: this.state.properties[i],
+                landing: false
+              }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+                return _regeneratorRuntime().wrap(function _callee5$(_context6) {
+                  while (1) switch (_context6.prev = _context6.next) {
+                    case 0:
+                      map.panTo(_construct(L.LatLng, _toConsumableArray(_this3.state.properties[i].location)), {
+                        animate: true,
+                        duration: .3,
+                        easeLinearity: .9
+                      });
+                      window.history.replaceState({}, null, "/properties/".concat(_this3.state.show.id));
+                      window.app.checkReserved();
+                    case 3:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }, _callee5);
+              })));
+            case 41:
+              _context7.next = 26;
+              break;
+            case 43:
+            case "end":
+              return _context7.stop();
           }
-          for (i = 0; i < this.state.properties.length; i++) if (this.state.properties[i].id == key.home) break;
-          this.setState({
-            calendarRange: this.state.calendarRange,
-            ordered: this.state.ordered,
-            show: this.state.properties[i],
-            landing: false
-          }, async () => {
-            map.panTo(new L.LatLng(...this.state.properties[i].location), {
-              animate: true,
-              duration: .3,
-              easeLinearity: .9
-            });
-            window.history.replaceState({}, null, `/properties/${this.state.show.id}`);
-            window.app.checkReserved();
-          });
-        }
+        }, _callee6, this);
+      }));
+      function componentDidMount() {
+        return _componentDidMount.apply(this, arguments);
       }
-      // , async () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()}
-      // TODO oonja ke vasate buy mire login va; oonja ke buy mikone vo ghablesh login hast, va didMount -> checkForPendingLoop(); age peding dasht mimoone too divare oonsafe tekoonam nemikhore (khastam quit kone payam dialogue midim ke baz shode dari boro beband), key dasht mire too home, va ellaa /search
-    }
-    calendar() {
+      return componentDidMount;
+    }()
+  }, {
+    key: "calendar",
+    value: function calendar() {
+      var _this4 = this;
       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'relative',
@@ -340,16 +578,18 @@
           marginLeft: 10,
           marginRight: 10
         }
-      }, ['شنبه', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جمعه'].map(wDay => /*#__PURE__*/React.createElement("span", {
-        style: {
-          display: 'inline-block',
-          width: 'calc(100% / 7)',
-          textAlign: 'center',
-          fontSize: '.75em',
-          color: '#343747af',
-          fontWeight: 700
-        }
-      }, wDay))), /*#__PURE__*/React.createElement("div", {
+      }, ['شنبه', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جمعه'].map(function (wDay) {
+        return /*#__PURE__*/React.createElement("span", {
+          style: {
+            display: 'inline-block',
+            width: 'calc(100% / 7)',
+            textAlign: 'center',
+            fontSize: '.75em',
+            color: '#343747af',
+            fontWeight: 700
+          }
+        }, wDay);
+      })), /*#__PURE__*/React.createElement("div", {
         className: "scroll",
         style: {
           margin: '10px 10px',
@@ -365,63 +605,74 @@
           overflowY: 'scroll',
           overflowX: 'hidden'
         }
-      }, [...Array(this.state.calendarBias).keys()].map(() => /*#__PURE__*/React.createElement("span", {
-        style: {
-          width: 'calc(100% / 7)',
-          textAlign: 'center',
-          lineHeight: '12px',
-          paddingTop: 16,
-          paddingBottom: 16,
-          display: 'inline-block'
-        }
-      })), this.state.calendar.map(([y, m, d], di) => /*#__PURE__*/React.createElement("span", {
-        onClick: () => {
-          if (m === faNow[1] && d < faNow[2] || this.binSearch(di)[0] || this.state.calendarRange[0] !== -1 && Math.abs(this.binSearch(di)[1] - this.binSearch(this.state.calendarRange[0])[1]) > 0) this.setState({
-            calendarRange: [-1, -1]
-          });else {
-            if (this.state.calendarRange[0] === -1) this.setState({
-              calendarRange: [di, di]
-            });else if (this.state.calendarRange[0] === this.state.calendarRange[1]) this.setState({
-              calendarRange: [Math.min(this.state.calendarRange[0], di), Math.max(this.state.calendarRange[0], di)]
-            });else this.setState({
-              calendarRange: [di, di]
-            });
+      }, _toConsumableArray(Array(this.state.calendarBias).keys()).map(function () {
+        return /*#__PURE__*/React.createElement("span", {
+          style: {
+            width: 'calc(100% / 7)',
+            textAlign: 'center',
+            lineHeight: '12px',
+            paddingTop: 16,
+            paddingBottom: 16,
+            display: 'inline-block'
           }
-        },
-        class: m === faNow[1] && d < faNow[2] ? "" : "touchable",
-        style: {
-          width: 'calc(100% / 7)',
-          textAlign: 'center',
-          lineHeight: '12px',
-          paddingTop: 16,
-          paddingBottom: 16,
-          display: 'inline-block',
-          fontSize: '1.13em',
-          fontWeight: 500,
-          color: this.binSearch(di)[0] ? '#fce9eb' : m === faNow[1] && d < faNow[2] ? '#e310256F' : this.state.calendarRange[0] <= di && di <= this.state.calendarRange[1] ? '#fff9fa' : '#212232',
-          backgroundColor: this.binSearch(di)[0] ? '#ee6f7b' : this.state.calendarRange[0] <= di && di <= this.state.calendarRange[1] ? '#e31025' : 'transparent',
-          borderTopLeftRadius: this.state.calendarRange[0] === di || this.binSearch(di)[0] == 2 || this.binSearch(di)[0] == 4 ? 22 : 0,
-          borderBottomLeftRadius: this.state.calendarRange[0] === di || this.binSearch(di)[0] == 2 || this.binSearch(di)[0] == 4 ? 22 : 0,
-          borderBottomRightRadius: this.state.calendarRange[1] === di || this.binSearch(di)[0] == 3 || this.binSearch(di)[0] == 4 ? 22 : 0,
-          borderTopRightRadius: this.state.calendarRange[1] === di || this.binSearch(di)[0] == 3 || this.binSearch(di)[0] == 4 ? 22 : 0
-        }
-      }, d === 1 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-        style: {
-          position: 'relative',
-          top: -6
-        }
-      }, d.farsify()), /*#__PURE__*/React.createElement("div", {
-        style: {
-          lineHeight: 0,
-          position: 'relative',
-          top: 5,
-          fontSize: '.79em',
-          marginTop: -5,
-          marginBottom: 5
-        }
-      }, jDate.jaMonths[m - 1])) : d.farsify()))));
+        });
+      }), this.state.calendar.map(function (_ref4, di) {
+        var _ref5 = _slicedToArray(_ref4, 3),
+          y = _ref5[0],
+          m = _ref5[1],
+          d = _ref5[2];
+        return /*#__PURE__*/React.createElement("span", {
+          onClick: function onClick() {
+            if (m === faNow[1] && d < faNow[2] || _this4.binSearch(di)[0] || _this4.state.calendarRange[0] !== -1 && Math.abs(_this4.binSearch(di)[1] - _this4.binSearch(_this4.state.calendarRange[0])[1]) > 0) _this4.setState({
+              calendarRange: [-1, -1]
+            });else {
+              if (_this4.state.calendarRange[0] === -1) _this4.setState({
+                calendarRange: [di, di]
+              });else if (_this4.state.calendarRange[0] === _this4.state.calendarRange[1]) _this4.setState({
+                calendarRange: [Math.min(_this4.state.calendarRange[0], di), Math.max(_this4.state.calendarRange[0], di)]
+              });else _this4.setState({
+                calendarRange: [di, di]
+              });
+            }
+          },
+          "class": m === faNow[1] && d < faNow[2] ? "" : "touchable",
+          style: {
+            width: 'calc(100% / 7)',
+            textAlign: 'center',
+            lineHeight: '12px',
+            paddingTop: 16,
+            paddingBottom: 16,
+            display: 'inline-block',
+            fontSize: '1.13em',
+            fontWeight: 500,
+            color: _this4.binSearch(di)[0] ? '#fce9eb' : m === faNow[1] && d < faNow[2] ? '#e310256F' : _this4.state.calendarRange[0] <= di && di <= _this4.state.calendarRange[1] ? '#fff9fa' : '#212232',
+            backgroundColor: _this4.binSearch(di)[0] ? '#ee6f7b' : _this4.state.calendarRange[0] <= di && di <= _this4.state.calendarRange[1] ? '#e31025' : 'transparent',
+            borderTopLeftRadius: _this4.state.calendarRange[0] === di || _this4.binSearch(di)[0] == 2 || _this4.binSearch(di)[0] == 4 ? 22 : 0,
+            borderBottomLeftRadius: _this4.state.calendarRange[0] === di || _this4.binSearch(di)[0] == 2 || _this4.binSearch(di)[0] == 4 ? 22 : 0,
+            borderBottomRightRadius: _this4.state.calendarRange[1] === di || _this4.binSearch(di)[0] == 3 || _this4.binSearch(di)[0] == 4 ? 22 : 0,
+            borderTopRightRadius: _this4.state.calendarRange[1] === di || _this4.binSearch(di)[0] == 3 || _this4.binSearch(di)[0] == 4 ? 22 : 0
+          }
+        }, d === 1 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+          style: {
+            position: 'relative',
+            top: -6
+          }
+        }, d.farsify()), /*#__PURE__*/React.createElement("div", {
+          style: {
+            lineHeight: 0,
+            position: 'relative',
+            top: 5,
+            fontSize: '.79em',
+            marginTop: -5,
+            marginBottom: 5
+          }
+        }, jDate.jaMonths[m - 1])) : d.farsify());
+      })));
     }
-    render() {
+  }, {
+    key: "render",
+    value: function render() {
+      var _this5 = this;
       return /*#__PURE__*/React.createElement("div", {
         style: {
           height: '100%'
@@ -429,16 +680,16 @@
       }, /*#__PURE__*/React.createElement("div", {
         className: "categories",
         style: {
-          backgroundColor: '#353331',
+          backgroundColor: ['#353331', '#ffffff', '#ffffff'][this.state.lyr],
           direction: 'ltr',
-          borderTop: '1px solid rgb(47, 39, 49)',
+          borderTop: "1px solid ".concat(['rgb(47, 39, 49)', '#fff9fa', '#fff9fa'][this.state.lyr]),
           height: '100%'
         }
       }, /*#__PURE__*/React.createElement("span", {
         style: {
           display: 'inline-block',
           position: 'absolute',
-          color: 'white',
+          color: ['white', '#343727', '#343727'][this.state.lyr],
           fontSize: '.85em',
           fontWeight: 500,
           left: 54,
@@ -449,7 +700,7 @@
         style: {
           display: 'inline-block',
           position: 'absolute',
-          color: 'white',
+          color: ['white', '#343727', '#343727'][this.state.lyr],
           fontSize: '.85em',
           fontWeight: 500,
           left: 1,
@@ -460,7 +711,7 @@
         style: {
           display: 'inline-block',
           position: 'absolute',
-          color: 'white',
+          color: ['white', '#343727', '#343727'][this.state.lyr],
           fontSize: '.85em',
           fontWeight: 500,
           left: 16,
@@ -471,7 +722,7 @@
         style: {
           display: 'inline-block',
           position: 'absolute',
-          color: 'white',
+          color: ['white', '#343727', '#343727'][this.state.lyr],
           fontSize: '.85em',
           fontWeight: 500,
           left: 122,
@@ -482,7 +733,7 @@
         style: {
           display: 'inline-block',
           position: 'absolute',
-          color: 'white',
+          color: ['white', '#343727', '#343727'][this.state.lyr],
           fontSize: '.85em',
           fontWeight: 500,
           left: 90,
@@ -493,7 +744,7 @@
         height: "99",
         width: "99",
         style: {
-          backgroundImage: 'linear-gradient(to left, #35333120, #353331f0 14%)',
+          backgroundImage: ['linear-gradient(to left, #35333120, #353331f0 14%)', 'linear-gradient(to left, white, white 14%)', 'linear-gradient(to left, white, white 14%)'][this.state.lyr],
           marginBottom: -10,
           position: 'relative',
           top: 9,
@@ -501,13 +752,13 @@
           zIndex: 598
         }
       }, /*#__PURE__*/React.createElement("polygon", {
-        points: `${maxStat[0][0] + cStat[0]} ${maxStat[0][1] + cStat[1]},${maxStat[1][0] + cStat[0]} ${maxStat[1][1] + cStat[1]},${maxStat[2][0] + cStat[0]} ${maxStat[2][1] + cStat[1]},${maxStat[3][0] + cStat[0]} ${maxStat[3][1] + cStat[1]},${maxStat[4][0] + cStat[0]} ${maxStat[4][1] + cStat[1]}`,
-        stroke: "rgba(200, 100, 89, .8)",
-        fill: "#353331",
+        points: "".concat(maxStat[0][0] + cStat[0], " ").concat(maxStat[0][1] + cStat[1], ",").concat(maxStat[1][0] + cStat[0], " ").concat(maxStat[1][1] + cStat[1], ",").concat(maxStat[2][0] + cStat[0], " ").concat(maxStat[2][1] + cStat[1], ",").concat(maxStat[3][0] + cStat[0], " ").concat(maxStat[3][1] + cStat[1], ",").concat(maxStat[4][0] + cStat[0], " ").concat(maxStat[4][1] + cStat[1]),
+        stroke: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr],
+        fill: ['#353331', '#ffffff', '#ffffff'][this.state.lyr],
         "stroke-width": "1"
       }), this.state.properties.length && /*#__PURE__*/React.createElement("polygon", {
-        points: `${maxStat[0][0] * this.state.properties[this.state.property].stat[0] + cStat[0]} ${maxStat[0][1] * this.state.properties[this.state.property].stat[0] + cStat[1]},${maxStat[1][0] * this.state.properties[this.state.property].stat[1] + cStat[0]} ${maxStat[1][1] * this.state.properties[this.state.property].stat[1] + cStat[1]},${maxStat[2][0] * this.state.properties[this.state.property].stat[2] + cStat[0]} ${maxStat[2][1] * this.state.properties[this.state.property].stat[2] + cStat[1]},${maxStat[3][0] * this.state.properties[this.state.property].stat[3] + cStat[0]} ${maxStat[3][1] * this.state.properties[this.state.property].stat[3] + cStat[1]},${maxStat[4][0] * this.state.properties[this.state.property].stat[4] + cStat[0]} ${maxStat[4][1] * this.state.properties[this.state.property].stat[4] + cStat[1]}`,
-        stroke: "rgba(200, 200, 200, .8)",
+        points: "".concat(maxStat[0][0] * this.state.properties[this.state.property].stat[0] + cStat[0], " ").concat(maxStat[0][1] * this.state.properties[this.state.property].stat[0] + cStat[1], ",").concat(maxStat[1][0] * this.state.properties[this.state.property].stat[1] + cStat[0], " ").concat(maxStat[1][1] * this.state.properties[this.state.property].stat[1] + cStat[1], ",").concat(maxStat[2][0] * this.state.properties[this.state.property].stat[2] + cStat[0], " ").concat(maxStat[2][1] * this.state.properties[this.state.property].stat[2] + cStat[1], ",").concat(maxStat[3][0] * this.state.properties[this.state.property].stat[3] + cStat[0], " ").concat(maxStat[3][1] * this.state.properties[this.state.property].stat[3] + cStat[1], ",").concat(maxStat[4][0] * this.state.properties[this.state.property].stat[4] + cStat[0], " ").concat(maxStat[4][1] * this.state.properties[this.state.property].stat[4] + cStat[1]),
+        stroke: ["rgba(200, 200, 200, .8)", "rgba(100, 100, 100, .8)", "rgba(100, 100, 100, .8)"][this.state.lyr],
         fill: "rgba(255, 255, 255, .1)",
         "stroke-width": "1"
       }), /*#__PURE__*/React.createElement("line", {
@@ -576,30 +827,34 @@
           position: 'absolute',
           bottom: 0
         }
-      }, [...new Set(this.state.properties.map(pr => pr.category))].map((category, idx) => /*#__PURE__*/React.createElement("span", {
-        className: "touchable",
-        style: {
-          fontSize: '.88em',
-          display: 'inline-block',
-          width: 'auto',
-          margin: 4,
-          padding: 10,
-          paddingLeft: 22,
-          paddingRight: 22,
-          lineHeight: '14px',
-          backgroundColor: 'rgba(89, 89, 89, 0.75)',
-          borderRadius: 7 + 27,
-          color: 'rgba(247, 253, 255, .95)',
-          borderStyle: 'solid',
-          borderWidth: 2,
-          borderColor: this.state.category == category ? '#ab5a51' : '#636063'
-        },
-        onClick: () => {
-          this.setState({
-            category: category
-          });
-        }
-      }, category))), /*#__PURE__*/React.createElement("div", {
+      }, _toConsumableArray(new Set(this.state.properties.map(function (pr) {
+        return pr.category;
+      }))).map(function (category, idx) {
+        return /*#__PURE__*/React.createElement("span", {
+          className: "touchable",
+          style: {
+            fontSize: '.88em',
+            display: 'inline-block',
+            width: 'auto',
+            margin: 4,
+            padding: 10,
+            paddingLeft: 22,
+            paddingRight: 22,
+            lineHeight: '14px',
+            backgroundColor: 'rgba(89, 89, 89, 0.75)',
+            borderRadius: 7 + 27,
+            color: 'rgba(247, 253, 255, .95)',
+            borderStyle: 'solid',
+            borderWidth: 2,
+            borderColor: _this5.state.category == category ? '#ab5a51' : '#636063'
+          },
+          onClick: function onClick() {
+            _this5.setState({
+              category: category
+            });
+          }
+        }, category);
+      })), /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'absolute',
           right: 0,
@@ -608,22 +863,22 @@
           direction: 'rtl'
         }
       }, /*#__PURE__*/React.createElement("svg", {
-        onClick: () => {
-          if (this.state.property == this.state.properties.length - 1) return;
-          this.setState({
-            property: this.state.property + 1
-          }, () => {
-            map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {
+        onClick: function onClick() {
+          if (_this5.state.property == _this5.state.properties.length - 1) return;
+          _this5.setState({
+            property: _this5.state.property + 1
+          }, function () {
+            map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
               animate: true,
               duration: .3,
               easeLinearity: .9
             });
           });
         },
-        class: "touchable",
+        "class": "touchable",
         style: {
           opacity: this.state.property == this.state.properties.length - 1 ? .6 : 1,
-          backgroundColor: 'rgba(200, 100, 89, .8)',
+          backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr],
           display: 'inline-block',
           width: 30,
           height: 30,
@@ -637,22 +892,22 @@
         fill: "white",
         "stroke-width": "1"
       })), /*#__PURE__*/React.createElement("svg", {
-        onClick: () => {
-          if (this.state.property == 0) return;
-          this.setState({
-            property: this.state.property - 1
-          }, () => {
-            map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {
+        onClick: function onClick() {
+          if (_this5.state.property == 0) return;
+          _this5.setState({
+            property: _this5.state.property - 1
+          }, function () {
+            map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
               animate: true,
               duration: .3,
               easeLinearity: .9
             });
           });
         },
-        class: "touchable",
+        "class": "touchable",
         style: {
           opacity: this.state.property == 0 ? .6 : 1,
-          backgroundColor: 'rgba(200, 100, 89, .8)',
+          backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr],
           display: 'inline-block',
           width: 30,
           height: 30,
@@ -666,9 +921,9 @@
         fill: "white",
         "stroke-width": "1"
       })), /*#__PURE__*/React.createElement("span", {
-        class: "touchable",
+        "class": "touchable",
         style: {
-          backgroundColor: 'rgba(200, 100, 89, .8)',
+          backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr],
           display: 'inline-block',
           color: 'white',
           height: 30,
@@ -678,15 +933,15 @@
           paddingRight: 10,
           marginRight: 7
         },
-        onClick: () => {
-          this.setState({
+        onClick: function onClick() {
+          _this5.setState({
             calendared: true
           });
         }
       }, "\u062A\u0642\u0648\u06CC\u0645"), /*#__PURE__*/React.createElement("span", {
-        class: "touchable",
+        "class": "touchable",
         style: {
-          backgroundColor: 'rgba(200, 100, 89, .8)',
+          backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr],
           display: 'inline-block',
           color: 'white',
           height: 30,
@@ -696,26 +951,37 @@
           paddingRight: 10,
           marginRight: 7
         },
-        onClick: async () => {
-          let stat = (this.state.stat + 1) % 5;
-          this.setState({
-            stat: stat,
-            property: 0,
-            properties: this.state.properties.sort((p0, p1) => p1.stat[stat] - p0.stat[stat])
-          }, () => {
-            map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {
-              animate: true,
-              duration: .3,
-              easeLinearity: .9
-            });
-          });
-        }
+        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+          var stat;
+          return _regeneratorRuntime().wrap(function _callee7$(_context8) {
+            while (1) switch (_context8.prev = _context8.next) {
+              case 0:
+                stat = (_this5.state.stat + 1) % 5;
+                _this5.setState({
+                  stat: stat,
+                  property: 0,
+                  properties: _this5.state.properties.sort(function (p0, p1) {
+                    return p1.stat[stat] - p0.stat[stat];
+                  })
+                }, function () {
+                  map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
+                    animate: true,
+                    duration: .3,
+                    easeLinearity: .9
+                  });
+                });
+              case 2:
+              case "end":
+                return _context8.stop();
+            }
+          }, _callee7);
+        }))
       }, ['پرامکانات‌ترین', 'اقتصادی‌ترین', 'جادارترین', 'پردسترس‌ترین', 'خاص‌ترین'][this.state.stat])), /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'absolute',
           right: 8,
           bottom: 81,
-          color: '#edf3f5',
+          color: ['#edf3f5', '#545747', '#545747'][this.state.lyr],
           fontSize: '1.02em'
         }
       }, this.state.properties.length ? this.state.properties[this.state.property].title : '-'), /*#__PURE__*/React.createElement("div", {
@@ -723,7 +989,7 @@
           position: 'absolute',
           right: 8,
           bottom: 48,
-          color: '#edf3f5',
+          color: ['#edf3f5', '#545747', '#545747'][this.state.lyr],
           fontSize: '.92em',
           fontWeight: 500
         }
@@ -732,7 +998,253 @@
           display: 'inline-block',
           marginRight: 2
         }
-      }, "\u062A\u0648\u0645\u0627\u0646"), (this.state.properties.length ? String(this.state.properties[this.state.property].price) : '-').replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify())), this.state.landing && /*#__PURE__*/React.createElement("div", {
+      }, "\u062A\u0648\u0645\u0627\u0646"), (this.state.properties.length ? String(this.state.properties[this.state.property].price) : '-').replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify())), " ", /*#__PURE__*/React.createElement("div", {
+        style: {
+          opacity: '98%',
+          position: 'fixed',
+          right: 5,
+          top: 5,
+          minHeight: 50,
+          width: 50,
+          borderRadius: 16,
+          zIndex: 798,
+          backgroundColor: '#ffffff',
+          overflow: 'hidden',
+          padding: 3,
+          paddingBottom: 0,
+          cursor: 'pointer',
+          textAlign: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("svg", {
+        style: {
+          width: 36,
+          height: 36,
+          fill: '#3a3a3a',
+          padding: 5,
+          position: 'relative',
+          left: 1,
+          top: 4
+        },
+        onClick: function onClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.nativeEvent.stopImmediatePropagation();
+          _this5.setState({
+            searchExpand: true
+          });
+        }
+      }, /*#__PURE__*/React.createElement("use", {
+        xlinkHref: "#searchSearch"
+      }, /*#__PURE__*/React.createElement("symbol", {
+        id: "searchSearch",
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 24 24"
+      }, /*#__PURE__*/React.createElement("path", {
+        "fill-rule": "evenodd",
+        d: "M10.5 18a7.5 7.5 0 115.973-2.963l4.369 4.246-1.394 1.434-4.387-4.263A7.467 7.467 0 0110.5 18zm5.5-7.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z",
+        "clip-rule": "evenodd"
+      }))))), " ", /*#__PURE__*/React.createElement("div", {
+        style: {
+          opacity: '98%',
+          position: 'fixed',
+          right: 5,
+          top: 60,
+          minHeight: 50,
+          width: 50,
+          borderRadius: 16,
+          zIndex: 798,
+          backgroundColor: '#ffffff',
+          overflow: 'hidden',
+          padding: 3,
+          paddingBottom: 0,
+          cursor: 'pointer',
+          height: this.state.expand_lyr ? 'auto' : 50
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 44,
+          height: 44,
+          borderRadius: 14,
+          overflow: 'hidden',
+          position: 'relative',
+          backgroundImage: "url(/static/icon/".concat(window.lyrs[this.state.lyr][0], ".png)"),
+          backgroundSize: 'cover',
+          backgroundPosition: '50% 50%'
+        },
+        onClick: function onClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.nativeEvent.stopImmediatePropagation();
+          if (e.target === e.currentTarget) _this5.setState({
+            expand_lyr: !_this5.state.expand_lyr
+          });
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: '.7em',
+          fontWeight: 500,
+          textAlign: 'center',
+          marginTop: -2,
+          marginBottom: 2
+        }
+      }, window.lyrs[this.state.lyr][1]), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 44,
+          height: 44,
+          borderRadius: 14,
+          overflow: 'hidden',
+          position: 'relative',
+          backgroundImage: "url(/static/icon/".concat(this.state.lyr == 0 ? window.lyrs[1][0] : window.lyrs[0][0], ".png)"),
+          backgroundSize: 'cover',
+          backgroundPosition: '50% 50%'
+        },
+        onClick: function onClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.nativeEvent.stopImmediatePropagation();
+          if (e.target === e.currentTarget) {
+            window.lyr.setUrl(window.lyrs[_this5.state.lyr == 0 ? 1 : 0][2]);
+            _this5.setState({
+              lyr: _this5.state.lyr == 0 ? 1 : 0,
+              expand_lyr: false
+            });
+          }
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: '.7em',
+          fontWeight: 500,
+          textAlign: 'center',
+          marginTop: -2,
+          marginBottom: 2
+        }
+      }, this.state.lyr == 0 ? window.lyrs[1][1] : window.lyrs[0][1]), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 44,
+          height: 44,
+          borderRadius: 14,
+          overflow: 'hidden',
+          position: 'relative',
+          backgroundImage: "url(/static/icon/".concat(this.state.lyr == 2 ? window.lyrs[1][0] : window.lyrs[2][0], ".png)"),
+          backgroundSize: 'cover',
+          backgroundPosition: '50% 50%'
+        },
+        onClick: function onClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.nativeEvent.stopImmediatePropagation();
+          if (e.target === e.currentTarget) {
+            window.lyr.setUrl(window.lyrs[_this5.state.lyr == 2 ? 1 : 2][2]);
+            _this5.setState({
+              lyr: _this5.state.lyr == 2 ? 1 : 2,
+              expand_lyr: false
+            });
+          }
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: '.7em',
+          fontWeight: 500,
+          textAlign: 'center',
+          marginTop: -2,
+          marginBottom: 0
+        }
+      }, this.state.lyr == 2 ? window.lyrs[1][1] : window.lyrs[2][1])), " ", this.state.searchExpand && /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: 'fixed',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          zIndex: 899,
+          backgroundColor: '#1111126A',
+          padding: 14
+        },
+        onClick: function onClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.nativeEvent.stopImmediatePropagation();
+          if (e.target === e.currentTarget) _this5.setState({
+            ordered: false
+          });
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "scroll",
+        style: {
+          height: '100%',
+          backgroundColor: 'white',
+          borderRadius: 16,
+          direction: 'rtl',
+          overflowY: 'scroll'
+        }
+      }, /*#__PURE__*/React.createElement("input", {
+        "class": "none",
+        style: {
+          '-webkit-appearance': 'none',
+          outline: 'none',
+          display: 'block',
+          width: '100%',
+          borderRadius: 10,
+          borderWidth: 0,
+          borderColor: 'white',
+          lineHeight: '1.6em',
+          fontSize: '1.3em',
+          padding: '.4em',
+          direction: 'rtl',
+          color: '#343747'
+        },
+        autoFocus: true,
+        type: "text",
+        name: "search-input",
+        placeholder: "\u062C\u0633\u062A\u062C\u0648",
+        autocomplete: "off",
+        value: this.state.searchInput,
+        onBlur: function onBlur() {
+          _this5.setState({
+            searchExpand: false
+          });
+        },
+        onChange: (/*#__PURE__*/function () {
+          var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(e) {
+            return _regeneratorRuntime().wrap(function _callee8$(_context9) {
+              while (1) switch (_context9.prev = _context9.next) {
+                case 0:
+                  _this5.setState({
+                    searchInput: e.target.value
+                  });
+                case 1:
+                case "end":
+                  return _context9.stop();
+              }
+            }, _callee8);
+          }));
+          return function (_x2) {
+            return _ref7.apply(this, arguments);
+          };
+        }()),
+        onKeyPress: (/*#__PURE__*/function () {
+          var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(e) {
+            return _regeneratorRuntime().wrap(function _callee9$(_context10) {
+              while (1) switch (_context10.prev = _context10.next) {
+                case 0:
+                  if (e.key === 'Enter') {
+                    console.log('SearchInput');
+                    _this5.setState({
+                      searchInput: '',
+                      searchExpand: false
+                    });
+                  }
+                case 1:
+                case "end":
+                  return _context10.stop();
+              }
+            }, _callee9);
+          }));
+          return function (_x3) {
+            return _ref8.apply(this, arguments);
+          };
+        }())
+      }))), " ", this.state.landing && /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'fixed',
           left: 0,
@@ -743,16 +1255,16 @@
           padding: 14,
           backgroundColor: '#1111126A'
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) this.setState({
+          if (e.target === e.currentTarget) _this5.setState({
             landing: false
           });
         }
       }, /*#__PURE__*/React.createElement("div", {
-        ref: elem => {
+        ref: function ref(elem) {
           window.show = elem;
         },
         className: "scroll",
@@ -766,7 +1278,7 @@
         style: {
           flexShrink: 0,
           display: 'inline-block',
-          backgroundImage: 'url(/static/hotel.webp)',
+          backgroundImage: 'url(/static/icon/hotel.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: 200,
@@ -835,11 +1347,11 @@
           fontSize: '1.02em',
           margin: 9
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          this.setState({
+          _this5.setState({
             landing: false
           });
         }
@@ -854,19 +1366,19 @@
           padding: 14,
           backgroundColor: '#1111126A'
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (this.state.ordered) return;
-          if (e.target === e.currentTarget) this.setState({
+          if (_this5.state.ordered) return;
+          if (e.target === e.currentTarget) _this5.setState({
             show: {}
-          }, () => {
-            window.history.replaceState({}, null, `/properties#${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`);
+          }, function () {
+            window.history.replaceState({}, null, "/properties/".concat(map.getZoom(), "/").concat(map.getCenter().lat.toFixed(2), "/").concat(map.getCenter().lng.toFixed(2)));
           });
         }
       }, /*#__PURE__*/React.createElement("div", {
-        ref: elem => {
+        ref: function ref(elem) {
           window.show = elem;
         },
         className: "scroll",
@@ -883,7 +1395,7 @@
           direction: 'rtl'
         }
       }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
-        class: this.state.ordered ? "bold" : "bold touchable",
+        "class": this.state.ordered ? "bold" : "bold touchable",
         style: {
           left: 'calc(0px)',
           top: '12px',
@@ -896,19 +1408,19 @@
           color: '#bb2d3b',
           opacity: this.state.ordered ? .6 : 1
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (this.state.ordered) return;
-          this.setState({
+          if (_this5.state.ordered) return;
+          _this5.setState({
             show: {}
-          }, () => {
-            window.history.replaceState({}, null, `/properties#${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`);
+          }, function () {
+            window.history.replaceState({}, null, "/properties/".concat(map.getZoom(), "/").concat(map.getCenter().lat.toFixed(2), "/").concat(map.getCenter().lng.toFixed(2)));
           });
         }
       }, "+"), /*#__PURE__*/React.createElement("span", {
-        class: "bold touchable",
+        "class": "bold touchable",
         style: {
           left: 'calc(8px)',
           top: '10px',
@@ -918,9 +1430,9 @@
           padding: 8,
           paddingBottom: 3,
           color: '#bb2d3b',
-          float: 'left'
+          "float": 'left'
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
@@ -934,17 +1446,19 @@
           overflowX: 'auto',
           direction: 'rtl'
         }
-      }, this.state.show.images.map(im => /*#__PURE__*/React.createElement("div", {
-        style: {
-          flexShrink: 0,
-          display: 'inline-block',
-          backgroundImage: `url(${im})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: 200,
-          width: '100%'
-        }
-      }))), /*#__PURE__*/React.createElement("div", {
+      }, this.state.show.images.map(function (im) {
+        return /*#__PURE__*/React.createElement("div", {
+          style: {
+            flexShrink: 0,
+            display: 'inline-block',
+            backgroundImage: "url(/static/properties/".concat(im, ")"),
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            height: 200,
+            width: '100%'
+          }
+        });
+      })), /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: '1.5rem',
           fontWeight: 500,
@@ -963,138 +1477,144 @@
       }, /*#__PURE__*/React.createElement("a", {
         style: {
           textDecoration: 'none',
-          float: 'left',
+          "float": 'left',
           color: '#343747',
           fontWeight: 500,
           cursor: 'pointer'
         },
-        onClick: () => {
-          window.open(`tel:${this.state.show.phone}`, '_self');
+        onClick: function onClick() {
+          window.open("tel:".concat(_this5.state.show.phone), '_self');
         }
       }, ('0' + this.state.show.phone.slice(3)).farsify()), /*#__PURE__*/React.createElement("div", {
         style: {
-          float: 'right'
+          "float": 'right'
         }
       }, "\u062A\u0645\u0627\u0633")), 'options' in this.state.show && /*#__PURE__*/React.createElement("div", {
         style: {
           display: 'flex',
           flexFlow: 'row wrap'
         }
-      }, Object.keys(this.state.show.options).map(k => /*#__PURE__*/React.createElement("div", {
-        className: "column",
-        style: {
-          flexGrow: 1,
-          color: 'rgba(0,0,0,.87)',
-          display: 'flex',
-          flexDirection: 'column',
-          flexBasis: '33.333%',
-          padding: '16px 0',
-          position: 'relative',
-          textAlign: 'center'
-        }
-      }, /*#__PURE__*/React.createElement("span", {
-        style: {
-          color: 'rgba(0,0,0,.56)',
-          marginBottom: '4px',
-          fontSize: '.875rem'
-        }
-      }, k), /*#__PURE__*/React.createElement("span", {
-        style: {
-          fontSize: '1.125rem',
-          fontWeight: 500,
-          lineHeight: 1.5
-        }
-      }, this.state.show.options[k].farsify())))), " ", /*#__PURE__*/React.createElement("hr", {
+      }, Object.keys(this.state.show.options).map(function (k) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "column",
+          style: {
+            flexGrow: 1,
+            color: 'rgba(0,0,0,.87)',
+            display: 'flex',
+            flexDirection: 'column',
+            flexBasis: '33.333%',
+            padding: '16px 0',
+            position: 'relative',
+            textAlign: 'center'
+          }
+        }, /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: 'rgba(0,0,0,.56)',
+            marginBottom: '4px',
+            fontSize: '.875rem'
+          }
+        }, k), /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontSize: '1.125rem',
+            fontWeight: 500,
+            lineHeight: 1.5
+          }
+        }, _this5.state.show.options[k].farsify()));
+      })), " ", /*#__PURE__*/React.createElement("hr", {
         className: "divider"
-      }), 'rows' in this.state.show && Object.keys(this.state.show.rows).map(k => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-        style: {
-          fontSize: '1rem',
-          whiteSpace: 'nowrap',
-          color: 'rgba(0,0,0,.56)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          lineHeight: 2,
-          padding: '8px .7em'
-        }
-      }, /*#__PURE__*/React.createElement("div", {
-        style: {
-          minWidth: '20%',
-          flex: '1 1',
-          alignItems: 'flex-start',
-          display: 'flex'
-        }
-      }, /*#__PURE__*/React.createElement("p", {
-        style: {
-          margin: 0,
-          color: 'rgba(0,0,0,.56)',
-          lineHeight: 2,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }
-      }, k)), /*#__PURE__*/React.createElement("div", {
-        style: {
-          flex: '1 1',
-          marginRight: '16px',
-          minWidth: 'calc(50% - 16px)',
-          alignItems: 'flex-end',
-          display: 'flex',
-          justifyContent: 'flex-end'
-        }
-      }, /*#__PURE__*/React.createElement("p", {
-        style: {
-          margin: 0,
-          color: 'rgba(0,0,0,.87)',
-          lineHeight: 2,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }
-      }, this.state.show.rows[k].farsify()))), /*#__PURE__*/React.createElement("hr", {
-        className: "divider"
-      }))), 'features' in this.state.show && /*#__PURE__*/React.createElement("div", {
+      }), 'rows' in this.state.show && Object.keys(this.state.show.rows).map(function (k) {
+        return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: '1rem',
+            whiteSpace: 'nowrap',
+            color: 'rgba(0,0,0,.56)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            lineHeight: 2,
+            padding: '8px .7em'
+          }
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            minWidth: '20%',
+            flex: '1 1',
+            alignItems: 'flex-start',
+            display: 'flex'
+          }
+        }, /*#__PURE__*/React.createElement("p", {
+          style: {
+            margin: 0,
+            color: 'rgba(0,0,0,.56)',
+            lineHeight: 2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }
+        }, k)), /*#__PURE__*/React.createElement("div", {
+          style: {
+            flex: '1 1',
+            marginRight: '16px',
+            minWidth: 'calc(50% - 16px)',
+            alignItems: 'flex-end',
+            display: 'flex',
+            justifyContent: 'flex-end'
+          }
+        }, /*#__PURE__*/React.createElement("p", {
+          style: {
+            margin: 0,
+            color: 'rgba(0,0,0,.87)',
+            lineHeight: 2,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }
+        }, _this5.state.show.rows[k].farsify()))), /*#__PURE__*/React.createElement("hr", {
+          className: "divider"
+        }));
+      }), 'features' in this.state.show && /*#__PURE__*/React.createElement("div", {
         style: {
           display: 'flex',
           flexFlow: 'row wrap'
         }
-      }, Object.keys(this.state.show.features).map(k => /*#__PURE__*/React.createElement("div", {
-        className: "column",
-        style: {
-          flexGrow: 1,
-          color: this.state.show.features[k] ? 'rgba(0,0,0,.87)' : 'rgba(0,0,0,.32)',
-          display: 'flex',
-          flexDirection: 'column',
-          flexBasis: '33.333%',
-          padding: '16px 0',
-          position: 'relative',
-          textAlign: 'center'
-        }
-      }, k in icons ? /*#__PURE__*/React.createElement("i", {
-        className: icons[k],
-        style: {
-          marginBottom: '4px',
-          width: '100%',
-          fontSize: '1.5rem',
-          height: '24px',
-          textRendering: 'auto',
-          backgroundPosition: '50%',
-          backgroundSize: 'contain',
-          display: 'inline-block',
-          fontFamily: 'sonnat',
-          lineHeight: 1,
-          fontStyle: 'normal'
-        }
-      }) : /*#__PURE__*/React.createElement("span", {
-        style: {
-          color: 'rgba(0,0,0,.56)',
-          marginBottom: '4px',
-          fontSize: '.875rem'
-        }
-      }, k), /*#__PURE__*/React.createElement("span", {
-        style: {
-          fontSize: '1.125rem',
-          fontWeight: this.state.show.features[k] ? 500 : 400,
-          lineHeight: 1.5
-        }
-      }, k, !this.state.show.features[k] && ' ندارد')))), /*#__PURE__*/React.createElement("div", {
+      }, Object.keys(this.state.show.features).map(function (k) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "column",
+          style: {
+            flexGrow: 1,
+            color: _this5.state.show.features[k] ? 'rgba(0,0,0,.87)' : 'rgba(0,0,0,.32)',
+            display: 'flex',
+            flexDirection: 'column',
+            flexBasis: '33.333%',
+            padding: '16px 0',
+            position: 'relative',
+            textAlign: 'center'
+          }
+        }, k in icons ? /*#__PURE__*/React.createElement("i", {
+          className: icons[k],
+          style: {
+            marginBottom: '4px',
+            width: '100%',
+            fontSize: '1.5rem',
+            height: '24px',
+            textRendering: 'auto',
+            backgroundPosition: '50%',
+            backgroundSize: 'contain',
+            display: 'inline-block',
+            fontFamily: 'sonnat',
+            lineHeight: 1,
+            fontStyle: 'normal'
+          }
+        }) : /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: 'rgba(0,0,0,.56)',
+            marginBottom: '4px',
+            fontSize: '.875rem'
+          }
+        }, k), /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontSize: '1.125rem',
+            fontWeight: _this5.state.show.features[k] ? 500 : 400,
+            lineHeight: 1.5
+          }
+        }, k, !_this5.state.show.features[k] && ' ندارد'));
+      })), /*#__PURE__*/React.createElement("div", {
         classNmae: 'p'
       }, this.state.show.description), this.calendar(), this.state.ordered ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
         className: "touchable",
@@ -1140,7 +1660,7 @@
           whiteSpace: 'pre-line'
         }
       }, " \u0627\u0632 \u0632\u0645\u0627\u0646\u200C\u0647\u0627\u06CC \u0645\u0648\u062C\u0648\u062F \u0628\u0627\u0632\u0647 \u0632\u0645\u0627\u0646\u06CC \u062E\u0648\u062F\u0631\u0627 \u0627\u0646\u062A\u062E\u0627\u0628 \u06A9\u0646\u06CC\u062F"), /*#__PURE__*/React.createElement("div", {
-        class: this.state.calendarRange[0] === -1 && !this.state.ordered ? "" : "touchable",
+        "class": this.state.calendarRange[0] === -1 && !this.state.ordered ? "" : "touchable",
         style: {
           padding: '13px 14px 15px 14px',
           margin: '10px 10px',
@@ -1152,42 +1672,99 @@
           fontSize: '1.02em',
           opacity: this.state.calendarRange[0] === -1 && !this.state.ordered ? .6 : 1
         },
-        onClick: async e => {
-          if (this.state.calendarRange[0] === -1 && !this.state.ordered) return;
-          this.setState({
-            ordered: !this.state.ordered
-          }, async () => {
-            window.show.scrollTo(0, window.show.scrollHeight);
-            if (this.state.ordered) {
-              let r = await fetch(`/key/${this.state.show.id}/_/${this.state.calendar[this.state.calendarRange[0]].join('-')}/${this.state.calendar[this.state.calendarRange[1]].join('-')}`, {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': this.state.session
-                }
-              });
-              if (r.status >= 300 || !(await r.json()).OK) ; //this.setState({ordered: !this.state.ordered});
-            } else {
-              let r = await fetch(`/key/${this.state.show.id}`, {
-                method: 'DELETE',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': this.state.session
-                }
-              });
-              if (r.status < 300) {
-                r = await r.json();
-                if (r.OK) this.setState({
-                  calendarRange: [-1, -1]
-                });else this.setState({
-                  ordered: !this.state.ordered
-                });
+        onClick: (/*#__PURE__*/function () {
+          var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(e) {
+            return _regeneratorRuntime().wrap(function _callee11$(_context12) {
+              while (1) switch (_context12.prev = _context12.next) {
+                case 0:
+                  if (!(_this5.state.calendarRange[0] === -1 && !_this5.state.ordered)) {
+                    _context12.next = 2;
+                    break;
+                  }
+                  return _context12.abrupt("return");
+                case 2:
+                  _this5.setState({
+                    ordered: !_this5.state.ordered
+                  }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+                    var r, _r;
+                    return _regeneratorRuntime().wrap(function _callee10$(_context11) {
+                      while (1) switch (_context11.prev = _context11.next) {
+                        case 0:
+                          window.show.scrollTo(0, window.show.scrollHeight);
+                          if (!_this5.state.ordered) {
+                            _context11.next = 14;
+                            break;
+                          }
+                          _context11.next = 4;
+                          return fetch("/key/".concat(_this5.state.show.id, "/_/").concat(_this5.state.calendar[_this5.state.calendarRange[0]].join('-'), "/").concat(_this5.state.calendar[_this5.state.calendarRange[1]].join('-')), {
+                            method: 'POST',
+                            headers: {
+                              'Accept': 'application/json',
+                              'Content-Type': 'application/json',
+                              'Authorization': _this5.state.session
+                            }
+                          });
+                        case 4:
+                          r = _context11.sent;
+                          _context11.t0 = r.status >= 300;
+                          if (_context11.t0) {
+                            _context11.next = 10;
+                            break;
+                          }
+                          _context11.next = 9;
+                          return r.json();
+                        case 9:
+                          _context11.t0 = !_context11.sent.OK;
+                        case 10:
+                          if (!_context11.t0) {
+                            _context11.next = 12;
+                            break;
+                          }
+                          ;
+                        case 12:
+                          _context11.next = 22;
+                          break;
+                        case 14:
+                          _context11.next = 16;
+                          return fetch("/key/".concat(_this5.state.show.id), {
+                            method: 'DELETE',
+                            headers: {
+                              'Accept': 'application/json',
+                              'Content-Type': 'application/json',
+                              'Authorization': _this5.state.session
+                            }
+                          });
+                        case 16:
+                          _r = _context11.sent;
+                          if (!(_r.status < 300)) {
+                            _context11.next = 22;
+                            break;
+                          }
+                          _context11.next = 20;
+                          return _r.json();
+                        case 20:
+                          _r = _context11.sent;
+                          if (_r.OK) _this5.setState({
+                            calendarRange: [-1, -1]
+                          });else _this5.setState({
+                            ordered: !_this5.state.ordered
+                          });
+                        case 22:
+                        case "end":
+                          return _context11.stop();
+                      }
+                    }, _callee10);
+                  })));
+                case 3:
+                case "end":
+                  return _context12.stop();
               }
-            }
-          });
-        }
+            }, _callee11);
+          }));
+          return function (_x4) {
+            return _ref9.apply(this, arguments);
+          };
+        }())
       }, this.state.ordered ? 'لغو' : 'سفارش'))), " ", this.state.ordered && (!this.state.session || !this.state.phone) && /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'fixed',
@@ -1199,11 +1776,11 @@
           padding: '32% 12%',
           backgroundColor: '#1111126A'
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) this.setState({
+          if (e.target === e.currentTarget) _this5.setState({
             ordered: false
           });
         }
@@ -1241,8 +1818,8 @@
           direction: 'ltr',
           color: '#343747'
         },
-        onChange: e => {
-          this.setState({
+        onChange: function onChange(e) {
+          _this5.setState({
             phone: e.target.value
           });
         }
@@ -1260,35 +1837,87 @@
           direction: 'ltr',
           color: '#343747'
         },
-        onChange: async e => {
-          if (e.target.value.length == 4) {
-            let r = await fetch(`/otp/${this.state.phone.trim().deFarsify()}/${e.target.value.trim().deFarsify()}`);
-            if (r.status < 300) {
-              r = await r.json();
-              if (r.OK) {
-                setCookie('session', r.session);
-                setCookie('phone', this.state.phone);
-                this.setState({
-                  session: r.session
-                }, async () => {
-                  if (!this.state.show.isEmpty() && this.state.ordered && this.state.calendarRange[0] != -1) {
-                    let r = await fetch(`/key/${this.state.show.id}/_/${this.state.calendar[this.state.calendarRange[0]].join('-')}/${this.state.calendar[this.state.calendarRange[1]].join('-')}`, {
-                      method: 'POST',
-                      headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': this.state.session
-                      }
-                    });
-                    if (r.status >= 300 || !(await r.json()).OK) this.setState({
-                      ordered: !this.state.ordered
-                    });
+        onChange: (/*#__PURE__*/function () {
+          var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(e) {
+            var r;
+            return _regeneratorRuntime().wrap(function _callee13$(_context14) {
+              while (1) switch (_context14.prev = _context14.next) {
+                case 0:
+                  if (!(e.target.value.length == 4)) {
+                    _context14.next = 9;
+                    break;
                   }
-                });
+                  _context14.next = 3;
+                  return fetch("/otp/".concat(_this5.state.phone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
+                case 3:
+                  r = _context14.sent;
+                  if (!(r.status < 300)) {
+                    _context14.next = 9;
+                    break;
+                  }
+                  _context14.next = 7;
+                  return r.json();
+                case 7:
+                  r = _context14.sent;
+                  if (r.OK) {
+                    setCookie('session', r.session);
+                    setCookie('phone', _this5.state.phone);
+                    _this5.setState({
+                      session: r.session
+                    }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12() {
+                      var _r2;
+                      return _regeneratorRuntime().wrap(function _callee12$(_context13) {
+                        while (1) switch (_context13.prev = _context13.next) {
+                          case 0:
+                            if (!(!_this5.state.show.isEmpty() && _this5.state.ordered && _this5.state.calendarRange[0] != -1)) {
+                              _context13.next = 11;
+                              break;
+                            }
+                            _context13.next = 3;
+                            return fetch("/key/".concat(_this5.state.show.id, "/_/").concat(_this5.state.calendar[_this5.state.calendarRange[0]].join('-'), "/").concat(_this5.state.calendar[_this5.state.calendarRange[1]].join('-')), {
+                              method: 'POST',
+                              headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': _this5.state.session
+                              }
+                            });
+                          case 3:
+                            _r2 = _context13.sent;
+                            _context13.t0 = _r2.status >= 300;
+                            if (_context13.t0) {
+                              _context13.next = 9;
+                              break;
+                            }
+                            _context13.next = 8;
+                            return _r2.json();
+                          case 8:
+                            _context13.t0 = !_context13.sent.OK;
+                          case 9:
+                            if (!_context13.t0) {
+                              _context13.next = 11;
+                              break;
+                            }
+                            _this5.setState({
+                              ordered: !_this5.state.ordered
+                            });
+                          case 11:
+                          case "end":
+                            return _context13.stop();
+                        }
+                      }, _callee12);
+                    })));
+                  }
+                case 9:
+                case "end":
+                  return _context14.stop();
               }
-            }
-          }
-        }
+            }, _callee13);
+          }));
+          return function (_x5) {
+            return _ref11.apply(this, arguments);
+          };
+        }())
       }) : /*#__PURE__*/React.createElement("div", {
         className: "touchable",
         style: {
@@ -1300,16 +1929,44 @@
           borderRadius: 12,
           fontSize: '1.02em'
         },
-        onClick: async e => {
-          let r = await fetch(`/otp/${this.state.phone.trim().deFarsify()}`);
-          if (r.status < 300) {
-            if (!this.state.phone) return;
-            r = await r.json();
-            this.setState({
-              otp: true
-            });
-          }
-        }
+        onClick: (/*#__PURE__*/function () {
+          var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
+            var r;
+            return _regeneratorRuntime().wrap(function _callee14$(_context15) {
+              while (1) switch (_context15.prev = _context15.next) {
+                case 0:
+                  _context15.next = 2;
+                  return fetch("/otp/".concat(_this5.state.phone.trim().deFarsify(), "/"));
+                case 2:
+                  r = _context15.sent;
+                  if (!(r.status < 300)) {
+                    _context15.next = 11;
+                    break;
+                  }
+                  if (_this5.state.phone) {
+                    _context15.next = 6;
+                    break;
+                  }
+                  return _context15.abrupt("return");
+                case 6:
+                  _context15.next = 8;
+                  return r.json();
+                case 8:
+                  r = _context15.sent;
+                  console.log(r);
+                  _this5.setState({
+                    otp: true
+                  });
+                case 11:
+                case "end":
+                  return _context15.stop();
+              }
+            }, _callee14);
+          }));
+          return function (_x6) {
+            return _ref13.apply(this, arguments);
+          };
+        }())
       }, 'ارسال پیامک'))), " ", this.state.calendared && /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'fixed',
@@ -1322,11 +1979,11 @@
           paddingTop: '50%',
           backgroundColor: '#1111126A'
         },
-        onClick: e => {
+        onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) this.setState({
+          if (e.target === e.currentTarget) _this5.setState({
             calendared: false
           });
         }
@@ -1362,15 +2019,17 @@
           fontSize: '1.02em',
           margin: 9
         },
-        onClick: () => {
-          this.setState({
+        onClick: function onClick() {
+          _this5.setState({
             calendared: false
           });
         }
       }, 'اعمال'))));
     }
-  }
-  ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.getElementById('app'));
-  </script>
+  }]);
+  return App;
+}(React.Component);
+ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById('app'));
+</script>
 </body>
 </html>
