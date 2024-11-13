@@ -28,7 +28,7 @@ async def util_debabel():
             # subprocess.Popen(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             output = subprocess.check_output(f'npx babel {jsx_tmp} --presets=@babel/preset-env,@babel/preset-react -o {js_tmp}', shell=True).decode()
             with open(js_tmp, encoding='utf-8') as f: file = file.replace(jsx[0], f'<script>{f.read()}</script>')
-            with open(page.replace(os.path.basename(page), f'serv/{os.path.basename(page).split('.')[0]}.html'), 'w', encoding='utf-8') as f: f.write(file)
+            with open(page.replace(os.path.basename(page), f'serv/{os.path.basename(page).split(".")[0]}.html'), 'w', encoding='utf-8') as f: f.write(file)
         finally: os.remove(jsx_tmp); os.remove(js_tmp)
 
 class OctetJWK:
