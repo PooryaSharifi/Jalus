@@ -79,8 +79,7 @@ async def _otp(r, phone, otp=None):
     if otp: return response.json({'OK': True, 'session': encode(json.dumps({'phone': phone, 'exp': str(datetime.now() + timedelta(days=180)).split()[0]}).encode())}) if phone in otps and otps[phone] == int(otp.lstrip('0')) else response.json({'OK': False})
     else:
         otps[phone] = (phone * 137 * (datetime.now().hour + 1)) % 10000; 
-        try: otp_list.appen([str(phone), f'{otps[phone]:04d}']); return response.json({'OK': True, 'otp':  otps[phone], 'ws': json.loads(await wss.recv())} if '-d' in sys.argv or '--debug' in sys.argv else json.loads(await wss.recv()))
-        except: return response.json({'OK': False, 'otp':  otps[phone]} if '-d' in sys.argv or '--debug' in sys.argv else {'OK': False})
+        otp_list.append([str(phone), f'{otps[phone]:04d}']); return response.json({'OK': True, 'otp':  otps[phone]} if '-d' in sys.argv or '--debug' in sys.argv else {'OK': True})
 @app.get("/otp")
 async def lite_otp(r, ):
     for _ in range(600):
