@@ -90,7 +90,11 @@ async def lite_otp(r, ):
     otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.clear()
     return response.text(otp_response)
 @app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
-async def _payment_receipt(r, date, src, dst, value): pass
+async def _payment_receipt(r, date, src, dst, value):
+    value //= 10
+    if not await r.app.config['db']['keys'].find_one({'sim': sim, 'value': value, 'fix': False}): return response.json({'OK': False, 'e': 'not existed', 'en': 1})
+    update_result = r.app.config['db']['keys'].update_one({'sim': sim, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
+    return response.json({'OK': True})
 
 @app.post('/potent')
 async def _append_potent(r, ):
