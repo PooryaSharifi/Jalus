@@ -138,7 +138,7 @@ async def _search(r, id_polygon_location=None):
     for pr in properties: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
-async def _properties_get(r, id_polygon_location=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Search{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8'))
+async def _properties_get(r, id_polygon_location=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/{'' if '-d' in sys.argv or '--debug' in sys.argv else 'serv/'}Search.html")).body.decode('utf-8'))
 
 @app.get('/homes/<home>/qr')
 async def _qr_(r, home):
