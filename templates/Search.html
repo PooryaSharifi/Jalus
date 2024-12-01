@@ -96,8 +96,8 @@
         let r = await fetch(`/key/${this.state.show.id}`); r = await r.json(); let calendar = [];
         for (var j = 0; j < r.length; j ++) { let key = r[j]; calendar.push([-1, -1]);
           for (var i = 0; i < this.state.calendar.length; i ++) {
-            if (this.state.calendar[i].join('-') == key.head) calendar[calendar.length - 1][0] = i;
-            if (this.state.calendar[i].join('-') == key.tail) calendar[calendar.length - 1][1] = i;
+            if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.head.split(' ')[0].split('-')).join('-')) calendar[calendar.length - 1][0] = i;
+            if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.tail.split(' ')[0].split('-')).join('-')) calendar[calendar.length - 1][1] = i;
           } if (calendar.length > 1 && calendar[calendar.length - 1][0] - calendar[calendar.length - 2][1] === 1) {calendar[calendar.length - 2][1] = calendar[calendar.length - 1][1]; calendar.pop()}
         } let binCalendar = []; calendar = [[4, 5], [7, 7], [9, 11], [25, 32]];
         for (var j = 0; j < calendar.length; j ++) { binCalendar.push([calendar[j][0], false]); binCalendar.push([calendar[j][1], true]); }
@@ -106,7 +106,7 @@
         let r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
         if (r.status < 300) {
           r = await r.json(); for (var i = 0; i < r.length; i ++) this.state.keys[r[i].home] = r[i];
-          for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) window.location.href = `/home/${r[i].home}`;
+          for (var i = 0; i < r.length; i ++) if (r[i].fix == true && r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) window.location.href = `/home/${r[i].home}`;
         }
       } binSearch(k) { if (!('calendarReserved' in this.state.show)) return 0;
         let start = 0, arr = this.state.show.calendarReserved; let end = arr.length - 1, mid;
@@ -147,8 +147,8 @@
           if ('fix' in key && key.fix === false) {
             this.state.ordered = true; var i = 0;
             for (i = 0; i < this.state.calendar.length; i ++) {
-              if (this.state.calendar[i].join('-') == key.head) this.state.calendarRange[0] = i;
-              if (this.state.calendar[i].join('-') == key.tail) this.state.calendarRange[1] = i;
+              if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.head.split(' ')[0].split('-')).join('-')) this.state.calendarRange[0] = i;
+              if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.tail.split(' ')[0].split('-')).join('-')) this.state.calendarRange[1] = i;
             } for (i = 0; i < this.state.properties.length; i ++) if (this.state.properties[i].id  == key.home) break;
             this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});
           }
@@ -248,7 +248,7 @@
                 <div style={{flex: '1 1', marginRight: '16px', minWidth: 'calc(50% - 16px)', alignItems: 'flex-end', display: 'flex', justifyContent: 'flex-end'}}>
                   <p style={{margin: 0, color: 'rgba(0,0,0,.87)', lineHeight: 2, overflow: 'hidden', textOverflow: 'ellipsis'}}>{this.state.show.rows[k].farsify()}</p>
                 </div>
-              </div><hr className="divider"/></>))} 
+              </div><hr className="divider"/></>))}
               {'features' in this.state.show && (<div style={{display: 'flex', flexFlow: 'row wrap'}}>
                 {Object.keys(this.state.show.features).map(k => (<div className="column" style={{flexGrow: 1, color: this.state.show.features[k] ? 'rgba(0,0,0,.87)' : 'rgba(0,0,0,.32)', display: 'flex', flexDirection: 'column', flexBasis: '33.333%', padding: '16px 0', position: 'relative', textAlign: 'center'}}>
                   {k in icons ? (<i className={icons[k]} style={{marginBottom: '4px', width: '100%', fontSize: '1.5rem', height: '24px', textRendering: 'auto', backgroundPosition: '50%', backgroundSize: 'contain', display: 'inline-block', fontFamily: 'sonnat', lineHeight: 1, fontStyle: 'normal'}}></i>) : (<span style={{color: 'rgba(0,0,0,.56)', marginBottom: '4px', fontSize: '.875rem'}}>{k}</span>)}
@@ -261,11 +261,11 @@
               {this.calendar()}
               {this.state.ordered ? <>
                 <div className="touchable" style={{padding: '16px 14px 12px 14px', margin: '10px 10px', color: '#343747', backgroundColor: 'rgb(240, 233, 236)', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.03em', direction: 'ltr'}}>{String(this.state.show.cart).slice(0, 4)} . {String(this.state.show.cart).slice(4, 8)} . {String(this.state.show.cart).slice(8, 12)} . {String(this.state.show.cart).slice(12, 16)}</div>
-                <div style={{fontSize: '1.1rem', paddingRight: '.9rem', paddingLeft: '.9rem', textAlign: 'justify',  textJustify: 'inter-word', lineHeight: 2, color: 'rgba(0,0,0,.87)', whiteSpace: 'pre-line'}}>مبلغ <span style={{backgroundColor: '#e3e3e3', borderRadius: 10, padding: '2px 12px', color: '#e31025', fontWeight: 500}}>{(this.state.show.price).farsify()}</span> هزارتومان را به صورت دقیق به شماره حساب بالا واریز کنید. دقت کنید که رقم یکان و دهگان مبلغ برای رهگیری در فرایند سایت ایجاد شده است.  این مازاد برای کمک به بی‌سرپرستان صرف می‌گردد. به‌محض دریافت پیامک واریز، لینک کلید دیجیتالی اسکان هوشمند برای‌شما ارسال می‌گردد.</div>
+                <div style={{fontSize: '1.1rem', paddingRight: '.9rem', paddingLeft: '.9rem', textAlign: 'justify',  textJustify: 'inter-word', lineHeight: 2, color: 'rgba(0,0,0,.87)', whiteSpace: 'pre-line'}}>مبلغ <span style={{backgroundColor: '#e3e3e3', borderRadius: 10, padding: '2px 12px', color: '#e31025', fontWeight: 500}}>{((this.state.show.price * (Math.round((new Date(...jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[1]])) - new Date(...jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[0]]))) / (1000 * 60 * 60 * 24)) + 1) + parseInt(this.state.phone.substr(this.state.phone.length - 2))) + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify()}</span> تومان را به صورت دقیق به شماره حساب بالا واریز کنید. دقت کنید که رقم یکان و دهگان مبلغ برای رهگیری در فرایند سایت ایجاد شده است.  این مازاد برای کمک به بی‌سرپرستان صرف می‌گردد. به‌محض دریافت پیامک واریز، لینک کلید دیجیتالی اسکان هوشمند برای‌شما ارسال می‌گردد.</div>
               </> : <div style={{fontSize: '1.1rem', paddingRight: '.9rem', paddingLeft: '.9rem', textAlign: 'justify',  textJustify: 'inter-word', lineHeight: 2, color: 'rgba(0,0,0,.87)', whiteSpace: 'pre-line'}}> از زمان‌های موجود بازه زمانی خودرا انتخاب کنید</div>}
               <div class={this.state.calendarRange[0] === -1 && !this.state.ordered ? "" : "touchable"} style={{padding: '13px 14px 15px 14px', margin: '10px 10px', color: 'white', backgroundColor: '#e31025', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.02em', opacity: this.state.calendarRange[0] === -1 && !this.state.ordered ? .6 : 1}} onClick={async (e) => { 
                 if (this.state.calendarRange[0] === -1 && !this.state.ordered) return; this.setState({ordered: !this.state.ordered}, async () => { window.show.scrollTo(0, window.show.scrollHeight); if (this.state.ordered) { 
-                  let r = await fetch(`/key/${this.state.show.id}/_/${this.state.calendar[this.state.calendarRange[0]].join('-')}/${this.state.calendar[this.state.calendarRange[1]].join('-')}`, {method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}}); if (r.status >= 300 || !(await r.json()).OK) ; //this.setState({ordered: !this.state.ordered});
+                  let r = await fetch(`/key/${this.state.show.id}/${this.state.show.sms}/${jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[0]]).join('-')}/${jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[1]]).join('-')}/${(this.state.show.price * (Math.round((new Date(...jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[1]])) - new Date(...jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[0]]))) / (1000 * 60 * 60 * 24)) + 1) + parseInt(this.state.phone.substr(this.state.phone.length - 2)))}`, {method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}}); if (r.status >= 300 || !(await r.json()).OK) ; //this.setState({ordered: !this.state.ordered});
                 } else { let r = await fetch(`/key/${this.state.show.id}`, {method: 'DELETE', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}}); if (r.status < 300) {r = await r.json(); if (r.OK) this.setState({calendarRange: [-1, -1]}); else this.setState({ordered: !this.state.ordered})}}})}}>{this.state.ordered ? 'لغو' : 'سفارش'}</div>
             </div>
           </div>} {this.state.ordered && (!this.state.session || !this.state.phone) && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 899, padding: '32% 12%', backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) this.setState({ordered: false})}}>

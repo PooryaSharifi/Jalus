@@ -28,6 +28,7 @@ async def close_connection(app, loop): app.config['db'].close()
 @app.post('/key/<home>/<sim>/<head>/<tail>/<value:int>')  # inja be name khodesh tooye db vase in home reserver mikone deghat beshe ke vase har home, phone maa faghat ye reserve darim.
 async def save_key(r, home, sim, head, tail, value):
     sim = int(sim[3:] if sim[:3] == '+98' else sim[1:] if sim[0] == '0' else sim)
+    head, tail = datetime.strptime(head, '%Y-%m-%d'), datetime.strptime(tail, '%Y-%m-%d')
     try: session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
     except: return response.json({'OK': False, 'e': 'jwt required'})
     Key = r.app.config['db']['keys']
@@ -62,8 +63,8 @@ async def load_phone_keys(r, ):
     session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
     keys = await r.app.config['db']['keys'].find({'phone': session['phone']}).to_list(None)
     for key in keys:
-        del key['_id']; del key['save']; print(key)
-        if key['fix']: del key['fix']; key['key'] = encrypt(json.dumps(key).encode()).decode()
+        del key['_id']; del key['save']; key['head'] = str(key['head']); key['tail'] = str(key['tail'])
+        if key['fix']: str(key['fix']); key['key'] = encrypt(json.dumps(key).encode()).decode()
     return response.json(keys)
 @app.get('/key/<home>')
 async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age baze key to r.args mohit bar key bud eshkal nadare
@@ -72,6 +73,13 @@ async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age
     for key in keys: del key['_id']; del key['phone']; del key['save']; del key['fix']
     return response.json(keys)
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
+@app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
+async def _payment_receipt(r, date, src, dst, value):
+    if value % 10 != 0 and (value % 1000) // 100 == 0: value = value // 1000 * 100 + value % 100
+    else: value //= 10
+    if not await r.app.config['db']['keys'].find_one({'sim': sim, 'value': value, 'fix': False}): return response.json({'OK': False, 'e': 'not existed', 'en': 1})
+    update_result = r.app.config['db']['keys'].update_one({'sim': sim, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
+    return response.json({'OK': True})
 @app.get('/otp/<phone>/<otp:path>')
 async def _otp(r, phone, otp=None):
     try: phone = int(phone[3:] if phone[:3] == '+98' else phone[1:] if phone[0] == '0' else phone)
@@ -89,12 +97,6 @@ async def lite_otp(r, ):
         return response.text(otp_response)
     otp_response = '\n'.join([','.join(op) for op in otp_list]); otp_list.clear()
     return response.text(otp_response)
-@app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
-async def _payment_receipt(r, date, src, dst, value):
-    value //= 10
-    if not await r.app.config['db']['keys'].find_one({'sim': sim, 'value': value, 'fix': False}): return response.json({'OK': False, 'e': 'not existed', 'en': 1})
-    update_result = r.app.config['db']['keys'].update_one({'sim': sim, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
-    return response.json({'OK': True})
 
 @app.post('/potent')
 async def _append_potent(r, ):
