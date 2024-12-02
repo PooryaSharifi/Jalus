@@ -75,12 +75,15 @@ async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
 @app.get("/pay/<date>/<time>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
 async def _payment_receipt(r, date, time, src, dst, value):
+    try: src = int(src[3:] if src[:3] == '+98' else src[1:] if src[0] == '0' else src)
+    except: return response.json({'OK': False, 'e': 'src phone malformed format'})
     try: dst = int(dst[3:] if dst[:3] == '+98' else dst[1:] if dst[0] == '0' else dst)
     except: return response.json({'OK': False, 'e': 'dst phone malformed format'})
     if value % 10 != 0 and (value % 1000) // 100 == 0: value = value // 1000 * 100 + value % 100
     else: value //= 10
     key = await r.app.config['db']['keys'].find_one({'sms': dst, 'value': value, 'fix': False})
-    if not key: return response.json({'OK': False, 'e': 'not existed', 'en': 1})
+    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as potents: potents.write(f'{date} {time},{src},{dst},{value}\n')
+    if not key: return response.json({'OK': True, 'e': 'not existed', 'en': 1})
     print(key)
     update_result = r.app.config['db']['keys'].update_one({'sms': dst, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
     return response.json({'OK': True})
@@ -105,7 +108,7 @@ async def lite_otp(r, ):
 @app.post('/potent')
 async def _append_potent(r, ):
     potent = {'datetime': str(datetime.now()).split('.')[0], 'user': r.form['user'][0], 'phone': r.form['phone'][0], 'interest': r.form['interest'][0], 'link': r.form['link'][0], 'lat': r.form['lat'][0], 'lng': r.form['lng'][0]}
-    with open('static/potents.csv', 'a') as potents: potents.write(','.join(potent.values()) + '\n')
+    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/potents.csv', 'a') as potents: potents.write(','.join(potent.values()) + '\n')
     return response.json({'OK': True})
 @app.get('/stories/<name_category>')  # ffmpeg -i input.mp4 -s hd480 -c:v libx264 -crf 23 -c:a aac -strict -2 output.mp4
 async def _thumbnail(r, name_category):
