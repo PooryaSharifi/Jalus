@@ -75,17 +75,21 @@ async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
 @app.get("/pay/<date>/<time>/<src>/<dst>/<value:int>")  # src, dst = 9...:phone
 async def _payment_receipt(r, date, time, src, dst, value):
+    print('for testing')
+    keys = await r.app.config['db']['keys'].find({}).to_list(None)
+    for key in keys: print(key)
+    print('testing Done')
     try: src = int(src[3:] if src[:3] == '+98' else src[1:] if src[0] == '0' else src)
     except: return response.json({'OK': False, 'e': 'src phone malformed format'})
     try: dst = int(dst[3:] if dst[:3] == '+98' else dst[1:] if dst[0] == '0' else dst)
     except: return response.json({'OK': False, 'e': 'dst phone malformed format'})
     if value % 10 != 0 and (value % 1000) // 100 == 0: value = value // 1000 * 100 + value % 100
     else: value //= 10
-    key = await r.app.config['db']['keys'].find_one({'sms': dst, 'value': value, 'fix': False})
+    key = await r.app.config['db']['keys'].find_one({'sim': dst, 'value': value, 'fix': False})
     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as sms: sms.write(f'{date} {time},{src},{dst},{value}\n')
     if not key: return response.json({'OK': True, 'e': 'not existed', 'en': 1})
     print(key)
-    update_result = r.app.config['db']['keys'].update_one({'sms': dst, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
+    update_result = r.app.config['db']['keys'].update_one({'sim': dst, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
     return response.json({'OK': True})
 @app.get('/otp/<phone>/<otp:path>')
 async def _otp(r, phone, otp=None):
