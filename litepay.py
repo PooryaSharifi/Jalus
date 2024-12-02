@@ -23,7 +23,7 @@ def sync_single_tty():
 
 def pay():
     while True:
-        sync_single_tty(); sms_cache = set()  # bedun felan tekrari ham midam badan kam mikonam tekrari bara net load
+        sync_single_tty(); all_done = True
         sms_list = subprocess.check_output(f'gammu getallsms', shell=True).decode()
         sms_list = re.split(r'Location.*, folder.*\n.*SMS message.*\n.*SMSC number.*:', sms_list); sms_list = [sms.strip() for sms in sms_list if sms.strip()]
         for sms in sms_list:
@@ -34,7 +34,10 @@ def pay():
             body = ' '.join(sms[6:]).strip()
             numbers = body.replace(',', '').replace('،', '')
             numbers = re.findall(r'\+\d+', numbers)
-            if numbers: requests.get(f"http://192.168.0.54:5000/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/9300345495/{phone}/{numbers[0][1:]}")
+            if numbers:
+                r = requests.get(f"http://192.168.0.54:5000/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/9300345495/{phone}/{numbers[0][1:]}")
+                if r.status_code != 200: all_done = False
+        if all_done: sync_single_tty(); subprocess.Popen('gammu deleteallsms 3', shell=True, stdout=DEVNULL, stderr=DEVNULL)
         time.sleep(10)
 
 def otp():
