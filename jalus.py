@@ -79,11 +79,11 @@ async def _payment_receipt(r, date, time, src, dst, value):
     except: return response.json({'OK': False, 'e': 'src phone malformed format'})
     try: dst = int(dst[3:] if dst[:3] == '+98' else dst[1:] if dst[0] == '0' else dst)
     except: return response.json({'OK': False, 'e': 'dst phone malformed format'})
-    if value % 10 != 0 and (value % 1000) // 100 == 0: value = value // 1000 * 100 + value % 100
-    else: value //= 10
+    if value % 10 != 0 and (value % 1000) // 100 == 0: value = int(value // 1000 * 100 + value % 100)
+    else: value = int(value / 10)
     print('for testing 2')
-    keys = await r.app.config['db']['keys'].find({'sim': dst, 'fix': False}).to_list(None)
-    for key in keys: print(key)
+    keys = await r.app.config['db']['keys'].find({'fix': False, 'value': value}).to_list(None)
+    for key in keys: print(key); print(type(key['sim']), type(dst), dst, key['sim'])
     print('testing Done')
     key = await r.app.config['db']['keys'].find_one({'sim': dst, 'value': value, 'fix': False})
     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as sms: sms.write(f'{date} {time},{src},{dst},{value}\n')
