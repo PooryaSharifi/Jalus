@@ -27,6 +27,7 @@ def pay():
         sms_list = subprocess.check_output(f'gammu getallsms', shell=True).decode()
         sms_list = re.split(r'Location.*, folder.*\n.*SMS message.*\n.*SMSC number.*:', sms_list); sms_list = [sms.strip() for sms in sms_list if sms.strip()]
         for sms in sms_list:
+            print(sms)
             sms = sms.split('\n')
             if len(sms) < 5: continue
             sms[0] = sms[3].split(':')[1].strip().lower()
