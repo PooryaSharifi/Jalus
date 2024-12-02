@@ -10,7 +10,7 @@
     <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
     <title>اسکان من</title>
     <meta name="apple-mobile-web-app-title" content="اسکان من">
-    <link rel="apple-touch-icon" href="/static/app-icon.webp" />
+    <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
@@ -25,11 +25,11 @@
     <link href="/static/thermostat.css" rel="stylesheet" crossorigin="anonymous">
     <style>
       html, body, #app { min-height: 100% !important; height: 100%; width: 100%; padding: 0; margin: 0; }
-      @font-face { font-weight: 300; src: url(/static/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 400; src: url(/static/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 500; src: url(/static/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 700; src: url(/static/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 400; src: url(/static/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
+      @font-face { font-weight: 300; src: url(/static/font/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 400; src: url(/static/font/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 500; src: url(/static/font/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 700; src: url(/static/font/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 400; src: url(/static/font/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
       .balcony::before {content: "\ea18"} .cabinet::before {content: "\ea19"} .parking::before {content: "\ea1c"} .telephone::before {content: "\e900"}
       * {box-sizing: border-box; font-family: IRANSans; font-weight: 400;}
       *.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
@@ -104,7 +104,7 @@
           // };
           this.state.spaces = [{
             name: 'Key',
-            image: ['/static/garden.webp', '/static/garden.webp'],
+            image: ['/static/icon/garden.webp', '/static/icon/garden.webp'],
             appliances: [{
               "title": "Door",
               "name": "b",
@@ -120,137 +120,137 @@
             }]
           }, {
             name: 'Coffee',
-            image: ['/static/coffeeBanner.webp', '/static/coffeeBanner.webp'],
+            image: ['/static/icon/coffeeBanner.webp', '/static/icon/coffeeBanner.webp'],
             appliances: [{
               "title": "Mocha",
               "name": "curacao",
-              "image": "/static/coffee.webp",
+              "image": "/static/icon/coffee.webp",
               "imagePosition": [0, 0],
               "loaded": true,
             }, {
               "title": "Espresso",
               "name": "curacao",
-              "image": "/static/coffee.webp",
+              "image": "/static/icon/coffee.webp",
               "imagePosition": [2, 2],
               "loaded": true,
             }, {
               "title": "Cappuccino",
               "name": "curacao",
-              "image": "/static/coffee.webp",
+              "image": "/static/icon/coffee.webp",
               "imagePosition": [2, 0],
               "loaded": true,
             }, {
               "title": "Latte",
               "name": "curacao",
-              "image": "/static/coffee.webp",
+              "image": "/static/icon/coffee.webp",
               "imagePosition": [0, 2],
               "loaded": true,
             }, {
               "title": "Americano",
               "name": "curacao",
-              "image": "/static/coffee.webp",
+              "image": "/static/icon/coffee.webp",
               "imagePosition": [0, 1],
               "loaded": true,
             }, {
               "title": "Hot Chocolate",
               "name": "curacao",
-              "image": "/static/coffee.webp",
+              "image": "/static/icon/coffee.webp",
               "imagePosition": [1, 1],
               "loaded": true,
             }, ],
           }, {
             name: 'Juice',
-            image: ['/static/juicesBanner.webp', '/static/juicesBanner.webp'],
+            image: ['/static/icon/juicesBanner.webp', '/static/icon/juicesBanner.webp'],
             appliances: [{
               "title": "Blue Curacao",
               "name": "curacao",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [0, 0],
               "loaded": true,
             }, {
               "title": "Blue Punch",
               "name": "punch",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [1, 0],
               "loaded": true,
             }, {
               "title": "Cherry Juice",
               "name": "cherry",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [2, 0],
               "loaded": true,
             }, {
               "title": "Coco Mango",
               "name": "cocoMango",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [3, 0],
               "loaded": true,
             }, {
               "title": "Cosmopolitan",
               "name": "cosmopolitan",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [4, 0],
               "loaded": true,
             }, {
               "title": "Limonade",
               "name": "limonade",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [0, 1],
               "loaded": true,
             }, {
               "title": "Mango Juice",
               "name": "mango",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [1, 1],
               "loaded": true,
             }, {
               "title": "Margarita",
               "name": "margarita",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [2, 1],
               "loaded": true,
             }, {
               "title": "Mojito",
               "name": "mojito",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [3, 1],
               "loaded": true,
             }, {
               "title": "Orange Juice",
               "name": "orange",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [4, 1],
               "loaded": true,
             }, {
               "title": "Orange Mint",
               "name": "orangeMint",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [0, 2],
               "loaded": true,
             }, {
               "title": "PinaColada",
               "name": "pinaColada",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [1, 2],
               "loaded": true,
             }, {
               "title": "Pineapple Juice",
               "name": "pineapple",
-              "image": "/static/juices.webp",
+              "image": "/static/icon/juices.webp",
               "imagePosition": [2, 2],
               "loaded": true,
             }, ],
           }, {
             name: 'Grill',
-            image: ['/static/grill.webp', '/static/grill.webp'],
+            image: ['/static/icon/grill.webp', '/static/icon/grill.webp'],
             appliances: [],
           }, {
             name: 'Dj',
-            image: ['/static/dj.webp', '/static/dj.webp'],
+            image: ['/static/icon/dj.webp', '/static/icon/dj.webp'],
             appliances: [],
           }, {
             "name": "Living Room",
-            "image": ["/static/living-room.jpg", "/static/living-room_mirror.jpg"],
+            "image": ["/static/icon/living-room.jpg", "/static/icon/living-room_mirror.jpg"],
             "appliances": [{
               "title": "Lamp",
               "name": "a",
@@ -280,24 +280,23 @@
               "loaded": true
             }, ],
           }, ]
-          let r = await fetch(`${window.location.href}/-`);
-          if (r.status === 200) {
-            r = await r.json();
-            this.state.spaces = r;
-          }
-          else window.location.href = "/properties";
-          this.setState({ selectedSpace: 0, loaded: true }, () => {document.body.style.backgroundColor = "#F6F8FA";});
+          // let r = await fetch(`${window.location.href}/-`);
+          // if (r.status === 200) {
+          //   r = await r.json();
+          //   this.state.spaces = r;
+          // } else window.location.href = "/properties";
+          // this.setState({ selectedSpace: 0, loaded: true }, () => {document.body.style.backgroundColor = "#F6F8FA";});
           // r = await fetch(`/weathers/@${r.location.lat},${r.location.lng}`);
           // if (r.status === 200)
           //   this.setState({weather: await r.json()});
-          if (!this.state.session) window.location.href = `/properties/${r[i].home}`;
-          r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
-          if (r.status > 300) window.location.href = `/properties/${r[i].home}`;
-          r = await r.json(); for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) return;
-          window.location.href = `/properties/${r[i].home}`;
+          // if (!this.state.session) window.location.href = `/properties/${r[i].home}`;
+          // r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
+          // if (r.status > 300) window.location.href = `/properties/${r[i].home}`;
+          // r = await r.json(); for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) return;
+          // window.location.href = `/properties/${r[i].home}`;
         } render() {
           return !this.state.loaded ? (
-            <div style={{width: window.screen.width, height: window.screen.height, backgroundImage: `url(/static/cover.webp)`, backgroundSize: '20%', backgroundRepeat: 'no-repeat', backgroundPosition: '50% 50%'}}/>
+            <div style={{width: window.screen.width, height: window.screen.height, backgroundImage: `url(/static/icon/cover.webp)`, backgroundSize: '20%', backgroundRepeat: 'no-repeat', backgroundPosition: '50% 50%'}}/>
           ) : this.state.space ? <div class={"dashboard" + (this.state.dark ? " dark" : "") + (this.state.trans ? " translate" : "")} style={{width: window.screen.width, minHeight: '100%'}}>
             <header>
               <div className="billBoard" style={{backgroundSize: 'cover', backgroundPosition: 'center center', backgroundImage: `url(${this.state.spaces[this.state.selectedSpace].image[this.state.trans ? 1 : 0]})`}}>
