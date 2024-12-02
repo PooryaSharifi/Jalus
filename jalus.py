@@ -63,14 +63,14 @@ async def load_phone_keys(r, ):
     session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
     keys = await r.app.config['db']['keys'].find({'phone': session['phone']}).to_list(None)
     for key in keys:
-        del key['_id']; del key['save']; key['head'] = str(key['head']); key['tail'] = str(key['tail'])
-        if key['fix']: str(key['fix']); key['key'] = encrypt(json.dumps(key).encode()).decode()
+        del key['_id']; del key['save']; key['head'] = str(key['head']).split('.')[0]; key['tail'] = str(key['tail']).split('.')[0]
+        if isinstance(key['fix'], datetime): key['fix'] = str(key['fix']).split('.')[0]; key['key'] = encode(json.dumps(key).encode())
     return response.json(keys)
 @app.get('/key/<home>')
 async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age baze key to r.args mohit bar key bud eshkal nadare
     # session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
     keys = await r.app.config['db']['keys'].find({'home': home, 'fix': {'$ne': False}}).sort('head', 1).to_list(None)
-    for key in keys: del key['_id']; del key['phone']; del key['save']; del key['fix']
+    for key in keys: del key['_id']; del key['phone']; del key['save']; del key['fix']; key['head'] = str(key['head']).split('.')[0]; key['tail'] = str(key['tail']).split('.')[0]
     return response.json(keys)
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
 @app.get("/pay/<date>/<time>/<src>/<dst>/<value:int>")  # src, dst = 9...:phone
@@ -81,10 +81,6 @@ async def _payment_receipt(r, date, time, src, dst, value):
     except: return response.json({'OK': False, 'e': 'dst phone malformed format'})
     if value % 10 != 0 and (value % 1000) // 100 == 0: value = int(value // 1000 * 100 + value % 100)
     else: value = int(value / 10)
-    print('for testing 2')
-    keys = await r.app.config['db']['keys'].find({'fix': False, 'value': value}).to_list(None)
-    for key in keys: print(key); print(type(key['sim']), type(dst), dst, key['sim'])
-    print('testing Done')
     key = await r.app.config['db']['keys'].find_one({'sim': dst, 'value': value, 'fix': False})
     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as sms: sms.write(f'{date} {time},{src},{dst},{value}\n')
     if not key: return response.json({'OK': True, 'e': 'not existed', 'en': 1})

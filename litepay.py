@@ -27,7 +27,6 @@ def pay():
         sms_list = subprocess.check_output(f'gammu getallsms', shell=True).decode()
         sms_list = re.split(r'Location.*, folder.*\n.*SMS message.*\n.*SMSC number.*:', sms_list); sms_list = [sms.strip() for sms in sms_list if sms.strip()]
         for sms in sms_list:
-            print(sms)
             sms = sms.split('\n')
             if len(sms) < 5: continue
             sms[0] = sms[3].split(':')[1].strip().lower()
@@ -37,7 +36,7 @@ def pay():
             numbers = body.replace(',', '').replace('،', '')
             numbers = re.findall(r'\+\d+', numbers)
             if numbers:
-                r = requests.get(f"http://192.168.0.54:5000/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/{phone}/9300345496/{numbers[0][1:]}")
+                r = requests.get(f"https://jalus.ir/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/{phone}/9300345496/{numbers[0][1:]}")
                 if r.status_code != 200 or not r.json()['OK']: all_done = False
         if all_done: sync_single_tty(); subprocess.Popen('gammu deleteallsms 3', shell=True, stdout=DEVNULL, stderr=DEVNULL)
         time.sleep(10)

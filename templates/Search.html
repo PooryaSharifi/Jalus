@@ -67,7 +67,7 @@
       zoomControl: false,
       // crs: L.CRS.Simple,
     }); window.lyr.addTo(map);
-    var hash = L.hash(map)
+    var hash = L.hash(map);
     Object.defineProperty(String.prototype, 'capitalize', {value: function() {
       return this.charAt(0).toUpperCase() + this.slice(1);
     }, enumerable: false});
@@ -106,7 +106,7 @@
         let r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
         if (r.status < 300) {
           r = await r.json(); for (var i = 0; i < r.length; i ++) this.state.keys[r[i].home] = r[i];
-          for (var i = 0; i < r.length; i ++) if (r[i].fix == true && r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) window.location.href = `/home/${r[i].home}`;
+          for (var i = 0; i < r.length; i ++) if (r[i].fix !== false && (!('id' in this.state.show) || r[i].home == this.state.show.id)) window.location.href = `/homes/${r[i].home}`; //  && Date.parse(r[i].head) < Date.now() && Date.now() < Date.parse(r[i].tail)
         }
       } binSearch(k) { if (!('calendarReserved' in this.state.show)) return 0;
         let start = 0, arr = this.state.show.calendarReserved; let end = arr.length - 1, mid;
