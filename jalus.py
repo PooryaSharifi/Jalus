@@ -82,7 +82,7 @@ async def _payment_receipt(r, date, time, src, dst, value):
     if value % 10 != 0 and (value % 1000) // 100 == 0: value = value // 1000 * 100 + value % 100
     else: value //= 10
     key = await r.app.config['db']['keys'].find_one({'sms': dst, 'value': value, 'fix': False})
-    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as potents: potents.write(f'{date} {time},{src},{dst},{value}\n')
+    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as sms: sms.write(f'{date} {time},{src},{dst},{value}\n')
     if not key: return response.json({'OK': True, 'e': 'not existed', 'en': 1})
     print(key)
     update_result = r.app.config['db']['keys'].update_one({'sms': dst, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
