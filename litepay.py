@@ -34,7 +34,7 @@ def pay():
             body = ' '.join(sms[6:]).strip()
             numbers = body.replace(',', '').replace('،', '')
             numbers = re.findall(r'\+\d+', numbers)
-            if numbers: requests.get(f'http://192.168.0.54:5000/pay/{str(datetime.now()).split('.')[0]}/9300345495/{phone}/{numbers[0][1:]}')
+            if numbers: requests.get(f"http://192.168.0.54:5000/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/9300345495/{phone}/{numbers[0][1:]}")
         time.sleep(10)
 
 def otp():

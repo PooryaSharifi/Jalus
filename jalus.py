@@ -73,7 +73,7 @@ async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age
     for key in keys: del key['_id']; del key['phone']; del key['save']; del key['fix']
     return response.json(keys)
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
-@app.get("/pay/<date>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
+@app.get("/pay/<date>/<time>/<src:int>/<dst:int>/<value:int>")  # src, dst = 9...:phone
 async def _payment_receipt(r, date, src, dst, value):
     try: dst = int(dst[3:] if dst[:3] == '+98' else dst[1:] if dst[0] == '0' else dst)
     except: return response.json({'OK': False, 'e': 'dst phone malformed format'})
