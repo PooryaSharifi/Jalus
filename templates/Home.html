@@ -280,16 +280,21 @@
               "loaded": true
             }, ],
           }, ]
-          // let r = await fetch(`${window.location.href}/-`);
-          // if (r.status === 200) {
-          //   r = await r.json();
-          //   this.state.spaces = r;
-          // } else window.location.href = "/properties";
-          // this.setState({ selectedSpace: 0, loaded: true }, () => {document.body.style.backgroundColor = "#F6F8FA";});
+          let id = window.location.href.split('/');
+          if (id[id.length - 1] == 'homes') { id = ''; /* fetch keys and find id of the key */}
+          else id = id[id.length - 1];
+          let r = await fetch(`/properties/${id}`, {method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}});
+          if (r.status === 200) {
+            r = await r.json();
+            // this.state.spaces = r[0].spaces;  // add spaces to Divar
+            this.state.spaces[0].image = [`/homes/${id}/qr`, `/homes/${id}/qr`]
+            console.log(r[0].spaces)
+          } else window.location.href = "/properties";
+          this.setState({ selectedSpace: 0, loaded: true }, () => {document.body.style.backgroundColor = "#F6F8FA";});
           // r = await fetch(`/weathers/@${r.location.lat},${r.location.lng}`);
           // if (r.status === 200)
           //   this.setState({weather: await r.json()});
-          // if (!this.state.session) window.location.href = `/properties/${r[i].home}`;
+          // if (!this.state.session) window.location.href = `/properties/${id}`;
           // r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
           // if (r.status > 300) window.location.href = `/properties/${r[i].home}`;
           // r = await r.json(); for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) return;
