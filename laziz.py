@@ -602,3 +602,116 @@ with open('static/delicious.json') as jf:
         document['_date'] = datetime.now()
     delicious.insert_many(collection)
 # ---- delicious ----
+# ---- laziz ----
+app.add_url_rule('/favicon.ico', 'favicon', lambda: redirect('/static/img/favicon.ico'))
+app.add_url_rule('/build/<path:path>', 'build', lambda path: redirect('/static/build/' + path))
+app.add_url_rule('/img/<path:path>', 'img', lambda path: redirect('/static/img/' + path))
+app.add_url_rule('/fonts/roboto/Roboto-Regular.woff2', 'woff2', lambda: redirect('/static/font/Roboto-Regular.woff2'))
+app.add_url_rule('/fonts/roboto/Roboto-Regular.woff', 'woff', lambda: redirect('/static/font/Roboto-Regular.woff'))
+
+@app.route("/seafood")
+def homepage():
+    return render_template('index.html')
+
+
+@app.route("/home_page/get-categories-home", methods=['GET', 'POST'])
+def categories():
+    return render_template('categories.html')
+
+
+@app.route("/", methods=['POST', 'GET'])
+def recommend():
+    _0 = delicious_collection.aggregate([
+        {'$match': {}},
+        {'$sample': {'size': 3}}
+    ])
+    _0 = obj2str(list(_0))
+    _1 = delicious_collection.aggregate([
+        {'$match': {}},
+        {'$sample': {'size': 4}}
+    ])
+    _1 = obj2str(list(_1))
+    response = {
+        'categories': [
+            {
+                'subject': u'مرغ',
+                'image': './assets/img/categories/chicken.jpg'
+            }, {
+                'subject': u'ماهی',
+                'image': './assets/img/categories/fish.jpg'
+            }, {
+                'subject': u'گوشت',
+                'image': './assets/img/categories/lamb.jpg'
+            }, {
+                'subject': u'برش‌سرد',
+                'image': './assets/img/categories/cold-cuts.jpg'
+            }, {
+                'subject': u'تخم‌مرغ',
+                'image': './assets/img/categories/eggs.jpg'
+            }, {
+                'subject': u'آماده',
+                'image': './assets/img/categories/ready.jpg'
+            }, {
+                'subject': u'ترکیبی',
+                'image': './assets/img/categories/combo.jpg'
+            }, {
+                'subject': u'خارجی',
+                'image': './assets/img/categories/exotic.jpg'
+            },
+        ],
+        'home': {
+            'offer': {
+                'source': './assets/img/cdn/offer.jpg',
+                'massage': u'چه‌ساده چه‌خوشمزه'
+            },
+            'carousels': [
+                {
+                    'products': _0,
+                    'subject': u'پیشنهاد لذیذستونی'
+                }, {
+                    'products': _1,
+                    'subject': u'تازه‌ها'
+                }
+            ]
+        },
+        'flavors': {
+            'chili': {
+                'title': u'فلفلی',
+                'image': './assets/img/flavors/chili-1.png',
+                'del': ['chili', 'raw', 'phenomenal'],
+            },
+            'onion': {
+                'title': u'پیازجعفری',
+                'image': './assets/img/flavors/onion-0.png',
+                'del': ['onion', 'raw', 'phenomenal'],
+            },
+            'fried': {
+                'title': u'سوخاری',
+                'image': './assets/img/flavors/shrimp-0.png',
+                'del': ['fried', 'raw', 'phenomenal'],
+            },
+            'smoky': {
+                'title': u'دودی',
+                'image': './assets/img/flavors/smoky-0.png',
+                'del': ['smoky', 'raw', 'phenomenal'],
+            },
+            'balsamic': {
+                'title': u'بالزامیک',
+                'image': './assets/img/flavors/balsamic-0.png',
+                'del': ['balsamic', 'raw', 'phenomenal'],
+            },
+            'raw': {
+                'title': u'خام',
+                'image': './assets/img/flavors/raw-0.png',
+                'del': ['raw', 'chili', 'onion', 'fried', 'smoky', 'balsamic', 'phenomenal'],
+            },
+            'phenomenal': {
+                'title': u'شگفت‌انگیز',
+                'image': './assets/img/flavors/phenomenal-0.png',
+                'del': ['raw', 'chili', 'onion', 'fried', 'smoky', 'balsamic', 'phenomenal'],
+            },
+        },
+        'adp': 3500,
+    }
+    return jsonify(response)
+# ---- laziz ----
