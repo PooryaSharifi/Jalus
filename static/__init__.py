@@ -3,6 +3,12 @@ from base64 import (urlsafe_b64encode, urlsafe_b64decode)
 from string import ascii_lowercase
 from scipy.spatial import Voronoi, SphericalVoronoi
 from sanic import response
+from bson import ObjectId
+from datetime import datetime
+from werkzeug.http import parse_date
+import mimetypes, os, re
+from ast import literal_eval
+from pymongo import ReturnDocument
 
 template_titles = {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه', 'fold': 'جالوس تاشو', 'dome': 'جالوس زوم'}
 matcher = re.compile(r'/// #.* ///')
@@ -138,5 +144,260 @@ for q in filters:
                     if wild_wild_key not in wild_filters: wild_filters[wild_wild_key] = []
                     wild_filters[wild_wild_key].append([i_wild_key, q])
 for wild_key in wild_filters: filters = list(sorted(wild_filters[wild_key], key=lambda qp: qp[0])); filters = [q[1] for q in filters]; wild_filters[wild_key] = filters
+
+def send_file_partial(path):
+    range_header = request.headers.get('Range', None)
+    if not range_header: return send_file(path)
+    size = os.path.getsize(path)
+    byte1, byte2 = 0, None
+    m = re.search('(\d+)-(\d*)', range_header)
+    g = m.groups()
+    if g[0]: byte1 = int(g[0])
+    if g[1]: byte2 = int(g[1])
+    length = size - byte1
+    if byte2 is not None: length = byte2 - byte1
+    data = None
+    with open(path, 'rb') as f: f.seek(byte1); data = f.read(length)
+    rv = Response(data, 206, mimetype=mimetypes.guess_type(path)[0], direct_passthrough=True)
+    rv.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(byte1, byte1 + length - 1, size))
+    return rv
+
+def my_send_file_partial(stream):
+    range_header = request.headers.get('Range', None)
+    if not range_header: return send_file(stream, mimetype=stream.content_type[0])
+    size = stream.length
+    byte1, byte2 = 0, None
+    m = re.search('(\d+)-(\d*)', range_header); g = m.groups()
+    if g[0]: byte1 = int(g[0])
+    if g[1]: byte2 = int(g[1])
+    length = size - byte1
+    if byte2 is not None: length = byte2 - byte1
+    data = None; stream.seek(byte1); data = stream.read(length)
+    rv = Response(data, 206, mimetype=stream.content_type[0], direct_passthrough=True)
+    rv.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(byte1, byte1 + length - 1, size))
+    return rv
+
+def request_json(request):
+    evaluated = {}
+    try:
+        try: evaluated = demjson.decode(request.values['json'], encoding='utf8')  # may # may not json
+        except: evaluated = literal_eval(request.values['json'])
+        for key, value in request.values.items():
+            if 'json.' in key:
+                key = '.'.join(key.split('.')[1:])
+                evaluated, key = dot_notation(evaluated, key)
+                try: evaluated[key] = demjson.decode(value, encoding='utf8')
+                except: evaluated[key] = value
+    finally: return evaluated
+
+def request_attributes(request, **kwargs):
+    values = request.values
+    _json = {}
+    for key, _type in kwargs.items():
+        if key not in values: raise AttributeError('{} not found.'.format(key))
+        else:
+            value = values[key]
+            if _type is str: evaluated_value = value
+            else:
+                try: evaluated_value = demjson.decode(value, encoding='utf8')
+                except: evaluated_value = literal_eval(value)
+                if type(evaluated_value) is not _type: raise TypeError()
+            _json[key] = evaluated_value
+    return _json
+
+def obj2str(tree):
+    if isinstance(tree, dict):
+        for k, node in tree.items(): tree[k] = obj2str(node)
+        return tree
+    elif isinstance(tree, list):
+        _tree = []
+        for node in tree: _tree.append(obj2str(node))
+        return _tree
+    elif isinstance(tree, ObjectId): return str(tree)
+    elif isinstance(tree, int) or isinstance(tree, float): return tree
+    return tree
+
+def str2obj(tree):
+    if isinstance(tree, dict):
+        for k, node in tree.items():
+            tree[k] = str2obj(node)
+        return tree
+    elif isinstance(tree, list):
+        _tree = []
+        for node in tree:
+            _tree.append(str2obj(node))
+        return _tree
+    try:
+        return ObjectId(tree)
+    except:
+        if isinstance(tree, str):
+            if tree.replace('.', '', 1).isdigit():
+                return float(tree)
+        try:
+            d = parse_date(tree)
+            if d:
+                return d
+            return tree
+        except:
+            return tree
+
+def free_from_(tree):
+    if isinstance(tree, dict):
+        new_tree = {}
+        for k, node in tree.items():
+            if '__' not in k:
+                new_tree[k] = free_from_(node)
+        return new_tree
+    elif isinstance(tree, list):
+        for idx, node in enumerate(tree):
+            tree[idx] = free_from_(node)
+    return tree
+
+def dot_notation(_dict, key):
+    keys = key.split('.')
+    for key in keys[:-1]:
+        if key not in _dict:
+            _dict[key] = {}
+        _dict = _dict[key]
+    return _dict, keys[-1]
+
+def _2num(s):
+    if isinstance(s, str):
+        regex = re.compile(r"[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?")
+        nums = re.findall(regex, s)
+        s = 0
+        for n in nums: s = s * 1000 + int(n) if '.' not in n else float(n)
+    return s
+
+def configure(_set, func):
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            return function(*args, **kwargs)
+        return wrapper
+    return lambda x: x
+
+def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {}), ban=None):
+    if not ban or 'insert' not in ban:
+        @blueprint.route('/+', methods=['POST', 'GET'])
+        @blueprint.route('/<_id>/+', methods=['POST', 'GET'])
+        # @login_required
+        def create(_id=None):
+            from copy import deepcopy
+            document = deepcopy(skeleton)
+            document.update(request_json(request))
+            if _id:
+                document['_id'] = ObjectId(_id)
+            document['_date'] = datetime.now()
+            result = collection.insert_one(document)
+            return str(result.inserted_id)
+    if not ban or 'delete' not in ban:
+        @blueprint.route('/<_id>/*', methods=['GET', 'POST'])
+        # @login_required
+        def delete(_id):
+            collection.delete_one({
+                '_id': ObjectId(_id)
+            })
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    if not ban or 'delete_all' not in ban:
+        @blueprint.route('/*', methods=['GET', 'POST'])
+        # @login_required
+        def delete_all():
+            collection.delete_many({})
+            return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+    if not ban or 'minimize' not in ban:
+        @blueprint.route('/<_id>/-')
+        def minimize(_id):
+            try:
+                document = collection.find_one({'_id': ObjectId(_id)})
+                obj2str(document)
+                return jsonify(document)
+            except Exception as e: return str(e)
+    if not ban or 'minimize_all' not in ban:
+        @blueprint.route('/-')
+        def minimize_all():
+            documents = collection.find()
+            documents = [obj2str(document) for document in documents]
+            return jsonify(documents)
+    if not ban or 'universal_alter' not in ban:
+        @blueprint.route('/<_id>/$$', methods=['GET', 'POST'])
+        def universal_alter(_id):
+            _id = ObjectId(_id)
+            try:
+                from pymongo import ReturnDocument
+                _json = request_json(request)
+                _json = free_from_(_json)
+                _json = str2obj(_json)
+                document = collection.find_one_and_update(
+                    {'_id': _id},
+                    {'$set': _json},
+                    return_document=ReturnDocument.AFTER
+                )
+                document = obj2str(document)
+                return render_template('crud/$$.html', **document)
+            except Exception as e:
+                print("sorry I can't update let's bring some thing to show")
+                try:
+                    document = collection.find_one({'_id': _id})
+                    if not document:
+                        raise
+                    document = obj2str(document)
+                except Exception as e:
+                    print("sorry I can't show any thing sorry for you")
+                    abort(501)
+                return render_template('$$.html', ctx=document)
+    if not ban or 'alter' not in ban:
+        @blueprint.route('/<_id>/$', methods=['GET', 'POST'])
+        def alter(_id):
+            _id = ObjectId(_id)
+            try:
+                if '_' in request.values:
+                    _json = request_json(request)  # , specific_type=None)
+                    node = request.values['_']
+                    if not _json:
+                        document = collection.find_one_and_update(
+                            {'_id': _id},
+                            {'$unset': {node: ""}},
+                            return_document=ReturnDocument.AFTER
+                        )
+                    else:
+                        document = collection.find_one_and_update(
+                            {'_id': _id},
+                            {'$set': {node: _json}},
+                            return_document=ReturnDocument.AFTER
+                        )
+                else:
+                    regex = re.compile(r"[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?")
+                    fields = {}
+                    for key, value in request.values.items():
+                        _fields, key = dot_notation(fields, key)
+                        _fields[key] = eval(value) if regex.match(value) else value
+                    print(fields)
+                    document = collection.find_one_and_update(
+                        {'_id': _id},
+                        {'$set': fields},
+                        return_document=ReturnDocument.AFTER
+                    )
+                document = obj2str(document)
+                return jsonify(document), 200
+            except Exception as e:
+                print(e)
+                try:
+                    document = collection.find_one({'_id': _id})
+                    #  document['_id'] = str(document['_id'])
+                    obj2str(document)
+                    return render_template(template + '_plus.html', **document)
+                except Exception as e:
+                    print(e)
+                    abort(405)
+    if not ban or 'get' not in ban:
+        @blueprint.route('/<_id>')
+        def get(_id):
+            try:
+                document = collection.find_one({'_id': ObjectId(_id)})
+                document, ctx = load(document)
+                #  document = obj2str(document)
+                return render_template(template + '.html', **document)
+            except Exception as e:
+                return str(e)
 
 if __name__ == '__main__': asyncio.new_event_loop().run_until_complete(globals()[f'util_{sys.argv[1]}']())
