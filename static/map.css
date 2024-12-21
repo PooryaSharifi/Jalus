@@ -1,0 +1,15 @@
+body {height:100%;margin:0;padding:0;background-color: #212333;}
+.leaflet-tile-container { pointer-events: auto; } .leaflet-control-attribution a {display: none;} .leaflet-control-zoom.leaflet-bar.leaflet-control {display: none;}
+@font-face { font-weight: 300; src: url(/static/font/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 400; src: url(/static/font/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 500; src: url(/static/font/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 700; src: url(/static/font/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 400; src: url(/static/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
+.balcony::before {content: "\ea18"} .cabinet::before {content: "\ea19"} .parking::before {content: "\ea1c"} .telephone::before {content: "\e900"}
+* {box-sizing: border-box; font-family: IRANSans; font-weight: 400;} *.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
+table.table-hover tbody {cursor: pointer} .pin::before {content: ''; display: inline-block; position: absolute; height: 0; width: 0; border-color: white #fff0 #fff0 #fff0; border-style: solid; border-width: 5px 5px 0px 5px; bottom: 19px; left: 10px}
+.touchable { cursor: pointer !important; transition: 0.07s ease-in-out !important; } .touchable:active { opacity: .2 !important; }
+.column:not(:first-child):not(:nth-child(3n+1))::before {border-left: 1px solid rgba(0,0,0,.12); content: ""; height: 40px; position: absolute; right: 0; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%);}
+hr.divider { background-color: rgba(0,0,0,.12); border: none; box-sizing: border-box; height: 1px; margin: 0 .65em;} input.none:focus{outline: none; border-color: inherit; -webkit-box-shadow: none; box-shadow: none;}
+.scroll { -ms-overflow-style: none; scrollbar-width: none; } .scroll::-webkit-scrollbar { display: none; } div.p {font-size: 1.1rem; padding-right: .9rem; padding-left: .9rem; text-align: justify;  text-justify: inter-word; line-height: 2; color: rgba(0,0,0,.87); white-space: pre-line}
+.lenz {overflow: hidden; border-radius: 50%; height: 100%; width: 100%; background-position: center; background-size: cover; border: none; box-shadow: 0 0 16px -1px #3e3f41ad inset, 0 0 4px -1px #ffffff79; color: white; font-weight: 500; text-align: center;}

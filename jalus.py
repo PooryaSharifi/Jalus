@@ -1,26 +1,36 @@
 import re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode
 from sanic import Sanic, Blueprint, response, exceptions
+from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
 from random import choice, randint, random
 from bson import ObjectId
 from datetime import datetime, timedelta
-from static import load_template, render_template, wild_origins, wild_filters, decode, encode, template_titles
+from static import load_template, template, wild_origins, wild_filters, decode, encode
 from io import BytesIO, StringIO
+from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
 
 WorkerManager.THRESHOLD = 1200
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
-app, otps, wss, otp_list = Sanic(__name__), {}, None, []
+app, otps, wss, otp_list = Sanic(__name__), {}, None, []; CORS(app)
 app.config.update(dict(REQUEST_TIMEOUT=120, RESPONSE_TIMEOUT=120, asset_dir='/home/poorya/Pictures/estates',
 WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
+app.blueprint(laziz_user, url_prefix='/laziz/user')
+app.blueprint(laziz_delicious, url_prefix='/laziz/delicious')
+app.blueprint(laziz_order, url_prefix='/laziz/order')
+app.blueprint(laziz, url_prefix='/laziz')
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
 app.add_route(lambda _: response.redirect('/properties/'), '/properties', name='properties_slash')
 app.add_route(lambda _: response.redirect('/dome'), '/zome', name='zome_dome')
 min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
-@app.route('/static/<path:path>', methods=['GET'])
+@app.get('/static/<path:path>')
 async def static_file(r, path): return await response.file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', *urllib.parse.unquote(min_files.get(path, path)).split('/')))
 @app.listener('before_server_start')
 async def init_ones(sanic, loop): 
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
+    with open('static/delicious.json', encoding='utf-8') as jf:
+        collection = json.load(jf); app.config['db']['laziz_delicious'].delete_many({'subject': {'$in': [document['subject'] for document in collection]}})
+        for document in collection: document['_date'] = datetime.now()
+        for document in collection: await app.config['db']['laziz_delicious'].insert_one(document)
     # await Key.get_collection().create_index([("home", 1), ("phone", 1), ("fix", 1)], )  # , unique=True)
 @app.listener('after_server_stop')
 async def close_connection(app, loop): app.config['db'].close()
@@ -147,7 +157,7 @@ async def _search(r, id_polygon_location=None):
     for pr in properties: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
-async def _properties_get(r, id_polygon_location=None, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/{'' if '-d' in sys.argv or '--debug' in sys.argv else 'serv/'}Search.html")).body.decode('utf-8'))
+async def _properties_get(r, id_polygon_location=None, ): return response.html(await template('Search') if '-d' in sys.argv else await load_template(f'serv/Search.html'))
 
 @app.get('/homes/<home>/qr')
 async def _qr_(r, home):
@@ -162,9 +172,10 @@ async def _smart_home_state(r, home, ):
         if home in properties: return response.json(properties[home]['spaces'])
         else: raise exceptions.NotFound()
 @app.get('/homes/<home>')
-async def _smart_home(r, home, ): return response.html((await response.file(f"{os.path.dirname(os.path.abspath(__file__))}/templates/Home{'' if '-d' in sys.argv or '--debug' in sys.argv else '.serv'}.html")).body.decode('utf-8')) 
-@app.get('/<page:path>')
-async def _page(r, page=None): page = 'jalus' if page == '' else page; return response.html((await render_template('base.html', {'title': template_titles[page], 'style': 'digikala'})).replace('/// block #content', await render_template(f'{page.capitalize()}.js', {})) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
+async def _smart_home(r, home, ): return response.html(await template('Home') if '-d' in sys.argv else await load_template(f'serv/Home.html'))
+pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj][ts]*'); pages = [os.path.basename(p).split('.')[0].lower() for p in pages]
+@app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz']])}|)>")
+async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 
 if __name__ == '__main__':
     debug = True if '-d' in sys.argv or '--debug' in sys.argv else False

@@ -10,21 +10,28 @@ import mimetypes, os, re
 from ast import literal_eval
 from pymongo import ReturnDocument
 
-template_titles = {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه', 'fold': 'جالوس تاشو', 'dome': 'جالوس زوم'}
-matcher = re.compile(r'/// #.* ///')
-def replace_target(match, d): target = match.group(); return d.get(target, target)
-
 async def load_template(name): return (await response.file(f"{os.path.dirname(os.path.dirname(os.path.abspath(__file__)))}/templates/{name}")).body.decode('utf-8')
-async def _render_template(name, d): return re.sub( matcher, lambda match: replace_target(match, d), await load_template(name))
-async def render_template(name, d): 
-    template = await load_template(name)
-    for k, v in d.items(): template = template.replace(f'/// #{k} ///', v)
-    for match in re.findall(r'{[/][*] #macro .+ [*][/]}', template): template = template.replace(match, await load_template(match[3:-3].strip().split(' ')[-1] + '.jsx'))
-    return template
+async def template(name):
+    index_template = await load_template('index.html')
+    target_template = await load_template(f'{name}.js')
+    for match in re.findall(r'[/][*][*] #\w+ .* #\w+ [*][*][/]', target_template): payload = match[5:-4]; hashtag = payload.rfind('#'); payload, block = payload[len(payload) - hashtag:hashtag], payload[hashtag + 1:]; index_template = index_template.replace(f'/// #{block} ///', payload); target_template = target_template.replace(match, '')
+    index_template = index_template.replace(f'/// #content ///', target_template)
+    for match in re.findall(r'{[/][*] #macro .+ [*][/]}', index_template): index_template = index_template.replace(match, await load_template(match[3:-3].strip().split(' ')[-1] + '.jsx'))
+    return index_template
+# template_titles = {'jalus': 'جالوس', 'go': 'جالوس رو', 'dual': 'جالوس بنای سبز دومنظوره', 'rebuild': 'جالوس بازسازی', 'host': 'جالوس صاحبخونه', 'fold': 'جالوس تاشو', 'dome': 'جالوس زوم', 'home': 'هوشمندسازی اسکان'}
+# matcher = re.compile(r'/// #.* ///')
+# def replace_target(match, d): target = match.group(); return d.get(target, target)
+# async def _render_template(name, d): return re.sub( matcher, lambda match: replace_target(match, d), await load_template(name))
+# async def render_template(name, d): 
+#     template = await load_template(name)
+#     for k, v in d.items(): template = template.replace(f'/// #{k} ///', v)
+#     for match in re.findall(r'{[/][*] #macro .+ [*][/]}', template): template = template.replace(match, await load_template(match[3:-3].strip().split(' ')[-1] + '.jsx'))
+#     return template
 async def util_debabel():
     for page in glob.glob(f'{os.path.dirname(os.path.dirname(__file__))}/templates/*.*'):
         if page[-4:] == 'html': file = await load_template(os.path.basename(page))
-        else: file = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
+        else: file = await template(page.capitalize(os.path.basename(page).split('.')[0]))
+        # else: file = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
         file = file.replace('<script src="/static/babel.min.js"></script>', '')
         jsx = re.findall(r'<script type="text/babel">(?:\n.*)*</script>', file)
         fd, jsx_tmp = tempfile.mkstemp(suffix='.jsx', prefix='tmp')
@@ -213,7 +220,7 @@ def obj2str(tree):
         _tree = []
         for node in tree: _tree.append(obj2str(node))
         return _tree
-    elif isinstance(tree, ObjectId): return str(tree)
+    elif isinstance(tree, ObjectId) or isinstance(tree, datetime): return str(tree)
     elif isinstance(tree, int) or isinstance(tree, float): return tree
     return tree
 
@@ -227,30 +234,25 @@ def str2obj(tree):
         for node in tree:
             _tree.append(str2obj(node))
         return _tree
-    try:
-        return ObjectId(tree)
+    try: return ObjectId(tree)
     except:
         if isinstance(tree, str):
-            if tree.replace('.', '', 1).isdigit():
-                return float(tree)
+            if tree.replace('.', '', 1).isdigit(): return float(tree)
         try:
             d = parse_date(tree)
             if d:
                 return d
             return tree
-        except:
-            return tree
+        except: return tree
 
 def free_from_(tree):
     if isinstance(tree, dict):
         new_tree = {}
         for k, node in tree.items():
-            if '__' not in k:
-                new_tree[k] = free_from_(node)
+            if '__' not in k: new_tree[k] = free_from_(node)
         return new_tree
     elif isinstance(tree, list):
-        for idx, node in enumerate(tree):
-            tree[idx] = free_from_(node)
+        for idx, node in enumerate(tree): tree[idx] = free_from_(node)
     return tree
 
 def dot_notation(_dict, key):
@@ -278,56 +280,56 @@ def configure(_set, func):
 
 def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {}), ban=None):
     if not ban or 'insert' not in ban:
-        @blueprint.route('/+', methods=['POST', 'GET'])
-        @blueprint.route('/<_id>/+', methods=['POST', 'GET'])
+        # @blueprint.route('/+', methods=['POST', 'GET'])
+        @blueprint.route('/<_id:(.*//|)/+>', methods=['POST', 'GET'])
         # @login_required
-        def create(_id=None):
+        async def create(r, _id=None):
+            if _id and _id[-2:] == '/+': _id = _id[:-2]
             from copy import deepcopy
             document = deepcopy(skeleton)
             document.update(request_json(request))
-            if _id:
-                document['_id'] = ObjectId(_id)
+            if _id: document['_id'] = ObjectId(_id)
             document['_date'] = datetime.now()
-            result = collection.insert_one(document)
+            result = await next(iter(blueprint.apps)).config['db'][collection].insert_one(document)
             return str(result.inserted_id)
     if not ban or 'delete' not in ban:
         @blueprint.route('/<_id>/*', methods=['GET', 'POST'])
         # @login_required
-        def delete(_id):
-            collection.delete_one({
+        async def delete(r, _id):
+            await next(iter(blueprint.apps)).config['db'][collection].delete_one({
                 '_id': ObjectId(_id)
             })
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     if not ban or 'delete_all' not in ban:
         @blueprint.route('/*', methods=['GET', 'POST'])
         # @login_required
-        def delete_all():
-            collection.delete_many({})
+        async def delete_all(r):
+            await next(iter(blueprint.apps)).config['db'][collection].delete_many({})
             return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
     if not ban or 'minimize' not in ban:
         @blueprint.route('/<_id>/-')
-        def minimize(_id):
+        async def minimize(r, _id):
             try:
-                document = collection.find_one({'_id': ObjectId(_id)})
+                document = await next(iter(blueprint.apps)).config['db'][collection].find_one({'_id': ObjectId(_id)})
                 obj2str(document)
-                return jsonify(document)
+                return response.json(document)
             except Exception as e: return str(e)
     if not ban or 'minimize_all' not in ban:
         @blueprint.route('/-')
-        def minimize_all():
-            documents = collection.find()
+        async def minimize_all(r):
+            documents = await next(iter(blueprint.apps)).config['db'][collection].find({}).to_list(None)
             documents = [obj2str(document) for document in documents]
-            return jsonify(documents)
+            return response.json(documents)
     if not ban or 'universal_alter' not in ban:
         @blueprint.route('/<_id>/$$', methods=['GET', 'POST'])
-        def universal_alter(_id):
+        async def universal_alter(r, _id):
             _id = ObjectId(_id)
             try:
                 from pymongo import ReturnDocument
                 _json = request_json(request)
                 _json = free_from_(_json)
                 _json = str2obj(_json)
-                document = collection.find_one_and_update(
+                document = await next(iter(blueprint.apps)).config['db'][collection].find_one_and_update(
                     {'_id': _id},
                     {'$set': _json},
                     return_document=ReturnDocument.AFTER
@@ -337,7 +339,7 @@ def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {})
             except Exception as e:
                 print("sorry I can't update let's bring some thing to show")
                 try:
-                    document = collection.find_one({'_id': _id})
+                    document = await next(iter(blueprint.apps)).config['db'][collection].find_one({'_id': _id})
                     if not document:
                         raise
                     document = obj2str(document)
@@ -347,20 +349,20 @@ def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {})
                 return render_template('$$.html', ctx=document)
     if not ban or 'alter' not in ban:
         @blueprint.route('/<_id>/$', methods=['GET', 'POST'])
-        def alter(_id):
+        async def alter(r, _id):
             _id = ObjectId(_id)
             try:
                 if '_' in request.values:
                     _json = request_json(request)  # , specific_type=None)
                     node = request.values['_']
                     if not _json:
-                        document = collection.find_one_and_update(
+                        document = await next(iter(blueprint.apps)).config['db'][collection].find_one_and_update(
                             {'_id': _id},
                             {'$unset': {node: ""}},
                             return_document=ReturnDocument.AFTER
                         )
                     else:
-                        document = collection.find_one_and_update(
+                        document = await next(iter(blueprint.apps)).config['db'][collection].find_one_and_update(
                             {'_id': _id},
                             {'$set': {node: _json}},
                             return_document=ReturnDocument.AFTER
@@ -372,7 +374,7 @@ def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {})
                         _fields, key = dot_notation(fields, key)
                         _fields[key] = eval(value) if regex.match(value) else value
                     print(fields)
-                    document = collection.find_one_and_update(
+                    document = await next(iter(blueprint.apps)).config['db'][collection].find_one_and_update(
                         {'_id': _id},
                         {'$set': fields},
                         return_document=ReturnDocument.AFTER
@@ -382,7 +384,7 @@ def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {})
             except Exception as e:
                 print(e)
                 try:
-                    document = collection.find_one({'_id': _id})
+                    document = await next(iter(blueprint.apps)).config['db'][collection].find_one({'_id': _id})
                     #  document['_id'] = str(document['_id'])
                     obj2str(document)
                     return render_template(template + '_plus.html', **document)
@@ -391,9 +393,9 @@ def crud(blueprint, collection, skeleton={}, template='', load=lambda x: (x, {})
                     abort(405)
     if not ban or 'get' not in ban:
         @blueprint.route('/<_id>')
-        def get(_id):
+        async def get(r, _id):
             try:
-                document = collection.find_one({'_id': ObjectId(_id)})
+                document = await next(iter(blueprint.apps)).config['db'][collection].find_one({'_id': ObjectId(_id)})
                 document, ctx = load(document)
                 #  document = obj2str(document)
                 return render_template(template + '.html', **document)

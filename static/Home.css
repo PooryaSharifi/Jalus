@@ -1,3 +1,19 @@
+html, body, #app { min-height: 100% !important; height: 100%; width: 100%; padding: 0; margin: 0; }
+@font-face { font-weight: 300; src: url(/static/font/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 400; src: url(/static/font/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 500; src: url(/static/font/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 700; src: url(/static/font/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+@font-face { font-weight: 400; src: url(/static/font/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
+.balcony::before {content: "\ea18"} .cabinet::before {content: "\ea19"} .parking::before {content: "\ea1c"} .telephone::before {content: "\e900"}
+* {box-sizing: border-box; font-family: IRANSans; font-weight: 400;}
+*.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
+table.table-hover tbody {cursor: pointer}
+.column:not(:first-child):not(:nth-child(3n+1))::before {border-left: 1px solid rgba(0,0,0,.12); content: ""; height: 40px; position: absolute; right: 0; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%);}
+hr.divider { background-color: rgba(0,0,0,.12); border: none; box-sizing: border-box; height: 1px; margin: 0;}
+.scroll { -ms-overflow-style: none; scrollbar-width: none; } .scroll::-webkit-scrollbar { display: none; }
+@-webkit-keyframes animate-positive {0% {width: 0;}}
+@keyframes animate-positive {0% {width: 0;}}
+
 .App {
   text-align: center;
 }

@@ -1,0 +1,135 @@
+[
+  {
+    "subject": "ماهی شوریده خلیج",
+    "image": "static/laziz/delicious/salty-1.jpg",
+    "price": 5500,
+    "tags": [
+      "تازه",
+      "امگا۶",
+      "امگا۳",
+      "ماهی",
+      "fish"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "بچه شیرماهی",
+    "image": "static/laziz/delicious/lion.jpg",
+    "price": 6000,
+    "tags": [
+      "تازه",
+      "بدون‌تیغ",
+      "امگا۳",
+      "ماهی",
+      "fish"
+    ],
+    "description": "بچه شیرماهی تازه زیر ۴۰۰گرم پرچرب مخصوص ورزشکاران و حاوی امگا۳",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "گیدر جنوب صیدروز",
+    "image": "static/laziz/delicious/gider.jpg",
+    "price": 3400,
+    "tags": [
+      "تازه",
+      "مناسب",
+      "امگا۳",
+      "fish"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "ماهی تن کوچک چابهار",
+    "image": "static/laziz/delicious/tuna.jpg",
+    "price": 3100,
+    "tags": [
+      "صید روز",
+      "بدون‌تیغ",
+      "امگا۳",
+      "fish"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "حلوای سفید ‌(زبیدی)",
+    "image": "static/laziz/delicious/white-halva-0.jpg",
+    "price": 14900,
+    "tags": [
+      "تازه",
+      "بدون‌تیغ",
+      "امگا۳",
+      "لاکچری",
+      "fish"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "سینه‌مرغ حوان",
+    "image": "static/laziz/delicious/chicken-0.jpg",
+    "price": 1200,
+    "tags": [
+      "تازه",
+      "سفید",
+      "پنبه‌ای",
+      "chicken"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "شش‌لیک",
+    "image": "static/laziz/delicious/lamb-2.jpg",
+    "price": 9900,
+    "tags": [
+      "قرمز",
+      "گوسفندی",
+      "لاکچری",
+      "lamb"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }, {
+    "subject": "راسته گوسفندی",
+    "image": "static/laziz/delicious/lamb-0.jpg",
+    "price": 8900,
+    "tags": [
+      "قرمز",
+      "گوسفندی",
+      "لاکچری",
+      "گوشت",
+      "lamb"
+    ],
+    "description": "ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است",
+    "reviews": [],
+    "quantity": 0,
+    "quantifying": false,
+    "flavoring": false,
+    "flavors": {}
+  }
+]
