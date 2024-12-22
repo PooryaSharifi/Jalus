@@ -1,6 +1,6 @@
 import string, io, os, os.path, json, sys
 from sanic import Blueprint, response
-from static import crud, template, obj2str
+from static import crud, template, obj2str, load_template
 blu = Blueprint('laziz_' + __name__)
 _path, trans_flag = os.path.dirname(os.path.realpath(__file__)) + '/static/dictionary.py', False
 def simplify(phrase): translator = str.maketrans('', '', string.punctuation); return phrase.translate(translator).lower().strip()
@@ -485,7 +485,7 @@ def homepage(r): return render_template('index.html')
 @blu.route("/home_page/get-categories-home", methods=['GET', 'POST'])
 def categories(r): return render_template('categories.html')
 @blu.get("/")
-async def laziz_page(r, ): return response.html(await template('Laziz') if '-d' in sys.argv else await load_template(f'serv/Laziz.html'))
+async def laziz_page(r, ): return response.html(await load_template(f'Laziz.html'))
 @blu.post("/")
 async def get_delicious(r):
     _0 = await next(iter(blu.apps)).config['db']['laziz_delicious'].aggregate([
