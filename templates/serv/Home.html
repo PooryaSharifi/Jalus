@@ -10,7 +10,7 @@
     <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
     <title>اسکان من</title>
     <meta name="apple-mobile-web-app-title" content="اسکان من">
-    <link rel="apple-touch-icon" href="/static/app-icon.webp" />
+    <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
@@ -25,11 +25,11 @@
     <link href="/static/thermostat.css" rel="stylesheet" crossorigin="anonymous">
     <style>
       html, body, #app { min-height: 100% !important; height: 100%; width: 100%; padding: 0; margin: 0; }
-      @font-face { font-weight: 300; src: url(/static/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 400; src: url(/static/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 500; src: url(/static/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 700; src: url(/static/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
-      @font-face { font-weight: 400; src: url(/static/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
+      @font-face { font-weight: 300; src: url(/static/font/IRANSansWeb_Light.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 400; src: url(/static/font/IRANSansWeb.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 500; src: url(/static/font/IRANSansWeb_Medium.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 700; src: url(/static/font/IRANSansWeb_Bold.woff2); font-family: IRANSans; font-display: swap; font-style: normal; }
+      @font-face { font-weight: 400; src: url(/static/font/sonnat-icons.woff2) format("woff2"); font-display: block; font-family: sonnat; font-style: normal; font-variant: normal;}
       .balcony::before {content: "\ea18"} .cabinet::before {content: "\ea19"} .parking::before {content: "\ea1c"} .telephone::before {content: "\e900"}
       * {box-sizing: border-box; font-family: IRANSans; font-weight: 400;}
       *.bold {font-family: IRANSans; font-weight: 700;} *.primary {color: #0D6EFD}
@@ -291,7 +291,7 @@ var App = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function () {
       var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var r, i;
+        var id, r;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -302,7 +302,7 @@ var App = /*#__PURE__*/function (_React$Component) {
               // };
               this.state.spaces = [{
                 name: 'Key',
-                image: ['/static/garden.webp', '/static/garden.webp'],
+                image: ['/static/icon/garden.webp', '/static/icon/garden.webp'],
                 appliances: [{
                   "title": "Door",
                   "name": "b",
@@ -318,137 +318,137 @@ var App = /*#__PURE__*/function (_React$Component) {
                 }]
               }, {
                 name: 'Coffee',
-                image: ['/static/coffeeBanner.webp', '/static/coffeeBanner.webp'],
+                image: ['/static/icon/coffeeBanner.webp', '/static/icon/coffeeBanner.webp'],
                 appliances: [{
                   "title": "Mocha",
                   "name": "curacao",
-                  "image": "/static/coffee.webp",
+                  "image": "/static/icon/coffee.webp",
                   "imagePosition": [0, 0],
                   "loaded": true
                 }, {
                   "title": "Espresso",
                   "name": "curacao",
-                  "image": "/static/coffee.webp",
+                  "image": "/static/icon/coffee.webp",
                   "imagePosition": [2, 2],
                   "loaded": true
                 }, {
                   "title": "Cappuccino",
                   "name": "curacao",
-                  "image": "/static/coffee.webp",
+                  "image": "/static/icon/coffee.webp",
                   "imagePosition": [2, 0],
                   "loaded": true
                 }, {
                   "title": "Latte",
                   "name": "curacao",
-                  "image": "/static/coffee.webp",
+                  "image": "/static/icon/coffee.webp",
                   "imagePosition": [0, 2],
                   "loaded": true
                 }, {
                   "title": "Americano",
                   "name": "curacao",
-                  "image": "/static/coffee.webp",
+                  "image": "/static/icon/coffee.webp",
                   "imagePosition": [0, 1],
                   "loaded": true
                 }, {
                   "title": "Hot Chocolate",
                   "name": "curacao",
-                  "image": "/static/coffee.webp",
+                  "image": "/static/icon/coffee.webp",
                   "imagePosition": [1, 1],
                   "loaded": true
                 }]
               }, {
                 name: 'Juice',
-                image: ['/static/juicesBanner.webp', '/static/juicesBanner.webp'],
+                image: ['/static/icon/juicesBanner.webp', '/static/icon/juicesBanner.webp'],
                 appliances: [{
                   "title": "Blue Curacao",
                   "name": "curacao",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [0, 0],
                   "loaded": true
                 }, {
                   "title": "Blue Punch",
                   "name": "punch",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [1, 0],
                   "loaded": true
                 }, {
                   "title": "Cherry Juice",
                   "name": "cherry",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [2, 0],
                   "loaded": true
                 }, {
                   "title": "Coco Mango",
                   "name": "cocoMango",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [3, 0],
                   "loaded": true
                 }, {
                   "title": "Cosmopolitan",
                   "name": "cosmopolitan",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [4, 0],
                   "loaded": true
                 }, {
                   "title": "Limonade",
                   "name": "limonade",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [0, 1],
                   "loaded": true
                 }, {
                   "title": "Mango Juice",
                   "name": "mango",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [1, 1],
                   "loaded": true
                 }, {
                   "title": "Margarita",
                   "name": "margarita",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [2, 1],
                   "loaded": true
                 }, {
                   "title": "Mojito",
                   "name": "mojito",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [3, 1],
                   "loaded": true
                 }, {
                   "title": "Orange Juice",
                   "name": "orange",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [4, 1],
                   "loaded": true
                 }, {
                   "title": "Orange Mint",
                   "name": "orangeMint",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [0, 2],
                   "loaded": true
                 }, {
                   "title": "PinaColada",
                   "name": "pinaColada",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [1, 2],
                   "loaded": true
                 }, {
                   "title": "Pineapple Juice",
                   "name": "pineapple",
-                  "image": "/static/juices.webp",
+                  "image": "/static/icon/juices.webp",
                   "imagePosition": [2, 2],
                   "loaded": true
                 }]
               }, {
                 name: 'Grill',
-                image: ['/static/grill.webp', '/static/grill.webp'],
+                image: ['/static/icon/grill.webp', '/static/icon/grill.webp'],
                 appliances: []
               }, {
                 name: 'Dj',
-                image: ['/static/dj.webp', '/static/dj.webp'],
+                image: ['/static/icon/dj.webp', '/static/icon/dj.webp'],
                 appliances: []
               }, {
                 "name": "Living Room",
-                "image": ["/static/living-room.jpg", "/static/living-room_mirror.jpg"],
+                "image": ["/static/icon/living-room.jpg", "/static/icon/living-room_mirror.jpg"],
                 "appliances": [{
                   "title": "Lamp",
                   "name": "a",
@@ -482,24 +482,36 @@ var App = /*#__PURE__*/function (_React$Component) {
                   "loaded": true
                 }]
               }];
-              _context.next = 3;
-              return fetch("".concat(window.location.href, "/-"));
-            case 3:
+              id = window.location.href.split('/');
+              if (id[id.length - 1] == 'homes') {
+                id = ''; /* fetch keys and find id of the key */
+              } else id = id[id.length - 1];
+              _context.next = 5;
+              return fetch("/properties/".concat(id), {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                }
+              });
+            case 5:
               r = _context.sent;
               if (!(r.status === 200)) {
-                _context.next = 11;
+                _context.next = 14;
                 break;
               }
-              _context.next = 7;
+              _context.next = 9;
               return r.json();
-            case 7:
+            case 9:
               r = _context.sent;
-              this.state.spaces = r;
-              _context.next = 12;
+              // this.state.spaces = r[0].spaces;  // add spaces to Divar
+              this.state.spaces[0].image = ["/homes/".concat(id, "/qr"), "/homes/".concat(id, "/qr")];
+              console.log(r[0].spaces);
+              _context.next = 15;
               break;
-            case 11:
+            case 14:
               window.location.href = "/properties";
-            case 12:
+            case 15:
               this.setState({
                 selectedSpace: 0,
                 loaded: true
@@ -509,41 +521,12 @@ var App = /*#__PURE__*/function (_React$Component) {
               // r = await fetch(`/weathers/@${r.location.lat},${r.location.lng}`);
               // if (r.status === 200)
               //   this.setState({weather: await r.json()});
-              if (!this.state.session) window.location.href = "/properties/".concat(r[i].home);
-              _context.next = 16;
-              return fetch('/key', {
-                method: 'GET',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': this.state.session
-                }
-              });
+              // if (!this.state.session) window.location.href = `/properties/${id}`;
+              // r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
+              // if (r.status > 300) window.location.href = `/properties/${r[i].home}`;
+              // r = await r.json(); for (var i = 0; i < r.length; i ++) if (r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == '')) return;
+              // window.location.href = `/properties/${r[i].home}`;
             case 16:
-              r = _context.sent;
-              if (r.status > 300) window.location.href = "/properties/".concat(r[i].home);
-              _context.next = 20;
-              return r.json();
-            case 20:
-              r = _context.sent;
-              i = 0;
-            case 22:
-              if (!(i < r.length)) {
-                _context.next = 28;
-                break;
-              }
-              if (!(r[i].head < Date() && Date() < r[i].tail && (r[i].home == this.state.home || this.state.home == ''))) {
-                _context.next = 25;
-                break;
-              }
-              return _context.abrupt("return");
-            case 25:
-              i++;
-              _context.next = 22;
-              break;
-            case 28:
-              window.location.href = "/properties/".concat(r[i].home);
-            case 29:
             case "end":
               return _context.stop();
           }
@@ -562,7 +545,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         style: {
           width: window.screen.width,
           height: window.screen.height,
-          backgroundImage: "url(/static/cover.webp)",
+          backgroundImage: "url(/static/icon/cover.webp)",
           backgroundSize: '20%',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: '50% 50%'
