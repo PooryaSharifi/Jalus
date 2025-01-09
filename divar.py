@@ -56,7 +56,8 @@ used_profiles, profile_lock = [Value(c_wchar_p, '**********') for _ in range(3)]
 def random_browser(phone=None, otp=False, headless=False):
     profile_lock.acquire()
     # os.environ['GH_TOKEN'] = "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"
-    profiles = glob.glob('C:\\Users\\Arsha\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\*Divar_*')
+    if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
+    profiles = glob.glob(f'/home/arsha/snap/firefox/common/.mozilla/firefox/*.Divar_{phone if phone else "*"}')
     if otp:
         freshes = []
         for pr in profiles:
@@ -71,10 +72,7 @@ def random_browser(phone=None, otp=False, headless=False):
     if len(profiles) == 0: raise
     profiles = {p.split('/')[-1].split('_')[-1]: p for p in profiles}
     profiles = {k: v for k, v in profiles.items() if not any([k.encode() == p.value for p in used_profiles])}
-    if phone:
-        phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
-        profile = profiles[phone]
-    else: profile = choices(list(profiles.items()))[0][1]
+    profile = choices(list(profiles.items()))[0][1]
     for p in used_profiles:
         if p.value == b'**********':  p.value = profile.split('/')[-1].split('_')[-1].encode(); break
     try:
@@ -305,8 +303,9 @@ def phone(browser, user):
         return {}
 
 def ppan(headless=False, rpm=45, debug=False):
+    pr_type = 'Rent' if 'rent' in ' '.join(sys.argv) else 'Residential'
     while True:
-        browser, t0 = random_browser(headless=headless), time.time()
+        browser, t0 = random_browser(headless=headless, phone=pr_type), time.time()
         k = pan(browser, city='isfahan', photo=True, log=True, rpm=rpm)
         browser.quit()
         for p in used_profiles:
