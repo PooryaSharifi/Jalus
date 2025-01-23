@@ -46,16 +46,16 @@ categories.extend([f'rent-{et}' for et in ['temporary-suite-apartment', 'tempora
 categories.extend(['contribution-construction', 'pre-sell-home'])
 categories = [(cat, 1 / 666 / ((2 + ic) ** (1 / 666) - 1)) for ic, cat in enumerate(categories)]
 cm = {
-    'browse-post-list': ['post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858', 'browse-post-list-f3858'], 
-    'post-card-item': ['post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972', 'post-card-item-af972'],
-    'kt-post-card__title': ['kt-post-card__title', 'kt-post-card__title', 'kt-post-card__title', 'kt-post-card__title', 'kt-post-card__title'],
-    'kt-post-card__bottom-description': ['kt-post-card__description', 'kt-post-card__bottom-description', 'kt-post-card__bottom-description', 'kt-post-card__bottom-description', 'kt-post-card__bottom-description'],
+    'browse-post-list': ['post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858'], 
+    'post-card-item': ['widget-col-d2306', 'post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972'],
+    'kt-post-card__title': ['kt-post-card__title'],
+    'kt-post-card__bottom-description': ['kt-post-card__description', 'kt-post-card__bottom-description'],
 }
 used_profiles, profile_lock = [Value(c_wchar_p, '**********') for _ in range(3)], Lock()
     
 def random_browser(phone=None, otp=False, headless=False):
     profile_lock.acquire()
-    # os.environ['GH_TOKEN'] = "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"
+    os.environ['GH_TOKEN'] = "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"
     if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
     profiles = glob.glob(f'/home/arsha/snap/firefox/common/.mozilla/firefox/*.Divar_{phone if phone else "*"}')
     if otp:
@@ -90,11 +90,11 @@ def random_browser(phone=None, otp=False, headless=False):
     [o.add_argument(arg) for arg in ['--profile', profile, '--user-data-dir', 'selenium']]
     profile_lock.release()
     try:
-        br = webdriver.Firefox(options=o)
+        # br = webdriver.Firefox(options=o, service=FirefoxService(FirefoxDriverManager().install()))
+        br = webdriver.Firefox(options=o, service=FirefoxService('/home/arsha/.wdm/drivers/geckodriver/linux64/v0.35.0/geckodriver'))
         br.__profile__, br.__otp__ = profile, otp
         return br
-    except WebDriverException:
-        return random_browser(phone=phone, otp=otp, headless=headless)
+    except WebDriverException: return random_browser(phone=phone, otp=otp, headless=headless)
 
 def otp(phone):
     browser = random_browser(phone)
@@ -111,23 +111,22 @@ def otp(phone):
     except: pass
     try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'با قوانین دیوار موافقم')]]]"))).click()
     except: pass
-    mobile = WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, '//input[@name="mobile"]')))
+    mobile = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.XPATH, '//input[@name="mobile"]')))
     mobile.send_keys(f"0{phone}")
     time.sleep(1.8)
-    try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'تأیید')]]]"))).click()
+    try: WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'تأیید')]]]"))).click()
     except: pass
     sms = input()
-    code = WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, '//input[@name="code"]')))
+    code = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@name="code"]')))
     code.send_keys(sms)
-    WebDriverWait(browser, 120).until(EC.invisibility_of_element_located((By.XPATH, "//div[text()[contains(., 'ورود به حساب کاربری')]]")))  # class="kt-modal__title"
+    WebDriverWait(browser, 150).until(EC.invisibility_of_element_located((By.XPATH, "//div[text()[contains(., 'ورود به حساب کاربری')]]")))  # class="kt-modal__title"
     with open(browser.__profile__ + f"/ban_{str(datetime.now()).split(' ')[0]}", 'w') as f:
         f.write(f'{datetime.now() - timedelta(days=1, seconds=1)}')
-    browser.quit()
+    # browser.quit()
 
-def pan(browser, city='isfahan', photo=True, log=True, rpm=10, cat=None):  # todo pan doesnt need loop and rpm
+def pan(browser, city, photo=True, log=True, rpm=10, cat=None):  # todo pan doesnt need loop and rpm
     users = get_users()
-    if len(sys.argv) > 3: city = sys.argv[3]
-    if len(sys.argv) > 4: cat = sys.argv[4]
+    if len(sys.argv) > 3: cat = sys.argv[-1]
     if not cat:
         cats = [(cat, w, list(users.find({'source': 'divar', 'category': cat}).sort([('pan_date', -1), ('pan_cnt', 1)]).limit(3))[::-1]) for cat, w in deepcopy(categories)]
         cats = [(cat, w * (min((datetime.now() - lasts[-1]['pan_date']).total_seconds() / 60 / 60, 3) if lasts else 5), set([ad['link'] for ad in lasts])) for cat, w, lasts in cats]  # ln 17 / ln 2]
@@ -162,8 +161,8 @@ def pan(browser, city='isfahan', photo=True, log=True, rpm=10, cat=None):  # tod
                 if not bottoms: continue
                 for sub in bottoms: subtitles.append(sub.get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا')); 
                 break
-            if not subtitles: print(traceback.format_exc()); assert 1 == 0
-            loc = list(reversed(wild_origins[city][0]['location']))
+            # if not subtitles: print(traceback.format_exc()); assert 1 == 0
+            loc = list(reversed(wild_origins[city][0]['loc']))
             print(f"{cs.WARNING}{cs.BOLD}Pan {pan_cnt}:{cs.ENDC} {cs.OKCYAN}{refs[0].split('/')[-1]}{cs.ENDC} {title} {cs.CGREY}{subtitles[0]}{cs.ENDC}")
             # with open('../divar_pan.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump({'title': title, 'category': cat, 'subtitles': subtitles, 'link': refs[0], 'loc': loc, 'pan_date': pan_date}, default_flow_style=False, indent=2, allow_unicode=True))
             pds.append({
@@ -303,15 +302,12 @@ def phone(browser, user):
         return {}
 
 def ppan(headless=False, rpm=45, debug=False):
-    pr_type = 'Rent' if 'rent' in ' '.join(sys.argv) else 'Residential'
     while True:
-        browser, t0 = random_browser(headless=headless, phone=pr_type), time.time()
-        k = pan(browser, city='isfahan', photo=True, log=True, rpm=rpm)
+        browser, t0 = random_browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
+        k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm)
         browser.quit()
         for p in used_profiles:
-            if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode():
-                p.value = b'**********'
-                break
+            if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
         time.sleep(max(k / rpm * 60 - (time.time() - t0), 0))
 
 def pdim(rpm=10, debug=False, **kwargs):
