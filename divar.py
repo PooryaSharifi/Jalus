@@ -55,7 +55,7 @@ used_profiles, profile_lock = [Value(c_wchar_p, '**********') for _ in range(3)]
     
 def random_browser(phone=None, otp=False, headless=False):
     profile_lock.acquire()
-    os.environ['GH_TOKEN'] = "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"
+    os.environ['GH_TOKEN'] = "<github token>"
     if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
     profiles = glob.glob(f'/home/arsha/snap/firefox/common/.mozilla/firefox/*.Divar_{phone if phone else "*"}')
     if otp:
