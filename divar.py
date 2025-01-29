@@ -27,11 +27,11 @@ def get_users():
     users.create_index([('source', 1), ('category', 1), ('date', 1)])
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
     users.create_index([('link', 1)], unique=True); users.create_index([('id', 1)], unique=True)
+    # users.delete_many({})
     print(f"{cs.FAIL}{cs.BOLD}Count All   : {users.count_documents({})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Detail: {users.count_documents({'detailed': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Phoned: {users.count_documents({'phoned': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Imaged: {users.count_documents({'imaged': True})}{cs.ENDC}")
-    # users.delete_many({})
     return users
 
 def rnd_necessities():
@@ -86,7 +86,7 @@ def random_browser(phone=None, otp=False, headless=False):
                     w_prefs.write(''.join(prefs))
     except FileNotFoundError: print('profile is fresh reopen to add no image')
     o = webdriver.FirefoxOptions()
-    if headless: o.headless = True
+    if headless: o.headless = True; o.add_argument('-headless');  # o.add_argument("--headless=new")
     [o.add_argument(arg) for arg in ['--profile', profile, '--user-data-dir', 'selenium']]
     profile_lock.release()
     try:
@@ -404,7 +404,7 @@ if __name__ == '__main__':
     routines = {'upload': pup, 'image': pdim, 'phone': pphone, 'detail': pdad, 'pan': ppan}
     if len(sys.argv) > 1 and sys.argv[1] in routines:
         debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
-        headless = False if ('-h' in sys.argv or '--debug' in sys.argv) else True
+        headless = True if ('-h' in sys.argv or '--headless' in sys.argv) else False
         if '-r' in sys.argv or '--rpm' in sys.argv:
             routines[sys.argv[1]](headless=headless, debug=debug, rpm=int(sys.argv[(sys.argv.index('-r') + 1) if '-r' in sys.argv else (sys.argv.index('--rpm') + 1)]))
         else: routines[sys.argv[1]](headless=headless, debug=debug)
