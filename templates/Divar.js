@@ -14,8 +14,17 @@ class App extends React.Component {
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
         {/* #macro modules/menu */}
-        <div style={{height: 105}}></div>
-        {this.state.ads.map((ad) => <div onClick={() => {this.setState({show: ad})}}>{ad.title}</div>)}
+        <div style={{height: 108}}></div>
+        <div style={{background: 'white', fontSize: '2.1em', paddingLeft: 160, paddingRight: 160, paddingTop: 5}}>
+          {this.state.ads.map((ad) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
+            <div style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 360, width: '36%', borderRadius: 8}}/>
+            <div style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', paddingRight: 15, width: '64%'}}>
+              <span style={{fontWeight: 500}}>{ad.title}</span>
+              <span>{ad.description}</span><br></br>
+              <a style={{textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={() => {window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
+            </div>
+          </div>)}
+        </div>
         {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) this.setState({show: {}})}}>
           <div ref={(elem) => {window.show = elem;}} className="scroll" style={{height: '100%', backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
             <div style={{paddingRight: '1em', direction: 'rtl', }}>

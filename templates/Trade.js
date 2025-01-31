@@ -29,6 +29,7 @@ class App extends React.Component {
   } render() { let app = this;
     return <div>
       <div id="symbols-page" class="symbols-page page">
+        {this.state.signals.map((signal) => <div>Signal {signal.market} {Math. floor(((Date.now()) - (new Date(signal.timestamp.replace(' ', 'T')).getTime())) / 1000 / 3600)} Hours and {Math. floor(((Date.now()) - (new Date(signal.timestamp.replace(' ', 'T')).getTime())) / 1000 / 60) % 60} Minuts ago applied to You</div>)}
         {this.state.markets.map((market) => 
           <div class="row touchable" label={market[0]} onClick={async () => {window.history.pushState({urlPath: `/k/${market[0]}`}, "", `/k/${market[0]}`); await this.updateKlines(market[0])}}>
             <div class="col one">
