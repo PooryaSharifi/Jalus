@@ -1,4 +1,4 @@
-import re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode
+import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode
 from sanic import Sanic, Blueprint, response, exceptions
 from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
@@ -11,9 +11,13 @@ from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_d
 
 WorkerManager.THRESHOLD = 1200
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
-app, otps, wss, otp_list = Sanic(__name__), {}, None, []; CORS(app)
-app.config.update(dict(REQUEST_TIMEOUT=120, RESPONSE_TIMEOUT=120, asset_dir='/home/poorya/Pictures/estates',
-WEBSOCKET_MAX_SIZE=2 ** 20, WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20))
+app, otps, wss, otp_list, signals, markets = Sanic(__name__), {}, None, [], [{'timestamp': '2024-11-10 06:58:57', 'market': 'BTCUSDT', 'author': 'arsha', 'weight': .3}, {'timestamp': '2025-01-02 12:38:47', 'market': 'ETHUSDT', 'author': 'arsha', 'weight': .2}], [
+    ['BTCUSDT', 102598.6, 102628.3, 96435.5], ['ETHUSDT', 3138.06, 3139.06, 3660.88], ['DOTUSDT', 5.7502, 5.7502, 8.6612], ['BNBUSDT', 671.514, 671.515, 660.659], ['ADAUSDT', 0.9309, 0.9316, 1.0933], ['SOLUSDT', 232.25, 232.468, 242.018], ['XRPUSDT', 3.0922, 3.09514, 1.89692], ['LUNAUSDT', 0.3135, 0.3135, 0.4498], 
+    ['DOGEUSDT', 0.32879, 0.32902, 0.42558], ['AVAXUSDT', 33.254, 33.254, 43.155], ['SHIBUSDT', 1.8428e-05, 1.8425e-05, 2.5852e-05], ['TRXUSDT', 0.2417, 0.2417, 0.2042], ['MATICUSDT', 0.4084, 0.4084, 0.6339], ['LINKUSDT', 23.4191, 23.4261, 18.2516], ['ATOMUSDT', 5.8665, 5.8652, 8.5482],
+    ['LTCUSDT', 113.294, 113.4, 104.45], ['IMXUSDT', 1.0865, 1.0865, 1.9474], ['APTUSDT', 7.4042, 7.4042, 13.0126], ['INJUSDT', 18.458, 18.462, 29.883], ['NEARUSDT', 4.4956, 4.4954, 6.9211], ['OPUSDT', 1.464, 1.464, 2.42], ['TONUSDT', 4.8524, 4.8538, 6.6699], ['RUNEUSDT', 2.0822, 2.0835, 6.1423], 
+    ['EGLDUSDT', 28.16, 28.19, 41.13], ['ORDIUSDT', 18.23, 18.23, 40.45], ['RNDRUSDT', 5.5948, 5.7191, 10.0133], ['ARBUSDT', 0.6119, 0.6119, 0.9582], ['DASHUSDT', 32.0, 32.02, 38.13], ['JTOUSDT', 3.021, 3.024, 3.764], ['GMXUSDT', 20.58, 20.6, 31.15], ['KASUSDT', 0.12375, 0.12387, 0.15887], ['IDUSDT', 0.3455, 0.3455, 0.5761]]
+app.config.update(dict(REQUEST_TIMEOUT=120, RESPONSE_TIMEOUT=120, asset_dir='/home/poorya/Pictures/estates', WEBSOCKET_MAX_SIZE=2 ** 20,
+    WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20)); CORS(app)
 app.blueprint(laziz_user, url_prefix='/laziz/user')
 app.blueprint(laziz_delicious, url_prefix='/laziz/delicious')
 app.blueprint(laziz_order, url_prefix='/laziz/order')
@@ -24,17 +28,24 @@ app.add_route(lambda _: response.redirect('/dome'), '/zome', name='zome_dome')
 min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
 @app.get('/static/<path:path>')
 async def static_file(r, path): return await response.file(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', *urllib.parse.unquote(min_files.get(path, path)).split('/')))
+@app.post('/static/<path:path>')  # 5
+async def upload_static_file(r, path):
+    path = f'{os.path.dirname(os.path.abspath(__file__))}/static/{path}'
+    if os.path.exists(path): return response.json({'OK': True})  # awaiting
+    os.makedirs(os.path.dirname(filename), exist_ok=True)  # awaiting
+    async with aiofiles.open(path, 'wb') as f: await f.write(r.files["file"][0].body)
+    f.close()
+    return response.json({'OK': True})
 @app.listener('before_server_start')
 async def init_ones(sanic, loop): 
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
     with open('static/delicious.json', encoding='utf-8') as jf:
-        collection = json.load(jf); app.config['db']['laziz_delicious'].delete_many({'subject': {'$in': [document['subject'] for document in collection]}})
+        collection = json.load(jf); await app.config['db']['laziz_delicious'].delete_many({'subject': {'$in': [document['subject'] for document in collection]}})
         for document in collection: document['_date'] = datetime.now()
         for document in collection: await app.config['db']['laziz_delicious'].insert_one(document)
     # await Key.get_collection().create_index([("home", 1), ("phone", 1), ("fix", 1)], )  # , unique=True)
 @app.listener('after_server_stop')
 async def close_connection(app, loop): app.config['db'].close()
-
 @app.post('/key/<home>/<sim>/<head>/<tail>/<value:int>')  # inja be name khodesh tooye db vase in home reserver mikone deghat beshe ke vase har home, phone maa faghat ye reserve darim.
 async def save_key(r, home, sim, head, tail, value):
     sim = int(sim[3:] if sim[:3] == '+98' else sim[1:] if sim[0] == '0' else sim)
@@ -176,6 +187,14 @@ async def _smart_home(r, home, ): return response.html(await template('Home') if
 pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj][ts]*'); pages = [os.path.basename(p).split('.')[0].lower() for p in pages]
 @app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz']])}|)>")
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
+@app.post('/divar/<page:int>')  # 11
+async def get_ads(r, page): ads = await app.config['db']['ads'].find(r.json).skip(24 * page).limit(24).to_list(None); return response.json(ads)
+@app.post('/divar/+')  # 6
+async def new_ad(r, ): ad = r.json; await app.config['db']['ads'].insert_one(ad); return response.json({'OK': True})  # change to datetime
+@app.post('/trade/s')
+async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
+@app.post('/trade/k')
+async def _get_klines(r, ): global markets; markets = r.json if r.body else markets; return response.json({}) if r.body else response.json(markets)
 
 if __name__ == '__main__':
     debug = True if '-d' in sys.argv or '--debug' in sys.argv else False

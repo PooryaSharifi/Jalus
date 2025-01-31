@@ -1,4 +1,4 @@
-import subprocess, requests, time, re, random, sys
+import subprocess, requests, time, re, random, sys, pymongo
 from datetime import datetime
 from subprocess import DEVNULL
 
@@ -45,5 +45,22 @@ def otp():
     while True:
         otp_list = requests.get(f'https://jalus.ir/otp').text.strip('\n').split('\n'); otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
         for phone, otp in otp_list: sync_single_tty(); subprocess.Popen(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL)
+
+ads = pymongo.C()['']['']
+def push_ads():  # 4
+    while True:
+        time.sleep(240)
+        new_ads, continue_flag = ads.find({}), False
+        if not new_ads: continue
+        new_images = [(ad['images'][0] if ad['images'] else '') for ad in new_ads]
+        for im_i, im in enumerate(new_images):
+            if im_i:
+                try: 
+                    files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im["id"]}/0.jpg', 'rb')}
+                    r = requests.post(f'https://jalus.ir/static/properties/{im["id"]}/0.jpg', files=files)
+                    if r.status != 2 or not r.json['OK']: continue_flag = True; raise
+                except: break
+        if continue_flag: continue
+        requests.post(f'https://jalus.ir/', {new_ads})
 
 if __name__ == '__main__': globals()[sys.argv[1]]()

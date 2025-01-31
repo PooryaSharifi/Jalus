@@ -14,6 +14,8 @@ async def load_template(name): return (await response.file(f"{os.path.dirname(os
 async def template(name):
     index_template = await load_template('index.html')
     target_template = await load_template(f'{name}.js')
+    for match in re.findall(r'[/][*][*] #elements .* #elements [*][*][/]', target_template, flags=re.DOTALL): payload = match.replace('/** #elements ', ''); payload = payload.replace(' #elements **/', ''); index_template = index_template.replace(f'/// #elements ///', payload); target_template = target_template.replace(match, '')
+    print(target_template)
     for match in re.findall(r'[/][*][*] #\w+ .* #\w+ [*][*][/]', target_template): payload = match[5:-4]; hashtag = payload.rfind('#'); payload, block = payload[len(payload) - hashtag:hashtag], payload[hashtag + 1:]; index_template = index_template.replace(f'/// #{block} ///', payload); target_template = target_template.replace(match, '')
     index_template = index_template.replace(f'/// #content ///', target_template)
     for match in re.findall(r'{[/][*] #macro .+ [*][/]}', index_template): index_template = index_template.replace(match, await load_template(match[3:-3].strip().split(' ')[-1] + '.jsx'))
