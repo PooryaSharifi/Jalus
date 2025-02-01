@@ -1,12 +1,11 @@
-<!-- npm i -D @babel/core @babel/cli @babel/preset-env @babel/preset-react --> <!-- <script type="text/babel"> -> npx babel App.jsx --presets=@babel/preset-env,@babel/preset-react -o app.js -> use it in app.html remove babel.min.js and type="text/babel -->
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html style="height:100%;margin:0;padding:0;"><head>
   <meta charset="utf-8" />
   <link rel="icon" href="/favicon.ico" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="اپلیکیشن جالوس بنای سبز دومنظوره"/>
-  <!-- <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> -->
-  <title>جالوس بنای سبز دومنظوره</title>
-  <meta name="apple-mobile-web-app-title" content="جالوس بنای سبز دومنظوره">
+  <meta name="description" content="اپلیکیشن جالوس بنای سبز دومنظوره "/>
+  <title>جالوس بنای سبز دومنظوره </title>
+  <meta name="apple-mobile-web-app-title" content="جالوس بنای سبز دومنظوره ">
   <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,12 +16,9 @@
   <script src="/static/react-dom.production.min.js" crossorigin></script>
   
   <script src="/static/jDate.min.js"></script>
-  <script src="/static/plyr.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/plyr.css"/>
-  <link rel="stylesheet" href="/static/plyr.min.css"/>
-  <link href="/static/digikala.css" rel="stylesheet" crossorigin="anonymous" as="style">
-  <link href="/static/switch.css" rel="stylesheet" crossorigin="anonymous">
-  <link href="/static/thermostat.css" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/digikala.css"/><script src="/static/plyr.js" crossorigin="anonymous"></script><link rel="stylesheet" href="/static/plyr.css"/><link rel="stylesheet" href="/static/plyr.min.css"/> 
+  <style>.touchable { cursor: pointer !important; transition: 0.07s ease-in-out !important; } .touchable:active { opacity: .2 !important; }
+  .scrollview { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }</style>
 </head><body><div id="app"></div><div onclick="(function(event) {if(event.target == document.getElementById('plyr')) {document.getElementById('plyr').style.display = 'none'; document.getElementById('plyr').innerHTML = ''}})(event)" style="display: none; background: #0004; position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 10" id="plyr"></div><script>"use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -135,6 +131,20 @@ Object.defineProperty(String.prototype, 'translate', {
   },
   enumerable: false
 });
+window.animate = function (elem, property, x, t) {
+  var prev = elem.style[property];
+  var delta = x - prev;
+  delta /= 100;
+  delta = Math.round(delta);
+  function frame() {
+    prev += delta;
+    elem.style[property] = prev + 'px';
+    if (left == 100) {
+      clearInterval(id);
+    }
+  }
+  var id = setInterval(frame, Math.round(10 * t));
+};
 window.tr_table = {
   'pizza': 'پیتزا',
   'fries': 'سیب سرخ‌شده',
@@ -1172,7 +1182,7 @@ var App = /*#__PURE__*/function (_React$Component) {
               while (1) switch (_context8.prev = _context8.next) {
                 case 0:
                   if (e.key === 'Enter') {
-                    console.log('ha ha');
+                    console.log(_this2.state.searchInput);
                     _this2.setState({
                       searchInput: '',
                       searchExpand: false

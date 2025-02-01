@@ -15,7 +15,6 @@ async def template(name):
     index_template = await load_template('index.html')
     target_template = await load_template(f'{name}.js')
     for match in re.findall(r'[/][*][*] #elements .* #elements [*][*][/]', target_template, flags=re.DOTALL): payload = match.replace('/** #elements ', ''); payload = payload.replace(' #elements **/', ''); index_template = index_template.replace(f'/// #elements ///', payload); target_template = target_template.replace(match, '')
-    print(target_template)
     for match in re.findall(r'[/][*][*] #\w+ .* #\w+ [*][*][/]', target_template): payload = match[5:-4]; hashtag = payload.rfind('#'); payload, block = payload[len(payload) - hashtag:hashtag], payload[hashtag + 1:]; index_template = index_template.replace(f'/// #{block} ///', payload); target_template = target_template.replace(match, '')
     index_template = index_template.replace(f'/// #content ///', target_template)
     for match in re.findall(r'{[/][*] #macro .+ [*][/]}', index_template): index_template = index_template.replace(match, await load_template(match[3:-3].strip().split(' ')[-1] + '.jsx'))
@@ -31,8 +30,9 @@ async def template(name):
 #     return template
 async def util_debabel():
     for page in glob.glob(f'{os.path.dirname(os.path.dirname(__file__))}/templates/*.*'):
+        if 'Laziz.html' in page: continue
         if page[-4:] == 'html': file = await load_template(os.path.basename(page))
-        else: file = await template(page.capitalize(os.path.basename(page).split('.')[0]))
+        else: file = await template(os.path.basename(page).split('.')[0].capitalize())
         # else: file = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
         file = file.replace('<script src="/static/babel.min.js"></script>', '')
         jsx = re.findall(r'<script type="text/babel">(?:\n.*)*</script>', file)

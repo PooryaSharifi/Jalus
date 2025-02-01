@@ -1,0 +1,3539 @@
+<!DOCTYPE html>
+<html style="height:100%;margin:0;padding:0;"><head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="اپلیکیشن لذیذستون "/>
+  <title>لذیذستون </title>
+  <meta name="apple-mobile-web-app-title" content="لذیذستون ">
+  <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+  <script src="/static/react.production.min.js" crossorigin></script>
+  <script src="/static/react-dom.production.min.js" crossorigin></script>
+  
+  <script src="/static/jDate.min.js"></script>
+   
+  <style>.touchable { cursor: pointer !important; transition: 0.07s ease-in-out !important; } .touchable:active { opacity: .2 !important; }
+  .scrollview { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }</style>
+</head><body><div id="app"></div><script>"use strict";
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _createSuper(t) { var r = _isNativeReflectConstruct(); return function () { var e, o = _getPrototypeOf(t); if (r) { var s = _getPrototypeOf(this).constructor; e = Reflect.construct(o, arguments, s); } else e = o.apply(this, arguments); return _possibleConstructorReturn(this, e); }; }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function setCookie(name, value) {
+  var expires = "";
+  var date = new Date();
+  date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000);
+  expires = "; expires=" + date.toUTCString();
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+function cookie(name) {
+  var nameEQ = name + "=",
+    ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+}
+function delCookie(name) {
+  document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+var dateObj = new Date();
+var now = [dateObj.getUTCFullYear(), dateObj.getUTCMonth(), dateObj.getUTCDate()];
+var faNow = jDate.gregorianToJalali(now[0], now[1], now[2]);
+var isMobile = /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4)) ? true : false;
+var faTable = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+var deFaTable = {
+  '۰': 0,
+  '۱': 1,
+  '۲': 2,
+  '۳': 3,
+  '۴': 4,
+  '۵': 5,
+  '۶': 6,
+  '۷': 7,
+  '۸': 8,
+  '۹': 9,
+  '٠': 0,
+  '١': 1,
+  '٢': 2,
+  '٣': 3,
+  '٤': 4,
+  '٥': 5,
+  '٦': 6,
+  '٧': 7,
+  '٨': 8,
+  '٩': 9
+};
+Object.defineProperty(String.prototype, 'capitalize', {
+  value: function value() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  },
+  enumerable: false
+});
+Object.defineProperty(String.prototype, 'farsify', {
+  value: function value() {
+    return this.split('').map(function (ch) {
+      return ch >= '0' && ch <= '9' ? faTable[parseInt(ch)] : ch;
+    }).join('');
+  },
+  enumerable: false
+});
+Object.defineProperty(Number.prototype, 'farsify', {
+  value: function value() {
+    return ('' + this).split('').map(function (ch) {
+      return ch >= '0' && ch <= '9' ? faTable[parseInt(ch)] : ch;
+    }).join('');
+  },
+  enumerable: false
+});
+Object.defineProperty(String.prototype, 'deFarsify', {
+  value: function value() {
+    return this.split('').map(function (ch) {
+      return ch in deFaTable ? deFaTable[ch] : ch;
+    }).join('');
+  },
+  enumerable: false
+});
+Object.defineProperty(Object.prototype, 'isEmpty', {
+  value: function value() {
+    return Object.keys(this).length === 0 && Object.getPrototypeOf(this) === Object.prototype;
+  },
+  enumerable: false
+});
+Object.defineProperty(String.prototype, 'translate', {
+  value: function value() {
+    return !window.app.state.trans ? this : window.tr_table[this.toLowerCase()];
+  },
+  enumerable: false
+});
+window.animate = function (elem, property, x, t) {
+  var prev = elem.style[property];
+  var delta = x - prev;
+  delta /= 100;
+  delta = Math.round(delta);
+  function frame() {
+    prev += delta;
+    elem.style[property] = prev + 'px';
+    if (left == 100) {
+      clearInterval(id);
+    }
+  }
+  var id = setInterval(frame, Math.round(10 * t));
+};
+window.tr_table = {
+  'pizza': 'پیتزا',
+  'fries': 'سیب سرخ‌شده',
+  'chicken_bbq': 'جوجه کباب',
+  'rice': 'برنج',
+  'bread': 'نان',
+  'falafel': 'فلافل',
+  'kebab': 'کباب',
+  'top': 'بالا',
+  'middle': 'وسط',
+  'bottom': 'پایین',
+  'yes': 'بله',
+  'no': 'خیر',
+  'open': 'باز',
+  'close': 'بسته',
+  'on': 'روشن',
+  'off': 'خاموش',
+  'light': 'روشن',
+  'dark': 'تیره',
+  'dj mode': 'حالت دی‌جی',
+  'area': 'محوطه',
+  'key': 'کلید',
+  'fold': 'گشایش',
+  'alarm': 'دزدگیر',
+  'security': 'گارد',
+  'lamp': 'روشنایی',
+  'router': 'اینترنت',
+  'air': 'تهویه',
+  'door': 'درب ورودی',
+  'outdoor': 'درب بیرونی',
+  'living room': 'سالن',
+  'garden': 'محوطه',
+  'weather': 'آب وهوا',
+  'pool': 'استخر',
+  'jacuzzi': 'جکوزی',
+  'lights': 'روشنایی',
+  'temperature': 'دما',
+  'heater': 'بخاری',
+  'cooler': 'کولر',
+  'dj': 'دی‌جی',
+  'coffee': 'کافی',
+  'juice': 'آبمیوه',
+  'pump': 'پمپ',
+  'fountain': 'آبنما',
+  'greenhouse': 'گلخانه',
+  'cloudy': 'ابری',
+  'clear': 'صاف',
+  'rainy': 'بارانی',
+  'snowy': 'برفی',
+  'shared devices': 'دستگاه‌های متصل',
+  'indoor temp': 'دمای داخل',
+  'outdoor humidity': 'رطوبت هوا',
+  'outdoor temp': 'دمای محیط',
+  'filter': 'فیلتر تصفیه',
+  'bubble': 'حباب‌ساز',
+  'heat': 'گرمایش',
+  'cold drink': 'نوشیدنی سرد',
+  'hot drink': 'نوشیدنی گرم',
+  'semi prepared': 'نیمه‌آماده',
+  'grill': 'گریل',
+  'automatic': 'اتوماتیک',
+  'complete': 'کامل',
+  'half': 'نیمه',
+  'spaces': 'مکان‌ها',
+  'things': 'اشیاء',
+  'orange juice': 'آب‌پرتغال',
+  'blue curacao': 'بلوکاراسائو',
+  'blue punch': 'بلوپانچ',
+  'cherry juice': 'آب‌آلبالو',
+  'coco mango': 'انبه نارگیل',
+  'cosmopolitan': 'کازموپولیتن',
+  'limonade': 'لیموناد',
+  'mango juice': 'آب‌انبه',
+  'margarita': 'مارگاریتا',
+  'mojito': 'موهیتو',
+  'pineapple juice': 'آب‌آناناس',
+  'orange mint': 'پرتغال نعنا',
+  'pinacolada': 'پیناکولادا',
+  'mocha': 'موکا',
+  'espresso': 'اسپرسو',
+  'cappuccino': 'کاپوچینو',
+  'latte': 'لته',
+  'americano': 'آمریکانو',
+  'hot chocolate': 'هات چاکلت'
+};
+var Dialog = /*#__PURE__*/function (_React$Component) {
+  _inherits(Dialog, _React$Component);
+  var _super = _createSuper(Dialog);
+  function Dialog() {
+    _classCallCheck(this, Dialog);
+    return _super.apply(this, arguments);
+  }
+  return _createClass(Dialog);
+}(React.Component);
+var Map = /*#__PURE__*/function (_React$Component2) {
+  _inherits(Map, _React$Component2);
+  var _super2 = _createSuper(Map);
+  function Map() {
+    _classCallCheck(this, Map);
+    return _super2.apply(this, arguments);
+  }
+  return _createClass(Map);
+}(React.Component);
+var screenWidth = Math.round(window.innerWidth),
+  screenHeight = Math.round(window.innerHeight),
+  host = '/laziz';
+var App = /*#__PURE__*/function (_React$Component3) {
+  _inherits(App, _React$Component3);
+  var _super3 = _createSuper(App);
+  // Images = {
+  //   "./assets/img/categories/chicken.jpg": require("./assets/img/categories/chicken.jpg"),
+  //   "./assets/img/categories/fish.jpg": require("./assets/img/categories/fish.jpg"),
+  //   "./assets/img/categories/lamb.jpg" : require("./assets/img/categories/lamb.jpg"),
+  //   "./assets/img/categories/cold-cuts.jpg" : require("./assets/img/categories/cold-cuts.jpg"),
+  //   "./assets/img/categories/eggs.jpg" : require("./assets/img/categories/eggs.jpg"),
+  //   "./assets/img/categories/ready.jpg" : require("./assets/img/categories/ready.jpg"),
+  //   "./assets/img/categories/combo.jpg" : require("./assets/img/categories/combo.jpg"),
+  //   "./assets/img/categories/exotic.jpg" : require("./assets/img/categories/exotic.jpg"),
+
+  //   './assets/img/cdn/offer.jpg': require('./assets/img/cdn/offer.jpg'),
+  //   'shrimp': require('./assets/img/shrimp.png'),
+  //   'fish': require('./assets/img/fish.png'),
+  //   'chicken': require('./assets/img/chicken.png'),
+  //   'lamb': require('./assets/img/sheep.png'),
+  //   './assets/img/flavors/chili-1.png': require('./assets/img/flavors/chili-1.png'),
+  //   './assets/img/flavors/onion-0.png': require('./assets/img/flavors/onion-0.png'),
+  //   './assets/img/flavors/shrimp-0.png': require('./assets/img/flavors/shrimp-0.png'),
+  //   './assets/img/flavors/smoky-0.png': require('./assets/img/flavors/smoky-0.png'),
+  //   './assets/img/flavors/balsamic-0.png': require('./assets/img/flavors/balsamic-0.png'),
+  //   './assets/img/flavors/raw-0.png': require('./assets/img/flavors/raw-0.png'),
+  //   './assets/img/flavors/phenomenal-0.png': require('./assets/img/flavors/phenomenal-0.png'),
+  // };
+
+  function App(props) {
+    var _this;
+    _classCallCheck(this, App);
+    _this = _super3.call(this, props);
+    // this.locationLength = new Animated.Value(40);
+    _defineProperty(_assertThisInitialized(_this), "nonState", {
+      username: null,
+      password: null,
+      newReview: {}
+    });
+    _defineProperty(_assertThisInitialized(_this), "state", {
+      user: {
+        location: {
+          latitude: 35.721896,
+          longitude: 51.312004
+        }
+      },
+      locationHeader: true,
+      vendor: {
+        latitude: 35.725470,
+        longitude: 51.320938
+      },
+      biker: {
+        location: {
+          latitude: 35.724546,
+          longitude: 51.312297
+        },
+        temperature: 4.3
+      },
+      route: [{
+        latitude: 35.721896,
+        longitude: 51.312004
+      }, {
+        latitude: 35.722061,
+        longitude: 51.312006
+      }, {
+        latitude: 35.722391,
+        longitude: 51.310158
+      }, {
+        latitude: 35.724838,
+        longitude: 51.310857
+      }, {
+        latitude: 35.724546,
+        longitude: 51.312297
+      }, {
+        latitude: 35.724112,
+        longitude: 51.313310
+      }, {
+        latitude: 35.723188,
+        longitude: 51.318570
+      }, {
+        latitude: 35.725757,
+        longitude: 51.319799
+      }, {
+        latitude: 35.725470,
+        longitude: 51.320938
+      }],
+      locations: [],
+      located: false,
+      fontLoaded: false,
+      web: null,
+      // 'https://www.google.com',
+      bar: 'home',
+      // home, menu, cart, search, profile
+      category: '',
+      page: '',
+      keyboard: false,
+      authorized: false,
+      profileEditing: false,
+      categories: [{
+        subject: '',
+        image: ''
+      }],
+      reviewAdding: false,
+      _product: {
+        _id: '0123',
+        subject: 'ماهی شوریده خلیج',
+        image: './assets/img/cdn/fish.jpg',
+        price: 5500,
+        tags: ['تازه', 'بدون‌تیغ', 'امگا۳'],
+        description: 'ماهی شوریده خلیج فارس کشتار روز با سایز مناسب که به بهترین نحو و در دمای مناسب تحت نظارت لذیذستون به تهران رسیده و برای شما فراهم‌آوری شده‌است',
+        reviews: [{
+          _date: '۱۳ام تیرماه، ۷:۳۲',
+          user: {
+            image: 'static/img/avatar.jpg',
+            username: 'پوریا'
+          },
+          body: {
+            score: 4.5,
+            text: 'چه‌قد عالی بود کیفیت این گوشت اما یکمی پیک دیر اومد'
+          }
+        }, {
+          _date: '۱۳ام تیرماه، ۷:۳۲',
+          user: {
+            image: 'static/img/avatar.jpg',
+            username: 'پوریا'
+          },
+          body: {
+            score: 3,
+            text: ' توکه می که نیستی غم آشتی جای بوسه که نداره عشق من توی دلم که میره جا نمیذاره برای من خواستی ..'
+          }
+        }],
+        quantity: 0,
+        quantifying: false,
+        flavoring: true,
+        flavors: {
+          'raw': {
+            'title': 'خام',
+            'image': './assets/img/flavors/raw-0.png',
+            'del': ['raw', 'chili']
+          }
+        }
+      },
+      product: null,
+      products: [],
+      home: null,
+      orderShown: true,
+      order: {
+        payed: false,
+        products: []
+      },
+      dialog: {
+        shown: false,
+        title: 'haa ha ha',
+        description: 'ha ha hhaaaa',
+        placeholder: 'uew'
+      },
+      q: 2
+    });
+    _defineProperty(_assertThisInitialized(_this), "login", /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var data, response, state, order;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            _this.setState({
+              keyboard: false
+            });
+            data = new FormData();
+            data.append('username', _this.nonState.username);
+            data.append('password', _this.nonState.password);
+            _context.next = 6;
+            return fetch(host + 'login', {
+              method: 'POST',
+              credentials: 'include',
+              headers: {
+                Accept: 'application/json'
+              },
+              body: data
+            });
+          case 6:
+            response = _context.sent;
+            _context.next = 9;
+            return response.json();
+          case 9:
+            response = _context.sent;
+            if (response.success) {
+              setCookie('username', _this.nonState.username);
+              setCookie('password', _this.nonState.password);
+              state = {
+                bar: 'home',
+                /* locationHeader: false, */authorized: true,
+                user: response.user
+              };
+              order = cookie('order');
+              if (order) state.order = JSON.parse(order);
+              _this.setState(state);
+            } else {}
+          case 11:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    })));
+    _this.render = _this.render.bind(_assertThisInitialized(_this));
+    _this.farsify = _this.farsify.bind(_assertThisInitialized(_this));
+    _this.card = _this.card.bind(_assertThisInitialized(_this));
+    _this.carousel = _this.carousel.bind(_assertThisInitialized(_this));
+    _this.locationHeader = _this.locationHeader.bind(_assertThisInitialized(_this));
+    _this.login = _this.login.bind(_assertThisInitialized(_this));
+    //    this.state.product = this.state._product;
+    //    this.state.order.products.push(this.state._product);
+    _this.renderPoint = _this.renderPoint.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+  _createClass(App, [{
+    key: "componentDidMount",
+    value: function () {
+      var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return fetch(host, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json'
+                }
+              });
+            case 2:
+              response = _context2.sent;
+              _context2.next = 5;
+              return response.json();
+            case 5:
+              response = _context2.sent;
+              // response.categories.map((category) => category.image = category.image.includes('./assets/') ? this.Images[category.image] : {uri: host + category.image});
+              // response.home.offer.source = this.Images[response.home.offer.source];
+              // Object.values(response.flavors).map((flavor) => flavor.image = flavor.image.includes('./assets/') ? this.Images[flavor.image] : {uri: host + flavor.image});
+              this.setState({
+                home: response.home,
+                categories: response.categories,
+                flavors: response.flavors,
+                adp: response.adp,
+                fontLoaded: true
+              });
+              this.nonState.username = cookie('username');
+              this.nonState.password = cookie('password');
+              if (this.nonState.username && this.nonState.password) this.login();
+              console.log(this.state.fontLoaded);
+            case 11:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function componentDidMount() {
+        return _componentDidMount.apply(this, arguments);
+      }
+      return componentDidMount;
+    }()
+  }, {
+    key: "farsify",
+    value: function farsify(num) {
+      var table = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      num = '' + num;
+      // return num.split('').map((ch) => table[parseInt(ch)]).join('');
+      return num.split('').map(function (ch) {
+        return ch >= '0' && ch <= '9' ? table[parseInt(ch)] : ch;
+      }).join('');
+    }
+  }, {
+    key: "locationHeader",
+    value: function locationHeader(e) {
+      if (e.nativeEvent.contentOffset.y == 0 && e.nativeEvent.velocity.y == 0) {
+        if (this.locationLength._value != 40) this.setState({
+          'locationHeader': true
+        }, function () {
+          window.animate(window.locationLength, 'height', 40, .2);
+        });
+      } else {
+        if (this.locationLength._value != 0) window.animate(window.locationLength, 'height', 0, .2);
+        this.setState({
+          'locationHeader': false
+        });
+      }
+    }
+  }, {
+    key: "card",
+    value: function card(product, bold, idx) {
+      var _this2 = this;
+      var extra = bold ? 10 : 0;
+      bold = bold ? 5 : 4;
+      return /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        key: product.subject + '_' + idx,
+        style: {
+          borderRadius: 3,
+          backgroundColor: 'white',
+          borderColor: '#343747',
+          width: screenWidth * bold / 5 - extra,
+          height: screenWidth * bold / 5 - extra,
+          marginLeft: 5,
+          marginRight: 5,
+          marginTop: extra / 1.3,
+          marginBottom: extra / 1.3,
+          shadowColor: "#fff",
+          shadowOffset: {
+            width: 0,
+            height: 2
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+          var response;
+          return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+            while (1) switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return fetch(host + 'delicious/' + product._id + '/-', {
+                  headers: {
+                    Accept: 'application/json'
+                  }
+                });
+              case 2:
+                response = _context3.sent;
+                _context3.next = 5;
+                return response.json();
+              case 5:
+                response = _context3.sent;
+                response.flavors['raw'] = _this2.state.flavors['raw'];
+                _this2.setState({
+                  product: response,
+                  locationHeader: false,
+                  bar: 'product'
+                });
+                window.animate(window.locationLength, 'height', 0, .1);
+              case 9:
+              case "end":
+                return _context3.stop();
+            }
+          }, _callee3);
+        }))
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: screenWidth * bold / 5 - extra,
+          height: screenWidth * (bold - 1) / 5 - extra / 1.3,
+          marginLeft: 0,
+          marginTop: -.5
+        },
+        source: {
+          uri: host + product.image
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          paddingLeft: 3,
+          paddingRight: 3,
+          justifyContent: 'space-between',
+          height: screenWidth / 5
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#373747',
+          fontFamily: 'iran-sans',
+          fontSize: 15
+        }
+      }, product.subject), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          margin: 9,
+          marginBottom: 5
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#DE3136',
+          marginTop: 5
+        }
+      }, "\u0642\u06CC\u0645\u062A:\u200C ", this.farsify((product.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 11
+        }
+      }, " \u062A\u0648\u0645\u0627\u0646")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          backgroundColor: '#DE3136',
+          paddingLeft: 8,
+          paddingRight: 8,
+          padding: 3,
+          borderRadius: 5
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+          var order;
+          return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+            while (1) switch (_context4.prev = _context4.next) {
+              case 0:
+                order = _this2.state.order;
+                product.quantity = 1;
+                order.products.push(product);
+                _this2.setState({
+                  order: order
+                });
+                if (!_this2.state.authorized) _this2.setState({
+                  product: null,
+                  bar: 'login'
+                });else setCookie('order', JSON.stringify(order));
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }, _callee4);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: 'white'
+        }
+      }, "\u0627\u0636\u0627\u0641\u0647\u200C\u0628\u0647 \u0633\u0628\u062F\u062E\u0631\u06CC\u062F")))));
+    }
+  }, {
+    key: "carousel",
+    value: function carousel(products, subject, description) {
+      var _this3 = this;
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 16,
+          color: '#373747'
+        }
+      }, subject)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 12,
+          color: '#676777',
+          marginTop: -6
+        }
+      }, description)), /*#__PURE__*/React.createElement("div", {
+        "class": "scrollview",
+        style: {},
+        ref: function ref(_ref4) {
+          return _this3['carousel_' + subject] = _ref4;
+        },
+        onContentSizeChange: function onContentSizeChange(width, height) {
+          return _this3['carousel_' + subject].scrollTo({
+            x: width
+          });
+        }
+      }, this['carousel_' + subject] ? products.map(function (product, idx) {
+        return _this3.card(product, false);
+      }) : products.reverse().map(function (product, idx) {
+        return _this3.card(product, false);
+      })));
+    }
+  }, {
+    key: "renderPoint",
+    value: function renderPoint(_ref5) {
+      var _this4 = this;
+      var item = _ref5.item,
+        index = _ref5.index;
+      return /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flex: 1,
+          flexDirection: 'row',
+          paddingLeft: 6,
+          paddingRight: 6,
+          paddingTop: 2,
+          paddingBottom: 2
+        },
+        onPress: function onPress() {
+          if (Object.keys(item.flavors).length == 0) item.flavors['raw'] = _this4.state.flavors['raw'];
+          item.flavoring = false;
+          _this4.setState({
+            bar: 'product',
+            product: item,
+            locationHeader: false
+          });
+          window.animate(window.locationLength, 'height', 0, .1);
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 6,
+          backgroundColor: item.status ? '#fbfafa' : '#FFF',
+          flex: 1,
+          flexDirection: 'row'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          padding: 5
+        }
+      }, 'image' in item ? /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 64,
+          height: 64,
+          borderRadius: 64
+        },
+        source: {
+          uri: host + item.image
+        }
+      }) : /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 500,
+          backgroundColor: '#fee',
+          minWidth: 64,
+          height: 64,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: 'white',
+          fontSize: 24,
+          fontFamily: 'iran-sans-bold'
+        }
+      }, item.name ? item.name.split(' ').map(function (name) {
+        return name[0];
+      }).join('‌') : 'ن'))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          borderBottomWidth: .5,
+          borderColor: this.state.order.products.length - 1 == index ? '#fff' : '#E6E7Ea',
+          justifyContent: 'flex-start'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#222',
+          fontSize: 15,
+          fontFamily: 'iran-sans',
+          marginLeft: 3
+        }
+      }, item.subject), /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#ccc',
+          fontSize: 12,
+          marginTop: 1,
+          marginRight: 2
+        }
+      }, " 15/09 ")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'flex-end'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#ccc',
+          marginLeft: 4
+        }
+      }, item.phone), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          backgroundColor: '#fafafa',
+          borderRadius: 48,
+          paddingLeft: 5,
+          paddingRight: 5,
+          alignSelf: 'flex-end',
+          marginRight: 5,
+          marginBottom: .5,
+          shadowColor: "#f7f7f7",
+          shadowOffset: {
+            width: 0,
+            height: .5
+          },
+          shadowOpacity: 0.05,
+          shadowRadius: 1.84,
+          elevation: .5
+        },
+        onPress: function onPress() {
+          if (Object.keys(item.flavors).length == 0) item.flavors['raw'] = _this4.state.flavors['raw'];
+          item.flavoring = true;
+          item.quantifying = true;
+          _this4.setState({
+            bar: 'product',
+            product: item,
+            locationHeader: false
+          });
+          window.animate(window.locationLength, 'height', 0, .1);
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#DE3136',
+          fontFamily: 'iran-sans',
+          fontSize: 12,
+          marginTop: -2,
+          marginBottom: -3
+        }
+      }, 'تغییرات')), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          backgroundColor: '#f9f9f9',
+          height: 20,
+          width: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 16,
+          alignSelf: 'flex-end',
+          marginRight: 4,
+          shadowColor: "#f7f7f7",
+          shadowOffset: {
+            width: 0,
+            height: .5
+          },
+          shadowOpacity: 0.05,
+          shadowRadius: 1.84,
+          elevation: .5
+        },
+        onPress: function onPress() {
+          var order = _this4.state.order;
+          order.products = order.products.slice(index, -1);
+          if (order.products.length == 0) _this4.state.orderShown = false;
+          // order.products[index].quantity = Math.max(0, order.products[index].quantity - 1);
+          _this4.setState({
+            order: order
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          height: 10,
+          width: 10
+        },
+        source: './assets/img/close-red.png'
+      }))))));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this5 = this;
+      return !this.state.fontLoaded ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          justifyContent: 'center'
+        }
+      }) : this.state.web ? /*#__PURE__*/React.createElement(WebView, {
+        source: {
+          uri: this.state.web
+        },
+        javaScriptEnabled: true,
+        onNavigationStateChange: (/*#__PURE__*/function () {
+          var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(webviewState) {
+            var order;
+            return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+              while (1) switch (_context5.prev = _context5.next) {
+                case 0:
+                  if (webviewState.url.includes('payed')) {
+                    order = _this5.state.order;
+                    order.payed = true;
+                    _this5.setState({
+                      web: null,
+                      order: order
+                    });
+                    setCookie('order', JSON.stringify(order));
+                  }
+                case 1:
+                case "end":
+                  return _context5.stop();
+              }
+            }, _callee5);
+          }));
+          return function (_x) {
+            return _ref6.apply(this, arguments);
+          };
+        }())
+      }) : /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          backgroundColor: '#f7f7f7'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: '#373747',
+          paddingTop: 0 /*StatusBar.currentHeight*/,
+          borderBottomWidth: .5,
+          borderBottomColor: '#E6E7Ea'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          zIndex: -1,
+          width: screenWidth,
+          height: this.locationLength,
+          backgroundColor: 'white',
+          justifyContent: 'center'
+        }
+      }, this.state.locationHeader ? /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          width: screenWidth,
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
+        },
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'location',
+            locationHeader: false
+          });
+          window.animate(window.locationLength, 'height', 0, .1);
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-light',
+          color: '#373747',
+          fontSize: 13,
+          marginTop: 2,
+          marginBottom: -2
+        }
+      }, "\u060C ", 'اصفهان'), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: '#373747',
+          fontSize: 16,
+          marginTop: 2,
+          marginBottom: -2
+        }
+      }, this.state.authorized ? this.state.user.address : this.state.locatedLocation), /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 18,
+          height: 18,
+          marginTop: -2,
+          marginBottom: 2,
+          marginLeft: 2
+        },
+        source: './assets/img/marker.png'
+      })) : null), ['menu', 'map', 'location', 'login', 'profile', 'page', 'product'].indexOf(this.state.bar) == -1 ? /*#__PURE__*/React.createElement("div", {
+        "class": "scrollview",
+        style: {
+          padding: 13,
+          paddingLeft: 3
+        }
+      }, this.state.categories.map(function (category, idx) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "touchable",
+          style: {
+            backgroundColor: category.subject == _this5.state.category ? '#eee' : '#373747',
+            borderColor: 'white',
+            borderRightWidth: .5,
+            padding: -12,
+            paddingRight: 11,
+            paddingLeft: 6,
+            marginLeft: 4,
+            marginRight: 3,
+            borderRadius: _this5.state.category == category.subject ? 6 : 0
+          },
+          key: 'categories_' + idx,
+          onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+            var response;
+            return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+              while (1) switch (_context6.prev = _context6.next) {
+                case 0:
+                  _context6.next = 2;
+                  return fetch(host + 'delicious/search/' + category.subject, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                      Accept: 'application/json'
+                    }
+                  });
+                case 2:
+                  response = _context6.sent;
+                  _context6.next = 5;
+                  return response.json();
+                case 5:
+                  response = _context6.sent;
+                  _this5.setState({
+                    bar: 'category',
+                    category: category.subject,
+                    products: response
+                  });
+                case 7:
+                case "end":
+                  return _context6.stop();
+              }
+            }, _callee6);
+          }))
+        }, /*#__PURE__*/React.createElement("p", {
+          style: {
+            color: category.subject == _this5.state.category ? '#373747' : 'white',
+            fontFamily: 'iran-sans-bold'
+          }
+        }, category.subject));
+      })) : null), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          backgroundColor: '#f7f7f7'
+        }
+      }, this.state.bar == 'login' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: this.state.keyboard ? 1 : 1,
+          backgroundColor: 'white',
+          justifyContent: this.state.keyboard ? 'center' : 'center',
+          alignItems: 'center'
+        }
+      }, this.state.keyboard ? null : /*#__PURE__*/React.createElement("image", {
+        style: {},
+        source: './assets/img/login.png'
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: '#DE3136'
+        }
+      }, "\u0648\u0631\u0648\u062F\u200C\u0628\u0647 \u062F\u0646\u06CC\u0627\u06CC \u062A\u0627\u0632\u0647\u200C\u0647\u0627\u06CC \u062E\u0648\u0634\u0645\u0632\u0647"), /*#__PURE__*/React.createElement("input", {
+        style: {
+          fontFamily: 'iran-sans',
+          width: screenWidth / 2,
+          textAlign: 'center',
+          backgroundColor: '#FCFCFC',
+          borderRadius: 7,
+          padding: 3,
+          marginTop: 20
+        },
+        placeholder: "\u0646\u0627\u0645\u200C\u06A9\u0627\u0631\u0628\u0631\u06CC",
+        onFocus: function onFocus() {
+          _this5.setState({
+            keyboard: true
+          });
+        },
+        onBlur: function onBlur() {
+          _this5.setState({
+            keyboard: false
+          });
+        },
+        onChangep: function onChangep(text) {
+          _this5.nonState.username = text;
+        }
+      }), /*#__PURE__*/React.createElement("input", {
+        style: {
+          fontFamily: 'iran-sans',
+          width: screenWidth / 2,
+          textAlign: 'center',
+          backgroundColor: '#FCFCFC',
+          borderRadius: 7,
+          padding: 3,
+          marginTop: 10
+        },
+        placeholder: "\u0631\u0645\u0632\u200C\u0639\u0628\u0648\u0631",
+        onFocus: function onFocus() {
+          _this5.setState({
+            keyboard: true
+          });
+        },
+        onBlur: function onBlur() {
+          _this5.setState({
+            keyboard: false
+          });
+        },
+        onChangep: function onChangep(text) {
+          _this5.nonState.password = text;
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: this.login
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          width: screenWidth / 2,
+          fontSize: 15,
+          borderRadius: 12,
+          paddingTop: 7,
+          paddingBottom: 6,
+          margin: 10,
+          textAlign: 'center',
+          fontFamily: 'iran-sans-bold',
+          borderColor: '#DE3136',
+          borderWidth: .5,
+          color: '#DE3136',
+          backgroundColor: 'white'
+        }
+      }, "\u0648\u0631\u0648\u062F\u060C \u062B\u0628\u062A\u200C\u0646\u0627\u0645"))) : this.state.product ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginTop: -50
+        },
+        ref: function ref(_ref11) {
+          return _this5.productScroll = _ref11;
+        },
+        onContentSizeChange: function onContentSizeChange(width, height) {
+          if (!('initiated' in _this5.state.product)) _this5.productScroll.scrollTo({
+            y: 0
+          });
+          _this5.state.product.initiated = true;
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        source: {
+          uri: host + this.state.product.image
+        },
+        style: {
+          width: screenWidth,
+          height: screenWidth * 9 / 16
+        }
+      }), this.state.product.offer ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", null, "15% Off")) : null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: screenWidth,
+          backgroundColor: 'white',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 16,
+          color: '#373747'
+        }
+      }, this.state.product.subject), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-light',
+          fontSize: 13,
+          color: '#575767'
+        }
+      }, this.state.product.tags.join(' | ')), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: screenWidth - 10,
+          margin: 5,
+          borderRadius: 7,
+          borderColor: '#9797a7',
+          borderWidth: .5,
+          borderBottomRightRadius: 22,
+          borderBottomLeftRadius: 22
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 14
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 20,
+          height: 20
+        },
+        source: this.Images[this.state.product.tags.find(function (tag) {
+          return tag in _this5.Images;
+        })]
+      }), /*#__PURE__*/React.createElement("div", null, ['۲-۳', '۳-۵', '۵-۸', '۸-۱۴', '۱۴-۲۲'].map(function (range, idx) {
+        return _this5.state.product.quantifying || idx == _this5.state.product.quantity ? /*#__PURE__*/React.createElement("p", {
+          key: idx,
+          style: {
+            fontFamily: 'iran-sans',
+            fontSize: 11,
+            color: idx == _this5.state.product.quantity && _this5.state.product.quantifying ? 'white' : '#373747',
+            marginTop: 1,
+            marginLeft: 8,
+            backgroundColor: idx == _this5.state.product.quantity && _this5.state.product.quantifying ? '#DE3136' : 'white',
+            borderRadius: 4,
+            paddingRight: 4
+          },
+          onPress: function onPress() {
+            var product = _this5.state.product;
+            product.quantity = idx;
+            product.quantifying = false;
+            _this5.setState({
+              product: product
+            });
+          }
+        }, range, " \u062A\u06A9\u0647") : null;
+      }))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 20,
+          height: 20
+        },
+        source: './assets/img/weight.png'
+      }), /*#__PURE__*/React.createElement("div", null, [200, 450, 1100, 2650, 6400].map(function (netWeight, idx) {
+        return _this5.state.product.quantifying || idx == _this5.state.product.quantity ? /*#__PURE__*/React.createElement("p", {
+          key: idx,
+          style: {
+            fontFamily: 'iran-sans',
+            fontSize: 11,
+            color: idx == _this5.state.product.quantity && _this5.state.product.quantifying ? 'white' : '#373747',
+            marginTop: 1,
+            marginLeft: 8,
+            backgroundColor: idx == _this5.state.product.quantity && _this5.state.product.quantifying ? '#DE3136' : 'white',
+            borderRadius: 6,
+            paddingRight: 4
+          },
+          onPress: function onPress() {
+            var product = _this5.state.product;
+            product.quantity = idx;
+            product.quantifying = false;
+            _this5.setState({
+              product: product
+            });
+          }
+        }, _this5.farsify(netWeight), " \u06AF\u0631\u0645") : null;
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          backgroundColor: '#f7f7f7',
+          height: 24,
+          width: 24,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 16,
+          marginRight: -5
+        },
+        onPress: function onPress() {
+          var product = _this5.state.product;
+          product.quantifying = !product.quantifying;
+          _this5.setState({
+            product: product
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          height: 12,
+          width: 12,
+          transform: [{
+            rotate: this.state.product.quantifying ? '180deg' : '0deg'
+          }]
+        },
+        source: './assets/img/down-curved.png'
+      }))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: screenWidth - 21,
+          margin: 5,
+          borderRadius: 18,
+          borderColor: '#ececfc',
+          borderWidth: .5,
+          padding: 4,
+          flexDirection: 'row',
+          backgroundColor: '#fcfcfc',
+          justifyContent: 'space-between'
+        }
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          flexDirection: 'row',
+          width: screenWidth - 54
+        }
+      }, Object.values(this.state.product.flavors).map(function (flavor, idx) {
+        return /*#__PURE__*/React.createElement("div", {
+          key: idx,
+          style: {
+            flexDirection: 'row',
+            borderRadius: 100,
+            backgroundColor: 'white',
+            padding: 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 4,
+            marginBottom: 1
+          }
+        }, /*#__PURE__*/React.createElement("image", {
+          style: {
+            height: 26,
+            width: 26,
+            marginLeft: 2,
+            marginTop: -3,
+            marginBottom: -3
+          },
+          source: flavor.image
+        }), /*#__PURE__*/React.createElement("p", {
+          style: {
+            fontFamily: 'iran-sans-light',
+            color: '#676777',
+            fontSize: 11,
+            marginRight: 8,
+            marginLeft: 1,
+            marginTop: 1,
+            marginBottom: -1
+          }
+        }, flavor.title), /*#__PURE__*/React.createElement("div", {
+          className: "touchable",
+          style: {
+            backgroundColor: '#f7f7f7',
+            height: 20,
+            width: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 16
+          },
+          onPress: function onPress() {
+            var product = _this5.state.product;
+            _this5.setState({
+              product: product
+            });
+          }
+        }, /*#__PURE__*/React.createElement("image", {
+          style: {
+            height: 10,
+            width: 10
+          },
+          source: './assets/img/close-red.png'
+        })));
+      })), this.state.product.flavoring && Object.keys(this.state.product.flavors).length != Object.keys(this.state.flavors).length ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          flexDirection: 'row',
+          width: screenWidth - 54,
+          marginTop: 7
+        }
+      }, Object.keys(this.state.flavors).map(function (key, idx) {
+        return key in _this5.state.product.flavors ? null : /*#__PURE__*/React.createElement("div", {
+          key: idx,
+          style: {
+            flexGrow: 0,
+            flexDirection: 'row',
+            borderRadius: 100,
+            backgroundColor: 'white',
+            padding: 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 4,
+            marginBottom: 1
+          }
+        }, /*#__PURE__*/React.createElement("image", {
+          style: {
+            height: 26,
+            width: 26,
+            marginLeft: 2,
+            marginTop: -3,
+            marginBottom: -3
+          },
+          source: _this5.state.flavors[key].image
+        }), /*#__PURE__*/React.createElement("p", {
+          style: {
+            fontFamily: 'iran-sans-light',
+            color: '#676777',
+            fontSize: 11,
+            marginRight: 8,
+            marginLeft: 1,
+            marginTop: 1,
+            marginBottom: -1
+          }
+        }, _this5.state.flavors[key].title), /*#__PURE__*/React.createElement("div", {
+          className: "touchable",
+          style: {
+            backgroundColor: '#DE3136',
+            height: 20,
+            width: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 16
+          },
+          onPress: function onPress() {
+            var product = _this5.state.product;
+            _this5.state.flavors[key].del.map(function (conflict) {
+              return delete product.flavors[conflict];
+            });
+            product.flavors[key] = _this5.state.flavors[key];
+            // product.flavoring = false;
+            _this5.setState({
+              product: product
+            });
+          }
+        }, /*#__PURE__*/React.createElement("image", {
+          style: {
+            height: 10,
+            width: 10
+          },
+          source: './assets/img/plus-curved-white.png'
+        })));
+      })) : null), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          backgroundColor: '#f7f7f7',
+          height: 24,
+          width: 24,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 16
+        },
+        onPress: function onPress() {
+          var product = _this5.state.product;
+          product.flavoring = !product.flavoring;
+          _this5.setState({
+            product: product
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          height: 12,
+          width: 12,
+          transform: [{
+            rotate: this.state.product.flavoring ? '45deg' : '0deg'
+          }]
+        },
+        source: './assets/img/plus.png'
+      })))), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 12,
+          color: '#575767',
+          marginTop: 5
+        }
+      }, "\u0645\u0648\u062C\u0648\u062F\u062F\u0631 \u067E\u06CC\u0634\u200C\u0633\u0641\u0627\u0631\u0634")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: 'white',
+          padding: 3,
+          paddingTop: 5
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 13,
+          color: '#676777'
+        }
+      }, this.state.product.description)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          padding: 12,
+          backgroundColor: 'white',
+          flex: 1,
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 14,
+          color: '#373747'
+        }
+      }, "\u0642\u06CC\u0645\u062A: ", this.farsify((this.state.product.price * [200, 450, 1100, 2650, 6400][this.state.product.quantity] / 100000).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')), " \u062A\u0648\u0645\u0627\u0646")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: _defineProperty({
+          padding: 12,
+          backgroundColor: 'white',
+          flex: 1,
+          alignItems: 'center'
+        }, "backgroundColor", '#DE3136'),
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+          var order;
+          return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+            while (1) switch (_context7.prev = _context7.next) {
+              case 0:
+                order = _this5.state.order;
+                order.products.push(_this5.state.product);
+                _this5.setState({
+                  order: order
+                });
+                if (_this5.state.authorized) {
+                  _context7.next = 7;
+                  break;
+                }
+                _this5.setState({
+                  bar: 'login',
+                  product: null
+                });
+                _context7.next = 9;
+                break;
+              case 7:
+                _context7.next = 9;
+                return AsyncStorage.setItem('order', JSON.stringify(order));
+              case 9:
+              case "end":
+                return _context7.stop();
+            }
+          }, _callee7);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 14,
+          color: 'white'
+        }
+      }, "\u0627\u0641\u0632\u0648\u062F\u0646\u200C\u0628\u0647 \u0633\u0628\u062F\u062E\u0631\u06CC\u062F"))), /*#__PURE__*/React.createElement("image", {
+        source: {
+          uri: host + this.state.product.image
+        },
+        blurRadius: /iPad|iPhone|iPod/.test(navigator.platform) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1 ? 10 : 5,
+        style: {
+          width: screenWidth,
+          height: screenWidth * 9 / 16
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: 'white',
+          margin: 7,
+          padding: 9,
+          borderRadius: 9,
+          marginTop: -75
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 15,
+          color: '#373747',
+          marginBottom: 5
+        }
+      }, "\u0645\u0648\u0627\u0631\u062F \u0627\u0631\u0633\u0627\u0644\u06CC \u0628\u0647\u200C\u0634\u0645\u0627"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 14,
+          color: '#373747'
+        }
+      }, "\u0638\u0631\u0641 \u06CC\u06A9\u200C\u0628\u0627\u0631\u0645\u0635\u0631\u0641 \u0627\u0648\u0631\u06AF\u0627\u0646\u06CC\u06A9"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 14,
+          color: '#373747'
+        }
+      }, "\u0645\u062D\u0645\u0648\u0644\u0647 \u0648\u06A9\u06CC\u0648\u0645 \u062F\u0631\u062F\u0645\u0627\u06CC \u0632\u06CC\u0631 \u06F4\u062F\u0631\u062C\u0647"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 14,
+          color: '#373747'
+        }
+      }, "\u062A\u06A9\u0647\u200C\u0647\u0627\u06CC \u06AF\u0648\u0634\u062A \u0622\u0645\u0627\u062F\u0647 \u067E\u062E\u062A"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          fontSize: 14,
+          color: '#373747'
+        }
+      }, "\u0633\u0633 \u062E\u0648\u0634\u0645\u0632\u0647 \u0637\u0628\u06CC\u0639\u06CC")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginTop: 8,
+          borderRadius: 18,
+          backgroundColor: 'white'
+        }
+      }, this.state.product.reviews.map(function (review, index) {
+        return /*#__PURE__*/React.createElement("div", {
+          key: 'reviews_' + index,
+          style: {
+            padding: 6,
+            flexDirection: 'column'
+          }
+        }, /*#__PURE__*/React.createElement("image", {
+          style: {
+            width: 24,
+            height: 24,
+            borderRadius: 12,
+            alignSelf: 'flex-end'
+          },
+          source: {
+            uri: host + review.user.image
+          }
+        }), /*#__PURE__*/React.createElement("p", {
+          style: {
+            fontFamily: 'iran-sans-light',
+            color: '#373747',
+            marginTop: -24
+          }
+        }, "       ", /*#__PURE__*/React.createElement("p", {
+          style: {
+            color: '#DE313688',
+            fontSize: 10
+          }
+        }, " ", review.user.username, ": "), review.body.text), /*#__PURE__*/React.createElement("p", {
+          style: {
+            fontFamily: 'iran-sans-light',
+            color: '#676777',
+            fontSize: 11,
+            marginRight: 12
+          }
+        }, review._date));
+      }), this.state.reviewAdding ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          padding: 6,
+          flexDirection: 'column'
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 24,
+          height: 24,
+          borderRadius: 12,
+          alignSelf: 'flex-end'
+        },
+        source: {
+          uri: host + 'static/img/avatar.jpg'
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-light',
+          color: '#DE313688',
+          fontSize: 10,
+          marginTop: -21,
+          marginRight: 29,
+          alignSelf: 'flex-end'
+        }
+      }, ":", this.state.user.username), /*#__PURE__*/React.createElement("input", {
+        style: {
+          justifyContent: 'flex-start',
+          fontFamily: 'iran-sans',
+          flex: 1,
+          textAlign: 'center',
+          backgroundColor: '#FCFCFC',
+          borderRadius: 7,
+          padding: 3,
+          marginTop: 10
+        },
+        multiline: true,
+        numberOfLines: 4,
+        value: this.state.text,
+        onChangep: function onChangep(text) {
+          return _this5.nonState.newReview.text = text;
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          borderRadius: 40,
+          backgroundColor: '#DE3136',
+          alignSelf: 'flex-end',
+          padding: 9,
+          paddingTop: 0,
+          paddingBottom: 1,
+          marginTop: 6
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
+          var data, response;
+          return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+            while (1) switch (_context8.prev = _context8.next) {
+              case 0:
+                data = new FormData();
+                data.append('text', _this5.nonState.newReview.text);
+                _context8.next = 4;
+                return fetch(host + 'delicious/' + _this5.state.product._id + '/review', {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: {
+                    Accept: 'application/json'
+                  },
+                  body: data
+                });
+              case 4:
+                response = _context8.sent;
+              case 5:
+              case "end":
+                return _context8.stop();
+            }
+          }, _callee8);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: 'white',
+          fontSize: 13
+        }
+      }, "\u0627\u0641\u0632\u0648\u062F\u0646"))) : this.state.product.reviews.length == 0 ? /*#__PURE__*/React.createElement("p", {
+        style: {
+          alignSelf: 'flex-end',
+          fontFamily: 'iran-sans-light',
+          color: '#575767',
+          marginRight: 34,
+          marginBottom: -24,
+          marginTop: 6,
+          fontSize: 13
+        }
+      }, "\u0627\u0648\u0644\u06CC\u0646\u200C\u0646\u0641\u0631\u06CC \u0628\u0627\u0634\u06CC\u062F \u06A9\u0647 \u0631\u0627\u062C\u0639\u200C\u0628\u0647 ", this.state.product.subject, " \u0646\u0638\u0631 \u0645\u06CC\u200C\u062F\u0647\u06CC\u062F") : null, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          width: 24,
+          height: 24,
+          marginRight: this.state.reviewAdding ? 70 : 6,
+          marginTop: this.state.reviewAdding ? -31 : 0,
+          marginBottom: 6,
+          alignSelf: 'flex-end',
+          backgroundColor: '#E0E0E0',
+          borderRadius: 12,
+          padding: 4
+        },
+        onPress: function onPress() {
+          if (_this5.state.authorized) _this5.setState({
+            reviewAdding: !_this5.state.reviewAdding
+          });else _this5.setState({
+            bar: 'login',
+            product: null
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          height: 16,
+          width: 16,
+          transform: [this.state.reviewAdding ? {
+            rotate: '45deg'
+          } : {
+            rotate: '0deg'
+          }]
+        },
+        source: './assets/img/add-1.png'
+      }))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: 'white',
+          padding: 3,
+          marginTop: 6
+        }
+      }, this.carousel(this.state.home.carousels[0].products, this.state.home.carousels[0].subject)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginBottom: 30
+        }
+      })) : this.state.bar == 'home' ? /*#__PURE__*/React.createElement("div", {
+        onMomentumScrollBegin: this.locationHeader
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: screenWidth * 1.2,
+          height: screenWidth / 2 + 80,
+          marginLeft: -screenWidth * .085,
+          marginTop: -80
+        },
+        source: this.state.home.offer.source,
+        resizeMode: 'cover'
+      }), /*#__PURE__*/React.createElement("p", {
+        style: _defineProperty({
+          fontFamily: 'hand-written',
+          fontSize: 16,
+          color: '#4A8469',
+          marginTop: -60,
+          marginBottom: 60 - 28,
+          marginRight: 25
+        }, "fontSize", 25)
+      }, this.state.home.offer.massage), this.carousel(this.state.home.carousels[0].products, this.state.home.carousels[0].subject), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 16,
+          color: '#373747',
+          marginTop: 16
+        }
+      }, "\u062C\u0633\u062A\u200C\u062C\u0648 \u0628\u0631\u0627\u0633\u0627\u0633 \u0637\u0628\u0642\u0647\u200C\u0628\u0646\u062F\u06CC"), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          flexDirection: 'row-reverse',
+          padding: 3,
+          marginTop: -1,
+          marginBottom: 14
+        }
+      }, this.state.categories.map(function (category, idx) {
+        return /*#__PURE__*/React.createElement("div", {
+          className: "touchable",
+          key: 'categories_' + idx,
+          style: {
+            backgroundColor: 'white',
+            margin: 6,
+            width: screenWidth / 3 - 14,
+            alignItems: 'center',
+            marginBottom: 2
+          },
+          onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+            var response;
+            return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+              while (1) switch (_context9.prev = _context9.next) {
+                case 0:
+                  _context9.next = 2;
+                  return fetch(host + 'delicious/search/' + category.subject, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                      Accept: 'application/json'
+                    }
+                  });
+                case 2:
+                  response = _context9.sent;
+                  _context9.next = 5;
+                  return response.json();
+                case 5:
+                  response = _context9.sent;
+                  _this5.setState({
+                    bar: 'category',
+                    category: category.subject,
+                    products: response
+                  });
+                case 7:
+                case "end":
+                  return _context9.stop();
+              }
+            }, _callee9);
+          }))
+        }, /*#__PURE__*/React.createElement("image", {
+          style: {
+            width: screenWidth / 3 - 14,
+            height: screenWidth / 4.8
+          },
+          source: category.image
+        }), /*#__PURE__*/React.createElement("p", {
+          style: {
+            fontFamily: 'iran-sans',
+            color: '#373747'
+          }
+        }, category.subject));
+      })), /*#__PURE__*/React.createElement("image", {
+        source: './assets/img/cdn/package.jpg',
+        blurRadius: 0,
+        style: {
+          width: screenWidth,
+          height: screenWidth * 9 / 16
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: 'white',
+          margin: screenWidth / 5,
+          padding: 9,
+          borderRadius: 9,
+          marginTop: -screenWidth / 2 - 7
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 14,
+          color: '#373747',
+          marginBottom: 5
+        }
+      }, "\u0647\u0645\u0647 \u0628\u0633\u062A\u0647\u200C\u0647\u0627\u06CC \u0644\u0630\u06CC\u0630\u0633\u062A\u0648\u0646\u06CC"), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row-reverse'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 9,
+          marginRight: 4,
+          marginLeft: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 14,
+          color: '#373747',
+          marginBottom: 5
+        }
+      }, "\u062F\u0631\u062F\u0645\u0627\u06CC \u0632\u06CC\u0631 \u06F4\u062F\u0631\u062C\u0647 \u0648\u06A9\u06CC\u0648\u0645 \u0645\u06CC\u200C\u0634\u0646")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row-reverse',
+          marginTop: -1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 9,
+          marginRight: 4,
+          marginLeft: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 14,
+          color: '#373747',
+          marginBottom: 5
+        }
+      }, "\u0627\u0632\u0686\u0646\u062F\u06CC\u0646 \u0645\u0631\u062D\u0644\u0647 \u06A9\u0646\u062A\u0631\u0644\u200C\u06A9\u06CC\u0641\u06CC \u0639\u0628\u0648\u0631 \u0645\u06CC\u200C\u06A9\u0646\u0646")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row-reverse',
+          marginTop: -1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 9,
+          marginRight: 4,
+          marginLeft: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 14,
+          color: '#373747',
+          marginBottom: 5
+        }
+      }, " \u0648 \u0628\u062F\u0648\u0646 \u0645\u0648\u0627\u062F \u0646\u06AF\u0647\u062F\u0627\u0631\u0646\u062F\u0647 \u0648 \u0627\u0641\u0632\u0648\u062F\u0646\u06CC \u0628\u0647\u200C\u062F\u0633\u062A \u0634\u0645\u0627 \u0645\u06CC\u200C\u0631\u0633\u0646"))), this.carousel(this.state.home.carousels[1].products, this.state.home.carousels[1].subject), /*#__PURE__*/React.createElement("div", {
+        style: {
+          height: 20
+        }
+      })) : this.state.bar == 'menu' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          marginTop: 0,
+          backgroundColor: '#fff'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          borderBottomWidth: .5,
+          borderBottomColor: '#a7a7b7',
+          padding: 14,
+          paddingRight: 6
+        },
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'home'
+          });
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 12,
+          marginRight: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u0644\u0630\u06CC\u0630\u0633\u062A\u0648\u0646 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          borderBottomWidth: .5,
+          borderBottomColor: '#a7a7b7',
+          padding: 14,
+          paddingRight: 6
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 12,
+          marginRight: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u067E\u06CC\u0627\u0645\u200C\u0647\u0627 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          borderBottomWidth: .5,
+          borderBottomColor: '#a7a7b7',
+          padding: 14,
+          paddingRight: 6
+        },
+        onPress: function onPress() {
+          return _this5.setState({
+            bar: 'page',
+            page: 'contact_us'
+          });
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 12,
+          marginRight: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u062A\u0645\u0627\u0633\u200C\u0628\u0647\u200C \u062E\u062F\u0645\u062A\u200C\u06AF\u0630\u0627\u0631 \u0634\u0645\u0627 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          padding: 14,
+          paddingRight: 6
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u0622\u0634\u067E\u0632\u06CC \u0628\u0627 \u0639\u0634\u0642 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          padding: 14,
+          paddingRight: 6
+        },
+        onPress: function onPress() {
+          return _this5.setState({
+            bar: 'page',
+            page: 'vision'
+          });
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u0634\u0639\u0627\u0631\u200C \u0645\u0627 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          padding: 14,
+          paddingRight: 6
+        },
+        onPress: function onPress() {
+          return _this5.setState({
+            bar: 'page',
+            page: 'mission'
+          });
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u0628\u0631\u0646\u0627\u0645\u0647\u200C\u0647\u0627\u06CC \u0645\u0627 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          borderBottomWidth: .5,
+          borderBottomColor: '#a7a7b7',
+          padding: 14,
+          paddingRight: 6
+        },
+        onPress: function onPress() {
+          return _this5.setState({
+            bar: 'page',
+            page: 'subscribe'
+          });
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " \u0645\u06CC\u200C\u0634\u0647 \u0628\u0627 \u062F\u0648\u0633\u062A\u0627\u062A \u062F\u0648\u0633\u062A \u200C\u0634\u0645 ")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row-reverse',
+          borderBottomWidth: .5,
+          borderBottomColor: '#a7a7b7',
+          padding: 14,
+          paddingRight: 6
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+          return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+            while (1) switch (_context10.prev = _context10.next) {
+              case 0:
+                if (!_this5.state.authorized) {
+                  _context10.next = 10;
+                  break;
+                }
+                _context10.next = 3;
+                return AsyncStorage.removeItem('username');
+              case 3:
+                _context10.next = 5;
+                return AsyncStorage.removeItem('password');
+              case 5:
+                _this5.nonState.username = null;
+                _this5.nonState.password = null;
+                _this5.setState({
+                  bar: 'login',
+                  authorized: false,
+                  user: {}
+                });
+                _context10.next = 11;
+                break;
+              case 10:
+                _this5.setState({
+                  bar: 'login'
+                });
+              case 11:
+              case "end":
+                return _context10.stop();
+            }
+          }, _callee10);
+        }))
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 5,
+          width: 5,
+          height: 5,
+          backgroundColor: '#DE3136',
+          marginTop: 12,
+          marginRight: 6
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747'
+        }
+      }, " ", this.state.authorized ? 'خروج' : 'ورود، ثبت‌نام', " "))) : this.state.bar == 'profile' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: 'white',
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 7,
+          paddingLeft: 10,
+          paddingRight: 10
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            bar: _this5.state.profileEditing ? 'profile' : 'home',
+            product: null,
+            profileEditing: false
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 28,
+          height: 28,
+          margin: 4
+        },
+        source: './assets/img/back-1.png'
+      })), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: '#373747',
+          fontSize: 22
+        }
+      }, "\u0644\u0630\u06CC\u0630\u0633\u062A\u0648\u0646"), this.state.profileEditing ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 32,
+          height: 32
+        }
+      }) : /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            profileEditing: true
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 32,
+          height: 32
+        },
+        source: './assets/img/edit-profile-0.png'
+      }))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        source: './assets/img/avatar.jpg',
+        style: {
+          width: screenWidth / 2,
+          height: screenWidth / 2,
+          borderRadius: screenWidth / 4,
+          marginTop: -screenWidth / 3.2
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          backgroundColor: this.state.profileEditing ? '#f7f7f7' : '#fff',
+          borderRadius: 9,
+          paddingLeft: 9,
+          paddingRight: 9,
+          fontFamily: 'iran-sans',
+          fontSize: 20,
+          color: this.state.profileEditing ? '#DE3136' : '#373747',
+          marginTop: 10
+        },
+        onPress: function onPress() {
+          var dialog = _this5.state.dialog;
+          dialog.field = 'username';
+          dialog.title = 'انتخاب نام‌کاربری';
+          dialog.description = 'نام‌کاربری جدیدتان را وارد کنید';
+          dialog.shown = true;
+          _this5.setState({
+            dialog: dialog
+          });
+        }
+      }, this.state.user.username), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          fontSize: 15,
+          color: '#373747',
+          marginTop: 6
+        },
+        onPress: function onPress() {
+          var dialog = _this5.state.dialog;
+          dialog.field = 'family';
+          dialog.title = 'تعداد';
+          dialog.description = 'تقریباً برای چندنفر آشپزی می‌کنید';
+          dialog.shown = true;
+          _this5.setState({
+            dialog: dialog
+          });
+        }
+      }, "\u062E\u0627\u0646\u0648\u0627\u062F\u0647", /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#DE3136',
+          fontFamily: 'iran-sans',
+          fontSize: 20,
+          textDecorationLine: this.state.profileEditing ? 'underline' : 'none'
+        }
+      }, "  ", this.farsify(this.state.user.family)), "\u0646\u0641\u0631\u0647"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          marginTop: 6,
+          backgroundColor: this.state.profileEditing ? '#f7f7f7' : '#fff',
+          color: this.state.profileEditing ? '#DE3136' : '#373747',
+          borderRadius: 9,
+          paddingLeft: 9,
+          paddingRight: 9
+        },
+        onPress: function onPress() {
+          var dialog = _this5.state.dialog;
+          dialog.field = 'phone';
+          dialog.title = 'شماره‌تماس جدید';
+          dialog.description = 'موبایلتان را وارد کنید';
+          dialog.shown = true;
+          _this5.setState({
+            dialog: dialog
+          });
+        }
+      }, " ", this.farsify(this.state.user.phone), " "), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'location'
+          });
+        },
+        style: {
+          flexDirection: 'row-reverse',
+          marginRight: 24,
+          marginTop: this.state.profileEditing ? 10 : 1
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: this.state.profileEditing ? '#DE3136' : '#fff',
+          padding: 4.5,
+          paddingTop: 5,
+          paddingBottom: 5,
+          marginTop: -5,
+          borderRadius: 20
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 24,
+          height: 24
+        },
+        source: this.state.profileEditing ? './assets/img/marker-white.png' : './assets/img/marker.png'
+      })), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans'
+        }
+      }, " ", this.state.user.address, " ")))) : this.state.bar == 'page' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          backgroundColor: 'white',
+          paddingTop: 20
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: '#373747',
+          fontSize: 16,
+          width: screenWidth,
+          textAlign: 'center'
+        }
+      }, this.state.page == 'subscribe' ? '' : 'به‌نام خدا'), this.state.page == 'contact_us' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          paddingTop: 30
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747',
+          padding: 40,
+          textAlign: 'center'
+        }
+      }, "\u0634\u0645\u0627\u0631\u0647\u200C\u0647\u0627\u06CC \u062A\u0645\u0627\u0633 \u0645\u0627\u0627\u06CC\u0646\u062C\u0627\u0633\u062A. \u062A\u0627\u06A9\u0646\u0648\u0646 \u0628\u0627 \u0646\u0638\u0631\u0627\u062A \u062F\u0648\u0633\u062A\u0627\u0646 \u0648 \u067E\u0627\u0633\u062E\u200C\u06AF\u0648\u06CC\u06CC \u0628\u0647 \u0646\u06CC\u0627\u0632\u0627\u062A\u0634\u0627\u0646 \u0628\u0647 \u0627\u06CC\u0646\u200C\u062C\u0627 \u0631\u0633\u06CC\u062F\u0647\u200C\u0627\u06CC\u0645. \u0628\u0631\u0627\u06CC\u200C\u0645\u0627 \u0646\u0638\u0631\u0627\u062A \u0634\u0645\u0627 \u062D\u06A9\u0645 \u0637\u0644\u0627\u06CC\u06CC \u0631\u0627 \u062F\u0627\u0631\u062F \u06A9\u0647 \u0633\u06CC\u0633\u062A\u0645 \u0631\u0627 \u0628\u0647 \u062C\u0644\u0648 \u067E\u06CC\u0634 \u0645\u06CC\u200C\u0628\u0631\u062F \u0648 \u0622\u0646\u200C\u0631\u0627 \u0627\u0631\u062A\u0642\u0627\u0639 \u0645\u06CC\u200C\u062F\u0647\u062F."), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          backgroundColor: '#DE3136',
+          alignSelf: 'center',
+          padding: 30,
+          paddingTop: 9,
+          paddingBottom: 8,
+          borderRadius: 9
+        },
+        onPress: function onPress() {
+          Linking.openURL('tel://09133657623');
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: '#fffffe',
+          fontSize: 15
+        }
+      }, "\u06F0\u06F9\u06F1\u06F3\u06F3\u06F6\u06F5\u06F7\u06F6\u06F2\u06F3"))) : this.state.page == 'mission' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          paddingTop: 30,
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        source: './assets/img/quality.jpg',
+        style: {
+          width: screenWidth / 1.57,
+          height: screenWidth / 2
+        }
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747',
+          padding: 40,
+          paddingBottom: 0,
+          paddingTop: 30,
+          textAlign: 'center'
+        }
+      }, "\u0645\u062D\u0635\u0648\u0644\u0627\u062A \u067E\u0631\u0648\u062A\u0626\u06CC\u0646\u06CC \u062E\u06CC\u0644\u06CC \u062D\u0633\u0627\u0633\u0646. \u0628\u0627 \u0622\u0632\u0645\u0627\u06CC\u0634\u0627\u062A \u0633\u0627\u062F\u0647 \u0632\u06CC\u0633\u062A\u06CC \u0645\u06CC\u0634\u0647 \u0641\u0647\u0645\u06CC\u062F \u06A9\u0647 \u0627\u06AF\u0647 \u0634\u0631\u0627\u06CC\u0637 \u0646\u06AF\u0647\u200C\u062F\u0627\u0631\u06CC \u062E\u0648\u0628\u200C\u0646\u0628\u0627\u0634\u0646 \u0628\u0647 \u063A\u0630\u0627\u06CC \u0645\u0627 \u0648 \u062F\u0631\u0646\u062A\u06CC\u062C\u0647 \u0628\u0647 \u0633\u0644\u0627\u0645\u062A\u06CC \u0645\u0627 \u0622\u0633\u06CC\u0628 \u0645\u06CC\u0631\u0633\u0648\u0646\u0646. \u0622\u06CC\u0627 \u0645\u06CC\u062A\u0648\u0646\u06CC\u0645 \u0633\u0644\u0627\u0645\u062A\u06CC \u06AF\u0648\u0634\u062A\u0645\u0648\u0646 \u0631\u0627 \u0628\u0647\u0628\u0648\u062F \u0628\u0628\u062E\u0634\u06CC\u0645. \u0627\u06CC\u0646 \u0686\u0627\u0644\u0634 \u0647\u0645\u06CC\u0634\u06AF\u06CC \u0645\u0627\u0633\u062A"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747',
+          padding: 40,
+          paddingTop: 10,
+          textAlign: 'center'
+        }
+      }, "\u0628\u0627 \u0633\u0647 \u0686\u06CC\u0632 \u0633\u0627\u062F\u0647 \u0645\u06CC\u0634\u0647 \u06A9\u0646\u062A\u0631\u0644 \u0645\u062D\u0635\u0648\u0644 \u067E\u0631\u0648\u062A\u0626\u06CC\u0646\u06CC \u0631\u0627 \u0686\u06A9 \u06A9\u0631\u062F. \u062F\u0645\u0627\u0633\u0646\u062C \u0648 \u067E\u06CC\u200C\u0627\u0686 \u0645\u062A\u0631 \u0648 \u067E\u0631\u062F\u0627\u0632\u0634 \u062A\u0635\u0648\u06CC\u0631\u06CC \u0627\u0632 \u0638\u0627\u0647\u0631 \u06AF\u0648\u0634\u062A. \u0627\u06CC\u0646 \u0645\u0648\u0631\u062F \u0639\u0644\u0627\u0642\u0647 \u0645\u0627\u0633\u062A \u06A9\u0647 \u0628\u062A\u0648\u0627\u0646\u06CC\u0645 \u0633\u0644\u0627\u0645\u062A \u062A\u06A9\u200C\u062A\u06A9 \u0633\u0641\u0627\u0631\u0634\u0627\u062A \u0631\u0627 \u0686\u06A9 \u06A9\u0646\u06CC\u0645 \u0648 \u0628\u0647 \u0633\u0641\u0627\u0631\u0634\u200C\u062F\u0647\u0646\u062F\u0647 \u0627\u0637\u0644\u0627\u0639 \u062F\u0647\u06CC\u0645")) : this.state.page == 'vision' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          paddingTop: 30
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747',
+          padding: 40,
+          textAlign: 'center'
+        }
+      }, "\u0634\u0627\u06CC\u062F \u0628\u062A\u0648\u0646\u06CC\u0645 \u067E\u06CC\u0634\u0631\u0641\u062A \u0627\u06CC\u0631\u0627\u0646 \u0639\u0632\u06CC\u0632\u0645\u0648\u0646\u0648 \u0627\u0632 \u067E\u06CC\u0634\u062A\u0631\u0641\u062A \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u067E\u0631\u0648\u062A\u0626\u06CC\u0646\u06CC\u0645\u0648\u0646\u06CC \u06A9\u0647 \u0645\u06CC\u200C\u062E\u0648\u0631\u06CC\u0645 \u0634\u0631\u0648\u0639\u200C\u06A9\u0646\u06CC\u0645")) : /*#__PURE__*/React.createElement("div", {
+        style: {
+          paddingTop: 45
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#373747',
+          padding: 40,
+          textAlign: 'center'
+        }
+      }, "\u0634\u0645\u0627\u0631\u0647\u200C\u0647\u0627\u06CC \u062A\u0645\u0627\u0633 \u0645\u0627\u0627\u06CC\u0646\u062C\u0627\u0633\u062A. \u062A\u0627\u06A9\u0646\u0648\u0646 \u0628\u0627 \u0646\u0638\u0631\u0627\u062A \u062F\u0648\u0633\u062A\u0627\u0646 \u0648 \u067E\u0627\u0633\u062E\u200C\u06AF\u0648\u06CC\u06CC \u0628\u0647 \u0646\u06CC\u0627\u0632\u0627\u062A\u0634\u0627\u0646 \u0628\u0647 \u0627\u06CC\u0646\u200C\u062C\u0627 \u0631\u0633\u06CC\u062F\u0647\u200C\u0627\u06CC\u0645. \u0628\u0631\u0627\u06CC\u200C\u0645\u0627 \u0646\u0638\u0631\u0627\u062A \u0634\u0645\u0627 \u062D\u06A9\u0645 \u0637\u0644\u0627\u06CC\u06CC \u0631\u0627 \u062F\u0627\u0631\u062F \u06A9\u0647 \u0633\u06CC\u0633\u062A\u0645 \u0631\u0627 \u0628\u0647 \u062C\u0644\u0648 \u067E\u06CC\u0634 \u0645\u06CC\u200C\u0628\u0631\u062F \u0648 \u0622\u0646\u200C\u0631\u0627 \u0627\u0631\u062A\u0642\u0627\u0639 \u0645\u06CC\u200C\u062F\u0647\u062F."), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {},
+        onPress: function onPress() {
+          Linking.openURL('tel://09133657623');
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 82,
+          height: 82,
+          marginTop: -9
+        },
+        source: './assets/img/whatsapp.png'
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          alignSelf: 'center',
+          fontFamily: 'iran-sans-bold',
+          fontSize: 10,
+          marginTop: -8,
+          color: '#5ABA9E'
+        }
+      }, "\u0648\u0627\u062A\u0633\u200C\u0627\u067E")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {},
+        onPress: function onPress() {
+          Linking.openURL('tel://09133657623');
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 64,
+          height: 64
+        },
+        source: './assets/img/instagram.png'
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          alignSelf: 'center',
+          fontFamily: 'iran-sans-bold',
+          fontSize: 10,
+          marginTop: 2,
+          color: '#FE697B'
+        }
+      }, "\u0627\u06CC\u0646\u0633\u062A\u0627\u06AF\u0631\u0627\u0645"))))) : this.state.bar == 'map' || this.state.bar == 'location' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement(MapView, {
+        style: {
+          flex: 1
+        },
+        ref: function ref(map) {
+          return _this5.map = map;
+        },
+        initialRegion: {
+          latitude: this.state.user.location.latitude,
+          longitude: this.state.user.location.longitude,
+          latitudeDelta: 0.1922 / 4,
+          longitudeDelta: 0.0821 / 4
+        },
+        onRegionChangeComplete: function onRegionChangeComplete(region) {
+          if (_this5.state.bar == 'location') {
+            _this5.nonState.latitude = region.latitude;
+            _this5.nonState.longitude = region.longitude;
+            if (region.latitudeDelta + region.longitudeDelta < 0.0342875 && !_this5.state.located) _this5.setState({
+              located: true
+            });
+            if (region.latitudeDelta + region.longitudeDelta > 0.0342875 && _this5.state.located) _this5.setState({
+              located: false
+            });
+          }
+        }
+      }, /*#__PURE__*/React.createElement(UrlTile, {
+        urlTemplate: "/static/lyrr/{z}/{x}/{y}.png",
+        maximumZ: 19,
+        flipY: false
+      }), this.state.bar == 'map' && /*#__PURE__*/React.createElement(MapView.Polyline, {
+        coordinates: this.state.route,
+        strokeColor: '#03A9B7',
+        strokeWidth: 4
+      }), this.state.bar == 'map' && /*#__PURE__*/React.createElement(MapView.Marker, {
+        style: {
+          zIndex: 99
+        },
+        anchor: {
+          x: 0.5,
+          y: .5
+        },
+        centerOffset: {
+          x: 0.5,
+          y: .5
+        },
+        coordinate: {
+          latitude: this.state.biker.location.latitude,
+          longitude: this.state.biker.location.longitude
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          zIndex: 97,
+          width: 16 * 4,
+          height: 16 * 4,
+          backgroundColor: '#3F86F525',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderColor: '#3F86F545',
+          borderWidth: 1,
+          borderRadius: 16 * 2
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: '#34374755',
+          borderRadius: 3,
+          marginBottom: 5,
+          marginTop: -15
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: 'white',
+          fontSize: 13,
+          marginBottom: -5,
+          marginTop: -2,
+          marginLeft: 4,
+          marginRight: 4
+        }
+      }, this.farsify(this.state.biker.temperature), " C\xB0")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16,
+          height: 16,
+          backgroundColor: '#3F86F5',
+          borderRadius: 8,
+          borderWidth: 2,
+          marginBottom: 5,
+          borderColor: 'white'
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: '#34374725',
+          borderRadius: 3,
+          marginBottom: -10,
+          marginTop: 0
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: 'white',
+          fontSize: 13,
+          marginBottom: -5,
+          marginTop: -2,
+          marginLeft: 4,
+          marginRight: 4
+        }
+      }, "\u062F\u0645\u0627")))), this.state.bar == 'map' && /*#__PURE__*/React.createElement(MapView.Marker, {
+        style: {
+          zIndex: 98
+        },
+        coordinate: {
+          latitude: this.state.user.location.latitude,
+          longitude: this.state.user.location.longitude
+        },
+        anchor: {
+          x: 0.5,
+          y: .94
+        },
+        centerOffset: {
+          x: 0.5,
+          y: .94
+        }
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16 * 4,
+          height: 16 * 4,
+          backgroundColor: '#3F86F525',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderColor: '#343747',
+          borderWidth: 3,
+          borderRadius: 16 * 2
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16 * 3.5,
+          height: 16 * 3.5,
+          backgroundColor: '#3F86F5',
+          borderRadius: 28,
+          borderWidth: 3,
+          marginBottom: 0,
+          borderColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: 'white',
+          fontFamily: 'iran-sans',
+          marginTop: -2,
+          fontSize: 11
+        }
+      }, this.state.user.username))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 4,
+          height: 16,
+          backgroundColor: '#343747',
+          marginLeft: 2 * 16 - 2,
+          marginTop: -2,
+          borderRadius: 4
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 12,
+          height: 10,
+          backgroundColor: '#34374764',
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: '#343747b8',
+          marginLeft: 2 * 16 - 6,
+          marginTop: -6
+        }
+      }))), this.state.bar == 'map' && /*#__PURE__*/React.createElement(MapView.Marker, {
+        style: {
+          zIndex: 98
+        },
+        coordinate: {
+          latitude: this.state.vendor.latitude,
+          longitude: this.state.vendor.longitude
+        },
+        anchor: {
+          x: 0.5,
+          y: .94
+        },
+        centerOffset: {
+          x: 0.5,
+          y: .94
+        }
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16 * 4,
+          height: 16 * 4,
+          backgroundColor: '#3F86F525',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderColor: '#343747',
+          borderWidth: 3,
+          borderRadius: 16 * 2
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16 * 3.5,
+          height: 16 * 3.5,
+          backgroundColor: '#3F86F5',
+          borderRadius: 28,
+          borderWidth: 3,
+          marginBottom: 0,
+          borderColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: 'white',
+          fontFamily: 'iran-sans',
+          marginTop: -2,
+          fontSize: 11
+        }
+      }, 'لذیذستون'))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 4,
+          height: 16,
+          backgroundColor: '#343747',
+          marginLeft: 2 * 16 - 2,
+          marginTop: -2,
+          borderRadius: 4
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 12,
+          height: 10,
+          backgroundColor: '#34374764',
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: '#343747b8',
+          marginLeft: 2 * 16 - 6,
+          marginTop: -6
+        }
+      })))), this.state.bar == 'location' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: 'absolute',
+          width: screenWidth
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'stretch'
+        }
+      }, /*#__PURE__*/React.createElement("input", {
+        style: {
+          flex: 1,
+          backgroundColor: '#ffffff',
+          borderRadius: 12,
+          paddingTop: 7,
+          paddingBottom: 8,
+          margin: 10,
+          textAlign: 'center',
+          fontFamily: 'iran-sans'
+        },
+        placeholder: "\u062C\u0633\u062A\u200C\u062C\u0648\u06CC \u0645\u062D\u0644\u0647 \u0633\u06A9\u0648\u0646\u062A",
+        onChangep: (/*#__PURE__*/function () {
+          var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(text) {
+            var response;
+            return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+              while (1) switch (_context11.prev = _context11.next) {
+                case 0:
+                  if (!(text.length < 2)) {
+                    _context11.next = 2;
+                    break;
+                  }
+                  return _context11.abrupt("return");
+                case 2:
+                  _context11.next = 4;
+                  return fetch(host + 'geo/search?q=' + text, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                      Accept: 'application/json'
+                    }
+                  });
+                case 4:
+                  response = _context11.sent;
+                  _context11.t0 = _this5;
+                  _context11.next = 8;
+                  return response.json();
+                case 8:
+                  _context11.t1 = _context11.sent;
+                  _context11.t2 = {
+                    locations: _context11.t1
+                  };
+                  _context11.t0.setState.call(_context11.t0, _context11.t2);
+                case 11:
+                case "end":
+                  return _context11.stop();
+              }
+            }, _callee11);
+          }));
+          return function (_x2) {
+            return _ref15.apply(this, arguments);
+          };
+        }())
+      }, this.state.location)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderRadius: 12,
+          backgroundColor: 'white',
+          margin: 10,
+          marginTop: 2
+        }
+      }, this.state.locations.map(function (location, idx) {
+        return /*#__PURE__*/React.createElement("p", {
+          key: idx,
+          style: {
+            flex: 1,
+            color: '#343747',
+            fontFamily: 'iran-sans',
+            borderBottomColor: '#f1f1f2',
+            borderBottomWidth: .5,
+            paddingTop: 5,
+            paddingBottom: 6,
+            paddingRight: 12
+          },
+          onPress: function onPress() {
+            var d_lat = 0.1922;
+            var d_lng = 0.0821;
+            _this5.map.animateToRegion({
+              latitude: location.coordination.latitude,
+              longitude: location.coordination.longitude,
+              latitudeDelta: d_lat / 8,
+              longitudeDelta: d_lng / 8
+            });
+            _this5.setState({
+              locations: [],
+              location: location.location
+            });
+          }
+        }, location.location);
+      }))) : null, this.state.bar == 'location' && /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          position: 'absolute',
+          left: screenWidth / 2 - 16 * 2,
+          top: screenHeight / 2 - 32 - 16 * 2 - 8
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12() {
+          var response, dialog;
+          return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+            while (1) switch (_context12.prev = _context12.next) {
+              case 0:
+                if (_this5.state.located) {
+                  _context12.next = 2;
+                  break;
+                }
+                return _context12.abrupt("return");
+              case 2:
+                _this5.setState({
+                  locatedLocation: _this5.state.location
+                });
+                if (!_this5.state.authorized) {
+                  _context12.next = 20;
+                  break;
+                }
+                _context12.next = 6;
+                return fetch(host + 'users/' + _this5.state.user._id + '/$?address=' + _this5.state.location + '&location.latitude=' + _this5.nonState.latitude + '&location.longitude=' + _this5.nonState.longitude, {
+                  method: 'GET',
+                  credentials: 'include',
+                  headers: {
+                    Accept: 'application/json'
+                  }
+                });
+              case 6:
+                response = _context12.sent;
+                if (!(response.status == 200)) {
+                  _context12.next = 20;
+                  break;
+                }
+                dialog = _this5.state.dialog;
+                dialog.field = 'address';
+                dialog.title = 'انتخاب محل سکونت';
+                dialog.description = 'آدرستان رابه صورت‌کامل وارد‌ نمایید.';
+                dialog.shown = true;
+                _context12.t0 = _this5;
+                _context12.t1 = dialog;
+                _context12.next = 17;
+                return response.json();
+              case 17:
+                _context12.t2 = _context12.sent;
+                _context12.t3 = {
+                  dialog: _context12.t1,
+                  user: _context12.t2
+                };
+                _context12.t0.setState.call(_context12.t0, _context12.t3);
+              case 20:
+              case "end":
+                return _context12.stop();
+            }
+          }, _callee12);
+        }))
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16 * 4,
+          height: 16 * 4,
+          backgroundColor: '#3F86F525',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderColor: '#343747',
+          borderWidth: 3,
+          borderRadius: 16 * 2
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 16 * 3.5,
+          height: 16 * 3.5,
+          backgroundColor: '#3F86F5',
+          borderRadius: 28,
+          borderWidth: 3,
+          marginBottom: 0,
+          borderColor: 'white',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: 'white',
+          fontFamily: 'iran-sans',
+          marginTop: -2,
+          fontSize: 11
+        }
+      }, this.state.located ? 'انتخاب' : 'زوم'))), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 4,
+          height: 16,
+          backgroundColor: '#343747',
+          marginLeft: 2 * 16 - 2,
+          marginTop: -2,
+          borderRadius: 4
+        }
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 12,
+          height: 10,
+          backgroundColor: '#34374764',
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: '#343747b8',
+          marginLeft: 2 * 16 - 6,
+          marginTop: -6
+        }
+      })), this.state.bar == 'map' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: 'white',
+          borderTopWidth: .5,
+          borderTopColor: '#E6E7Ea',
+          paddingTop: 3,
+          paddingRight: 4,
+          paddingLeft: 4
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'flex-end'
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#3F86F5',
+          fontFamily: 'iran-sans-light',
+          fontSize: 13,
+          marginTop: 6
+        }
+      }, "\u0645\u0633\u0627\u0641\u062A ", this.farsify(2100), " \u0645\u062A\u0631"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#343747',
+          fontFamily: 'iran-sans',
+          fontSize: 15
+        },
+        onPress: function onPress() {
+          return _this5.setState({
+            bar: 'location'
+          });
+        }
+      }, "\u0627\u0635\u0641\u0647\u0627\u0646, ", this.state.user.address, " - ")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row-reverse',
+          justifyContent: 'space-between'
+        }
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#343747',
+          fontFamily: 'iran-sans',
+          fontSize: 16,
+          marginTop: 4,
+          marginRight: 8
+        }
+      }, this.farsify((this.state.order.products.map(function (product) {
+        return product.price * [200, 450, 1100, 2650, 6400][product.quantity];
+      }).reduce(function (a, b) {
+        return a + b;
+      }, 0.0) / 100000 + this.state.adp / 1000).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')), " \u062A\u0648\u0645\u0627\u0646", /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-light',
+          color: '#643777',
+          fontSize: 13
+        }
+      }, "  \u0634\u0627\u0645\u0644 ", this.farsify((this.state.adp / 1000).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')), " \u062A\u0648\u0645\u0627\u0646 \u0647\u0632\u06CC\u0646\u0647 \u200C\u062F\u0644\u06CC\u0648\u0631\u06CC")), /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: '#343747',
+          fontFamily: 'iran-sans-light',
+          fontSize: 13,
+          marginTop: 2,
+          marginRight: 7
+        }
+      }, this.state.order.payed ? '۴ دقیقه تا رسیدن پیک' : "نفر" + this.farsify(this.state.q) + "ام درصف")), !this.state.order.payed && /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          height: 64,
+          width: 64,
+          borderRadius: 48,
+          backgroundColor: '#3F86F5',
+          marginLeft: 12,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: -15,
+          borderColor: '#34374720',
+          borderWidth: 2
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13() {
+          return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+            while (1) switch (_context13.prev = _context13.next) {
+              case 0:
+                _this5.setState({
+                  web: host + 'orders/' + _this5.state.order._id + '/pay?price=' + _this5.state.order.products.map(function (product) {
+                    return product.price * [200, 450, 1100, 2650, 6400][product.quantity];
+                  }).reduce(function (a, b) {
+                    return a + b;
+                  }, 0) / 10
+                });
+              case 1:
+              case "end":
+                return _context13.stop();
+            }
+          }, _callee13);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: 'white',
+          fontFamily: 'iran-sans-bold',
+          fontSize: 15
+        }
+      }, "\u062E\u0631\u06CC\u062F")))) : /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: this.state.located ? '#3FD459' : '#DE3136',
+          marginTop: -14 * 2 - 3,
+          marginBottom: 3,
+          paddingRight: 8
+        }
+      }, this.state.located ? 'بسیار خوب. روی علامت را لمس کنید.' : 'زوم کنید و مکانتان را پیدا کنید. تا علامت سبز شود.')) : /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: '#fff',
+          flex: 1
+        }
+      }, this.state.bar == 'search' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'stretch',
+          borderBottomWidth: .5,
+          borderBottomColor: '#E6E7Ea'
+        }
+      }, /*#__PURE__*/React.createElement("input", {
+        style: {
+          flex: 1,
+          backgroundColor: '#fbfafa',
+          borderRadius: 12,
+          paddingTop: 4,
+          paddingBottom: 4,
+          margin: 10,
+          textAlign: 'center',
+          fontFamily: 'iran-sans'
+        },
+        placeholder: "\u062C\u0633\u062A\u200C\u062C\u0648\u06CC \u0644\u0630\u06CC\u0630\u0647\u0627",
+        onSubmitEditing: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14() {
+          var response;
+          return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+            while (1) switch (_context14.prev = _context14.next) {
+              case 0:
+                _context14.next = 2;
+                return fetch(host + 'delicious/search?q=' + _this5.nonState.search, {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: {
+                    Accept: 'application/json'
+                  }
+                });
+              case 2:
+                response = _context14.sent;
+                _context14.next = 5;
+                return response.json();
+              case 5:
+                response = _context14.sent;
+                _this5.setState({
+                  bar: 'search',
+                  products: response
+                });
+              case 7:
+              case "end":
+                return _context14.stop();
+            }
+          }, _callee14);
+        })),
+        onChangep: function onChangep(text) {
+          _this5.nonState.search = text;
+        }
+      })) : null, /*#__PURE__*/React.createElement(FlatList, {
+        onMomentumScrollBegin: this.locationHeader,
+        style: {
+          alignSelf: 'stretch',
+          textAlign: 'center',
+          paddingTop: 0,
+          marginTop: 0,
+          backgroundColor: 'f7f7f7'
+        },
+        data: this.state.products,
+        renderItem: function renderItem(_ref19) {
+          var item = _ref19.item,
+            index = _ref19.index;
+          return _this5.card(item, true, index);
+        },
+        keyExtractor: function keyExtractor(item, index) {
+          return index.toString();
+        }
+      })), this.state.orderShown && this.state.order.products.length > 0 && this.state.bar != 'map' && this.state.bar != 'location' ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderTopLeftRadius: 22,
+          borderTopRightRadius: 22,
+          backgroundColor: 'white',
+          marginTop: -30
+        }
+      }, this.state.order.payed ? null : /*#__PURE__*/React.createElement("div", {
+        style: {
+          borderBottomWidth: .5,
+          borderBottomColor: '#E6E7Ea',
+          flexDirection: 'row'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'stretch',
+          flex: .9
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
+          return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+            while (1) switch (_context15.prev = _context15.next) {
+              case 0:
+                _this5.setState({
+                  order: {
+                    products: [],
+                    payed: false
+                  }
+                });
+                _context15.next = 3;
+                return AsyncStorage.removeItem('order');
+              case 3:
+              case "end":
+                return _context15.stop();
+            }
+          }, _callee15);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontSize: 15,
+          flex: 1,
+          borderRadius: 12,
+          paddingTop: 7,
+          paddingBottom: 6,
+          margin: 10,
+          marginRight: 5,
+          textAlign: 'center',
+          fontFamily: 'iran-sans-bold',
+          borderColor: 'red',
+          borderWidth: .5,
+          color: 'red',
+          backgroundColor: 'white'
+        }
+      }, "\u0627\u0646\u0635\u0631\u0627\u0641")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'stretch',
+          flex: 1.1,
+          borderColor: '#3FD459',
+          borderWidth: .5,
+          backgroundColor: 'white',
+          paddingTop: 7,
+          paddingBottom: 6,
+          margin: 10,
+          marginLeft: 5,
+          borderRadius: 12
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
+          var data, order, response, route, min_lat, min_lng, d_lat, d_lng;
+          return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+            while (1) switch (_context16.prev = _context16.next) {
+              case 0:
+                data = new FormData();
+                order = _this5.state.order;
+                order.price = order.products.map(function (product) {
+                  return product.price * [200, 450, 1100, 2650, 6400][product.quantity];
+                }).reduce(function (a, b) {
+                  return a + b;
+                }, 0.0) / 100 + _this5.state.adp;
+                _context16.next = 5;
+                return AsyncStorage.setItem('order', JSON.stringify(order));
+              case 5:
+                data.append('json', JSON.stringify(order));
+                _context16.next = 8;
+                return fetch(host + 'orders/+', {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: {
+                    Accept: 'application/json'
+                  },
+                  body: data
+                });
+              case 8:
+                response = _context16.sent;
+                _context16.next = 11;
+                return response.text();
+              case 11:
+                order._id = _context16.sent;
+                _this5.setState({
+                  bar: 'map',
+                  product: null,
+                  locationHeader: false,
+                  orderShown: false,
+                  order: order
+                });
+                window.animate(window.locationLength, 'height', 0, .1);
+                _context16.next = 16;
+                return fetch('http://103.215.221.23:5000/' + 'route/v1/car/' + _this5.state.user.location.longitude + ',' + _this5.state.user.location.latitude + ';' + _this5.state.vendor.longitude + ',' + _this5.state.vendor.latitude + '?steps=true');
+              case 16:
+                route = _context16.sent;
+                _context16.next = 19;
+                return route.json();
+              case 19:
+                route = _context16.sent;
+                route = route['routes'][0]['legs'][0]['steps'].map(function (step) {
+                  return {
+                    latitude: step['maneuver']['location'][1],
+                    longitude: step['maneuver']['location'][0]
+                  };
+                });
+                _this5.setState({
+                  route: route
+                });
+                min_lat = Math.min(_this5.state.user.location.latitude, _this5.state.vendor.latitude);
+                min_lng = Math.min(_this5.state.user.location.longitude, _this5.state.vendor.longitude);
+                d_lat = Math.abs(_this5.state.user.location.latitude - _this5.state.vendor.latitude);
+                d_lng = Math.abs(_this5.state.user.location.longitude - _this5.state.vendor.longitude);
+                console.log(min_lat);
+                console.log(min_lng);
+                _this5.map.animateToRegion({
+                  latitude: min_lat,
+                  longitude: min_lng + d_lng / 2,
+                  latitudeDelta: d_lat * 2.7,
+                  longitudeDelta: d_lng * 2.7
+                });
+              case 29:
+              case "end":
+                return _context16.stop();
+            }
+          }, _callee16);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontSize: 12,
+          textAlign: 'center',
+          fontFamily: 'iran-sans-bold',
+          color: '#3FD459',
+          marginTop: 4
+        }
+      }, this.farsify((this.state.order.products.map(function (product) {
+        return product.price * [200, 450, 1100, 2650, 6400][product.quantity];
+      }).reduce(function (a, b) {
+        return a + b;
+      }, 0.0) / 100000).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')), " \u062A\u0648\u0645\u0627\u0646"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontSize: 16,
+          textAlign: 'center',
+          fontFamily: 'iran-sans-bold',
+          color: '#3FD459',
+          marginLeft: 8
+        }
+      }, "\u0633\u0641\u0627\u0631\u0634"))), this.state.order.payed ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("image", {
+        style: {
+          borderTopLeftRadius: 12,
+          borderTopRightRadius: 12,
+          width: screenWidth + 1,
+          height: screenWidth * 9 / 16,
+          margin: 0
+        },
+        source: './assets/img/signal.gif'
+      }), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: 'white',
+          marginRight: 15,
+          marginBottom: -25 + screenWidth * 9 / 16,
+          marginTop: -screenWidth * 9 / 16
+        }
+      }, "\u0634\u0628\u06A9\u0647 \u0644\u0630\u06CC\u0630\u0633\u062A\u0648\u0646"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans',
+          color: '#343747',
+          borderBottomColor: '#a4a7b7',
+          borderBottomWidth: .5,
+          padding: 5
+        }
+      }, " \u0633\u0641\u0627\u0631\u0634\u062A\u0627\u0646 \u0631\u0627 \u0628\u0647 \u0637\u0648\u0631 \u0632\u0646\u062F\u0647 \u0627\u0632 \u0637\u0631\u06CC\u0642 \u0634\u0628\u06A9\u0647 \u0644\u0630\u06CC\u0630\u0633\u062A\u0648\u0646 \u06CC\u0627 \u0631\u0648\u06CC \u0646\u0642\u0634\u0647 \u062F\u0646\u0628\u0627\u0644 \u06A9\u0646\u06CC\u062F. \u0647\u0645\u0686\u0646\u06CC\u0646 \u0627\u0632 \u0647\u0645\u06CC\u0646\u200C\u062C\u0627 \u0627\u0642\u062F\u0627\u0645 \u0628\u0647 \u0633\u0641\u0627\u0631\u0634 \u062C\u062F\u06CC\u062F \u0646\u0645\u0627\u06CC\u06CC\u062F. "), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          margin: 14
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          borderRadius: 40,
+          backgroundColor: '#DE3136',
+          alignSelf: 'flex-end',
+          padding: 9,
+          paddingTop: 0,
+          paddingBottom: 1,
+          marginTop: 0
+        },
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'map',
+            locationHeader: false,
+            orderShown: false
+          });
+          window.animate(window.locationLength, 'height', 0, .1);
+        }
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: 'white',
+          fontSize: 13
+        }
+      }, "\u062F\u0631\u0646\u0642\u0634\u0647 \u062F\u0646\u0628\u0627\u0644\u200C\u06A9\u0646\u06CC\u062F")), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        style: {
+          borderRadius: 40,
+          backgroundColor: '#DE3136',
+          alignSelf: 'flex-end',
+          padding: 9,
+          paddingTop: 0,
+          paddingBottom: 1,
+          marginTop: 0
+        },
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
+          return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+            while (1) switch (_context17.prev = _context17.next) {
+              case 0:
+                _this5.setState({
+                  order: {
+                    payed: false,
+                    products: []
+                  },
+                  orderShown: false
+                });
+                _context17.next = 3;
+                return AsyncStorage.setItem('order', JSON.stringify({
+                  payed: false,
+                  products: []
+                }));
+              case 3:
+              case "end":
+                return _context17.stop();
+            }
+          }, _callee17);
+        }))
+      }, /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'iran-sans-bold',
+          color: 'white',
+          fontSize: 13
+        }
+      }, "\u0633\u0641\u0627\u0631\u0634 \u062C\u062F\u06CC\u062F")))) : /*#__PURE__*/React.createElement(FlatList, {
+        style: {
+          alignSelf: 'stretch',
+          textAlign: 'center',
+          paddingTop: 4
+        },
+        data: this.state.order.products,
+        renderItem: this.renderPoint,
+        keyExtractor: function keyExtractor(item, index) {
+          return index.toString();
+        }
+      })) : null), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: this.state.bar == 'map' || this.state.bar == 'location' ? 'white' : '#FFFFFF',
+          borderTopWidth: .5,
+          borderTopColor: this.state.bar == 'map' || this.state.bar == 'location' ? 'white' : '#E6E7Ea',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingLeft: 8,
+          paddingRight: 8
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'home',
+            product: null
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 32,
+          height: 32,
+          marginRight: 3,
+          marginLeft: 4,
+          marginTop: 6,
+          marginBottom: 8
+        },
+        source: './assets/img/chicken-face.png'
+      })), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'menu',
+            product: null,
+            locationHeader: false
+          });
+          window.animate(window.locationLength, 'height', 0, .1);
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 32,
+          height: 32,
+          marginRight: 3,
+          marginLeft: 4,
+          marginTop: 6,
+          marginBottom: 6
+        },
+        source: './assets/img/menu.png'
+      })), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            orderShown: !_this5.state.orderShown
+          });
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          width: 36 * 1.8,
+          height: 36 * 1.8,
+          backgroundColor: '#343747',
+          borderRadius: 500,
+          marginBottom: -36 * .3,
+          marginTop: -36 * .3,
+          padding: .3 * 36
+        }
+      }, this.state.order.products.length > 0 ? /*#__PURE__*/React.createElement("p", {
+        style: {
+          color: 'white',
+          fontFamily: 'iran-sans',
+          marginTop: -10,
+          marginBottom: -13,
+          textAlign: 'center',
+          fontSize: 16
+        }
+      }, this.farsify(this.state.order.products.length)) : null, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 32,
+          height: 32,
+          marginRight: 3,
+          marginLeft: 3,
+          marginTop: 6,
+          marginBottom: 8
+        },
+        source: this.state.order.payed ? './assets/img/cart-tick-white.png' : './assets/img/cart-white.png'
+      }))), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            bar: 'search',
+            product: null
+          });
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 32,
+          height: 32,
+          marginRight: 3,
+          marginLeft: 4,
+          marginTop: 6,
+          marginBottom: 8
+        },
+        source: './assets/img/search.png'
+      })), /*#__PURE__*/React.createElement("div", {
+        className: "touchable",
+        onPress: function onPress() {
+          _this5.setState({
+            bar: _this5.state.authorized ? 'profile' : 'login',
+            profileEditing: false,
+            product: null,
+            locationHeader: false
+          });
+          window.animate(window.locationLength, 'height', 0, .1);
+        }
+      }, /*#__PURE__*/React.createElement("image", {
+        style: {
+          width: 32,
+          height: 32,
+          marginRight: 3,
+          marginLeft: 4,
+          marginTop: 6,
+          marginBottom: 8
+        },
+        source: './assets/img/profile.png'
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          backgroundColor: '#DE3136',
+          height: 4,
+          width: 4,
+          borderRadius: 2,
+          marginTop: -9,
+          marginLeft: 29
+        }
+      }))), /*#__PURE__*/React.createElement("div", {
+        visible: this.state.dialog.shown
+      }, /*#__PURE__*/React.createElement("h2", null, this.state.dialog.title), /*#__PURE__*/React.createElement("p", null, this.state.dialog.description), /*#__PURE__*/React.createElement("input", {
+        label: "\u0648\u0631\u0648\u062F\u06CC",
+        onChangep: function onChangep(text) {
+          return _this5.nonState[_this5.state.dialog.field] = text;
+        }
+      }), /*#__PURE__*/React.createElement("button", {
+        label: "\u0627\u0646\u0635\u0631\u0627\u0641",
+        onPress: function onPress() {
+          _this5.state.dialog.shown = false;
+          _this5.setState({
+            dialog: _this5.state.dialog
+          });
+        }
+      }), /*#__PURE__*/React.createElement("button", {
+        label: "\u0627\u0639\u0645\u0627\u0644",
+        onPress: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
+          var response;
+          return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+            while (1) switch (_context18.prev = _context18.next) {
+              case 0:
+                _context18.next = 2;
+                return fetch(host + 'users/' + _this5.state.user._id + '/$?' + _this5.state.dialog.field + '=' + _this5.nonState[_this5.state.dialog.field], {
+                  method: 'GET',
+                  credentials: 'include',
+                  headers: {
+                    Accept: 'application/json'
+                  }
+                });
+              case 2:
+                response = _context18.sent;
+                if (!(response.status == 200)) {
+                  _context18.next = 14;
+                  break;
+                }
+                _this5.state.dialog.shown = false;
+                _context18.t0 = _this5;
+                _context18.t1 = _this5.state.dialog;
+                _context18.next = 9;
+                return response.json();
+              case 9:
+                _context18.t2 = _context18.sent;
+                _context18.t3 = {
+                  dialog: _context18.t1,
+                  user: _context18.t2
+                };
+                _context18.t0.setState.call(_context18.t0, _context18.t3);
+                _context18.next = 16;
+                break;
+              case 14:
+                _this5.state.dialog.description = 'دوباره تلاش کنید';
+                _this5.setState({
+                  dialog: _this5.state.dialog
+                });
+              case 16:
+              case "end":
+                return _context18.stop();
+            }
+          }, _callee18);
+        }))
+      })));
+    }
+  }]);
+  return App;
+}(React.Component);
+ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById('app'));
+</script></body></html>
