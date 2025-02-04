@@ -4,12 +4,22 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0};
+    this.state = {ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0};
+  } async populate() {  // amadash kon bara trigger up down
+    // let r = await fetch('/properties/', {method: 'POST'});
+    let ads = [];
+    for (var i = 0; i < 3; i ++) {
+      let r = await fetch(`/divar/${this.state.searchInput}/${this.state.page + i}`);
+      if (r.status != 200) continue
+      ads.push(...ads(await r.json()));
+    } this.setState({ads: ads});
   } async componentDidMount() { let app = this;
-    let r = await fetch('/properties/', {method: 'POST'});
-    r = await r.json();
-    this.setState({ads: r});
-    // this.setState({show: r[0]})
+    let params = new URLSearchParams(window.location);
+    params = Object.fromEntries(params);
+    if ('p' in params) this.state.page = params.p;
+    if ('q' in params) this.state.phrase = params.q;
+    await this.populate();
+    // TODO triggers
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
@@ -21,7 +31,8 @@ class App extends React.Component {
             <div style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', paddingRight: 15, width: '64%'}}>
               <span style={{fontWeight: 500}}>{ad.title}</span>
               <span>{ad.description}</span><br></br>
-              <a style={{textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={() => {window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
+              <a style={{textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
+              <a style={{textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
             </div>
           </div>)}
         </div>

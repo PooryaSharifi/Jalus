@@ -46,21 +46,23 @@ def otp():
         otp_list = requests.get(f'https://jalus.ir/otp').text.strip('\n').split('\n'); otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
         for phone, otp in otp_list: sync_single_tty(); subprocess.Popen(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL)
 
-ads = pymongo.C()['']['']
+users = pymongo.MongoClient("mongodb://localhost:27017")['Divar']['users']; collection = 0
+collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': False}), ('divar', {'category': {'$neq': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': False})]
+
 def push_ads():  # 4
     while True:
         time.sleep(240)
-        new_ads, continue_flag = ads.find({}), False
+        new_ads, continue_flag = collections[collections[collection][1]].find({}).limit(4 if collection == 0 else 12), False
         if not new_ads: continue
-        new_images = [(ad['images'][0] if ad['images'] else '') for ad in new_ads]
-        for im_i, im in enumerate(new_images):
-            if im_i:
-                try: 
-                    files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im["id"]}/0.jpg', 'rb')}
-                    r = requests.post(f'https://jalus.ir/static/properties/{im["id"]}/0.jpg', files=files)
+        for ad in enumerate(new_ads):
+            for i_im, im in enumerate(im['images'][:20 if collection == 0 else 2])
+                try:
+                    files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im["category"]}/{im["id"]}/{i_im}.jpg', 'rb')}
+                    r = requests.post(f'https://jalus.ir/static/properties/{im["category"]}/{im["id"]}/{i_im}.jpg', files=files)
                     if r.status != 2 or not r.json['OK']: continue_flag = True; raise
                 except: break
         if continue_flag: continue
-        requests.post(f'https://jalus.ir/', {new_ads})
+        requests.post(f'https://jalus.ir/{["users", "divar"][collection]}/+', data=json.dumps(new_ads))  # too kodum berizim
+        collection = 1 - collection if len(new_ads) < 12 else 0 if random() < .3 else 1
 
 if __name__ == '__main__': globals()[sys.argv[1]]()

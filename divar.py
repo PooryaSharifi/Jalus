@@ -22,7 +22,7 @@ from static import wild_origins
 class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
     '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
 def get_users():
-    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
+    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__).split('.')[0]).capitalize()]['users']
     users.create_index([('location', '2dsphere')])
     users.create_index([('source', 1), ('category', 1), ('date', 1)])
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
@@ -206,7 +206,7 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
         _asset_dir = _asset_dir + '/' + _id
         os.makedirs(_asset_dir, exist_ok=True)
         if len([name for name in os.listdir(_asset_dir)]) != len(images):
-            [subprocess.run(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for iim, im in enumerate(images)]
+            [subprocess.run(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for iim, im in enumerate(images) if iim < 6]
         ad['images'] = [f'{"/".join(_asset_dir.split("/")[-2:])}/{iim}.webp' for iim, _ in enumerate(images)]
     print(f"{cs.FAIL}{cs.BOLD}Image:{cs.ENDC} {cs.OKCYAN}{ad['link'].split('/')[-1]}{cs.ENDC} {ad['title']}")
     ad['imaged'], ad['imaged_date'] = True, datetime.now()
@@ -268,7 +268,7 @@ def dad(browser, user):
         #             # user['location'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['location']))}
         #             break
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
-    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 15. else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 14.6 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
@@ -333,7 +333,7 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
             succeed = dad(browser, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
-            if user['score'] > 15. and browser.__otp__:
+            if user['score'] > 14.6 and browser.__otp__:
                 uq = phone(browser, user)
                 if 'phoned' in uq and uq['phoned'] and uq['phone']:
                     users.replace_one({'_id': user['_id']}, user)

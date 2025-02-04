@@ -45,7 +45,7 @@
                                                     <div class="grow text-body-3">
                                                       <input autoFocus class="px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--primary__IZ6Ku text-neutral-500 text-body-2 lg:text-body-2 text-button-1 h-full" type="text" name="search-input" placeholder="جستجو" autocomplete="off" value={this.state.searchInput} onBlur={() => {this.setState({searchExpand: false})}} onChange={async (e) => {this.setState({searchInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {
                                                         console.log(this.state.searchInput);
-                                                        this.setState({searchInput: '', searchExpand: false})
+                                                        this.setState({searchExpand: false})
                                                       }}}/>
                                                     </div>
                                                   </div>
