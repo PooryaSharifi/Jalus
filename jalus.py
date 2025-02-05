@@ -192,7 +192,7 @@ pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 @app.route('/<collection:(users|ads)>/-', methods=['GET', 'POST'])  # 11
 async def search_documents(r, collection):
-    phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p']) if 'p' in r.args else 1
+    phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db']['divar'].find(body).skip(48 * (page - 1)).limit(24).to_list(None); return response.json(ads)
