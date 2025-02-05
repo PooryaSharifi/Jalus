@@ -10,7 +10,7 @@ from io import BytesIO, StringIO
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
 
 WorkerManager.THRESHOLD = 1200
-db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).split('.')[0].capitalize()
+db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
 app, otps, wss, otp_list, signals, markets = Sanic(__name__), {}, None, [], [{'timestamp': '2024-11-10 06:58:57', 'market': 'BTCUSDT', 'author': 'arsha', 'weight': .3}, {'timestamp': '2025-01-31 03:55:47', 'market': 'ETHUSDT', 'author': 'arsha', 'weight': .2}], [
     ['BTCUSDT', 102598.6, 102628.3, 96435.5], ['ETHUSDT', 3138.06, 3139.06, 3660.88], ['DOTUSDT', 5.7502, 5.7502, 8.6612], ['BNBUSDT', 671.514, 671.515, 660.659], ['ADAUSDT', 0.9309, 0.9316, 1.0933], ['SOLUSDT', 232.25, 232.468, 242.018], ['XRPUSDT', 3.0922, 3.09514, 1.89692], ['LUNAUSDT', 0.3135, 0.3135, 0.4498], 
     ['DOGEUSDT', 0.32879, 0.32902, 0.42558], ['AVAXUSDT', 33.254, 33.254, 43.155], ['SHIBUSDT', 1.8428e-05, 1.8425e-05, 2.5852e-05], ['TRXUSDT', 0.2417, 0.2417, 0.2042], ['MATICUSDT', 0.4084, 0.4084, 0.6339], ['LINKUSDT', 23.4191, 23.4261, 18.2516], ['ATOMUSDT', 5.8665, 5.8652, 8.5482],
@@ -195,7 +195,7 @@ async def get_ads(r, phrase, page):
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db']['divar'].find(body).skip(48 * (page - 1)).limit(24).to_list(None); return response.json(ads)
-@app.post('/<collection>/+')  # 6
+@app.post('/<collection:(users|ads)>/+')  # 6
 async def new_ad(r, ): ad = r.json; await app.config['db'][collection].insert_one(ad); return response.json({'OK': True})  # change to datetime
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)

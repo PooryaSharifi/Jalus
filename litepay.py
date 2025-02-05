@@ -46,7 +46,7 @@ def otp():
         otp_list = requests.get(f'https://jalus.ir/otp').text.strip('\n').split('\n'); otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
         for phone, otp in otp_list: sync_single_tty(); subprocess.Popen(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL)
 
-users = pymongo.MongoClient("mongodb://localhost:27017")['Divar']['users']; collection = 0
+users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
 collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': False}), ('divar', {'category': {'$neq': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': False})]
 
 def push_ads():  # 4
