@@ -45,7 +45,7 @@ async def init_ones(sanic, loop):
         for document in collection: await app.config['db']['laziz_delicious'].insert_one(document)
     # await Key.get_collection().create_index([("home", 1), ("phone", 1), ("fix", 1)], )  # , unique=True)
     await sanic.config['db']['users'].create_index([('title', 'text'), ('description', 'text')], weights={'title': 2, 'description': 1})
-    await sanic.config['db']['divar'].create_index([('title', 'text'), ('description', 'text')], weights={'title': 2, 'description': 1})
+    await sanic.config['db']['ads'].create_index([('title', 'text'), ('description', 'text')], weights={'title': 2, 'description': 1})
 
 @app.listener('after_server_stop')
 async def close_connection(app, loop): app.config['db'].close()
@@ -195,7 +195,9 @@ async def search_documents(r, collection):
     phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
-    ads = await app.config['db']['divar'].find(body).skip(48 * (page - 1)).limit(24).to_list(None); return response.json(ads)
+    ads = await app.config['db'][collection].find(body).skip(48 * (page - 1)).limit(24).to_list(None)
+    for pr in ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
+    return response.json(ads)
 @app.post('/<collection:(users|ads)>/+')  # 6
 async def new_document(r, ): ad = r.json; await app.config['db'][collection].insert_one(ad); return response.json({'OK': True})  # change to datetime
 @app.post('/trade/s')

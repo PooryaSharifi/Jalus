@@ -11,7 +11,7 @@ class App extends React.Component {
     for (var i = 0; i < 3; i ++) {
       let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
       if (r.status != 200) continue
-      ads.push(...ads(await r.json()));
+      r = await r.json(); ads.push(...r);
     } this.setState({ads: ads});
   } async componentDidMount() { let app = this;
     let params = new URLSearchParams(window.location);
