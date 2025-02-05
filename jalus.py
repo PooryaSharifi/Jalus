@@ -190,13 +190,14 @@ async def _smart_home(r, home, ): return response.html(await template('Home') if
 pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj][ts]*'); pages = [os.path.basename(p).split('.')[0].lower() for p in pages]
 @app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz']])}|)>")
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
-@app.post('/divar/<phrase>/<page:int>')  # 11
-async def get_ads(r, phrase, page):
+@app.route('/<collection:(users|ads)>/-', methods=['GET', 'POST'])  # 11
+async def search_documents(r, collection):
+    phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p']) if 'p' in r.args else 1
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db']['divar'].find(body).skip(48 * (page - 1)).limit(24).to_list(None); return response.json(ads)
 @app.post('/<collection:(users|ads)>/+')  # 6
-async def new_ad(r, ): ad = r.json; await app.config['db'][collection].insert_one(ad); return response.json({'OK': True})  # change to datetime
+async def new_document(r, ): ad = r.json; await app.config['db'][collection].insert_one(ad); return response.json({'OK': True})  # change to datetime
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
 @app.post('/trade/k')

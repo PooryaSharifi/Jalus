@@ -280,7 +280,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                 break;
               }
               _context.next = 5;
-              return fetch("/divar/".concat(this.state.searchInput, "/").concat(this.state.page + i));
+              return fetch("/users/-?q=".concat(this.state.searchInput, "&p=").concat(this.state.page + i));
             case 5:
               r = _context.sent;
               if (!(r.status != 200)) {

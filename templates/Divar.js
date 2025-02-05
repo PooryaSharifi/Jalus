@@ -9,7 +9,7 @@ class App extends React.Component {
     // let r = await fetch('/properties/', {method: 'POST'});
     let ads = [];
     for (var i = 0; i < 3; i ++) {
-      let r = await fetch(`/divar/${this.state.searchInput}/${this.state.page + i}`);
+      let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
       if (r.status != 200) continue
       ads.push(...ads(await r.json()));
     } this.setState({ads: ads});
