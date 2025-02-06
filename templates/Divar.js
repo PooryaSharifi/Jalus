@@ -5,21 +5,40 @@
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
     this.state = {ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0};
-  } async populate() {  // amadash kon bara trigger up down
-    // let r = await fetch('/properties/', {method: 'POST'});
+  } async search() {
     let ads = [];
-    for (var i = 0; i < 3; i ++) {
+    for (var i = 0; i < 2; i ++) {
       let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
-      if (r.status != 200) continue
+      if (r.status != 200) continue;
       r = await r.json(); ads.push(...r);
     } this.setState({ads: ads});
+
+    var st, lastScrollTop = 0, height, lock = false; document.addEventListener('scroll', async (e) => {
+      if (lock) return;
+      st = window.pageYOffset || document.documentElement.scrollTop;
+      height = document.documentElement.scrollHeight - window.screen.height + 200;
+      if (st > lastScrollTop) {
+        if ((height - st) / height * this.state.ads.length < 4) {
+          if (this.state.ads.length % 12 != 0) return; lock = true;
+          let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
+          if (r.status != 200) lock = false;
+          else {r = await r.json(); /*  for (let i = 0; i < 12; i ++ ) this.state.ads.shift(); */ if (r.length > 0) this.state.ads.push(...r); else this.state.ads.push(this.state.ads[0]); this.setState({ads: this.state.ads, page: this.state.page + 1}); lock = false;}
+        }
+      } /* else if (st < lastScrollTop) {
+        if (st / height * this.state.ads.length < 4) {
+          if (this.state.page == 1) return; lock = true;
+          let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page - 1}`);
+          if (r.status != 200) lock = false;
+          else {r = await r.json(); for (let i = 0; i == 0 || this.state.ads.length % 12 != 0; i ++ ) this.state.ads.pop(); this.state.ads.unshift(...r); this.setState({ads: this.state.ads, page: this.state.page - 1}); lock = false;}
+        }
+      }*/ lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
   } async componentDidMount() { let app = this;
     let params = new URLSearchParams(window.location);
     params = Object.fromEntries(params);
     if ('p' in params) this.state.page = params.p;
     if ('q' in params) this.state.phrase = params.q;
-    await this.populate();
-    // TODO triggers
+    await this.search();
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
