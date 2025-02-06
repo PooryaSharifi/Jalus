@@ -1181,13 +1181,17 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee8$(_context8) {
               while (1) switch (_context8.prev = _context8.next) {
                 case 0:
-                  if (e.key === 'Enter') {
-                    console.log(_this2.state.searchInput);
-                    _this2.setState({
-                      searchExpand: false
-                    });
+                  if (!(e.key === 'Enter')) {
+                    _context8.next = 4;
+                    break;
                   }
-                case 1:
+                  _this2.setState({
+                    searchExpand: false,
+                    page: 1
+                  });
+                  _context8.next = 4;
+                  return _this2.search();
+                case 4:
                 case "end":
                   return _context8.stop();
               }
