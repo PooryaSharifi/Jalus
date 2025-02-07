@@ -4,7 +4,7 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {notes: {}, ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0};
+    this.state = {notes: {}, ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'لیست سرچ'};
   } async search() {
     let ads = [];
     for (var i = 0; i < 2; i ++) {
@@ -44,9 +44,10 @@ class App extends React.Component {
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
         {/* #macro modules/menu */}
         <div style={{height: 108}}></div>
+        {this.state.leftMenu == 'ثبت و بستن' && <textarea style={{border: 'none', outline: 'none', borderTop: '1px grey solid', position: 'fixed', zIndex: 899, left: 150, right: 150, border: '1px solid grey', borderRadius: 8, marginTop: 10, direction: 'ltr', padding: 4, minHeight: 250}}></textarea>}
         {!this.state.notes.isEmpty() && <div id="notes" style={{fontSize: '1.8em', position: 'fixed', bottom: 25, left: 150, right: 150, height: 360, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 899}}>
           {this.state.notes.notes.map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}>•</span>{t}</div>)}
-          <input autoFocus placeholder="یادداشت" class="input" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.notes.input} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({notes: {}}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.state.notes.input = e.target.value; this.setState({notes: this.state.notes})}} onKeyPress={async (e) => {if(e.key === 'Enter') {this.state.notes.notes.push(this.state.notes.input); this.state.notes.input = ''; this.setState({notes: this.state.notes})}}}/>
+          <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.notes.input} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({notes: {}}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.state.notes.input = e.target.value; this.setState({notes: this.state.notes})}} onKeyPress={async (e) => {if(e.key === 'Enter') {this.state.notes.notes.push(this.state.notes.input); this.state.notes.input = ''; this.setState({notes: this.state.notes})}}}/>
         </div>} <div style={{background: 'white', fontSize: '2.1em', paddingLeft: 150, paddingRight: 150, paddingTop: 5}}>
           {this.state.ads.map((ad) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
             <div style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 360, width: '36%', borderRadius: 8}}/>
