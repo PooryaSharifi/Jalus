@@ -4,7 +4,7 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0};
+    this.state = {notes: {}, ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0};
   } async search() {
     let ads = [];
     for (var i = 0; i < 2; i ++) {
@@ -44,14 +44,18 @@ class App extends React.Component {
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
         {/* #macro modules/menu */}
         <div style={{height: 108}}></div>
-        <div style={{background: 'white', fontSize: '2.1em', paddingLeft: 160, paddingRight: 160, paddingTop: 5}}>
+        {!this.state.notes.isEmpty() && <div id="notes" style={{fontSize: '1.8em', position: 'fixed', bottom: 25, left: 150, right: 150, height: 360, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 899}}>
+          {this.state.notes.notes.map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}>•</span>{t}</div>)}
+          <input autoFocus placeholder="یادداشت" class="input" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.notes.input} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({notes: {}}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.state.notes.input = e.target.value; this.setState({notes: this.state.notes})}} onKeyPress={async (e) => {if(e.key === 'Enter') {this.state.notes.notes.push(this.state.notes.input); this.state.notes.input = ''; this.setState({notes: this.state.notes})}}}/>
+        </div>} <div style={{background: 'white', fontSize: '2.1em', paddingLeft: 150, paddingRight: 150, paddingTop: 5}}>
           {this.state.ads.map((ad) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
             <div style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 360, width: '36%', borderRadius: 8}}/>
-            <div style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', paddingRight: 15, width: '64%'}}>
-              <span style={{fontWeight: 500}}>{ad.title}</span>
+            <div style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', paddingRight: 15, width: '64%', minHeight: 360, position: 'relative'}}>
+              <span style={{fontWeight: 500, paddingLeft: 4}}>{ad.title}</span>
               <span>{ad.description}</span><br></br>
-              <a style={{textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
-              <a style={{textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
+              <a style={{position: 'absolute', bottom: 0, textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
+              <a style={{position: 'absolute', bottom: 0, left: 0, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
+              <a style={{position: 'absolute', bottom: 0, left: 40, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.scrollTo({ top: window.scrollY + e.target.getBoundingClientRect().top - 455 }); this.setState({notes: {title: 'salam', notes: ['سلام', 'هاواریو'], input: ''}})}}>یادداشت<span style={{backgroundColor: '#f43747', color: 'white', borderRadius: 10, width: 20, height: 20, display: 'inline-block', textAlign: 'center', verticalAlign: 'middle', marginRight: 5, lineHeight: '20px'}}>{'2'.farsify()}</span></a>
             </div>
           </div>)}
         </div>
