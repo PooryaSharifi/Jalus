@@ -39,19 +39,17 @@ class App extends React.Component {
     if ('p' in params) this.state.page = params.p;
     if ('q' in params) this.state.phrase = params.q;
     await this.search();
-    setInterval(async () => {
+    setInterval(async () => {  // TODO sort kon tu db be tartibe date biad age har kodum az in 3 ta 
       let r = await fetch(`/users/-?q=${app.state.searchInput}&p=1&n=3`);
       if (r.status != 200) return;
-      r = await r.json(); var flags = [false, false, false], ad; 
-      for (var i = 0; i < this.state.ads.length; i ++) {
-        ad = this.state.ads[i];
-        if (ad.id == r[0].id) flags[0] = true;
-        if (ad.id == r[1].id) flags[1] = true;
-        if (ad.id == r[2].id) flags[2] = true;
-      } 
-      if (! flags[0]) {r[0].new = true; this.state.ads.unshift(r[0])};
-      if (! flags[1]) {r[1].new = true; this.state.ads.unshift(r[1]);}
-      if (! flags[2]) {r[2].new = true; this.state.ads.unshift(r[2]);}
+      r = await r.json(); var flags = [false, false, false], ad;
+      for (var j = 0; j < 3; j ++) {
+        for (var i = 0; i < this.state.ads.length; i ++) {
+          ad = this.state.ads[i];
+          if (ad.id == r[j].id) {flags[j] = true; continue}
+        }
+        if (! flags[j]) {r[j].new = true; this.state.ads.unshift(r[j])};
+      }
       this.setState({ads: this.state.ads});
     }, 180000);  // 180000
   } render() { let app = this;
