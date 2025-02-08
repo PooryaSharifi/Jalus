@@ -192,10 +192,10 @@ pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 @app.route('/<collection:(users|ads)>/-', methods=['GET', 'POST'])  # 11
 async def search_documents(r, collection):
-    phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1
+    phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1; limit = int(r.args['n'][0]) if 'n' in r.args else 12
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
-    ads = await app.config['db'][collection].find(body).skip(12 * (page - 1)).limit(12).to_list(None)
+    ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
     for pr in ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(ads)
 @app.post('/<collection:(users|ads)>/+')  # 6

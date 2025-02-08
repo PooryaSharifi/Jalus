@@ -39,6 +39,21 @@ class App extends React.Component {
     if ('p' in params) this.state.page = params.p;
     if ('q' in params) this.state.phrase = params.q;
     await this.search();
+    setInterval(async () => {
+      let r = await fetch(`/users/-?q=${app.state.searchInput}&p=1&n=3`);
+      if (r.status != 200) return;
+      r = await r.json(); var flags = [false, false, false], ad; 
+      for (var i = 0; i < this.state.ads.length; i ++) {
+        ad = this.state.ads[i];
+        if (ad.id == r[0].id) flags[0] = true;
+        if (ad.id == r[1].id) flags[1] = true;
+        if (ad.id == r[2].id) flags[2] = true;
+      } 
+      if (! flags[0]) {r[0].new = true; this.state.ads.unshift(r[0])};
+      if (! flags[1]) {r[1].new = true; this.state.ads.unshift(r[1]);}
+      if (! flags[2]) {r[2].new = true; this.state.ads.unshift(r[2]);}
+      this.setState({ads: this.state.ads});
+    }, 180000);  // 180000
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
@@ -55,6 +70,7 @@ class App extends React.Component {
               <span style={{fontWeight: 500, paddingLeft: 4}}>{ad.title}</span>
               <span>{ad.description}</span><br></br>
               <a style={{position: 'absolute', bottom: 0, textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
+              { ad.new && <span style={{position: 'absolute', bottom: 4, textDecoration: 'none', color: '#e1a400', right: 150, fontWeight: 700, fontSize: '.8em'}}>new</span> }
               <a style={{position: 'absolute', bottom: 0, left: 0, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
               <a style={{position: 'absolute', bottom: 0, left: 40, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.scrollTo({ top: window.scrollY + e.target.getBoundingClientRect().top - 455 }); this.setState({notes: {title: 'salam', notes: ['سلام', 'هاواریو'], input: ''}})}}>یادداشت<span style={{backgroundColor: '#f43747', color: 'white', borderRadius: 10, width: 20, height: 20, display: 'inline-block', textAlign: 'center', verticalAlign: 'middle', marginRight: 5, lineHeight: '20px'}}>{'2'.farsify()}</span></a>
             </div>
