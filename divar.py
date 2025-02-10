@@ -124,15 +124,21 @@ def otp(phone):
         f.write(f'{datetime.now() - timedelta(days=1, seconds=1)}')
     # browser.quit()
 
-def pan(browser, city, photo=True, log=True, rpm=10, cat=None):  # todo pan doesnt need loop and rpm
+# isfahan/rent-temporary
+# isfahan/buy-industrial-agricultural-property?q=باغ
+# isfahan/rent-office?q=دفتر
+# isfahan/buy-residential
+# ramsar/rent-temporary
+
+def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pan doesnt need loop and rpm
     users = get_users()
-    if len(sys.argv) > 3: cat = sys.argv[-1]
     if not cat:
         cats = [(cat, w, list(users.find({'source': 'divar', 'category': cat}).sort([('pan_date', -1), ('pan_cnt', 1)]).limit(3))[::-1]) for cat, w in deepcopy(categories)]
         cats = [(cat, w * (min((datetime.now() - lasts[-1]['pan_date']).total_seconds() / 60 / 60, 3) if lasts else 5), set([ad['link'] for ad in lasts])) for cat, w, lasts in cats]  # ln 17 / ln 2]
         w_cat_s = sum([w for _, w, _ in cats])
         cat = choices(cats, [w / w_cat_s for _, w, _ in cats])[0][0]
-    browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}")
+    if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}")
+    else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}")
     seen, pan_date, pan_cnt = set(), datetime.now(), 0
     while True:
         t0 = time.time()
@@ -304,7 +310,12 @@ def phone(browser, user):
 def ppan(headless=False, rpm=45, debug=False):
     while True:
         browser, t0 = random_browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
-        k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm)
+        if len(sys.argv) > 3:
+            cat = sys.argv[-1]
+            k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat)
+        else:
+            city, cat, q, _ = choose(rows(file('divar_urls')))  # city, cat, q, weight
+            k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat, q=q)
         browser.quit()
         for p in used_profiles:
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
