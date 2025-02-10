@@ -124,12 +124,6 @@ def otp(phone):
         f.write(f'{datetime.now() - timedelta(days=1, seconds=1)}')
     # browser.quit()
 
-# isfahan/rent-temporary
-# isfahan/buy-industrial-agricultural-property?q=باغ
-# isfahan/rent-office?q=دفتر
-# isfahan/buy-residential
-# ramsar/rent-temporary
-
 def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pan doesnt need loop and rpm
     users = get_users()
     if not cat:
@@ -314,7 +308,10 @@ def ppan(headless=False, rpm=45, debug=False):
             cat = sys.argv[-1]
             k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat)
         else:
-            city, cat, q, _ = choose(rows(file('divar_urls')))  # city, cat, q, weight
+            with open(os.path.basename(os.path.dirname(__file__)), encoding='utf-8') as csv:
+                csv = csv.readlines(); csv = [v.strip() for v in l.split(',') for l in csv]; csv = [l for l in csv if len(l) == 4]
+                choices(csv, [float(l[2]) for l in csv], k=1)[0]
+                city, cat, _, q = choose(rows(file('divar_urls')))  # city, cat, q, weight
             k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat, q=q)
         browser.quit()
         for p in used_profiles:
