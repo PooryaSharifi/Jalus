@@ -1,4 +1,4 @@
-import subprocess, requests, time, re, random, sys, pymongo
+import subprocess, requests, time, re, random, sys, pymongo, os.path
 from datetime import datetime
 from subprocess import DEVNULL
 
@@ -46,23 +46,23 @@ def otp():
         otp_list = requests.get(f'https://jalus.ir/otp').text.strip('\n').split('\n'); otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
         for phone, otp in otp_list: sync_single_tty(); subprocess.Popen(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL)
 
-users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
-collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': False}), ('divar', {'category': {'$neq': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': False})]
-
-def push_ads():  # 4
+def push_ads():
+    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
+    collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}}), ('divar', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}})]
     while True:
-        time.sleep(240)
-        new_ads, continue_flag = collections[collections[collection][1]].find({}).limit(4 if collection == 0 else 12), False
+        new_ads, continue_flag = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12)), False
         if not new_ads: continue
-        for ad in enumerate(new_ads):
-            for i_im, im in enumerate(im['images'][:20 if collection == 0 else 2])
+        for i_ad, ad in enumerate(new_ads):
+            for i_im, im in enumerate(ad['images'][:(8 if collection == 0 else 2)]):
                 try:
-                    files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im["category"]}/{im["id"]}/{i_im}.jpg', 'rb')}
-                    r = requests.post(f'https://jalus.ir/static/properties/{im["category"]}/{im["id"]}/{i_im}.jpg', files=files)
-                    if r.status != 2 or not r.json['OK']: continue_flag = True; raise
-                except: break
+                    files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
+                    r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
+                    if r.status_code != 200 or not r.json['OK']: raise
+                except: continue_flag = True; break
+            if continue_flag: continue
         if continue_flag: continue
-        requests.post(f'https://jalus.ir/{["users", "divar"][collection]}/+', data=json.dumps(new_ads))  # too kodum berizim
-        collection = 1 - collection if len(new_ads) < 12 else 0 if random() < .3 else 1
+        requests.post(f'https://jalus.ir/{collections[collection][0]}/+', data=json.dumps(new_ads), verify=False)  # too kodum berizim
+        collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random() < .3 else 1
+        time.sleep(240)
 
 if __name__ == '__main__': globals()[sys.argv[1]]()

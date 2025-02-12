@@ -31,8 +31,8 @@ async def static_file(r, path): return await response.file(os.path.join(os.path.
 @app.post('/static/<path:path>')  # 5
 async def upload_static_file(r, path):
     path = f'{os.path.dirname(os.path.abspath(__file__))}/static/{path}'
-    if os.path.exists(path): return response.json({'OK': True})  # awaiting
-    os.makedirs(os.path.dirname(filename), exist_ok=True)  # awaiting
+    if os.path.exists(path): return response.json({'OK': True})
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     async with aiofiles.open(path, 'wb') as f: await f.write(r.files["file"][0].body)
     f.close()
     return response.json({'OK': True})
