@@ -1,4 +1,4 @@
-import os, os.path, random, time, glob, re, pymongo, json, subprocess, math, yaml, requests, traceback, sys
+import os, os.path, random, time, glob, re, pymongo, json, subprocess, math, yaml, requests, traceback, sys, warnings
 from urllib.parse import urlparse
 from multiprocessing import Process, Value, Lock, Manager
 from datetime import datetime, timedelta
@@ -18,6 +18,7 @@ from bson import ObjectId
 from ctypes import c_wchar_p
 from bson.json_util import dumps
 from static import wild_origins
+warnings.filterwarnings('ignore')
 # TODO yeki halati ke ban mishe, yeki halati ke azash ye hafte migzare
 class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
     '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'

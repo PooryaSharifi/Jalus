@@ -1,6 +1,7 @@
-import subprocess, requests, time, re, random, sys, pymongo, os.path
+import subprocess, requests, time, re, random, sys, pymongo, os.path, warnings
 from datetime import datetime
 from subprocess import DEVNULL
+warnings.filterwarnings('ignore')
 
 def sync_single_tty():
     dmesg = subprocess.check_output(f'dmesg | grep ttyUSB', shell=True).decode().split('\n')
