@@ -303,16 +303,17 @@ def phone(browser, user):
 
 def ppan(headless=False, rpm=45, debug=False):
     while True:
-        browser, t0 = random_browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
-        if len(sys.argv) > 3:
+        if len([arg for arg in sys.argv if len(arg) and arg[0] != '-' and not arg.isnumeric()]) > 3:
+            browser, t0 = random_browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
             cat = sys.argv[-1]
             k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat)
         else:
-            with open(os.path.basename(os.path.dirname(__file__)), encoding='utf-8') as csv:
-                csv = csv.readlines(); csv = [v.strip() for v in l.split(',') for l in csv]; csv = [l for l in csv if len(l) == 4]
-                choices(csv, [float(l[2]) for l in csv], k=1)[0]
-                city, cat, _, q = choose(rows(file('divar_urls')))  # city, cat, q, weight
-            k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat, q=q)
+            with open(os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'divar.csv'), encoding='utf-8') as csv:
+                csv = csv.readlines(); csv = [[v.strip() for v in l.strip().split(',')] for l in csv]; csv = [l for l in csv if len(l) == 4]
+                city, cat, _, q = choices(csv, [float(l[2]) for l in csv], k=1)[0]
+            print(city, cat, q)
+            browser, t0 = random_browser(headless=headless, phone=city + '-' + cat), time.time()
+            k = pan(browser, city=city, photo=True, log=True, rpm=rpm, cat=cat, q=q)
         browser.quit()
         for p in used_profiles:
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
