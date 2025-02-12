@@ -33,6 +33,7 @@ def get_users():
     print(f"{cs.FAIL}{cs.BOLD}Count Detail: {users.count_documents({'detailed': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Phoned: {users.count_documents({'phoned': True})}{cs.ENDC}")
     print(f"{cs.FAIL}{cs.BOLD}Count Imaged: {users.count_documents({'imaged': True})}{cs.ENDC}")
+    print(f"{cs.FAIL}{cs.BOLD}Count Served: {users.count_documents({'served': True})}{cs.ENDC}")
     return users
 
 def rnd_necessities():

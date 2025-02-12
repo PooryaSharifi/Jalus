@@ -51,7 +51,7 @@ def push_ads():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
     collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}}), ('divar', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}})]
     while True:
-        new_ads, continue_flag = users.find(collections[collection][1]).limit(4 if collection == 0 else 12), False
+        new_ads, continue_flag = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12)), False
         if not new_ads: continue
         for i_ad, ad in enumerate(new_ads):
             for i_im, im in enumerate(ad['images'][:(8 if collection == 0 else 2)]):
@@ -59,7 +59,6 @@ def push_ads():
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
                     r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
                     if r.status_code != 200 or not r.json()['OK']: raise
-                    print(im)
                 except FileNotFoundError: ad['images'] = ad['images'][:i_im]; break
                 except Exception: continue_flag = True; break
             if continue_flag: break
@@ -68,7 +67,7 @@ def push_ads():
         r = requests.post(f'https://jalus.ir/{collections[collection][0]}/+', data=json.dumps(new_ads), verify=False)  # too kodum berizim
         if r.status_code == 200:
             for pr in new_ads: users.update_one({'_id': pr['_id']}, {'$set': {'images': pr['images'], 'served': True}})
-        collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random() < .3 else 1
+        collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(60)
 
 if __name__ == '__main__': globals()[sys.argv[1]]()
