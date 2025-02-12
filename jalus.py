@@ -1,4 +1,4 @@
-import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode
+import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings
 from sanic import Sanic, Blueprint, response, exceptions
 from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
@@ -9,6 +9,7 @@ from static import load_template, template, wild_origins, wild_filters, decode, 
 from io import BytesIO, StringIO
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
 
+warnings.filterwarnings('ignore')
 WorkerManager.THRESHOLD = 1200
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
 app, otps, wss, otp_list, signals, markets = Sanic(__name__), {}, None, [], [{'timestamp': '2024-11-10 06:58:57', 'market': 'BTCUSDT', 'author': 'arsha', 'weight': .3}, {'timestamp': '2025-01-31 03:55:47', 'market': 'ETHUSDT', 'author': 'arsha', 'weight': .2}], [
