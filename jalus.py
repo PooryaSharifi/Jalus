@@ -200,7 +200,10 @@ async def search_documents(r, collection):
     for pr in ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(ads)
 @app.post('/<collection:(users|ads)>/+')  # 6
-async def new_document(r, ): ad = r.json; await app.config['db'][collection].insert_one(ad); return response.json({'OK': True})  # change to datetime
+async def new_document(r, ): 
+    ads = r.json
+    for pr in ads: pr['pan_date'] = datetime.fromisoformat(pr['pan_date']); pr['detailed_date'] = datetime.fromisoformat(pr['detailed_date']); pr['phoned_date'] = datetime.fromisoformat(pr['phoned_date']); pr['imaged_date'] = datetime.fromisoformat(pr['imaged_date'])
+    await app.config['db'][collection].insert_many(ads); return response.json({'OK': True})  # change to datetime
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
 @app.post('/trade/k')

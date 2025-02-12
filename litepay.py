@@ -1,4 +1,4 @@
-import subprocess, requests, time, re, random, sys, pymongo, os.path, warnings
+import subprocess, requests, time, re, random, sys, pymongo, os.path, warnings, json
 from datetime import datetime
 from subprocess import DEVNULL
 warnings.filterwarnings('ignore')
@@ -51,17 +51,20 @@ def push_ads():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
     collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}}), ('divar', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}})]
     while True:
-        new_ads, continue_flag = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12)), False
+        new_ads, continue_flag = users.find(collections[collection][1]).limit(4 if collection == 0 else 12), False
         if not new_ads: continue
         for i_ad, ad in enumerate(new_ads):
             for i_im, im in enumerate(ad['images'][:(8 if collection == 0 else 2)]):
                 try:
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
                     r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
-                    if r.status_code != 200 or not r.json['OK']: raise
-                except: continue_flag = True; break
-            if continue_flag: continue
+                    if r.status_code != 200 or not r.json()['OK']: raise
+                    print(im)
+                except FileNotFoundError: print('oh oh'); break
+                except Exception: print('ha ha'); continue_flag = True; break
+            if continue_flag: break
         if continue_flag: continue
+        for pr in new_ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
         requests.post(f'https://jalus.ir/{collections[collection][0]}/+', data=json.dumps(new_ads), verify=False)  # too kodum berizim
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random() < .3 else 1
         time.sleep(240)
