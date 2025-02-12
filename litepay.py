@@ -60,13 +60,15 @@ def push_ads():
                     r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
                     if r.status_code != 200 or not r.json()['OK']: raise
                     print(im)
-                except FileNotFoundError: print('oh oh'); break
-                except Exception: print('ha ha'); continue_flag = True; break
+                except FileNotFoundError: ad['images'] = ad['images'][:i_im]; break
+                except Exception: continue_flag = True; break
             if continue_flag: break
         if continue_flag: continue
-        for pr in new_ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
-        requests.post(f'https://jalus.ir/{collections[collection][0]}/+', data=json.dumps(new_ads), verify=False)  # too kodum berizim
+        for pr in new_ads: pr['served'] = True; pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
+        r = requests.post(f'https://jalus.ir/{collections[collection][0]}/+', data=json.dumps(new_ads), verify=False)  # too kodum berizim
+        if r.status_code == 200:
+            for pr in new_ads: users.update_one({'_id': pr['_id']}, {'$set': {'images': pr['images'], 'served': True}})
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random() < .3 else 1
-        time.sleep(240)
+        time.sleep(60)
 
 if __name__ == '__main__': globals()[sys.argv[1]]()

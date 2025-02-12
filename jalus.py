@@ -203,7 +203,8 @@ async def search_documents(r, collection):
 async def new_document(r, ): 
     ads = r.json
     for pr in ads: pr['pan_date'] = datetime.fromisoformat(pr['pan_date']); pr['detailed_date'] = datetime.fromisoformat(pr['detailed_date']); pr['phoned_date'] = datetime.fromisoformat(pr['phoned_date']); pr['imaged_date'] = datetime.fromisoformat(pr['imaged_date'])
-    await app.config['db'][collection].insert_many(ads); return response.json({'OK': True})  # change to datetime
+    for pr in ads: await app.config['db'][collection].update_one({'id': pr['id']}, {'$set': pr}, upsert=True)
+    return response.json({'OK': True})  # change to datetime
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
 @app.post('/trade/k')
