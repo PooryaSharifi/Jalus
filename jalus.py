@@ -199,8 +199,8 @@ async def search_documents(r, collection):
     ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
     for pr in ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(ads)
-@app.post('/<collection:(users|ads)>/+')  # 6
-async def new_document(r, ): 
+@app.post('/<collection:(users|ads)>/~')  # 6
+async def new_documents(r, collection):
     ads = r.json
     for pr in ads: pr['pan_date'] = datetime.fromisoformat(pr['pan_date']); pr['detailed_date'] = datetime.fromisoformat(pr['detailed_date']); pr['phoned_date'] = datetime.fromisoformat(pr['phoned_date']); pr['imaged_date'] = datetime.fromisoformat(pr['imaged_date'])
     for pr in ads: await app.config['db'][collection].update_one({'id': pr['id']}, {'$set': pr}, upsert=True)
