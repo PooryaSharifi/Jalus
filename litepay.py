@@ -50,23 +50,26 @@ def otp():
 def push_ads():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
     collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}}), ('divar', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}})]
+    print(collections[collection][0])
     while True:
-        new_ads, continue_flag = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12)), False
-        if not new_ads: continue
+        new_ads, continue_flag, ids = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12)), False, []
+        if not new_ads: time.sleep(60); continue
         for i_ad, ad in enumerate(new_ads):
             for i_im, im in enumerate(ad['images'][:(8 if collection == 0 else 2)]):
                 try:
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
                     r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
                     if r.status_code != 200 or not r.json()['OK']: raise
+                    print(im)
                 except FileNotFoundError: ad['images'] = ad['images'][:i_im]; break
                 except Exception: continue_flag = True; break
             if continue_flag: break
-        if continue_flag: continue
-        for pr in new_ads: pr['served'] = True; pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
+        if continue_flag: time.sleep(60); continue
+        for pr in new_ads: pr['served'] = True; pr['location'] = list(reversed(pr['location']['coordinates'])); ids.append(pr['_id']); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
         r = requests.post(f'https://jalus.ir/{collections[collection][0]}/+', data=json.dumps(new_ads), verify=False)  # too kodum berizim
+        print(r.status_code)
         if r.status_code == 200:
-            for pr in new_ads: users.update_one({'_id': pr['_id']}, {'$set': {'images': pr['images'], 'served': True}})
+            for i_pr, pr in enumerate(new_ads): r = users.update_one({'_id': ids[i_pr]}, {'$set': {'images': pr['images'], 'served': True}}); print(r.matched_count)
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(60)
 
