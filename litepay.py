@@ -49,8 +49,7 @@ def otp():
 
 def push_ads():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
-    collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}}), ('divar', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}})]
-    print(collections[collection][0])
+    collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}}), ('ads', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'imaged': True, 'served': {'$ne': True}})]
     while True:
         new_ads, continue_flag, ids = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12)), False, []
         if not new_ads: time.sleep(60); continue
@@ -67,10 +66,9 @@ def push_ads():
         if continue_flag: time.sleep(60); continue
         for pr in new_ads: pr['served'] = True; pr['location'] = list(reversed(pr['location']['coordinates'])); ids.append(pr['_id']); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
         r = requests.post(f'https://jalus.ir/{collections[collection][0]}/~', data=json.dumps(new_ads), verify=False)  # too kodum berizim
-        print(r.status_code)
         if r.status_code == 200:
             for i_pr, pr in enumerate(new_ads): r = users.update_one({'_id': ids[i_pr]}, {'$set': {'images': pr['images'], 'served': True}}); print(r.matched_count)
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
-        time.sleep(60)
+        time.sleep(10 if len(new_ads) % 4 == 0 else 60)
 
 if __name__ == '__main__': globals()[sys.argv[1]]()

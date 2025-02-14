@@ -197,7 +197,9 @@ async def search_documents(r, collection):
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
-    for pr in ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
+    for pr in ads: 
+        try: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
+        except: print('***', pr['location'])
     return response.json(ads)
 @app.post('/<collection:(users|ads)>/~')  # 6
 async def new_documents(r, collection):
