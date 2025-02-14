@@ -270,7 +270,7 @@ def dad(browser, user):
         #             # user['location'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['location']))}
         #             break
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
-    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 14.6 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 11.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
@@ -344,7 +344,7 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
             succeed = dad(browser, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
-            if user['score'] > 14.6 and browser.__otp__:
+            if user['score'] > 11.8 and browser.__otp__:
                 uq = phone(browser, user)
                 if 'phoned' in uq and uq['phoned'] and uq['phone']:
                     users.replace_one({'_id': user['_id']}, user)
@@ -365,7 +365,7 @@ def pphone(headless=False, rpm=10, debug=False, **kwargs):  # rpm
         if not browser.__otp__: print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} no otp browser"); time.sleep(60); continue
         for user in _users:
             t1 = time.time()
-            if user['score'] < 10: break
+            if user['score'] < 11.8: break
             browser.get(f"{user['link']}")
             uq = phone(browser, user)
             if 'phoned' in uq and uq['phoned'] and uq['phone']:
