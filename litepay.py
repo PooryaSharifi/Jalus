@@ -64,7 +64,7 @@ def push_ads():
                 except Exception: continue_flag = True; break
             if continue_flag: break
         if continue_flag: time.sleep(60); continue
-        for pr in new_ads: pr['served'] = True; pr['location'] = list(reversed(pr['location']['coordinates'])); ids.append(pr['_id']); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
+        for pr in new_ads: pr['served'] = True; ids.append(pr['_id']); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
         r = requests.post(f'https://jalus.ir/{collections[collection][0]}/~', data=json.dumps(new_ads), verify=False)  # too kodum berizim
         if r.status_code == 200:
             for i_pr, pr in enumerate(new_ads): r = users.update_one({'_id': ids[i_pr]}, {'$set': {'images': pr['images'], 'served': True}}); print(r.matched_count)
