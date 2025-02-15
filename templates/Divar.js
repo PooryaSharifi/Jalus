@@ -4,7 +4,8 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {notes: {}, ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'لیست سرچ'};
+    this.state = {note: -1, noteInput: '', ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', noteInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'لیست سرچ', urlList: '', category: -1, categoryShow: false, categories: [
+      {q: {}, title: 'اصفهان آپارتمان'}, {q: {}, title: 'اصفهان خانه'}, {q: {}, title: 'اصفهان باغ'}, {q: {}, title: 'اصفهان خودرو'}, {q: {}, title: 'اصفهان دفترومغازه'}, {q: {}, title: 'اصفهان اجاره خانه'}]};
   } async search() {
     let ads = [];
     for (var i = 0; i < 2; i ++) {
@@ -39,6 +40,7 @@ class App extends React.Component {
     if ('p' in params) this.state.page = params.p;
     if ('q' in params) this.state.phrase = params.q;
     await this.search();
+    let r = await fetch('/static/divar.csv'); if (r.status == 200) this.setState({urlList: await r.text()})
     setInterval(async () => {  // TODO sort kon tu db be tartibe date biad age har kodum az in 3 ta 
       let r = await fetch(`/users/-?q=${app.state.searchInput}&p=1&n=3`);
       if (r.status != 200) return;
@@ -47,8 +49,7 @@ class App extends React.Component {
         for (var i = 0; i < this.state.ads.length; i ++) {
           ad = this.state.ads[i];
           if (ad.id == r[j].id) {flags[j] = true; continue}
-        }
-        if (! flags[j]) {r[j].new = true; this.state.ads.unshift(r[j])};
+        } if (! flags[j]) {r[j].new = true; this.state.ads.unshift(r[j])};
       }
       this.setState({ads: this.state.ads});
     }, 180000);  // 180000
@@ -57,20 +58,20 @@ class App extends React.Component {
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
         {/* #macro modules/menu */}
         <div style={{height: 108}}></div>
-        {this.state.leftMenu == 'ثبت و بستن' && <textarea style={{border: 'none', outline: 'none', borderTop: '1px grey solid', position: 'fixed', zIndex: 899, left: 150, right: 150, border: '1px solid grey', borderRadius: 8, marginTop: 10, direction: 'ltr', padding: 4, minHeight: 250}}></textarea>}
-        {!this.state.notes.isEmpty() && <div id="notes" style={{fontSize: '1.8em', position: 'fixed', bottom: 25, left: 150, right: 150, height: 360, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 899}}>
-          {this.state.notes.notes.map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}>•</span>{t}</div>)}
-          <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.notes.input} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({notes: {}}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.state.notes.input = e.target.value; this.setState({notes: this.state.notes})}} onKeyPress={async (e) => {if(e.key === 'Enter') {this.state.notes.notes.push(this.state.notes.input); this.state.notes.input = ''; this.setState({notes: this.state.notes})}}}/>
-        </div>} <div style={{background: 'white', fontSize: '2.1em', paddingLeft: 150, paddingRight: 150, paddingTop: 5}}>
-          {this.state.ads.map((ad) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
-            <div style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 360, width: '36%', borderRadius: 8}}/>
-            <div style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', paddingRight: 15, width: '64%', minHeight: 360, position: 'relative'}}>
+        {this.state.leftMenu == 'ثبت و بستن' && <textarea style={{border: 'none', outline: 'none', borderTop: '1px grey solid', position: 'fixed', zIndex: 899, left: 150, right: 150, border: '1px solid grey', borderRadius: 8, marginTop: 10, direction: 'ltr', padding: 4, minHeight: 250}} value={this.state.urlList} onChange={async (e) => {this.setState({urlList: e.target.value})}}></textarea>}
+        {this.state.note >= 0 && <div id="notes" style={{fontSize: '1.3em', position: 'fixed', bottom: 1, left: 80, right: 80, height: 222, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 899}}>
+          {this.state.ads[this.state.note].notes.map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}>•</span>{t}</div>)}
+          <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.noteInput} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({note: -1}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.setState({noteInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {let r = await fetch(`/users/${this.state.ads[this.state.note].id}/notes`, {method: 'PUT', body: this.state.noteInput}); if (r.status == 200) {this.state.ads[this.state.note].notes.push(this.state.noteInput)}; this.setState({noteInput: ''});}}}/>
+        </div>} <div style={{background: 'white', fontSize: '1.5em', paddingLeft: 80, paddingRight: 80, paddingTop: 5}}>
+          {this.state.ads.map((ad, adi) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
+            <div style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 254, width: '36%', borderRadius: 8}}/>
+            <div style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', paddingRight: 15, width: '64%', minHeight: 254, position: 'relative'}}>
               <span style={{fontWeight: 500, paddingLeft: 4}}>{ad.title}</span>
               <span>{ad.description}</span><br></br>
               <a style={{position: 'absolute', bottom: 0, textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
               { ad.new && <span style={{position: 'absolute', bottom: 4, textDecoration: 'none', color: '#e1a400', right: 150, fontWeight: 700, fontSize: '.8em'}}>new</span> }
               <a style={{position: 'absolute', bottom: 0, left: 0, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
-              <a style={{position: 'absolute', bottom: 0, left: 40, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.scrollTo({ top: window.scrollY + e.target.getBoundingClientRect().top - 455 }); this.setState({notes: {title: 'salam', notes: ['سلام', 'هاواریو'], input: ''}})}}>یادداشت<span style={{backgroundColor: '#f43747', color: 'white', borderRadius: 10, width: 20, height: 20, display: 'inline-block', textAlign: 'center', verticalAlign: 'middle', marginRight: 5, lineHeight: '20px'}}>{'2'.farsify()}</span></a>
+              <a style={{position: 'absolute', bottom: 0, left: 40, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.scrollTo({ top: window.scrollY + e.target.getBoundingClientRect().top - 342 }); this.setState({note: adi})}}>یادداشت<span style={{backgroundColor: '#f43747', color: 'white', borderRadius: 10, width: 20, height: 20, display: 'inline-block', textAlign: 'center', verticalAlign: 'middle', marginRight: 5, lineHeight: '20px'}}>{ad.notes.length.farsify()}</span></a>
             </div>
           </div>)}
         </div>
@@ -105,7 +106,7 @@ class App extends React.Component {
                 <span style={{fontSize: '1.125rem', fontWeight: this.state.show.features[k] ? 500 : 400, lineHeight: 1.5, }}>{k}{!this.state.show.features[k] && ' ندارد'}</span>
               </div>))}
             </div>)}
-            <div classNmae={'p'}>{this.state.show.description}</div>
+            <div classNmae={'p'} style={{fontSize: '1.4em', padding: 16}}>{this.state.show.description}</div>
             {/*<span>{'category' in this.state.show && this.state.show.category}</span> - <span>{'id' in this.state.show && this.state.show.id}</span>*/}
             {/*<div>{'subtitle' in this.state.show && this.state.show.subtitle}</div>*/}
           </div>

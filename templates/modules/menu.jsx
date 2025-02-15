@@ -376,18 +376,17 @@
       <div class=" flex w-full container-4xl-w mx-auto relative justify-between md:px-4 grow">
         <div
           class="flex relative base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navContainer__hGPBW">
-          <div class="flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA">
+          <div class="flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA" onClick={() => this.setState({categoryShow: !this.state.categoryShow})}>
             <div class="digikala-nav-item leading-0 h-full flex items-center flex items-center"><span
                 data-cro-id="header-main-menu"
                 class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-neutral-700 text-body1-strong">
-                <div class="flex ml-1 text-neutral-400"><svg
-                    style={{width: 20, height: 20, fill: 'var(--color-icon-high-emphasis)'}}>
+                <div class="flex ml-1 text-neutral-400">
+                  <svg style={{width: 20, height: 20, fill: 'var(--color-icon-high-emphasis)'}}>
                     <use xlinkHref="#hamburgerMenu"></use>
-                  </svg></div>دسته‌بندی اسکان‌ها<span
-                  class="relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"></span>
+                  </svg>
+                </div>دسته‌بندی {this.state.category == -1 ? ('href' in this.state.categories[0] ? 'اسکان' : 'آگهی') : this.state.categories[this.state.category].title}‌ها<span class="relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"></span>
               </span>
-              <div
-                class="base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__megaMenuContainer__ipIFg absolute bg-neutral-000 shadow-3-bottom z-4"
+              <div class="base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__megaMenuContainer__ipIFg absolute bg-neutral-000 shadow-3-bottom z-4"
                 style={{width: 'auto', height: 774}}></div>
             </div>
           </div>
@@ -444,7 +443,7 @@
             class="absolute bottom-0 bg-primary-700 left-0 z-4 base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__indicator__KRIzY"
             style={{width: 0, transform: 'translate3d(-16px, 0px, 0px)'}}></div>
         </div>
-        <div class="flex pb-1 items-center text-neutral-700 cursor-pointer mt-2 pt-2 lg:mt-0 lg:pt-0 BaseLayoutGeneralLocation_BaseLayoutGeneralLocation__4brmO" data-cro-id="header-location" onClick={async (e) => {if (this.state.leftMenu == 'لیست سرچ') this.setState({leftMenu: 'ثبت و بستن'}); else if (this.state.leftMenu == 'ثبت و بستن') {this.setState({leftMenu: 'لیست سرچ'})}}}>
+        <div class="flex pb-1 items-center text-neutral-700 cursor-pointer mt-2 pt-2 lg:mt-0 lg:pt-0 BaseLayoutGeneralLocation_BaseLayoutGeneralLocation__4brmO" data-cro-id="header-location" onClick={async (e) => {if (this.state.leftMenu == 'لیست سرچ') this.setState({leftMenu: 'ثبت و بستن'}); else if (this.state.leftMenu == 'ثبت و بستن') {if (this.state.urlList.trim() == '') {this.setState({leftMenu: 'لیست سرچ'}); return} let fd = new FormData(); fd.append('file', new Blob([this.state.urlList])); let r = await fetch('/static/divar.csv?override=true', {method: 'post', body: fd}); if (r.status == 200) this.setState({leftMenu: 'لیست سرچ'})}}}>
           <div class="flex ml-2"><svg style={{width: 20, height: 20, fill: 'var(--color-icon-high-emphasis)'}}>
               <use xlinkHref="#pin">
                 <symbol id="pin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M4 9.611C4 5.391 7.59 2 12 2s8 3.39 8 7.611c0 2.818-1.425 5.518-3.768 8.034a23.496 23.496 0 01-2.514 2.322c-.517.413-.923.706-1.166.867L12 21.2l-.552-.366c-.243-.16-.65-.454-1.166-.867a23.499 23.499 0 01-2.514-2.322C5.425 15.129 4 12.428 4 9.61zm8.47 8.794c.784-.627 1.569-1.34 2.298-2.124C16.8 14.101 18 11.827 18 9.611 18 6.521 15.33 4 12 4S6 6.522 6 9.611c0 2.215 1.2 4.49 3.232 6.67A21.536 21.536 0 0012 18.769c.148-.111.305-.233.47-.364zM12 14a4.001 4.001 0 010-8 4.001 4.001 0 010 8zm0-2a2.001 2.001 0 000-4 2.001 2.001 0 000 4z" clip-rule="evenodd"></path></symbol>
@@ -460,13 +459,18 @@
               انتخاب کنید<div></div>
             </div>
           </div>
-          <div class="flex mr-auto text-neutral-400 lg:hidden"><svg width="20" height="20"
-              style={{width: 24, height: 24, fill: 'var(--color-icon-high-emphasis)'}}>
+          <div class="flex mr-auto text-neutral-400 lg:hidden">
+            <svg width="20" height="20" style={{width: 24, height: 24, fill: 'var(--color-icon-high-emphasis)'}}>
               <use xlinkHref="#chevronLeft"></use>
-            </svg></div>
+            </svg>
+          </div>
         </div>
       </div>
       <div class="w-full"></div>
     </nav>
   </header>
+  {this.state.categoryShow && <div style={{position: 'absolute', overflow: 'hidden', width: 115, backgroundColor: 'white', borderRadius: 10, border: '1px solid #949494', marginTop: 3, marginRight: 35, boxShadow: '0 0 1px 1px #ededed'}}>
+    <input autoFocus style={{height: 0, position: 'absolute', margin: 0, border: 'none'}} onBlur={() => {setTimeout(() => {this.setState({categoryShow: false})}, 200)}}/>
+    {this.state.categories.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {this.setState({category: ci, categoryShow: false})}}>{c.title}</div>)}
+  </div>}
 </div>

@@ -17,7 +17,7 @@ class App extends React.Component {
       {webp: '/static/slides/Home_All.webp',
       jpeg: '/static/slides/Home_All-80.jpg',
       title: 'خدمات هوشمند و رفاهی رایگان', href: '#', state: {potent: true, potentInterest: 'host'}},
-    ], categories: [
+    ], category: -1, categories: [
       {href: '/main/mobile/', title: 'کوهستانی',
       png: '/static/categories/mountain_0_exposed.webp'},
       {href: '/main/mobile/', title: 'پردسترس',
@@ -53,7 +53,7 @@ class App extends React.Component {
     ], products: [
       {title: "جالوس هوشمند", href: '/home/_',
       png: '/static/icon/jalus_app_phone-8.png'},
-      {title: "کلید بلاکچین", href: '/hosting#key',
+      {title: "کلید بلاکچین", href: '/host#key',
       png: '/static/icon/jalus_app_key-8.png'},
       {title: "جالوس‌پلاس", href: '/3',
       png: '/static/icon/jalus_app_plus.png'},
@@ -119,9 +119,9 @@ class App extends React.Component {
       {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 20},
     ], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
-      {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/hosting#smartkey'},
-      {svg: '/static/icon/jalus_pay.svg', href: '/hosting#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
-      {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/hosting#all'}
+      {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
+      {svg: '/static/icon/jalus_pay.svg', href: '/host#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
+      {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/host#all'}
     ], potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, foods: {bread: {img: 0}, pizza: {img: 0}, rice: {img: 0}, fries: {img: 0}, chicken_bbq: {img: 0}, kebab: {img: 0}, falafel: {img: 0}}};
   } async componentDidMount() { let app = this;
     let stories = await fetch('http://localhost:5000/stories/host'); if (stories.status < 300) {

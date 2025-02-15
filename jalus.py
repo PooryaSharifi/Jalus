@@ -32,7 +32,7 @@ async def static_file(r, path): return await response.file(os.path.join(os.path.
 @app.post('/static/<path:path>')  # 5
 async def upload_static_file(r, path):
     path = f'{os.path.dirname(os.path.abspath(__file__))}/static/{path}'
-    if os.path.exists(path): return response.json({'OK': True})
+    if 'override' not in r.args and os.path.exists(path): return response.json({'OK': True})
     os.makedirs(os.path.dirname(path), exist_ok=True)
     async with aiofiles.open(path, 'wb') as f: await f.write(r.files["file"][0].body)
     f.close()
@@ -169,7 +169,7 @@ async def _search(r, id_polygon_location=None):
     if not id_polygon_location.strip(): properties = await r.app.config['db']['users'].find(body).to_list(None)
     elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).to_list(None)
     else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).to_list(None)
-    for pr in properties: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    for pr in properties: pr['notes'] = [n['note'] for n in pr['notes']]; pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
 async def _properties_get(r, id_polygon_location=None, ): return response.html(await template('Search') if '-d' in sys.argv else await load_template(f'serv/Search.html'))
@@ -197,14 +197,26 @@ async def search_documents(r, collection):
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
-    for pr in ads: pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    for pr in ads: pr['notes'] = [n['note'] for n in pr['notes']]; pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
 @app.post('/<collection:(users|ads)>/~')  # 6
 async def new_documents(r, collection):
     ads = r.json
-    for pr in ads: pr['served_date'] = datetime.now(); pr['pan_date'] = datetime.fromisoformat(pr['pan_date']); pr['detailed_date'] = datetime.fromisoformat(pr['detailed_date']); pr['phoned_date'] = datetime.fromisoformat(pr['phoned_date']); pr['imaged_date'] = datetime.fromisoformat(pr['imaged_date'])
+    for pr in ads: pr['notes'] = []; pr['served_date'] = datetime.now(); pr['pan_date'] = datetime.fromisoformat(pr['pan_date']); pr['detailed_date'] = datetime.fromisoformat(pr['detailed_date']); pr['phoned_date'] = datetime.fromisoformat(pr['phoned_date']); pr['imaged_date'] = datetime.fromisoformat(pr['imaged_date'])
     for pr in ads: await app.config['db'][collection].update_one({'id': pr['id']}, {'$set': pr}, upsert=True)
     return response.json({'OK': True})  # change to datetime
+@app.put('/<collection:(users|ads)>/<_id>/notes')
+async def append_note(r, collection, _id):
+    print(r.body.decode())
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$push': {'notes': {'note': r.body.decode(), 'date': datetime.now()}}}, upsert=True)
+    if r.matched_count == 0: raise exceptions.NotFound(f"Could not find user with id={_id}")
+    return response.json({'OK': True})
+@app.post('/<collection:(users|ads)>/<_id>/notes')
+async def set_notes(r, collection, _id):
+    print(r.json)
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': r.json}, upsert=True)
+    if r.matched_count == 0: raise exceptions.NotFound(f"Could not find user with id={_id}")
+    return response.json({'OK': True})
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
 @app.post('/trade/k')
