@@ -264,7 +264,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         webp: '/static/slides/Home_Transparency.webp',
         jpeg: '/static/slides/Home_Transparency-80.jpg',
         title: 'شفافیت',
-        href: '/hosting#transparency'
+        href: '/host#transparency'
       }
       // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/1e3ced747d8cf62c297f95c0d94ef9d13732048f_1718696318.jpg?x-oss-process=image/quality,q_95/format,webp',
       // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/1e3ced747d8cf62c297f95c0d94ef9d13732048f_1718696318.jpg?x-oss-process=image/quality,q_95',
@@ -282,6 +282,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/4743e3c09d2113d86ae7dbe415d3fd1cac85f7ac_1722951209.jpg?x-oss-process=image/quality,q_95',
       // title: 'پارتنرشیپ-زرین', href: '/8'},
       ],
+      category: -1,
       categories: [{
         href: '/main/mobile/',
         title: 'کوهستانی',
@@ -340,53 +341,20 @@ var App = /*#__PURE__*/function (_React$Component) {
         png: '/static/categories/swedish_0_exposed.webp'
       }, {
         href: '/main/mobile/',
-        title: 'تفریح‌وهیجان',
+        title: 'تفریحی‌هیجانی',
         png: '/static/categories/entertain_1_exposed.webp'
       }, {
         href: '/main/mobile/',
-        title: 'تجربه جدید',
+        title: 'تجربه‌جدید',
         png: '/static/categories/hobit_0_exposed.webp'
-      }
-      // {href: '/main/mobile/', title: 'موبایل',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/aba1e5dca8958ac1176e25cd194ff8ac622cd383_1692600155.png'},
-      // {href: '/main/electronic-devices/', title: 'کالای دیجیتال',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/8f80e75e4c2dca42ee0538e100c7a7b05455aa88_1692600287.png'},
-      // {href: '/main/book-and-media/', title: 'کتاب، لوازم تحریر و هنر',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/3582bbed0a53318c2332d2c79b051b226f02a3bb_1692600677.png'},
-      // {href: '/main/home-and-kitchen/', title: 'خانه و آشپزخانه',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/0c3cc1cb589df1c74c4ad95a742bb6df967956a8_1692600390.png'},
-      // {href: '/landing/category-home-appliance/', title: 'لوازم خانگی برقی',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/c16b7dff700a9d99880174c32ec233d20ddb531c_1703057953.png'},
-      // {href: '/main/apparel/', title: 'مد و پوشاک',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/5795b31a635f1e23df96a908c009f31744ede38f_1692600481.png'},
-      // {href: '/search/category-gold-jewelry/', title: 'طلا و نقره',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/d17e98a20e1681c7bac5af856aa9552250ec9a96_1710666504.png'},
-      // {href: '/main/personal-appliance/', title: 'آرایشی بهداشتی',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/0cefa48f5c58adbbde8c5a76b22ee49de0e667f5_1692600876.png'},
-      // {href: '/search/category-health-care/', title: 'تجهیزات پزشکی و سلامت',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/a8579f44936c7fdff292b005a5d927601cb67cb9_1714224510.jpg'},
-      // {href: '/main/vehicles-spare-parts/', title: 'خودرو و موتورسیکلت',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/4e985adcf61dd54d4d8abe725a62ba3990ea1eb1_1692601177.png'},
-      // {href: '/main/vehicles/', title: 'ابزار آلات و تجهیزات',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/5d89d5b168e5ed079d619181e849cc737ec42c8d_1692601067.png'},
-      // {href: '/main/sport-entertainment/', title: 'ورزش و سفر',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/1c44d5964f259e0725ec86ca9739de888f1862c7_1692600975.png'},
-      // {href: '/main/dk-ds-gift-card/', title: 'کارت هدیه و گیفت کارت',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/20c179dff5c513104599d33858b6b11e77ced9b4_1692601532.png'},
-      // {href: '/main/food-beverage/', title: 'کالای خوراکی و اساسی',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/da24c42172585abb0c328accf85d071049c4253e_1692600598.png'},
-      // {href: '/main/mother-and-child/', title: 'اسباب بازی، کودک و نوزاد',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/0c46d2532d61dd3a5b6a3afc17552c23c1b4d39e_1692600773.png'},
-      // {href: '/main/rural-products/', title: 'محصولات بومی و محلی',
-      // png: 'https://dkstatics-public.digikala.com/digikala-mega-menu/af02140ea60e0fd478b09b279976a095c95615b6_1692601283.png'},
-      ],
+      }],
       products: [{
         title: "جالوس هوشمند",
         href: '/home/_',
         png: '/static/icon/jalus_app_phone-8.png'
       }, {
         title: "کلید بلاکچین",
-        href: '/hosting#key',
+        href: '/host#key',
         png: '/static/icon/jalus_app_key-8.png'
       }, {
         title: "جالوس‌پلاس",
@@ -488,7 +456,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }],
       foot_logos: [{
         svg: '/static/icon/jalus_host.svg',
-        href: '/hosting'
+        href: '/host'
       }, {
         svg: '/static/icon/jalus_rebuild.svg',
         href: '/rebuild'
@@ -497,10 +465,10 @@ var App = /*#__PURE__*/function (_React$Component) {
         href: '/greenhome'
       }, {
         svg: '/static/icon/jalus_key.svg',
-        href: '/hosting#smartkey'
+        href: '/host#smartkey'
       }, {
         svg: '/static/icon/jalus_pay.svg',
-        href: '/hosting#payment'
+        href: '/host#payment'
       }, {
         svg: '/static/icon/jalus_service.svg',
         href: '/'
@@ -509,7 +477,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         href: '/'
       }, {
         svg: '/static/icon/jalus_smart.svg',
-        href: '/hosting#all'
+        href: '/host#all'
       }],
       potent: false,
       potentOtp: '',
@@ -1775,7 +1743,12 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex relative base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navContainer__hGPBW"
       }, /*#__PURE__*/React.createElement("div", {
-        "class": "flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA"
+        "class": "flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA",
+        onClick: function onClick() {
+          return _this2.setState({
+            categoryShow: !_this2.state.categoryShow
+          });
+        }
       }, /*#__PURE__*/React.createElement("div", {
         "class": "digikala-nav-item leading-0 h-full flex items-center flex items-center"
       }, /*#__PURE__*/React.createElement("span", {
@@ -1791,7 +1764,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("use", {
         xlinkHref: "#hamburgerMenu"
-      }))), "\u062F\u0633\u062A\u0647\u200C\u0628\u0646\u062F\u06CC \u0627\u0633\u06A9\u0627\u0646\u200C\u0647\u0627", /*#__PURE__*/React.createElement("span", {
+      }))), "\u062F\u0633\u062A\u0647\u200C\u0628\u0646\u062F\u06CC ", this.state.category == -1 ? 'href' in this.state.categories[0] ? 'اسکان' : 'آگهی' : this.state.categories[this.state.category].title, "\u200C\u0647\u0627", /*#__PURE__*/React.createElement("span", {
         "class": "relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"
       })), /*#__PURE__*/React.createElement("div", {
         "class": "base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__megaMenuContainer__ipIFg absolute bg-neutral-000 shadow-3-bottom z-4",
@@ -1919,17 +1892,46 @@ var App = /*#__PURE__*/function (_React$Component) {
         "data-cro-id": "header-location",
         onClick: (/*#__PURE__*/function () {
           var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(e) {
+            var fd, r;
             return _regeneratorRuntime().wrap(function _callee9$(_context9) {
               while (1) switch (_context9.prev = _context9.next) {
                 case 0:
-                  if (_this2.state.leftMenu == 'لیست سرچ') _this2.setState({
-                    leftMenu: 'ثبت و بستن'
-                  });else if (_this2.state.leftMenu == 'ثبت و بستن') {
-                    _this2.setState({
-                      leftMenu: 'لیست سرچ'
-                    });
+                  if (!(_this2.state.leftMenu == 'لیست سرچ')) {
+                    _context9.next = 4;
+                    break;
                   }
-                case 1:
+                  _this2.setState({
+                    leftMenu: 'ثبت و بستن'
+                  });
+                  _context9.next = 14;
+                  break;
+                case 4:
+                  if (!(_this2.state.leftMenu == 'ثبت و بستن')) {
+                    _context9.next = 14;
+                    break;
+                  }
+                  if (!(_this2.state.urlList.trim() == '')) {
+                    _context9.next = 8;
+                    break;
+                  }
+                  _this2.setState({
+                    leftMenu: 'لیست سرچ'
+                  });
+                  return _context9.abrupt("return");
+                case 8:
+                  fd = new FormData();
+                  fd.append('file', new Blob([_this2.state.urlList]));
+                  _context9.next = 12;
+                  return fetch('/static/divar.csv?override=true', {
+                    method: 'post',
+                    body: fd
+                  });
+                case 12:
+                  r = _context9.sent;
+                  if (r.status == 200) _this2.setState({
+                    leftMenu: 'لیست سرچ'
+                  });
+                case 14:
                 case "end":
                   return _context9.stop();
               }
@@ -1983,7 +1985,59 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#chevronLeft"
       }))))), /*#__PURE__*/React.createElement("div", {
         "class": "w-full"
-      })))), /*#__PURE__*/React.createElement("div", {
+      }))), this.state.categoryShow && /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: 'absolute',
+          overflow: 'hidden',
+          width: 115,
+          backgroundColor: 'white',
+          borderRadius: 10,
+          border: '1px solid #949494',
+          marginTop: 3,
+          marginRight: 35,
+          boxShadow: '0 0 1px 1px #ededed'
+        }
+      }, /*#__PURE__*/React.createElement("input", {
+        autoFocus: true,
+        style: {
+          height: 0,
+          position: 'absolute',
+          margin: 0,
+          border: 'none'
+        },
+        onBlur: function onBlur() {
+          setTimeout(function () {
+            _this2.setState({
+              categoryShow: false
+            });
+          }, 200);
+        }
+      }), this.state.categories.map(function (c, ci) {
+        return /*#__PURE__*/React.createElement("div", {
+          "class": "touchable",
+          style: {
+            fontSize: '1.3rem',
+            fontWeight: 400,
+            lineHeight: 2.17,
+            color: '#656971',
+            paddingRight: 6
+          },
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+            return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+              while (1) switch (_context10.prev = _context10.next) {
+                case 0:
+                  _this2.setState({
+                    category: ci,
+                    categoryShow: false
+                  });
+                case 1:
+                case "end":
+                  return _context10.stop();
+              }
+            }, _callee10);
+          }))
+        }, c.title);
+      }))), /*#__PURE__*/React.createElement("div", {
         style: {
           height: 105
         }

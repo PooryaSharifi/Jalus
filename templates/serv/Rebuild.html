@@ -289,6 +289,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/4743e3c09d2113d86ae7dbe415d3fd1cac85f7ac_1722951209.jpg?x-oss-process=image/quality,q_95',
       // title: 'پارتنرشیپ-زرین', href: '/8'},
       ],
+      category: -1,
       categories: [{
         href: '/main/mobile/',
         title: 'کوهستانی',
@@ -393,7 +394,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         png: '/static/icon/jalus_app_phone-8.png'
       }, {
         title: "کلید بلاکچین",
-        href: '/hosting#key',
+        href: '/host#key',
         png: '/static/icon/jalus_app_key-8.png'
       }, {
         title: "جالوس‌پلاس",
@@ -495,7 +496,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }],
       foot_logos: [{
         svg: '/static/icon/jalus_host.svg',
-        href: '/hosting'
+        href: '/host'
       }, {
         svg: '/static/icon/jalus_rebuild.svg',
         href: '/rebuild'
@@ -504,10 +505,10 @@ var App = /*#__PURE__*/function (_React$Component) {
         href: '/greenhome'
       }, {
         svg: '/static/icon/jalus_key.svg',
-        href: '/hosting#smartkey'
+        href: '/host#smartkey'
       }, {
         svg: '/static/icon/jalus_pay.svg',
-        href: '/hosting#payment'
+        href: '/host#payment'
       }, {
         svg: '/static/icon/jalus_service.svg',
         href: '/'
@@ -516,7 +517,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         href: '/'
       }, {
         svg: '/static/icon/jalus_smart.svg',
-        href: '/hosting#all'
+        href: '/host#all'
       }],
       potent: false,
       potentOtp: '',
@@ -1782,7 +1783,12 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex relative base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navContainer__hGPBW"
       }, /*#__PURE__*/React.createElement("div", {
-        "class": "flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA"
+        "class": "flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA",
+        onClick: function onClick() {
+          return _this2.setState({
+            categoryShow: !_this2.state.categoryShow
+          });
+        }
       }, /*#__PURE__*/React.createElement("div", {
         "class": "digikala-nav-item leading-0 h-full flex items-center flex items-center"
       }, /*#__PURE__*/React.createElement("span", {
@@ -1798,7 +1804,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("use", {
         xlinkHref: "#hamburgerMenu"
-      }))), "\u062F\u0633\u062A\u0647\u200C\u0628\u0646\u062F\u06CC \u0627\u0633\u06A9\u0627\u0646\u200C\u0647\u0627", /*#__PURE__*/React.createElement("span", {
+      }))), "\u062F\u0633\u062A\u0647\u200C\u0628\u0646\u062F\u06CC ", this.state.category == -1 ? 'href' in this.state.categories[0] ? 'اسکان' : 'آگهی' : this.state.categories[this.state.category].title, "\u200C\u0647\u0627", /*#__PURE__*/React.createElement("span", {
         "class": "relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"
       })), /*#__PURE__*/React.createElement("div", {
         "class": "base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__megaMenuContainer__ipIFg absolute bg-neutral-000 shadow-3-bottom z-4",
@@ -1926,17 +1932,46 @@ var App = /*#__PURE__*/function (_React$Component) {
         "data-cro-id": "header-location",
         onClick: (/*#__PURE__*/function () {
           var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(e) {
+            var fd, r;
             return _regeneratorRuntime().wrap(function _callee9$(_context9) {
               while (1) switch (_context9.prev = _context9.next) {
                 case 0:
-                  if (_this2.state.leftMenu == 'لیست سرچ') _this2.setState({
-                    leftMenu: 'ثبت و بستن'
-                  });else if (_this2.state.leftMenu == 'ثبت و بستن') {
-                    _this2.setState({
-                      leftMenu: 'لیست سرچ'
-                    });
+                  if (!(_this2.state.leftMenu == 'لیست سرچ')) {
+                    _context9.next = 4;
+                    break;
                   }
-                case 1:
+                  _this2.setState({
+                    leftMenu: 'ثبت و بستن'
+                  });
+                  _context9.next = 14;
+                  break;
+                case 4:
+                  if (!(_this2.state.leftMenu == 'ثبت و بستن')) {
+                    _context9.next = 14;
+                    break;
+                  }
+                  if (!(_this2.state.urlList.trim() == '')) {
+                    _context9.next = 8;
+                    break;
+                  }
+                  _this2.setState({
+                    leftMenu: 'لیست سرچ'
+                  });
+                  return _context9.abrupt("return");
+                case 8:
+                  fd = new FormData();
+                  fd.append('file', new Blob([_this2.state.urlList]));
+                  _context9.next = 12;
+                  return fetch('/static/divar.csv?override=true', {
+                    method: 'post',
+                    body: fd
+                  });
+                case 12:
+                  r = _context9.sent;
+                  if (r.status == 200) _this2.setState({
+                    leftMenu: 'لیست سرچ'
+                  });
+                case 14:
                 case "end":
                   return _context9.stop();
               }
@@ -1990,7 +2025,59 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#chevronLeft"
       }))))), /*#__PURE__*/React.createElement("div", {
         "class": "w-full"
-      })))), /*#__PURE__*/React.createElement("div", {
+      }))), this.state.categoryShow && /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: 'absolute',
+          overflow: 'hidden',
+          width: 115,
+          backgroundColor: 'white',
+          borderRadius: 10,
+          border: '1px solid #949494',
+          marginTop: 3,
+          marginRight: 35,
+          boxShadow: '0 0 1px 1px #ededed'
+        }
+      }, /*#__PURE__*/React.createElement("input", {
+        autoFocus: true,
+        style: {
+          height: 0,
+          position: 'absolute',
+          margin: 0,
+          border: 'none'
+        },
+        onBlur: function onBlur() {
+          setTimeout(function () {
+            _this2.setState({
+              categoryShow: false
+            });
+          }, 200);
+        }
+      }), this.state.categories.map(function (c, ci) {
+        return /*#__PURE__*/React.createElement("div", {
+          "class": "touchable",
+          style: {
+            fontSize: '1.3rem',
+            fontWeight: 400,
+            lineHeight: 2.17,
+            color: '#656971',
+            paddingRight: 6
+          },
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+            return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+              while (1) switch (_context10.prev = _context10.next) {
+                case 0:
+                  _this2.setState({
+                    category: ci,
+                    categoryShow: false
+                  });
+                case 1:
+                case "end":
+                  return _context10.stop();
+              }
+            }, _callee10);
+          }))
+        }, c.title);
+      }))), /*#__PURE__*/React.createElement("div", {
         style: {
           height: 105
         }
