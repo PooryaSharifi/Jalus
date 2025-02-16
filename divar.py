@@ -216,7 +216,8 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
     
 def dad(browser, user):
     user['detailed'], user['detailed_date'] = True, datetime.now()
-    try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
+    # try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
+    try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
     except: pass
     if 'title' not in user or not user['title']: user['title'] = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__title')]").get_attribute("innerHTML")
     if 'subtitles' not in user: user['subtitles'] = []
@@ -275,6 +276,8 @@ def dad(browser, user):
     return True
 
 def phone(browser, user):
+    try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
+    except: pass
     for ic, button_class in enumerate(['post-actions__non-experimental', 'post-actions__get-contact']):
         try: WebDriverWait(browser, 7).until(EC.presence_of_element_located((By.XPATH, f".//button[contains(concat(' ', @class, ' '), ' {button_class} ')]"))).click(); break
         except:
