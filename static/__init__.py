@@ -45,6 +45,13 @@ async def util_debabel():
             with open(js_tmp, encoding='utf-8') as f: file = file.replace(jsx[0], f'<script>{f.read()}</script>')
             with open(page.replace(os.path.basename(page), f'serv/{os.path.basename(page).split(".")[0]}.html'), 'w', encoding='utf-8') as f: f.write(file)
         finally: os.remove(jsx_tmp); os.remove(js_tmp)
+async def util_score():
+    users = pymongo.MongoClient("mongodb://localhost:27017")['Jalus']['users']
+    ds = list(users.find({'detailed': True, 'pan_date': {'$gt': datetime.datetime.fromisoformat('2025-02-11 22:00:37.856000')}}))
+    dates = [d['pan_date'] for d in ds]
+    scores = [d['score'] for d in ds]
+    scores = list(sorted(scores))
+    print(len(scores), scores[0], scores[-1], scores[-200])
 
 class OctetJWK:
     def __init__(self, key: bytes, kid=None, **options): self.key, self.kid, self.options = key, kid, {k: v for k, v in options.items() if k in {'use', 'key_ops', 'alg', 'x5u', 'x5c', 'x5t', 'x5t#s256'}}

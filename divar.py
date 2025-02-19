@@ -55,7 +55,7 @@ cm = {
 }
 used_profiles, profile_lock = [Value(c_wchar_p, '**********') for _ in range(3)], Lock()
     
-def random_browser(phone=None, otp=False, headless=False):
+def random_browser(phone=None, otp=False, headless=False, imaged=False):
     profile_lock.acquire()
     os.environ['GH_TOKEN'] = "<github token>"
     if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
@@ -65,7 +65,7 @@ def random_browser(phone=None, otp=False, headless=False):
         for pr in profiles:
             bfs = sorted(glob.glob(f'{pr}/ban_*'))
             if not bfs: continue
-            if datetime.now() - datetime.fromisoformat(bfs[-1].split('ban_')[-1]) > timedelta(days=30): continue
+            if datetime.now() - datetime.fromisoformat(bfs[-1].split('ban_')[-1]) > timedelta(days=60): continue
             with open(bfs[-1]) as f:
                 if datetime.now() - datetime.fromisoformat(f.read()) < timedelta(days=1): continue
             freshes.append(pr)
@@ -77,13 +77,17 @@ def random_browser(phone=None, otp=False, headless=False):
     profile = choices(list(profiles.items()))[0][1]
     for p in used_profiles:
         if p.value == b'**********':  p.value = profile.split('/')[-1].split('_')[-1].encode(); break
+    try: ps = subprocess.check_output(f'ps -fC firefox', shell=True, stderr=subprocess.STDOUT).decode().split('\n')
+    except Exception as e: ps = e.output.decode().split('\n')
+    ps = [p for p in ps if 'firefox' in p and profile.split('/')[-1] in p]
+    for p in ps: p = [arg for arg in p.split() if arg]; subprocess.call(f'kill -9 {p[1]}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         with open(f'{profile}/prefs.js', 'r') as prefs:
             prefs = list(prefs.readlines())
             permission = [(ipref, pref) for ipref, pref in enumerate(prefs) if 'permissions.default.image' in pref]
-            if not permission or '2' not in permission[0][1]:
+            if not permission or f'{1 if imaged else 2}' not in permission[0][1]:
                 if permission: prefs = [pref for ipref, pref in enumerate(prefs) if ipref != permission[0]]
-                prefs.append('user_pref("permissions.default.image", 2);\n')
+                prefs.append(f'user_pref("permissions.default.image", {1 if imaged else 2});\n')
                 with open(f'{profile}/prefs.js', 'w') as w_prefs:
                     w_prefs.write(''.join(prefs))
     except FileNotFoundError: print('profile is fresh reopen to add no image')
@@ -99,7 +103,7 @@ def random_browser(phone=None, otp=False, headless=False):
     except WebDriverException: return random_browser(phone=phone, otp=otp, headless=headless)
 
 def otp(phone):
-    browser = random_browser(phone)
+    browser = random_browser(phone, imaged=True)
     user = get_users().find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
     # user = [{'link': 'https://divar.ir/v/_/wZSwa-DW'}]
     if not user: return
@@ -271,21 +275,21 @@ def dad(browser, user):
         #             # user['location'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['location']))}
         #             break
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
-    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 10.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
-def phone(browser, user):
+def dphone(browser, user):
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
     except: pass
     for ic, button_class in enumerate(['post-actions__non-experimental', 'post-actions__get-contact']):
         try: WebDriverWait(browser, 7).until(EC.presence_of_element_located((By.XPATH, f".//button[contains(concat(' ', @class, ' '), ' {button_class} ')]"))).click(); break
         except:
-            if ic == 1: raise Exception()
+            if ic == 1: browser.quit(); raise Exception()
     try:
         phone = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href,'tel:')]")))  # class="kt-base-row__title kt-unexpandable-row__title"
         eng_phone = phone.get_attribute('href').split('tel:')[1].strip()
-        user['phone'] = phone.text.strip()
+        user['phone'] = eng_phone if eng_phone else phone.text.strip()
         user['phoned'] = True
         user['phoned_date'] = datetime.now()
         print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} {cs.OKCYAN}{eng_phone},{user['phone']}{cs.ENDC} {user['title']} {cs.CGREY}{user['score']:.2f}{cs.ENDC}")
@@ -341,16 +345,23 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
         users, t0 = get_users(), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         browser = random_browser(headless=headless, otp=True)
+        print(browser.__profile__)
         for user in _users:
             t1 = time.time()
             browser.get(f"{user['link']}")
             succeed = dad(browser, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
-            if user['score'] > 10.8 and browser.__otp__:
-                uq = phone(browser, user)
+            if user['score'] > 12.8 and browser.__otp__:
+                uq = dphone(browser, user)
                 if 'phoned' in uq and uq['phoned'] and uq['phone']:
                     users.replace_one({'_id': user['_id']}, user)
+                else:
+                    try: 
+                        _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
+                        user['phoned'] = True; user['phone'] = '_'; user['phoned_date'] = datetime.now()
+                        users.replace_one({'_id': user['_id']}, user)
+                    except: pass
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
         browser.quit()
         for p in used_profiles:
@@ -359,20 +370,27 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
                 break
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
 
-def pphone(headless=False, rpm=10, debug=False, **kwargs):  # rpm
+def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
     while True:
         users, t0 = get_users(), time.time()
         # _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False}}, {'$sample': {'size': 1}}]))
-        _users = list(users.find({'source': 'divar', 'detailed': True, 'phoned': False}).sort([('score', -1)]).limit(max(5, rpm // 10)))  # 5 * 12 = 60
-        browser = random_browser(headless=headless, otp=True)
+        # _users = list(users.find({'source': 'divar', 'detailed': True, 'phoned': False}).sort([('score', -1)]).limit(max(5, rpm // 10)))  # 5 * 12 = 60
+        _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False, 'score': {'$gt': 12.8}}}, {'$sample': {'size': max(1, min(rpm // 10, 1))}}]))
+        browser = random_browser(headless=headless, otp=True, phone=phone)
         if not browser.__otp__: print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} no otp browser"); time.sleep(60); continue
         for user in _users:
             t1 = time.time()
-            if user['score'] < 10.8: break
+            if user['score'] < 12.8: break
             browser.get(f"{user['link']}")
-            uq = phone(browser, user)
+            uq = dphone(browser, user)
             if 'phoned' in uq and uq['phoned'] and uq['phone']:
                 users.replace_one({'_id': user['_id']}, user)
+            else:
+                try: 
+                    _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
+                    user['phoned'] = True; user['phone'] = '_'; user['phoned_date'] = datetime.now()
+                    users.replace_one({'_id': user['_id']}, user)
+                except: pass
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
         browser.quit()
         for p in used_profiles:
@@ -380,6 +398,7 @@ def pphone(headless=False, rpm=10, debug=False, **kwargs):  # rpm
                 p.value = b'**********'
                 break
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
+        # time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0) + randint(-270, 270), 0))
 
 def pup(rpm=10, debug=False, **kwargs):
     while True:
@@ -419,8 +438,9 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] in routines:
         debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
         headless = True if ('-h' in sys.argv or '--headless' in sys.argv) else False
+        phone = [p for p in sys.argv if len(p) == 10 and p.isnumeric()]; phone = phone[0] if phone else None
         if '-r' in sys.argv or '--rpm' in sys.argv:
-            routines[sys.argv[1]](headless=headless, debug=debug, rpm=int(sys.argv[(sys.argv.index('-r') + 1) if '-r' in sys.argv else (sys.argv.index('--rpm') + 1)]))
+            routines[sys.argv[1]](headless=headless, debug=debug, phone=phone, rpm=float(sys.argv[(sys.argv.index('-r') + 1) if '-r' in sys.argv else (sys.argv.index('--rpm') + 1)]))
         else: routines[sys.argv[1]](headless=headless, debug=debug)
     elif len(sys.argv) > 1: otp(sys.argv[2]) if sys.argv[1] == 'otp' else random_browser(phone=sys.argv[2], headless=False) if sys.argv[1] == 'browser' else ()
     else:
@@ -433,7 +453,7 @@ if __name__ == '__main__':
             u['_id'] = str(u['_id']); u['gender'] = True; u['family'] = ''; u['category'] = 'استخردار'; u['phone'] = ''
             del u['detailed']; del u['detailed_date']; del u['synced']; del u['subtitle']; del u['source']; del u['score']
             del u['pan_cnt']; del u['pan_date']; del u['phoned']; del u['maker']; del u['imaged']
-            # phone(browser, u)
+            # dphone(browser, u)
             print(yaml.dump(u, default_flow_style=False, allow_unicode=True))
             dim(u, asset_dir='static/properties')
             browser.quit()
