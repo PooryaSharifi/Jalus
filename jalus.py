@@ -169,7 +169,9 @@ async def _search(r, id_polygon_location=None):
     if not id_polygon_location.strip(): properties = await r.app.config['db']['users'].find(body).to_list(None)
     elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).to_list(None)
     else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).to_list(None)
-    for pr in properties: pr['notes'] = [n['note'] for n in pr['notes']]; pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    for pr in properties:
+        for note in pr['notes']: note['date'] = str(note['date'])
+        pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
 async def _properties_get(r, id_polygon_location=None, ): return response.html(await template('Search') if '-d' in sys.argv else await load_template(f'serv/Search.html'))
@@ -197,7 +199,9 @@ async def search_documents(r, collection):
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
-    for pr in ads: pr['notes'] = [n['note'] for n in pr['notes']]; pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    for pr in ads: 
+        for note in pr['notes']: note['date'] = str(note['date']); print('****', note)
+        pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
 @app.post('/<collection:(users|ads)>/~')  # 6
 async def new_documents(r, collection):

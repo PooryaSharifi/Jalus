@@ -1,5 +1,5 @@
 import subprocess, requests, time, re, random, sys, pymongo, os.path, warnings, json
-from datetime import datetime
+from datetime import datetime, timedelta
 from subprocess import DEVNULL
 warnings.filterwarnings('ignore')
 
@@ -92,5 +92,8 @@ def push_ads():
             for i_pr, pr in enumerate(new_ads): r = users.update_one({'_id': ids[i_pr]}, {'$set': {'images': pr['images'], 'served': True}}); print(r.matched_count)
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(10 if len(new_ads) % 4 == 0 else 60)
+def auto_del():
+    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
+    users.delete_many({'pan_date': {'$lte': datetime.now() - timedelta(days=28)}, 'phoned': False})
 
 if __name__ == '__main__': globals()[sys.argv[1]]()

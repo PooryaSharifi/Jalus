@@ -9,7 +9,7 @@ class App extends React.Component {
     } async search() {
       let ads = [];
       for (var i = 0; i < 2; i ++) {
-        let r = await fetch(`/ads/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
+        let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
         if (r.status != 200) continue;
         r = await r.json(); ads.push(...r);
       } this.setState({ads: ads});
@@ -21,14 +21,14 @@ class App extends React.Component {
         if (st > lastScrollTop) {
           if ((height - st) / height * this.state.ads.length < 4) {
             if (this.state.ads.length % 12 != 0) return; lock = true;
-            let r = await fetch(`/ads/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
+            let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
             if (r.status != 200) lock = false;
             else {r = await r.json(); /*  for (let i = 0; i < 12; i ++ ) this.state.ads.shift(); */ if (r.length > 0) this.state.ads.push(...r); else this.state.ads.push(this.state.ads[0]); this.setState({ads: this.state.ads, page: this.state.page + 1}); lock = false;}
           }
         } /* else if (st < lastScrollTop) {
           if (st / height * this.state.ads.length < 4) {
             if (this.state.page == 1) return; lock = true;
-            let r = await fetch(`/ads/-?q=${this.state.searchInput}&p=${this.state.page - 1}`);
+            let r = await fetch(`/users/-?q=${this.state.searchInput}&p=${this.state.page - 1}`);
             if (r.status != 200) lock = false;
             else {r = await r.json(); for (let i = 0; i == 0 || this.state.ads.length % 12 != 0; i ++ ) this.state.ads.pop(); this.state.ads.unshift(...r); this.setState({ads: this.state.ads, page: this.state.page - 1}); lock = false;}
           }
@@ -42,7 +42,7 @@ class App extends React.Component {
       await this.search();
       let r = await fetch('/static/divar.csv'); if (r.status == 200) this.setState({urlList: await r.text()})
       setInterval(async () => {  // TODO sort kon tu db be tartibe date biad age har kodum az in 3 ta 
-        let r = await fetch(`/ads/-?q=${app.state.searchInput}&p=1&n=3`);
+        let r = await fetch(`/users/-?q=${app.state.searchInput}&p=1&n=3`);
         if (r.status != 200) return;
         r = await r.json(); var flags = [false, false, false], ad;
         for (var j = 0; j < 3; j ++) {
@@ -60,8 +60,11 @@ class App extends React.Component {
           <div style={{height: 108}}></div>
           {this.state.leftMenu == 'ثبت و بستن' && <textarea style={{border: 'none', outline: 'none', borderTop: '1px grey solid', position: 'fixed', zIndex: 899, left: 150, right: 150, border: '1px solid grey', borderRadius: 8, marginTop: 10, direction: 'ltr', padding: 4, minHeight: 250}} value={this.state.urlList} onChange={async (e) => {this.setState({urlList: e.target.value})}}></textarea>}
           {this.state.note >= 0 && <div id="notes" style={{fontSize: '1.3em', position: 'fixed', bottom: 1, left: 80, right: 80, height: 222, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 899}}>
-            {this.state.ads[this.state.note].notes.map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}>•</span>{t}</div>)}
-            <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.noteInput} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({note: -1}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.setState({noteInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {let r = await fetch(`/ads/${this.state.ads[this.state.note].id}/notes`, {method: 'PUT', body: this.state.noteInput}); if (r.status == 200) {this.state.ads[this.state.note].notes.push(this.state.noteInput)}; this.setState({noteInput: ''});}}}/>
+            <div style={{height: 'calc(222px - 3em)', overflowY: 'scroll', overflowX: 'hidden'}}>{this.state.ads[this.state.note].notes.reverse().map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}><span style={{color: '#a3a4ce', fontSize: 12, position: 'relative', top: -3, paddingLeft: 4}}>{t.date.split(' ')[1].split(':')[0]}:{t.date.split(' ')[1].split(':')[1]}</span>•</span>{t.note}</div>)}</div>
+            <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.noteInput} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({note: -1}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.setState({noteInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {let r = await fetch(`/users/${this.state.ads[this.state.note].id}/notes`, {method: 'PUT', body: this.state.noteInput}); if (r.status == 200) {this.state.ads[this.state.note].notes.push({note: this.state.noteInput, date: (new Date(Date.now() - (new Date).getTimezoneOffset() * 60000)).toISOString().replace('T', ' ')})}; this.setState({noteInput: ''});}}}/>
+            <div class="touchable" style={{position: 'absolute', left: 3, bottom: 3, border: '1px solid #ea456e', padding: 5, paddingBottom: 4, paddingTop: 4, borderRadius: 6}} onClick={async () => {let r = await fetch(`/users/${this.state.ads[this.state.note].id}/notes`, {method: 'PUT', body: '📞'}); if (r.status == 200) {this.state.ads[this.state.note].notes.push({note: '📞', date: (new Date(Date.now() - (new Date).getTimezoneOffset() * 60000)).toISOString().replace('T', ' ')}); this.setState({note: this.state.note})}}}>📞</div>
+            <div class="touchable" style={{fontSize: '1.2em', position: 'absolute', left: 35, bottom: 3, border: '1px solid #ea456e', padding: 3, paddingBottom: 2, paddingTop: 2, borderRadius: 6}}>📩</div>
+            <div class="touchable" style={{fontSize: '1.3em', position: 'absolute', left: 67, bottom: 3, border: '1px solid #ea456e', padding: 3, paddingBottom: 0, paddingTop: 2, borderRadius: 6}}>🔀</div>
           </div>} <div class="narrow_fit" style={{background: 'white', fontSize: '1.5em', paddingTop: 5}}>
             {this.state.ads.map((ad, adi) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
               <div class="narrow_fit_image" style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 254, borderRadius: 8}}/>

@@ -137,8 +137,8 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
         cats = [(cat, w * (min((datetime.now() - lasts[-1]['pan_date']).total_seconds() / 60 / 60, 3) if lasts else 5), set([ad['link'] for ad in lasts])) for cat, w, lasts in cats]  # ln 17 / ln 2]
         w_cat_s = sum([w for _, w, _ in cats])
         cat = choices(cats, [w / w_cat_s for _, w, _ in cats])[0][0]
-    if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}")
-    else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}")
+    if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}&business-type=personal")
+    else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&business-type=personal")
     seen, pan_date, pan_cnt = set(), datetime.now(), 0
     while True:
         t0 = time.time()
@@ -352,16 +352,16 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
             succeed = dad(browser, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
-            if user['score'] > 12.8 and browser.__otp__:
-                uq = dphone(browser, user)
-                if 'phoned' in uq and uq['phoned'] and uq['phone']:
-                    users.replace_one({'_id': user['_id']}, user)
-                else:
-                    try: 
-                        _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
-                        user['phoned'] = True; user['phone'] = '_'; user['phoned_date'] = datetime.now()
-                        users.replace_one({'_id': user['_id']}, user)
-                    except: pass
+            # if user['score'] > 12.8 and browser.__otp__:
+            #     uq = dphone(browser, user)
+            #     if 'phoned' in uq and uq['phoned'] and uq['phone']:
+            #         users.replace_one({'_id': user['_id']}, user)
+            #     else:
+            #         try: 
+            #             _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
+            #             user['phoned'] = True; user['phone'] = '_'; user['phoned_date'] = datetime.now()
+            #             users.replace_one({'_id': user['_id']}, user)
+            #         except: pass
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
         browser.quit()
         for p in used_profiles:
