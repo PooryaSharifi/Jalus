@@ -169,4 +169,6 @@ static/properties/
 static/potents.csv
 static/sms.csv
 static/divar.csv
+static/consultant.csv
+static/consultants/
 static/dictionary.py

@@ -53,8 +53,9 @@ cm = {
     'kt-post-card__title': ['kt-post-card__title'],
     'kt-post-card__bottom-description': ['kt-post-card__description', 'kt-post-card__bottom-description'],
 }
-used_profiles, profile_lock = [Value(c_wchar_p, '**********') for _ in range(3)], Lock()
-    
+used_profiles, profile_lock, browser_index = [Value(c_wchar_p, '**********') for _ in range(3)], Lock(), randint(0, 73)
+consultants = pd.read_csv('static/consultants.csv').to_list()
+
 def random_browser(phone=None, otp=False, headless=False, imaged=False):
     profile_lock.acquire()
     os.environ['GH_TOKEN'] = "<github token>"
@@ -74,7 +75,8 @@ def random_browser(phone=None, otp=False, headless=False, imaged=False):
     if len(profiles) == 0: raise
     profiles = {p.split('/')[-1].split('_')[-1]: p for p in profiles}
     profiles = {k: v for k, v in profiles.items() if not any([k.encode() == p.value for p in used_profiles])}
-    profile = choices(list(profiles.items()))[0][1]
+    if otp: profile = profiles.items()[(browser_index := browser_index + 1) % len(profiles)]
+    else: profile = choices(list(profiles.items()))[0][1]
     for p in used_profiles:
         if p.value == b'**********':  p.value = profile.split('/')[-1].split('_')[-1].encode(); break
     try: ps = subprocess.check_output(f'ps -fC firefox', shell=True, stderr=subprocess.STDOUT).decode().split('\n')
@@ -218,7 +220,8 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
     ad['imaged'], ad['imaged_date'] = True, datetime.now()
     return {'imaged': ad['imaged'], 'imaged_date': ad['imaged_date'], 'images': ad['images']}
     
-def dad(browser, user):
+# age halate lesser bashe -> center of polygon mishe khode amlaki pas
+def dad(browser, user):  # TODO choose consultant for dad after location <- voronoi, sort average distance of poligon points or center of polygon for lesser cpu
     user['detailed'], user['detailed_date'] = True, datetime.now()
     # try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
@@ -344,7 +347,7 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
     while True:
         users, t0 = get_users(), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
-        browser = random_browser(headless=headless, otp=True)
+        browser = random_browser(headless=headless, otp=False)
         print(browser.__profile__)
         for user in _users:
             t1 = time.time()

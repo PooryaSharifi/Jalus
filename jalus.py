@@ -193,6 +193,14 @@ async def _smart_home(r, home, ): return response.html(await template('Home') if
 pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj][ts]*'); pages = [os.path.basename(p).split('.')[0].lower() for p in pages]
 @app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz']])}|)>")
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
+@app.get('/<collection:(users|ads)>/<ids>')
+async def get_documents(r, collection, ids):
+    ids = ids.split(','); ids = [d.strip() for d in ids]
+    ads = await app.config['db'][collection].find({'id': {'$in': ids}}).to_list(None)
+    for pr in ads: 
+        for note in pr['notes']: note['date'] = str(note['date'])
+        pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    return response.json(ads)
 @app.route('/<collection:(users|ads)>/-', methods=['GET', 'POST'])  # 11
 async def search_documents(r, collection):
     phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1; limit = int(r.args['n'][0]) if 'n' in r.args else 12
@@ -200,7 +208,7 @@ async def search_documents(r, collection):
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
     ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
     for pr in ads: 
-        for note in pr['notes']: note['date'] = str(note['date']); print('****', note)
+        for note in pr['notes']: note['date'] = str(note['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
 @app.post('/<collection:(users|ads)>/~')  # 6

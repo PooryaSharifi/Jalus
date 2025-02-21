@@ -4,7 +4,11 @@
 
 class App extends React.Component {
     constructor(props) {super(props); let app = this; window.app = this;
-      this.state = {note: -1, noteInput: '', ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', noteInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'لیست سرچ', urlList: '', category: -1, categoryShow: false, categories: [
+      this.state = {note: -1, noteInput: '', ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', noteInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'لیست سرچ', urlList: '', category: -1, categoryShow: false, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
+        {title: 'تازه‌ترین یادداشت'}, {title: 'تازه‌ترین تبلیغ'}, {title: 'تازه‌ترین مچ'}, 
+      ], secondMenuList: [
+        {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
+      ], categories: [
         {q: {}, title: 'اصفهان آپارتمان'}, {q: {}, title: 'اصفهان خانه'}, {q: {}, title: 'اصفهان باغ'}, {q: {}, title: 'اصفهان خودرو'}, {q: {}, title: 'اصفهان دفترومغازه'}, {q: {}, title: 'اصفهان اجاره خانه'}]};
     } async search() {
       let ads = [];
@@ -35,13 +39,16 @@ class App extends React.Component {
         }*/ lastScrollTop = st <= 0 ? 0 : st;
       }, false);
     } async componentDidMount() { let app = this;
-      let params = new URLSearchParams(window.location);
+      let params = new URLSearchParams(window.location.search);
       params = Object.fromEntries(params);
       if ('p' in params) this.state.page = params.p;
       if ('q' in params) this.state.phrase = params.q;
-      await this.search();
+      if ('ids' in params) {
+        let r = await fetch(`/users/${params.ids}`);
+        if (r.status == 200) {r = await r.json(); this.setState({ads: r, show: r[0]});}
+      } else await this.search();
       let r = await fetch('/static/divar.csv'); if (r.status == 200) this.setState({urlList: await r.text()})
-      setInterval(async () => {  // TODO sort kon tu db be tartibe date biad age har kodum az in 3 ta 
+      if (!('ids' in params)) setInterval(async () => {  // TODO sort kon tu db be tartibe date biad age har kodum az in 3 ta 
         let r = await fetch(`/users/-?q=${app.state.searchInput}&p=1&n=3`);
         if (r.status != 200) return;
         r = await r.json(); var flags = [false, false, false], ad;
@@ -63,16 +70,19 @@ class App extends React.Component {
             <div style={{height: 'calc(222px - 3em)', overflowY: 'scroll', overflowX: 'hidden'}}>{this.state.ads[this.state.note].notes.reverse().map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}><span style={{color: '#a3a4ce', fontSize: 12, position: 'relative', top: -3, paddingLeft: 4}}>{t.date.split(' ')[1].split(':')[0]}:{t.date.split(' ')[1].split(':')[1]}</span>•</span>{t.note}</div>)}</div>
             <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" value={this.state.noteInput} onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'notes' && target.parentElement.id != 'notes' && target.parentElement.parentElement.id != 'notes') this.setState({note: -1}); else window.setTimeout(() => e.target.focus(), 0)}} onChange={async (e) => {this.setState({noteInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {let r = await fetch(`/users/${this.state.ads[this.state.note].id}/notes`, {method: 'PUT', body: this.state.noteInput}); if (r.status == 200) {this.state.ads[this.state.note].notes.push({note: this.state.noteInput, date: (new Date(Date.now() - (new Date).getTimezoneOffset() * 60000)).toISOString().replace('T', ' ')})}; this.setState({noteInput: ''});}}}/>
             <div class="touchable" style={{position: 'absolute', left: 3, bottom: 3, border: '1px solid #ea456e', padding: 5, paddingBottom: 4, paddingTop: 4, borderRadius: 6}} onClick={async () => {let r = await fetch(`/users/${this.state.ads[this.state.note].id}/notes`, {method: 'PUT', body: '📞'}); if (r.status == 200) {this.state.ads[this.state.note].notes.push({note: '📞', date: (new Date(Date.now() - (new Date).getTimezoneOffset() * 60000)).toISOString().replace('T', ' ')}); this.setState({note: this.state.note})}}}>📞</div>
-            <div class="touchable" style={{fontSize: '1.2em', position: 'absolute', left: 35, bottom: 3, border: '1px solid #ea456e', padding: 3, paddingBottom: 2, paddingTop: 2, borderRadius: 6}}>📩</div>
+            <div class="touchable" style={{fontSize: '1.2em', position: 'absolute', left: 35, bottom: 3, border: '1px solid #ea456e', padding: 3, paddingBottom: 2, paddingTop: 2, borderRadius: 6}}>🔥</div>
             <div class="touchable" style={{fontSize: '1.3em', position: 'absolute', left: 67, bottom: 3, border: '1px solid #ea456e', padding: 3, paddingBottom: 0, paddingTop: 2, borderRadius: 6}}>🔀</div>
+            <div class="touchable" style={{fontSize: '1.34em', position: 'absolute', left: 101, bottom: 3, border: '1px solid #ea456e', padding: 2, paddingBottom: 0, paddingTop: 1, borderRadius: 6}}>💲</div>
+            <div class="touchable" style={{fontSize: '1.25em', position: 'absolute', left: 134, bottom: 3, border: '1px solid #ea456e', padding: 3, paddingBottom: 0, paddingTop: 3, borderRadius: 6}}>❌</div>
           </div>} <div class="narrow_fit" style={{background: 'white', fontSize: '1.5em', paddingTop: 5}}>
-            {this.state.ads.map((ad, adi) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {this.setState({show: ad})}}>
+            {this.state.ads.map((ad, adi) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {console.log(ad.id); this.setState({show: ad})}}>
               <div class="narrow_fit_image" style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 254, borderRadius: 8}}/>
               <div class="narrow_fit_text" style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', minHeight: 254, position: 'relative'}}>
                 <span style={{fontWeight: 500, paddingLeft: 4}}>{ad.title}</span>
                 <span>{ad.description}</span><br></br>
                 <a style={{position: 'absolute', bottom: 0, textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
-                { ad.new && <span style={{position: 'absolute', bottom: 4, textDecoration: 'none', color: '#e1a400', right: 150, fontWeight: 700, fontSize: '.8em'}}>new</span> }
+                <div style={{position: 'absolute', bottom: 0, textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer', right: 150}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); console.log('hu ha ha')}} src={`/static/houzeo.png`}><image style={{objectFit: 'contain', width: '100%', height: 20}} src={`/static/consultants/${'houzeo'}.png`}/>{'houzeo'}</div>
+                { ad.new && <span style={{position: 'absolute', bottom: 4, textDecoration: 'none', color: '#e1a400', left: 170, fontWeight: 700, fontSize: '.8em'}}>new</span> }
                 <a style={{position: 'absolute', bottom: 0, left: 0, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
                 <a style={{position: 'absolute', bottom: 0, left: 40, textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.scrollTo({ top: window.scrollY + e.target.getBoundingClientRect().top - 342 }); this.setState({note: adi})}}>یادداشت<span style={{backgroundColor: '#f43747', color: 'white', borderRadius: 10, width: 20, height: 20, display: 'inline-block', textAlign: 'center', verticalAlign: 'middle', marginRight: 5, lineHeight: '20px'}}>{ad.notes.length.farsify()}</span></a>
               </div>
