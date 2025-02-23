@@ -54,7 +54,7 @@ cm = {
     'kt-post-card__bottom-description': ['kt-post-card__description', 'kt-post-card__bottom-description'],
 }
 used_profiles, profile_lock, browser_index = [Value(c_wchar_p, '**********') for _ in range(3)], Lock(), randint(0, 73)
-consultants = pd.read_csv('static/consultants.csv').to_list()
+consultants = pd.read_csv('static/consultant.csv').to_dict('records')
 
 def random_browser(phone=None, otp=False, headless=False, imaged=False):
     profile_lock.acquire()
