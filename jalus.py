@@ -211,6 +211,13 @@ async def search_documents(r, collection):
         for note in pr['notes']: note['date'] = str(note['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
+@app.route('/<collection:(users|ads)>/<_id>/-', methods=['GET', 'POST'])
+async def get_document(r, collection, _id):
+    pr = await app.config['db'][collection].find_one({'id': _id})
+    if not pr: raise exceptions.NotFound(f"Could not find user with id={_id}")
+    for note in pr['notes']: note['date'] = str(note['date'])
+    pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    return response.json(pr)
 @app.post('/<collection:(users|ads)>/~')  # 6
 async def update_new_documents(r, collection):
     ads = r.json
