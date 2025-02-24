@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
 from webdriver_manager.firefox import GeckoDriverManager as FirefoxDriverManager
-from random import choices
+from random import choices, randint
 from mimetypes import guess_extension
 from copy import deepcopy
 from bson import ObjectId
@@ -55,6 +55,7 @@ cm = {
 }
 used_profiles, profile_lock, browser_index = [Value(c_wchar_p, '**********') for _ in range(3)], Lock(), randint(0, 73)
 consultants = pd.read_csv('static/consultant.csv').to_dict('records')
+for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
 
 def random_browser(phone=None, otp=False, headless=False, imaged=False):
     profile_lock.acquire()
@@ -277,6 +278,10 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         #         if (loc := loc.strip()) in wild_origins:
         #             # user['location'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['location']))}
         #             break
+    d_consultants = [(abs(c['coordinates']['lng'] - user['location']['coordinates']['lng']) ** 1.3 + abs(c['coordinates']['lat'] - user['location']['coordinates']['lat']) ** 1.3, c) for c in consultants]
+    d_consultants = list(sorted(d_consultants, key=lambda c: c[0]))
+    if d_consultants[1][0] / d_consultants[0][0] > 1.3: user['consultant'] = d_consultants[0][1]
+    else: user['consultant'] = choices(d_consultants[:2])[1]
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
     print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
@@ -434,7 +439,8 @@ def pup(rpm=10, debug=False, **kwargs):
         if debug == 2: break
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
 
-"""TODO boro to fs image hara bibin age file image khali bud ya kam bud sai kon dobare download koni age synced dobare ersal koni"""
+def swap():
+    # TODO algorithm of matching between swappables and requestes
 
 if __name__ == '__main__':
     routines = {'upload': pup, 'image': pdim, 'phone': pphone, 'detail': pdad, 'pan': ppan}

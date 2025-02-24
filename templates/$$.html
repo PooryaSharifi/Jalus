@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
    <meta charset="UTF-8">
-   <title>{{ ctx.title }}</title>
-   <link rel="icon" href="{{ url_for('static', filename='img/$$.jpeg') }}">
-   <link rel="stylesheet" href="{{ url_for('static', filename='semantic/dist/semantic.min.css') }}">
-   <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-   <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js') }}"></script>
-   <script src="{{ url_for('static', filename='ractive.js') }}"></script>
+   <title>به‌روزرسانی پرونده</title>
+   <link rel="icon" href="/favicon.ico">
+   <script src="/static/jquery.min.js"></script>
+   <link rel="stylesheet" href="/static/semantic.min.css">
+   <script src="/static/semantic.min.js'"></script>
+   <script src="/static/ractive.js"></script>
 </head>
 <body></body>
-{% raw %}
 <script id="template" type="text/ractive">
    {{#partial field}}
       <form enctype="multipart/form-data">
@@ -94,14 +93,12 @@
       <br>
    </div>
 </script>
-{% endraw %}
-
 <script>
    $(function() {
       var plusUltra = new Ractive({
          template: '#template',
          target: 'body',
-         data: {{ ctx | tojson }},
+         data: {},
       });
       $('.ui.accordion').first()
          .accordion({
