@@ -236,7 +236,13 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     if description:
         try: user['description'] = description[0].get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا')
         except: return False
-    else: print("NO DESCRIPTION")
+    else: user['description'] = ''; print("NO DESCRIPTION")
+    title_description = user['title'].strip() + ' ' + user['description'].strip()
+    title_description = [w for w in title_description.split() if w]
+    if 'معاوضه' in title_description:
+        swap_index = title_description.index('معاوضه')
+        user['swap'] = {'q': '', 'location': {'type': 'Point', 'coordinates': [0, 0]}, 'category': '', 'budget': 0, 'date': datetime.now()}
+        if swap_index + 2 < len(title_description) and title_description[swap_index + 1] == 'با': user['swap']['q'] = title_description[swap_index + 2]
     # options = browser.find_elements(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-group-row-item--info-row ') and .//*[contains(concat(' ', @class, ' '), ' kt-group-row-item__title ')] and .//*[contains(concat(' ', @class, ' '), ' kt-group-row-item__value ')] and .//*[contains(concat(' ', @class, ' '), ' kt-group-row__heading ')] and .//*[contains(concat(' ', @class, ' '), ' kt-group-row__data-row ')]]")
     options = browser.find_elements(by=By.XPATH, value="//*[contains(concat(' ', @class, ' '), ' kt-group-row-item--info-row ')]")
     ks = [op.text for op in options[:len(options) // 2]]; vs = [op.text for op in options[len(options) // 2:]]
@@ -407,37 +413,6 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
                 break
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
         # time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0) + randint(-270, 270), 0))
-
-def pup(rpm=10, debug=False, **kwargs):
-    while True:
-        users, t0 = get_users(), time.time()
-        # _users = list(users.find({'source': 'divar', 'detailed': True, 'imaged': True, 'phoned': True, 'synced': False}).limit(10))
-        _users = list(users.find({'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'synced': False}).limit(max(5, rpm // 10)))
-        print('**', len(_users))
-        for user in _users:
-            user['_id'], t1 = str(user['_id']), time.time()
-            if 'pan_date' in user: user['pan_date'] = str(user['pan_date'])
-            if 'detailed_date' in user: user['detailed_date'] = str(user['detailed_date'])
-            if 'phoned_date' in user: user['phoned_date'] = str(user['phoned_date'])
-            if 'imaged_date' in user: user['imaged_date'] = str(user['imaged_date'])
-            if 'synced_date' in user: user['synced_date'] = str(user['synced_date'])
-            r = requests.put('http://localhost:5000/users', json.dumps(user))
-            if r.status_code == 201:
-                for im in user['images']:
-                    t2 = time.time()
-                    with open(f'/home/poorya/Pictures/estate/{im}', 'rb') as f:
-                        while True:
-                            rim = requests.post(f'http://localhost:5000/static/{im}', files={'file': f})
-                            if rim.status_code == 409 or rim.status_code == 201: break
-                            time.sleep(max(1 / len(user['images']) / rpm * 60 - (time.time() - t2), 0))
-                user['synced'] = True
-                r = users.update_one({'_id': ObjectId(user['_id'])}, {'$set': {'synced': True, 'synced_date': datetime.now()}})
-                print(f"{cs.OKCYAN}{cs.BOLD}Up:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']}")
-                if debug: debug = 2; break
-            else: continue
-            time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        if debug == 2: break
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
 
 def swap():
     # TODO algorithm of matching between swappables and requestes

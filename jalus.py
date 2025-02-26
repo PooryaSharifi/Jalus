@@ -197,27 +197,21 @@ async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')
 async def get_documents(r, collection, ids):
     ids = ids.split(','); ids = [d.strip() for d in ids]
     ads = await app.config['db'][collection].find({'id': {'$in': ids}}).to_list(None)
-    for pr in ads: 
+    for pr in ads:
         for note in pr['notes']: note['date'] = str(note['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+    print(ads)
     return response.json(ads)
 @app.route('/<collection:(users|ads)>/-', methods=['GET', 'POST'])  # 11
 async def search_documents(r, collection):
-    phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1; limit = int(r.args['n'][0]) if 'n' in r.args else 12
+    order = r.args['q'][0] if 'q' in r.args and r.args['q'][0] else '!phoned_date'; order = (order[1:], -1) if order[0] == '!' else (order, 1); phrase = r.args['q'][0] if 'q' in r.args else ''; page = int(r.args['p'][0]) if 'p' in r.args else 1; limit = int(r.args['n'][0]) if 'n' in r.args else 12
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True; phrase = phrase.strip()
     if phrase and phrase != '_': body['$text'] = {"$search": phrase}
-    ads = await app.config['db'][collection].find(body).skip(limit * (page - 1)).limit(limit).to_list(None)
+    ads = await app.config['db'][collection].find(body).sort([order]).skip(limit * (page - 1)).limit(limit).to_list(None)
     for pr in ads: 
         for note in pr['notes']: note['date'] = str(note['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
-@app.route('/<collection:(users|ads)>/<_id>/-', methods=['GET', 'POST'])
-async def get_document(r, collection, _id):
-    pr = await app.config['db'][collection].find_one({'id': _id})
-    if not pr: raise exceptions.NotFound(f"Could not find user with id={_id}")
-    for note in pr['notes']: note['date'] = str(note['date'])
-    pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
-    return response.json(pr)
 @app.post('/<collection:(users|ads)>/~')  # 6
 async def update_new_documents(r, collection):
     ads = r.json
@@ -225,9 +219,7 @@ async def update_new_documents(r, collection):
     for pr in ads: await app.config['db'][collection].update_one({'id': pr['id']}, {'$set': pr}, upsert=True)
     return response.json({'OK': True})  # change to datetime
 @app.get('/<collection:(users|ads)>/<_id>/~')
-async def update_partial_document_page(r, collection, _id):
-    return await response.file('templates/$$.html')
-    # return response.html
+async def update_partial_document_page(r, collection, _id): return await response.file('templates/$$.html')
 @app.post('/<collection:(users|ads)>/<_id>/~')
 async def update_partial_document(r, collection, _id):
     q = r.json
@@ -241,10 +233,10 @@ async def update_partial_document(r, collection, _id):
 @app.put('/<collection:(users|ads)>/<_id>/notes')
 async def append_note(r, collection, _id):
     print(r.body.decode())
-    r = await app.config['db'][collection].update_one({'id': _id}, {'$push': {'notes': {'note': r.body.decode(), 'date': datetime.now()}}}, upsert=True)
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'last_note_date': datetime.now()}, '$push': {'notes': {'note': r.body.decode(), 'date': datetime.now()}}}, upsert=True)
     if r.matched_count == 0: raise exceptions.NotFound(f"Could not find user with id={_id}")
     return response.json({'OK': True})
-@app.post('/<collection:(users|ads)>/<_id>/notes')
+@app.post('/<collection:(users|ads)>/<_id>/notes')  # for deletion
 async def set_notes(r, collection, _id):
     print(r.json)
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': r.json}, upsert=True)

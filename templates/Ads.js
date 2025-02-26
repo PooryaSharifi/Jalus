@@ -5,7 +5,7 @@
 class App extends React.Component {
     constructor(props) {super(props); let app = this; window.app = this;
       this.state = {swap: -1, swapLocation: [51.64841, 32.70773], swapQ: 'test', swapCategory: 'cat', swapBudget: 0, note: -1, noteInput: '', ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', noteInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'لیست سرچ', urlList: '', category: -1, categoryShow: false, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
-        {title: 'تازه‌ترین یادداشت'}, {title: 'تازه‌ترین تبلیغ'}, {title: 'تازه‌ترین مچ'}, 
+        {title: 'تازه‌ترین یادداشت', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین تبلیغ', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین مچ', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
       ], secondMenuList: [
         {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
       ], categories: [
@@ -17,7 +17,7 @@ class App extends React.Component {
         if (r.status != 200) continue;
         r = await r.json(); ads.push(...r);
       } this.setState({ads: ads})
-  
+
       var st, lastScrollTop = 0, height, lock = false; document.addEventListener('scroll', async (e) => {
         if (lock) return;
         st = window.pageYOffset || document.documentElement.scrollTop;
@@ -42,7 +42,8 @@ class App extends React.Component {
       let params = new URLSearchParams(window.location.search);
       params = Object.fromEntries(params);
       if ('p' in params) this.state.page = params.p;
-      if ('q' in params) this.state.phrase = params.q;
+      if ('q' in params) this.state.searchInput = params.q;
+      if ('o' in params) this.state.order = params.o;
       if ('ids' in params) {
         let r = await fetch(`/users/${params.ids}`);
         if (r.status == 200) {r = await r.json(); this.setState({ads: r, show: r[0]});}

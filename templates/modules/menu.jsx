@@ -471,12 +471,12 @@
   </header>
   {this.state.categoryShow && <div style={{position: 'absolute', overflow: 'hidden', width: 115, backgroundColor: 'white', borderRadius: 10, border: '1px solid #949494', marginTop: 3, marginRight: 35, boxShadow: '0 0 1px 1px #ededed'}}>
     <input autoFocus style={{height: 0, position: 'absolute', margin: 0, border: 'none'}} onBlur={() => {setTimeout(() => {this.setState({categoryShow: false})}, 200)}}/>
-    {this.state.categories.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {this.setState({category: ci, categoryShow: false})}}>{c.title}</div>)}
+    {this.state.categories.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {if('action' in c) await c.action(); this.setState({category: ci, categoryShow: false})}}>{c.title}</div>)}
   </div>} {this.state.firstMenuShow && <div style={{position: 'absolute', overflow: 'hidden', width: 115, backgroundColor: 'white', borderRadius: 10, border: '1px solid #949494', marginTop: 3, marginRight: 165, boxShadow: '0 0 1px 1px #ededed'}}>
     <input autoFocus style={{height: 0, position: 'absolute', margin: 0, border: 'none'}} onBlur={() => {setTimeout(() => {this.setState({firstMenuShow: false})}, 200)}}/>
-    {this.state.firstMenuList.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {this.setState({firstMenuIndex: ci, firstMenuShow: false})}}>{c.title}</div>)}
+    {this.state.firstMenuList.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {if('action' in c) await c.action(); this.setState({firstMenuIndex: ci, firstMenuShow: false})}}>{c.title}</div>)}
   </div>} {this.state.secondMenuShow && <div style={{position: 'absolute', overflow: 'hidden', width: 115, backgroundColor: 'white', borderRadius: 10, border: '1px solid #949494', marginTop: 3, marginRight: 295, boxShadow: '0 0 1px 1px #ededed'}}>
     <input autoFocus style={{height: 0, position: 'absolute', margin: 0, border: 'none'}} onBlur={() => {setTimeout(() => {this.setState({secondMenuShow: false})}, 200)}}/>
-    {this.state.secondMenuList.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {this.setState({secondMenuIndex: ci, secondMenuShow: false})}}>{c.title}</div>)}
+    {this.state.secondMenuList.map((c, ci) => <div class="touchable" style={{fontSize: '1.3rem', fontWeight: 400, lineHeight: 2.17, color: '#656971', paddingRight: 6}} onClick={async () => {if('action' in c) await c.action(); this.setState({secondMenuIndex: ci, secondMenuShow: false})}}>{c.title}</div>)}
   </div>}
 </div>

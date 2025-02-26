@@ -97,11 +97,11 @@
 </script>
 <script>
    $(function() {
-      $.get(window.location.pathname.replace('~', '-'), (r, status) => {
+      $.get(window.location.pathname.replace('/~', ''), (r, status) => {
          var plusUltra = new Ractive({
             template: '#template',
             target: 'body',
-            data: r,
+            data: r[0],
          });
          $('.ui.accordion').first()
             .accordion({
