@@ -76,16 +76,17 @@ def push_ads():
         new_ads = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12))
         if not new_ads: time.sleep(60); continue
         for i_ad, ad in enumerate(new_ads):
-            for i_im, im in enumerate(ad['images'][:(8 if collection == 0 else 2)]):
+            ad['images'] = ad['images'][:(8 if collection == 0 else 3)]
+            for i_im, im in enumerate(ad['images']):
                 try:
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
                     r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
                     if r.status_code != 200 or not r.json()['OK']: raise
                     print(im)
-                except FileNotFoundError: ad['images'] = ad['images'][:i_im]; continue
-                except Exception: break
-            if i_im + 1 == min(len(ad['images']), (8 if collection == 0 else 2)): 
-                print('ha ha ha')
+                except FileNotFoundError: ad['images'][i_im] = 'not found'; continue
+                except Exception: ad['images'][i_im] = 'network'; break
+            if ad['images'][i_im] != 'network':
+                ad['images'] = [im for im in ad['images'] if im != 'not found']
                 pr['served'] = True; ids.append(pr['_id']); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
                 r = requests.post(f'https://jalus.ir/{collections[collection][0]}/~', data=json.dumps(new_ads), verify=False)  # too kodum berizim
                 if r.status_code == 200: r = users.update_one({'_id': ids[i_pr]}, {'$set': {'images': pr['images'], 'served': True}}); print(r.matched_count)
