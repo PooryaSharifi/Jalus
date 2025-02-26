@@ -1,4 +1,4 @@
-import os, os.path, random, time, glob, re, pymongo, json, subprocess, math, yaml, requests, traceback, sys, warnings
+import os, os.path, random, time, glob, re, pymongo, json, subprocess, math, yaml, requests, traceback, sys, warnings, pandas as pd
 from urllib.parse import urlparse
 from multiprocessing import Process, Value, Lock, Manager
 from datetime import datetime, timedelta
@@ -11,7 +11,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
 from webdriver_manager.firefox import GeckoDriverManager as FirefoxDriverManager
-from random import choices, randint
+from random import choices, randint, random
 from mimetypes import guess_extension
 from copy import deepcopy
 from bson import ObjectId
@@ -58,6 +58,7 @@ consultants = pd.read_csv('static/consultant.csv').to_dict('records')
 for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
 
 def random_browser(phone=None, otp=False, headless=False, imaged=False):
+    global browser_index
     profile_lock.acquire()
     os.environ['GH_TOKEN'] = "<github token>"
     if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
@@ -67,7 +68,7 @@ def random_browser(phone=None, otp=False, headless=False, imaged=False):
         for pr in profiles:
             bfs = sorted(glob.glob(f'{pr}/ban_*'))
             if not bfs: continue
-            if datetime.now() - datetime.fromisoformat(bfs[-1].split('ban_')[-1]) > timedelta(days=60): continue
+            # if datetime.now() - datetime.fromisoformat(bfs[-1].split('ban_')[-1]) > timedelta(days=60): continue
             with open(bfs[-1]) as f:
                 if datetime.now() - datetime.fromisoformat(f.read()) < timedelta(days=1): continue
             freshes.append(pr)
@@ -76,7 +77,7 @@ def random_browser(phone=None, otp=False, headless=False, imaged=False):
     if len(profiles) == 0: raise
     profiles = {p.split('/')[-1].split('_')[-1]: p for p in profiles}
     profiles = {k: v for k, v in profiles.items() if not any([k.encode() == p.value for p in used_profiles])}
-    if otp: profile = profiles.items()[(browser_index := browser_index + 1) % len(profiles)]
+    if otp: profile = list(profiles.items())[browser_index := (browser_index + 1) % len(profiles)][1]; print(profile)
     else: profile = choices(list(profiles.items()))[0][1]
     for p in used_profiles:
         if p.value == b'**********':  p.value = profile.split('/')[-1].split('_')[-1].encode(); break
@@ -284,10 +285,10 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         #         if (loc := loc.strip()) in wild_origins:
         #             # user['location'] = {'type': 'Point', 'coordinates': list(reversed(.get()[0]['location']))}
         #             break
-    d_consultants = [(abs(c['coordinates']['lng'] - user['location']['coordinates']['lng']) ** 1.3 + abs(c['coordinates']['lat'] - user['location']['coordinates']['lat']) ** 1.3, c) for c in consultants]
+    d_consultants = [(abs(c['location']['coordinates'][0] - user['location']['coordinates'][0]) ** 1.3 + abs(c['location']['coordinates'][1] - user['location']['coordinates'][1]) ** 1.3, c) for c in consultants]
     d_consultants = list(sorted(d_consultants, key=lambda c: c[0]))
     if d_consultants[1][0] / d_consultants[0][0] > 1.3: user['consultant'] = d_consultants[0][1]
-    else: user['consultant'] = choices(d_consultants[:2])[1]
+    else: user['consultant'] = d_consultants[0][1] if random() < .6 else d_consultants[1][1]
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
     print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
@@ -324,7 +325,7 @@ def dphone(browser, user):
         except: pass
         return {}
 
-def ppan(headless=False, rpm=45, debug=False):
+def ppan(headless=False, rpm=45, debug=False, **kwargs):
     while True:
         if len([arg for arg in sys.argv if len(arg) and arg[0] != '-' and not arg.isnumeric()]) > 3:
             browser, t0 = random_browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
@@ -359,7 +360,6 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
         users, t0 = get_users(), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         browser = random_browser(headless=headless, otp=False)
-        print(browser.__profile__)
         for user in _users:
             t1 = time.time()
             browser.get(f"{user['link']}")
@@ -416,9 +416,10 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
 
 def swap():
     # TODO algorithm of matching between swappables and requestes
+    pass
 
 if __name__ == '__main__':
-    routines = {'upload': pup, 'image': pdim, 'phone': pphone, 'detail': pdad, 'pan': ppan}
+    routines = {'image': pdim, 'phone': pphone, 'detail': pdad, 'pan': ppan}  # , 'upload': pup, }
     if len(sys.argv) > 1 and sys.argv[1] in routines:
         debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
         headless = True if ('-h' in sys.argv or '--headless' in sys.argv) else False

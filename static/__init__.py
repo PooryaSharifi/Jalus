@@ -30,7 +30,7 @@ async def template(name):
 #     return template
 async def util_debabel():
     for page in glob.glob(f'{os.path.dirname(os.path.dirname(__file__))}/templates/*.*'):
-        if 'Laziz.html' in page: continue
+        if 'Laziz.html' in page or '$$.html' in page: continue
         if page[-4:] == 'html': file = await load_template(os.path.basename(page))
         else: file = await template(os.path.basename(page).split('.')[0].capitalize())
         # else: file = (await render_template('base.html', {'title': template_titles[os.path.basename(page).lower().split('.')[0]], 'style': 'digikala'})).replace('/// block #content', await render_template(os.path.basename(page), {}))
