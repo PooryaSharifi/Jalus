@@ -87,9 +87,10 @@ def push_ads():
                 except Exception: ad['images'][i_im] = 'network'; break
             if ad['images'][i_im] != 'network':
                 ad['images'] = [im for im in ad['images'] if im != 'not found']
-                pr['served'] = True; ids.append(pr['_id']); del pr['_id']; pr['pan_date'] = str(pr['pan_date']); pr['detailed_date'] = str(pr['detailed_date']); pr['phoned_date'] = str(pr['phoned_date']); pr['imaged_date'] = str(pr['imaged_date'])
-                r = requests.post(f'https://jalus.ir/{collections[collection][0]}/~', data=json.dumps(new_ads), verify=False)  # too kodum berizim
-                if r.status_code == 200: r = users.update_one({'_id': ids[i_pr]}, {'$set': {'images': pr['images'], 'served': True}}); print(r.matched_count)
+                ad['served'] = True; ad['served_date'] = datetime.now(); ad['notes'] = []
+                del ad['_id']; ad['pan_date'] = str(ad['pan_date']); ad['detailed_date'] = str(ad['detailed_date']); ad['phoned_date'] = str(ad['phoned_date']); ad['imaged_date'] = str(ad['imaged_date'])
+                r = requests.post(f'https://jalus.ir/{collections[collection][0]}/{ad['id']}/~', data=json.dumps(ad), verify=False)
+                if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'srved_date': datetime.now()}}); print(r.matched_count)
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(10 if len(new_ads) % 4 == 0 else 60)
 def auto_del():

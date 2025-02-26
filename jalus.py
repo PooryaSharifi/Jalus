@@ -212,22 +212,16 @@ async def search_documents(r, collection):
         for note in pr['notes']: note['date'] = str(note['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
-@app.post('/<collection:(users|ads)>/~')  # 6
-async def update_new_documents(r, collection):
-    ads = r.json
-    for pr in ads: pr['notes'] = []; pr['served_date'] = datetime.now(); pr['pan_date'] = datetime.fromisoformat(pr['pan_date']); pr['detailed_date'] = datetime.fromisoformat(pr['detailed_date']); pr['phoned_date'] = datetime.fromisoformat(pr['phoned_date']); pr['imaged_date'] = datetime.fromisoformat(pr['imaged_date'])
-    for pr in ads: await app.config['db'][collection].update_one({'id': pr['id']}, {'$set': pr}, upsert=True)
-    return response.json({'OK': True})  # change to datetime
 @app.get('/<collection:(users|ads)>/<_id>/~')
 async def update_partial_document_page(r, collection, _id): return await response.file('templates/$$.html')
 @app.post('/<collection:(users|ads)>/<_id>/~')
-async def update_partial_document(r, collection, _id):
+async def update_new_partial_document(r, collection, _id):
     q = r.json
-    print(q)
     if 'pan_date' in q: q['pan_date'] = datetime.fromisoformat(q['pan_date'])
     if 'detailed_date' in q: q['detailed_date'] = datetime.fromisoformat(q['detailed_date'])
     if 'phoned_date' in q: q['phoned_date'] = datetime.fromisoformat(q['phoned_date'])
     if 'imaged_date' in q: q['imaged_date'] = datetime.fromisoformat(q['imaged_date'])
+    if 'served_date' in q: q['served_date'] = datetime.fromisoformat(q['served_date'])
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': q})
     return response.json({'OK': True, 'c': r.matched_count})
 @app.put('/<collection:(users|ads)>/<_id>/notes')
