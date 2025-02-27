@@ -82,6 +82,7 @@ def push_ads():  # http://10.42.0.11:5000, https://jalus.ir
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
                     r = requests.post(f'http://10.42.0.11:5000/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
                     if r.status_code != 200 or not r.json()['OK']: raise
+                    print(im)
                 except FileNotFoundError: ad['images'][i_im] = 'not found'; continue
                 except Exception: ad['images'][i_im] = 'network'; break
             if ad['images'][i_im] != 'network':
@@ -90,8 +91,9 @@ def push_ads():  # http://10.42.0.11:5000, https://jalus.ir
                 del ad['_id']; ad['pan_date'] = str(ad['pan_date']).split('.')[0]; ad['detailed_date'] = str(ad['detailed_date']).split('.')[0]
                 ad['phoned_date'] = str(ad['phoned_date']).split('.')[0]; ad['imaged_date'] = str(ad['imaged_date']).split('.')[0]
                 if 'swap' in ad and ad['swap'] and 'date' in ad['swap']: ad['swap']['date'] = str(ad['swap']['date']).split('.')[0]
+                print(ad)
                 r = requests.post(f'http://10.42.0.11:5000/{collections[collection][0]}/{ad['id']}/~', data=json.dumps(ad), verify=False)
-                if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'srved_date': datetime.now()}}); r = r.matched_count
+                if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'served_date': datetime.now()}}); r = r.matched_count
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(10 if len(new_ads) % 4 == 0 else 60)
 def auto_del():
