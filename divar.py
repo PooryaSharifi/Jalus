@@ -114,8 +114,7 @@ def otp(phone):
     try:
         WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//p[text()[contains(., 'شمارهٔ موبایل')]]")))  # class="kt-base-row__title kt-unexpandable-row__title"
         phone = WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href,'tel:')]")))  # class="kt-base-row__title kt-unexpandable-row__title"
-        browser.quit()
-        return
+        time.sleep(1); browser.quit(); return
     except: pass
     try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'با قوانین دیوار موافقم')]]]"))).click()
     except: pass
@@ -296,7 +295,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
 
 def dphone(browser, user):
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
-    except: return {}
+    except: pass
     for ic, button_class in enumerate(['post-actions__non-experimental', 'post-actions__get-contact']):
         try: WebDriverWait(browser, 7).until(EC.presence_of_element_located((By.XPATH, f".//button[contains(concat(' ', @class, ' '), ' {button_class} ')]"))).click(); break
         except:
