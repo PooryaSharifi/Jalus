@@ -222,7 +222,8 @@ async def update_new_partial_document(r, collection, _id):
     if 'phoned_date' in q: q['phoned_date'] = datetime.fromisoformat(q['phoned_date'])
     if 'imaged_date' in q: q['imaged_date'] = datetime.fromisoformat(q['imaged_date'])
     if 'served_date' in q: q['served_date'] = datetime.fromisoformat(q['served_date'])
-    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': q})
+    if 'swap' in q and ad['swap'] and 'date' in q['swap']: q['swap']['date'] = datetime.fromisoformat(q['swap']['date'])
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': q}, upsert=True)
     return response.json({'OK': True, 'c': r.matched_count})
 @app.put('/<collection:(users|ads)>/<_id>/notes')
 async def append_note(r, collection, _id):
