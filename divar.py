@@ -227,7 +227,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     user['detailed'], user['detailed_date'] = True, datetime.now()
     # try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
-    except: return False
+    except: pass
     if 'title' not in user or not user['title']: user['title'] = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__title')]").get_attribute("innerHTML")
     if 'subtitles' not in user: user['subtitles'] = []
     try: user['subtitles'].append(browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__subtitle ')]").get_attribute("innerHTML").split('|')[0].strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا'))
@@ -341,7 +341,7 @@ def ppan(headless=False, rpm=45, debug=False, **kwargs):
         browser.quit()
         for p in used_profiles:
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
-        time.sleep(max(k / rpm * 60 - (time.time() - t0), 0 if k else 10))
+        time.sleep(max(k / rpm * 60 - (time.time() - t0), 45 if k else 90))
 
 def pdim(rpm=10, debug=False, **kwargs):
     while True:
@@ -362,7 +362,8 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
         browser = random_browser(headless=headless, otp=False)
         for user in _users:
             t1 = time.time()
-            browser.get(f"{user['link']}")
+            try: browser.get(f"{user['link']}")
+            except: continue
             succeed = dad(browser, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
@@ -382,7 +383,7 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode():
                 p.value = b'**********'
                 break
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 4) - len(_users)) * 6))
+        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 4) - len(_users)) * 7))
 
 def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
     while True:
