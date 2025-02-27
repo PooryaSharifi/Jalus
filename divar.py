@@ -29,11 +29,9 @@ def get_users():
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
     users.create_index([('link', 1)], unique=True); users.create_index([('id', 1)], unique=True)
     # users.delete_many({})
-    print(f"{cs.FAIL}{cs.BOLD}Count All   : {users.count_documents({})}{cs.ENDC}")
-    print(f"{cs.FAIL}{cs.BOLD}Count Detail: {users.count_documents({'detailed': True})}{cs.ENDC}")
-    print(f"{cs.FAIL}{cs.BOLD}Count Phoned: {users.count_documents({'phoned': True})}{cs.ENDC}")
-    print(f"{cs.FAIL}{cs.BOLD}Count Imaged: {users.count_documents({'imaged': True})}{cs.ENDC}")
-    print(f"{cs.FAIL}{cs.BOLD}Count Served: {users.count_documents({'served': True})}{cs.ENDC}")
+    print(f"{cs.FAIL}{cs.BOLD}All, Detail:  {users.count_documents({})}, {users.count_documents({'detailed': True})}{cs.ENDC}")
+    print(f"{cs.FAIL}{cs.BOLD}Phone, Image: {users.count_documents({'phoned': True})}, {users.count_documents({'imaged': True})}{cs.ENDC}")
+    print(f"{cs.FAIL}{cs.BOLD}Serve:        {users.count_documents({'served': True})}{cs.ENDC}")
     return users
 
 def rnd_necessities():
@@ -50,8 +48,8 @@ categories = [(cat, 1 / 666 / ((2 + ic) ** (1 / 666) - 1)) for ic, cat in enumer
 cm = {
     'browse-post-list': ['post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858'], 
     'post-card-item': ['widget-col-d2306', 'post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972'],
-    'kt-post-card__title': ['kt-post-card__title'],
-    'kt-post-card__bottom-description': ['kt-post-card__description', 'kt-post-card__bottom-description'],
+    'kt-post-card__title': ['unsafe-kt-post-card__title', 'kt-post-card__title'],
+    'kt-post-card__bottom-description': ['unsafe-kt-post-card__description', 'kt-post-card__description', 'kt-post-card__bottom-description'],
 }
 used_profiles, profile_lock, browser_index = [Value(c_wchar_p, '**********') for _ in range(3)], Lock(), randint(0, 73)
 consultants = pd.read_csv('static/consultant.csv').to_dict('records')
@@ -141,8 +139,10 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
         cats = [(cat, w * (min((datetime.now() - lasts[-1]['pan_date']).total_seconds() / 60 / 60, 3) if lasts else 5), set([ad['link'] for ad in lasts])) for cat, w, lasts in cats]  # ln 17 / ln 2]
         w_cat_s = sum([w for _, w, _ in cats])
         cat = choices(cats, [w / w_cat_s for _, w, _ in cats])[0][0]
-    if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}&business-type=personal")
-    else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&business-type=personal")
+    try:
+        if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}&business-type=personal")
+        else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&business-type=personal")
+    except: return 0
     seen, pan_date, pan_cnt = set(), datetime.now(), 0
     while True:
         t0 = time.time()
@@ -150,12 +150,12 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
         for attr in cm["browse-post-list"]:
             try: post_list = browser.find_elements(by=By.CLASS_NAME, value=f'{attr}')[0]; halt = True; break
             except: halt = False
-        if not halt: print(traceback.format_exc()); assert 1 == 0
+        if not halt: print(traceback.format_exc()); return 0
         for attr in cm["post-card-item"]:
             ads, pds = post_list.find_elements(by=By.XPATH, value=f".//div[contains(concat(' ', @class, ' '), ' {attr} ')]"), []
             if ads: halt = True; break
             else: halt = False
-        if not halt: print(traceback.format_exc()); assert 1 == 0
+        if not halt: print(traceback.format_exc()); return 0
         for ad in ads:
             t1 = time.time()
             refs = [ref.get_attribute('href') for ref in ad.find_elements(by=By.XPATH, value=".//a[@href and string-length(@href)!=0]")]
@@ -164,7 +164,7 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
             for attr in cm['kt-post-card__title']:
                 try: title = ad.find_element(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {attr} ')]").get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا'); halt = True; break
                 except: halt = False
-            if not halt: print(traceback.format_exc()); assert 1 == 0
+            if not halt: continue
             subtitles = []
             for attr in cm['kt-post-card__bottom-description']:
                 bottoms = ad.find_elements(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {attr} ')]")
@@ -180,7 +180,7 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
                 'pan_cnt': (pan_cnt := pan_cnt + 1), 'source': 'divar', 'maker': True, 'detailed': False, 'imaged': False, 'phoned': False, 'score': 0., 'synced': False,
             })
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        ads = [ad for ad in pds if ad['link'] not in seen]
+        ads = [ad for ad in pds if ad['link'] not in seen and ad['title']]
         [seen.add(ad['link']) for ad in ads]
         ads_length = len(ads)
         ads = [ad for ad in ads if ad['link'] not in cat]
@@ -227,7 +227,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     user['detailed'], user['detailed_date'] = True, datetime.now()
     # try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
-    except: pass
+    except: return False
     if 'title' not in user or not user['title']: user['title'] = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__title')]").get_attribute("innerHTML")
     if 'subtitles' not in user: user['subtitles'] = []
     try: user['subtitles'].append(browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__subtitle ')]").get_attribute("innerHTML").split('|')[0].strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا'))
@@ -296,7 +296,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
 
 def dphone(browser, user):
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
-    except: pass
+    except: return {}
     for ic, button_class in enumerate(['post-actions__non-experimental', 'post-actions__get-contact']):
         try: WebDriverWait(browser, 7).until(EC.presence_of_element_located((By.XPATH, f".//button[contains(concat(' ', @class, ' '), ' {button_class} ')]"))).click(); break
         except:
@@ -341,7 +341,7 @@ def ppan(headless=False, rpm=45, debug=False, **kwargs):
         browser.quit()
         for p in used_profiles:
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
-        time.sleep(max(k / rpm * 60 - (time.time() - t0), 0))
+        time.sleep(max(k / rpm * 60 - (time.time() - t0), 0 if k else 10))
 
 def pdim(rpm=10, debug=False, **kwargs):
     while True:
@@ -358,7 +358,7 @@ def pdim(rpm=10, debug=False, **kwargs):
 def pdad(headless=False, rpm=10, debug=False, **kwargs):
     while True:
         users, t0 = get_users(), time.time()
-        _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 4)}}]))
         browser = random_browser(headless=headless, otp=False)
         for user in _users:
             t1 = time.time()
@@ -382,7 +382,7 @@ def pdad(headless=False, rpm=10, debug=False, **kwargs):
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode():
                 p.value = b'**********'
                 break
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
+        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 4) - len(_users)) * 6))
 
 def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
     while True:
@@ -395,7 +395,8 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
         for user in _users:
             t1 = time.time()
             if user['score'] < 12.8: break
-            browser.get(f"{user['link']}")
+            try: browser.get(f"{user['link']}")
+            except: _users = []; break
             uq = dphone(browser, user)
             if 'phoned' in uq and uq['phoned'] and uq['phone']:
                 users.replace_one({'_id': user['_id']}, user)
@@ -411,7 +412,7 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode():
                 p.value = b'**********'
                 break
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
+        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (1 - len(_users)) * 60))
         # time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0) + randint(-270, 270), 0))
 
 def swap():
