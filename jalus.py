@@ -210,6 +210,7 @@ async def search_documents(r, collection):
     ads = await app.config['db'][collection].find(body).sort([order]).skip(limit * (page - 1)).limit(limit).to_list(None)
     for pr in ads: 
         for note in pr['notes']: note['date'] = str(note['date'])
+        if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
     return response.json(ads)
 @app.get('/<collection:(users|ads)>/<_id>/~')
