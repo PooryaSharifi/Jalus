@@ -22,16 +22,17 @@ warnings.filterwarnings('ignore')
 # TODO yeki halati ke ban mishe, yeki halati ke azash ye hafte migzare
 class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
     '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
-def get_users():
+def get_users(stat=True):
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
     users.create_index([('location', '2dsphere')])
     users.create_index([('source', 1), ('category', 1), ('date', 1)])
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
     users.create_index([('link', 1)], unique=True); users.create_index([('id', 1)], unique=True)
     # users.delete_many({})
-    print(f"{cs.FAIL}{cs.BOLD}All, Detail:  {users.count_documents({})}, {users.count_documents({'detailed': True})}{cs.ENDC}")
-    print(f"{cs.FAIL}{cs.BOLD}Phone, Image: {users.count_documents({'phoned': True})}, {users.count_documents({'imaged': True})}{cs.ENDC}")
-    print(f"{cs.FAIL}{cs.BOLD}Serve:        {users.count_documents({'served': True})}{cs.ENDC}")
+    if stat:
+        print(f"{cs.FAIL}{cs.BOLD}All, Detail : {users.count_documents({})}, {users.count_documents({'detailed': True})}{cs.ENDC}")
+        print(f"{cs.FAIL}{cs.BOLD}Phone, Image: {users.count_documents({'phoned': True})}, {users.count_documents({'imaged': True})}{cs.ENDC}")
+        print(f"{cs.FAIL}{cs.BOLD}Serve       : {users.count_documents({'served': True})}{cs.ENDC}")
     return users
 
 def rnd_necessities():
@@ -215,17 +216,17 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
     if images:
         _asset_dir = _asset_dir + '/' + _id
         os.makedirs(_asset_dir, exist_ok=True)
-        # if len([name for name in os.listdir(_asset_dir)]) != len(images):
         remain = min(8, len(images))
         for iim, im in enumerate(images):
-            if os.path.exists(f'{_asset_dir}/{iim}.webp') and os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000: remain -= 1; continue
-            try: subprocess.check_output(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True); remain -= 1
+            if os.path.exists(f'{_asset_dir}/{iim}.webp'):
+                if os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000: remain -= 1; continue
+                else: os.remove(f'{_asset_dir}/{iim}.webp')
+            try: r = subprocess.check_output(f"aria2c {im} --auto-file-renaming=false --dir {_asset_dir} -o {iim}.webp", shell=True, stderr=subprocess.DEVNULL); remain -= 1
             except:
-                try: subprocess.check_output(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True); remain -= 1
-                except: os.remove(f'{_asset_dir}/{iim}.webp')
+                if os.path.exists(f'{_asset_dir}/{iim}.webp'): os.remove(f'{_asset_dir}/{iim}.webp')
             if remain == 0: break
         if remain > 2: ad['imaged'] = False if random() < .75 else True
-        ad['images'] = [f'{"/".join(_asset_dir.split("/")[-2:])}/{iim}.webp' for iim, _ in enumerate(images)]
+        ad['images'] = [f'{"/".join(_asset_dir.split("/")[-2:])}/{iim}.webp' for iim, _ in enumerate(images) if os.path.exists(f'{_asset_dir}/{iim}.webp') and os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000]
     print(f"{cs.FAIL}{cs.BOLD}Image:{cs.ENDC} {cs.OKCYAN}{ad['link'].split('/')[-1]}{cs.ENDC} {ad['title']}")
     return {'imaged': ad['imaged'], 'imaged_date': ad['imaged_date'], 'images': ad['images']}
     
@@ -352,14 +353,14 @@ def ppan(headless=False, rpm=45, debug=False, **kwargs):
 
 def pdim(rpm=10, debug=False, **kwargs):
     while True:
-        users, t0 = get_users(), time.time()
-        _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
-        ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        users, t0 = get_users(stat=False), time.time()
+        _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         for ad in ads:
             t1 = time.time(); r = dim(ad)
-            users.replace_one({'_id': ad['_id']}, {'$set': r})
+            users.update_one({'_id': ad['_id']}, {'$set': r})
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
+        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
 
 def pdad(headless=False, rpm=10, debug=False, **kwargs):
     while True:
