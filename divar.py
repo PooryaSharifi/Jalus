@@ -211,14 +211,22 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
     images = [urlparse(im) for im in ad['_images']]
     images = list(set([f'{pr.scheme}://{pr.netloc}{pr.path}' for pr in images]))
     images = sorted(images, key=cmp_to_key(lambda a, b: -1 if len(a) < len(b) or len(a) == len(b) and a < b else (1 if len(a) > len(b) or len(a) == len(b) and a > b else 0)))
+    ad['imaged'], ad['imaged_date'] = True, datetime.now()
     if images:
         _asset_dir = _asset_dir + '/' + _id
         os.makedirs(_asset_dir, exist_ok=True)
-        if len([name for name in os.listdir(_asset_dir)]) != len(images):
-            [subprocess.run(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for iim, im in enumerate(images) if iim < 6]
+        # if len([name for name in os.listdir(_asset_dir)]) != len(images):
+        remain = min(8, len(images))
+        for iim, im in enumerate(images):
+            if os.path.exists(f'{_asset_dir}/{iim}.webp') and os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000: remain -= 1; continue
+            try: subprocess.check_output(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True); remain -= 1
+            except:
+                try: subprocess.check_output(f"curl {im} > {_asset_dir}/{iim}.webp", shell=True); remain -= 1
+                except: os.remove(f'{_asset_dir}/{iim}.webp')
+            if remain == 0: break
+        if remain > 2: ad['imaged'] = False if random() < .75 else True
         ad['images'] = [f'{"/".join(_asset_dir.split("/")[-2:])}/{iim}.webp' for iim, _ in enumerate(images)]
     print(f"{cs.FAIL}{cs.BOLD}Image:{cs.ENDC} {cs.OKCYAN}{ad['link'].split('/')[-1]}{cs.ENDC} {ad['title']}")
-    ad['imaged'], ad['imaged_date'] = True, datetime.now()
     return {'imaged': ad['imaged'], 'imaged_date': ad['imaged_date'], 'images': ad['images']}
     
 # age halate lesser bashe -> center of polygon mishe khode amlaki pas
@@ -348,9 +356,8 @@ def pdim(rpm=10, debug=False, **kwargs):
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': False}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         for ad in ads:
-            t1 = time.time()
-            dim(ad)
-            users.replace_one({'_id': ad['_id']}, ad)
+            t1 = time.time(); r = dim(ad)
+            users.replace_one({'_id': ad['_id']}, {'$set': r})
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), 0))
 

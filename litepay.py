@@ -76,7 +76,8 @@ def push_ads():  # http://10.42.0.11:5000, https://jalus.ir
         new_ads = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12))
         if not new_ads: time.sleep(60); continue
         for i_ad, ad in enumerate(new_ads):
-            ad['images'] = ad['images'][:(8 if collection == 0 else 3)]
+            ad['images'] = [im for im in ad['images'] if os.path.exsits(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp') 
+                            and os.path.getsize(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp') > 3000][:(8 if collection == 0 else 3)]
             for i_im, im in enumerate(ad['images']):
                 try:
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
