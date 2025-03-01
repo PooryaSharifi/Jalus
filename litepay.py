@@ -69,7 +69,7 @@ def otp():
                 sync_single_tty()
                 try: subprocess.call(f'''BODY='کد تایید جالوس:\nCode: {otp}\nبرای دیگران نفرستید.';gammu --sendsms TEXT 98{phone} -unicode -text "$BODY"''', shell=True, stdout=DEVNULL, stderr=DEVNULL); break
                 except: time.sleep(.5)
-def push_ads():  # http://10.42.0.11:5000, https://jalus.ir
+def push_ads():  # http://192.168.0.55:5000, https://jalus.ir
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
     collections = [('users', {'category': 'rent-temporary', 'detailed': True, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}}), ('ads', {'category': {'$ne': 'rent-temporary'}, 'detailed': True, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}})]
     while True:
@@ -81,18 +81,20 @@ def push_ads():  # http://10.42.0.11:5000, https://jalus.ir
             for i_im, im in enumerate(ad['images']):
                 try:
                     files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', 'rb')}
-                    r = requests.post(f'https://jalus.ir/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
+                    r = requests.post(f'http://192.168.0.55:5000/static/properties/{ad["category"]}/{ad["id"]}/{i_im}.webp', files=files, verify=False)
                     if r.status_code != 200 or not r.json()['OK']: raise
                 except FileNotFoundError: ad['images'][i_im] = 'not found'; continue
                 except Exception: ad['images'][i_im] = 'network'; break
             if ad['images'][i_im] != 'network':
+                ad['title'] = ad['title'].split(); ' '.join([w for w in ad['title'] if w])
+                ad['description'] = ad['description'].split(); ' '.join([w for w in ad['description'] if w])
                 ad['images'] = [im for im in ad['images'] if im != 'not found']
                 if '_images' in ad: del ad['_images']
                 ad['served'] = True; ad['served_date'] = str(datetime.now()).split('.')[0]; ad['notes'] = []
                 del ad['_id']; ad['pan_date'] = str(ad['pan_date']).split('.')[0]; ad['detailed_date'] = str(ad['detailed_date']).split('.')[0]
                 ad['phoned_date'] = str(ad['phoned_date']).split('.')[0]; ad['imaged_date'] = str(ad['imaged_date']).split('.')[0]
                 if 'swap' in ad and ad['swap'] and 'date' in ad['swap']: ad['swap']['date'] = str(ad['swap']['date']).split('.')[0]
-                r = requests.post(f'https://jalus.ir/{collections[collection][0]}/{ad['id']}/~', data=json.dumps(ad), verify=False)
+                r = requests.post(f'http://192.168.0.55:5000/{collections[collection][0]}/{ad['id']}/~', data=json.dumps(ad), verify=False)
                 if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'served_date': datetime.now()}}); r = r.matched_count
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(10 if len(new_ads) % 4 == 0 else 60)

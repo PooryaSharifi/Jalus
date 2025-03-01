@@ -10088,7 +10088,7 @@ img[src^=chrome-extension] {
             max-width: 768px
         }
         .narrow_fit_image {width: 36%}
-        .narrow_fit_text {width: 64%; padding-right: 15px}
+        .narrow_fit_text {width: calc(64% - 15px); padding-right: 12px}
     }
 
     @media (min-width:1024px) {

@@ -21,16 +21,18 @@
             <input
                {{#if typeof this === 'number' }}
                   type="number"
+               {{elseif typeof this === 'boolean' }}
+                  type="checkbox"
                {{else }}
                   type="text"
                {{/if }}
-               placeholder="Value or TAG" value="{{ this }}" size="55" dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL">
+               placeholder="Value or TAG" value="{{ this }}" checked="{{ this }}" size="55" dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL">
          </div>
       </form>
    {{/partial}}
 
    {{#partial thumbnail}}
-      {{#if typeof this === 'number' || typeof this ==='string' }}
+      {{#if typeof this === 'boolean' || typeof this === 'number' || typeof this ==='string' }}
          {{> field this }}
       {{elseif Object.prototype.toString.call( this ) === '[object Array]' }}
          <div class="ui middle aligned list">
@@ -47,12 +49,13 @@
             <div class="ui input">
                <input type="text" value="{{ this.__selector__ }}" placeholder="@collectoin: #_id ..." size="30"> <!-- dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL" -->
             </div>
-            #
+            &nbsp;#&nbsp;
             <div class="ui buttons">
                <button on-click="['insert', @keypath, {}, null, __selector__]" class="ui red basic button">Dictionary {}</button>
                <button on-click="['insert', @keypath, [], null, __selector__]" class="ui blue basic button">Array []</button>
                <button on-click="['insert', @keypath, "", null, __selector__]" class="ui green basic button">String ""</button>
                <button on-click="['insert', @keypath, 0, null, __selector__]" class="ui yellow basic button">Num 0</button>
+               <button on-click="['insert', @keypath, true, null, __selector__]" class="ui pink basic button">Bool T</button>
             </div>
          </div>
       {{elseif Object.prototype.toString.call( this ) === '[object Object]' }}
@@ -71,17 +74,18 @@
             {{/each}}
             <div class="ui bottom attached warning message">
                <div class="ui input">
-                  <input type="text" value="{{ this.__selector__ }}" placeholder="@collectoin: #_id ..." size="30"> <!-- dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL" -->
+                  <input type="text" value="{{ this.__selector__ }}" placeholder="@collectoin: #_id ..." size="19"> <!-- dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL" -->
                </div>
-               #
+               &nbsp;#&nbsp;
                <div class="ui buttons">
                   <button on-click="['insert', @keypath, {}, __attr__, __selector__]" class="ui red basic button">Dictionary {}</button>
                   <button on-click="['insert', @keypath, [], __attr__, __selector__]" class="ui blue basic button">Array []</button>
                   <button on-click="['insert', @keypath, "", __attr__, __selector__]" class="ui green basic button">String ""</button>
                   <button on-click="['insert', @keypath, 0, __attr__, __selector__]" class="ui yellow basic button">Num 0</button>
-               </div> &nbsp;&nbsp;:&nbsp;
+                  <button on-click="['insert', @keypath, true, __attr__, __selector__]" class="ui pink basic button">Bool T</button>
+               </div> &nbsp;:&nbsp;
                <div class="ui input">
-                  <input type="text" value="{{ this.__attr__ }}" placeholder="new unique name" size="40"> <!-- dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL" -->
+                  <input type="text" value="{{ this.__attr__ }}" placeholder="new unique name" size="20"> <!-- dir="rtl" style=" text-align: right; float: right; clear: both; direction: RTL" -->
                </div>
             </div>
          </div>
@@ -195,13 +199,23 @@
                });
             }
          });
+         function pure(d) {
+            if (typeof d === 'object' && !Array.isArray(d) && d !== null) {
+               if ('__attr__' in d) delete d.__attr__
+               if ('__selector__' in d) delete d.__selector__
+               if (Object.keys(d).length === 0 && Object.getPrototypeOf(d) === Object.prototype) return {}
+               for (var key in d) d[key] = pure(d[key])
+            } return d;
+         }
          $('button.ui.big.inverted.fluid.green.button').click(function() {
             var document = plusUltra.get();
+            pure(document)
+            if ('location' in document) document['location'] = {'type': 'Point', 'coordinates': [document['location'][1], document['location'][0]]}
             document = JSON.stringify(document);
             $.ajax({
                type: "POST",
                url: '',
-               data: {json: document},
+               data: document,
                success: function(response) {
                   location.reload();
                },

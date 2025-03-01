@@ -171,7 +171,9 @@ async def _search(r, id_polygon_location=None):
     else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).to_list(None)
     for pr in properties:
         for note in pr['notes']: note['date'] = str(note['date'])
-        pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+        if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
+        pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
+        del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
 async def _properties_get(r, id_polygon_location=None, ): return response.html(await template('Search') if '-d' in sys.argv else await load_template(f'serv/Search.html'))
@@ -199,8 +201,9 @@ async def get_documents(r, collection, ids):
     ads = await app.config['db'][collection].find({'id': {'$in': ids}}).to_list(None)
     for pr in ads:
         for note in pr['notes']: note['date'] = str(note['date'])
-        pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
-    print(ads)
+        if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
+        pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
+        del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(ads)
 @app.route('/<collection:(users|ads)>/-', methods=['GET', 'POST'])  # 11
 async def search_documents(r, collection):
@@ -211,13 +214,18 @@ async def search_documents(r, collection):
     for pr in ads: 
         for note in pr['notes']: note['date'] = str(note['date'])
         if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
-        pr['location'] = list(reversed(pr['location']['coordinates'])); del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']; pr.pop('served_date', None)
+        pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
+        del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
     return response.json(ads)
+@app.get('/<collection:(users|ads)>/<_id>/x')
+async def del_document(r, collection, _id): r = await app.config['db'][collection].delete_one({'id': _id}); return response.json({'OK': True, 'c': r.deleted_count})
 @app.get('/<collection:(users|ads)>/<_id>/~')
 async def update_partial_document_page(r, collection, _id): return await response.file('templates/$$.html')
 @app.post('/<collection:(users|ads)>/<_id>/~')
 async def update_new_partial_document(r, collection, _id):
     q = r.json
+    if 'notes' in q:
+        for note in q['notes']: note['date'] = datetime.fromisoformat(note['date'])
     if 'pan_date' in q: q['pan_date'] = datetime.fromisoformat(q['pan_date'])
     if 'detailed_date' in q: q['detailed_date'] = datetime.fromisoformat(q['detailed_date'])
     if 'phoned_date' in q: q['phoned_date'] = datetime.fromisoformat(q['phoned_date'])
