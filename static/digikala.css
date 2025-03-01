@@ -10088,7 +10088,8 @@ img[src^=chrome-extension] {
             max-width: 768px
         }
         .narrow_fit_image {width: 36%}
-        .narrow_fit_text {width: calc(64% - 15px); padding-right: 12px}
+        .narrow_fit_text {width: calc(64% - 15px); padding-right: 12px; min-height: 254px}
+        .narrow_sub {position: absolute; bottom: 0;}
     }
 
     @media (min-width:1024px) {
@@ -14862,6 +14863,7 @@ button.swiper-pagination-bullet {
   .lg\:ml-0 {margin-left: 0;}
   .narrow_fit_image {width: 100%}
   .narrow_fit_text {width: 100%; padding-top: 6px}
+  .narrow_sub {margin-top: 20px}
 }
 
 @media (max-width: 1024px) {

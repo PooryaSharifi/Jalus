@@ -87,10 +87,10 @@ class App extends React.Component {
           </div>} <div class="narrow_fit" style={{background: 'white', fontSize: '1.5em', paddingTop: 5}}>
             {this.state.ads.map((ad, adi) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {console.log(ad.id); this.setState({show: ad})}}>
               <div class="narrow_fit_image" style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 254, borderRadius: 8}}/>
-              <div class="narrow_fit_text" style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', minHeight: 254, position: 'relative'}}>
+              <div class="narrow_fit_text" style={{textAlign: 'justify', display: 'inline-block', verticalAlign: 'top', position: 'relative'}}>
                 <span style={{fontWeight: 500, paddingLeft: 4}}>{ad.title}</span>
                 <span>{ad.description}</span><br></br>
-                <div style={{position: 'absolute', width: 'calc(100% - 15px)', bottom: 0}}>
+                <div class="narrow_sub" style={{width: '100%'}}>
                   <div style={{float: 'right', marginTop: -3, textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); console.log('hu ha ha')}}><img src={`/static/consultants/${ad.consultant.icon}`} style={{height: 30, display: 'inline-block', verticalAlign: 'middle', marginLeft: 4}}/>{ad.consultant.name}</div>
                   <a style={{float: 'right', textDecoration: 'none', color: '#343747', fontWeight: 500, cursor: 'pointer', marginRight: 10}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.open(`tel:${ad.phone}`, '_self')}}>{ad.phone}</a>
                   <a style={{float: 'left', textDecoration: 'none', color: '#f43747', fontSize: '.85em', fontWeight: 500, cursor: 'pointer', paddingRight: 10}} href={`https://divar.ir/v/_/${ad.id}`} target="_blank" rel="noopener noreferrer" onClick={(e) => {e.stopPropagation(); e.nativeEvent.stopImmediatePropagation();}}>دیوار</a>
