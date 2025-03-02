@@ -211,7 +211,7 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
     os.makedirs(_asset_dir, exist_ok=True)
     images = [urlparse(im) for im in ad['_images']]
     images = list(set([f'{pr.scheme}://{pr.netloc}{pr.path}' for pr in images]))
-    images = sorted(images, key=cmp_to_key(lambda a, b: -1 if len(a) < len(b) or len(a) == len(b) and a < b else (1 if len(a) > len(b) or len(a) == len(b) and a > b else 0)))
+    images = list(sorted(images, key=cmp_to_key(lambda a, b: -1 if len(a) < len(b) or len(a) == len(b) and a < b else (1 if len(a) > len(b) or len(a) == len(b) and a > b else 0))))
     ad['imaged'], ad['imaged_date'] = True, datetime.now()
     if images:
         _asset_dir = _asset_dir + '/' + _id
@@ -356,6 +356,7 @@ def pdim(rpm=10, debug=False, **kwargs):
         users, t0 = get_users(stat=False), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        # ads = list(users.find({'id': 'QZ8fmObt'}))
         for ad in ads:
             t1 = time.time(); r = dim(ad)
             users.update_one({'_id': ad['_id']}, {'$set': r})
