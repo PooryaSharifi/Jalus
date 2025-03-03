@@ -80,48 +80,7 @@ class App extends React.Component {
       jpeg: '/static/articles/north_guide.0.webp'},
       {title: "کمپینگ ایمن بادست خالی در شمال", href: '/3',
       jpeg: '/static/articles/camping.0.jpg'},
-    ], stories: [
-      // {title: 'پاوربانک مخصوص پرچم‌دارها💪🏻', href: '/stories/0',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/9f60c5e591964904c979a11921630ec633ea5ea1_1721664701.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'موس 8 میلیونی؟!', href: '/stories/1',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/de0a1fb08019701c34455f706f51db93450315ad_1721913910.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'این فلش‌مموری رو همه می‌خوان❗️', href: '/stories/2',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/1d605d4e7623fc9a733367295762fabc5d4657ad_1721664445.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'تی شرت های زگماک', href: '/stories/3',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/652b5a8eef77fe08ad29ff5439c6163ccd8063f9_1722267433.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'پنگوئن مهربون', href: '/stories/4',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/c6b6d9c60e8651a9f42ab63fc991f87243ef028c_1722110950.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'دوچرخه کلاسیک', href: '/stories/5',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/442b5e2b6be0ee1ae4c80edcec4c85ddd377efcb_1721943521.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'اکتیو رو اکتیو کن!', href: '/stories/6',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/9e1946757d4ab353b40d352fed9e7979a32e79c4_1722212651.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'می‌خوایی از ناخنات بیشتر مراقبت کنی', href: '/stories/7',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/62222c0ec84a0ce34e5bff1b937d68d24936189c_1721729884.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'پاور بانک با ظرفیت ولی عجیب⚡', href: '/stories/8',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/56488ac3082950039df53a69b591cd8f902886ab_1722056417.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'درست استفاده‌کن', href: '/stories/9',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/785e52bd651eb58d15782d35b1940d474ece2b49_1722095866.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'کتری برقی اقتصادی', href: '/stories/10',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/f63220f09c848511f1553e1430f1cdbd8aef6ad5_1722276219.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'برای کوچولوها', href: '/stories/11',
-      // jpeg: 'https://dkstatics-public.digikala.com/digikala-content-x-post-media/32d134fcb86bec1161f6a4b13429b5c88e236a44_1722156973.jpg?x-oss-process=image/resize,m_fill,h_115,w_115'},
-      // {title: 'تست ارزون ترین گیتار دیجی‌کالا', href: '/stories/12',
-      // jpeg: ''},
-      // {title: '', href: '/stories/13',
-      // jpeg: ''},
-      // {title: '', href: '/stories/14',
-      // jpeg: ''},
-      // {title: '', href: '/stories/15',
-      // jpeg: ''},
-    ], offers: [
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 48},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 43},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 38},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 35},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 30},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 26},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 20},
-    ], foot_logos: [
+    ], stories: [], offers: [], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
       {svg: '/static/icon/jalus_pay.svg', href: '/host#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
@@ -148,9 +107,9 @@ class App extends React.Component {
           <div class="w-full">
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
               <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
-                <source media="(min-width: 768px)" srcset="https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=640&amp;q=80 640w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=750&amp;q=80 750w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=828&amp;q=80 828w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=1080&amp;q=80 1080w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=1200&amp;q=80 1200w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=1920&amp;q=80 1920w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=2048&amp;q=80 2048w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F23cb83926ed1ce1458c120ffba94323e31ea6c0a_1725655219.gif&amp;w=3840&amp;q=80 3840w"/>
-                <source media="(min-width: 767px)" srcset="https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=640&amp;q=80 640w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=750&amp;q=80 750w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=828&amp;q=80 828w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=1080&amp;q=80 1080w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=1200&amp;q=80 1200w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=1920&amp;q=80 1920w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=2048&amp;q=80 2048w, https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=3840&amp;q=80 3840w"/>
-                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="https://about.digikala.com/landing/_next/image/?url=https%3A%2F%2Fdkstatics-public.digikala.com%2Fdigikala-admin-landing%2F3f1a5fb2fe3193db126917aff3a358beaa2e028a_1725655208.gif&amp;w=3840&amp;q=80" class="w-full h-auto xl:object-cover"/>
+                <source media="(min-width: 768px)" srcset=""/>
+                <source media="(min-width: 767px)" srcset=""/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="/static/slides/Hosting_Split.jpg" class="w-full h-auto xl:object-cover"/>
               </picture>
             </div>
           </div>

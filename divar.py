@@ -282,7 +282,10 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     images = list(set([img.get_attribute('src') for img in images]))
     user['_images'] = images  # <- IMAGES ->
     try:
-        lat_lng = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]")
+        # WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @src, ' '), 'mapimage')]"))).click()
+        WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @alt, ' '), 'موقعیت مکانی')]"))).click()
+        # lat_lng = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]")
+        lat_lng = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, "//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]"))).click()
         lat_lng = urlparse(lat_lng.get_attribute('href'))
         lat, lng = lat_lng.query.split('&')
         lat, lng = float(lat.split('=')[1]), float(lng.split('=')[1])

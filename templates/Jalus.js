@@ -128,15 +128,7 @@ class App extends React.Component {
       // jpeg: ''},
       // {title: '', href: '/stories/15',
       // jpeg: ''},
-    ], offers: [
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 48},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 43},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 38},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 35},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 30},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 26},
-      {images: ['rent-temporary/AZn9Q1Wc/0.webp'], offer: 20},
-    ], foot_logos: [
+    ], offers: [], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
       {svg: '/static/icon/jalus_pay.svg', href: '/host#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
