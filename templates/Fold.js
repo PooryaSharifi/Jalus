@@ -4,7 +4,11 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, slide: 3, slides: [
+    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
+      {title: 'تازه‌ترین یادداشت', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین تبلیغ', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین مچ', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
+    ], secondMenuList: [
+      {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
+    ], slide: 3, slides: [
       {webp: '/static/slides/Go_Asphalt.webp', 
       jpeg: '/static/slides/Go_Asphalt-80.jpg',
       title: 'بوکینگ هوشند', href: '#', state: {potent: true, potentInterest: 'host'}},
@@ -17,7 +21,7 @@ class App extends React.Component {
       {webp: '/static/slides/Go_Grass.webp',
       jpeg: '/static/slides/Go_Grass-80.jpg',
       title: 'خدمات هوشمند و رفاهی رایگان', href: '#', state: {potent: true, potentInterest: 'host'}},
-    ], category: -1, categories: [
+    ], category: -1, categoryShow: false, categories: [
       {href: '/main/mobile/', title: 'کوهستانی',
       png: '/static/categories/mountain_0_exposed.webp'},
       {href: '/main/mobile/', title: 'پردسترس',

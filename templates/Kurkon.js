@@ -1,27 +1,38 @@
-/** #title جالوس رو #title **/
+/** #title جالوس #title **/
 /** #links <link rel="stylesheet" href="/static/digikala.css"/><script src="/static/plyr.js" crossorigin="anonymous"></script><link rel="stylesheet" href="/static/plyr.css"/><link rel="stylesheet" href="/static/plyr.min.css"/> #links **/
 /** #elements <div id="app"></div><div onclick="(function(event) {if(event.target == document.getElementById('plyr')) {document.getElementById('plyr').style.display = 'none'; document.getElementById('plyr').innerHTML = ''}})(event)" style="display: none; background: #0004; position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 10" id="plyr"></div> #elements **/
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
-      {title: 'تازه‌ترین یادداشت', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین تبلیغ', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین مچ', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
-    ], secondMenuList: [
-      {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
-    ], slide: 3, slides: [
-      {webp: '/static/slides/Go_Asphalt.webp', 
-      jpeg: '/static/slides/Go_Asphalt-80.jpg',
-      title: 'بوکینگ هوشند', href: '#', state: {potent: true, potentInterest: 'host'}},
-      {webp: '/static/slides/Go_Convert.webp',
-      jpeg: '/static/slides/Go_Convert-80.jpg',
-      title: 'ویلای پنج ستاره !!', href: '#', state: {potent: true, potentInterest: 'host'}},
-      {webp: '/static/slides/Go_Garden.webp',
-      jpeg: '/static/slides/Go_Garden-80.jpg',
-      title: 'خدمات هوشمند و رفاهی رایگان', href: '#', state: {potent: true, potentInterest: 'host'}},
-      {webp: '/static/slides/Go_Grass.webp',
-      jpeg: '/static/slides/Go_Grass-80.jpg',
-      title: 'خدمات هوشمند و رفاهی رایگان', href: '#', state: {potent: true, potentInterest: 'host'}},
-    ], category: -1, categoryShow: false, categories: [
+    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, slide: 3, slides: [
+      {webp: '/static/slides/Home_Booking.webp',
+      jpeg: '/static/slides/Home_Booking-80.jpg',
+      title: 'بوکینگ هوشند', href: '/properties'},
+      {webp: '/static/slides/Home_5Star.webp',
+      jpeg: '/static/slides/Home_5Star-80.jpg',
+      title: 'ویلای پنج ستاره !!', href: '/properties?stars=5'},
+      {webp: '/static/slides/Home_All.webp',
+      jpeg: '/static/slides/Home_All-80.jpg',
+      title: 'خدمات هوشمند و رفاهی رایگان', href: '/'},
+      {webp: '/static/slides/Home_Transparency.webp',
+      jpeg: '/static/slides/Home_Transparency-80.jpg',
+      title: 'شفافیت', href: '/host#transparency'},
+      // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/1e3ced747d8cf62c297f95c0d94ef9d13732048f_1718696318.jpg?x-oss-process=image/quality,q_95/format,webp',
+      // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/1e3ced747d8cf62c297f95c0d94ef9d13732048f_1718696318.jpg?x-oss-process=image/quality,q_95',
+      // title: 'تناسب اندام', href: '/4'},
+      // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/71f867b90d6dca65405a4252159f7b9c5b7cd8b6_1722415413.jpg?x-oss-process=image/quality,q_95/format,webp',
+      // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/71f867b90d6dca65405a4252159f7b9c5b7cd8b6_1722415413.jpg?x-oss-process=image/quality,q_95',
+      // title: 'پارتنرشیپ-وزارت نیرو', href: '/5'},
+      // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/24e93720f9f253d833b5131b9241ee6d8f979ca5_1722662924.jpg?x-oss-process=image/quality,q_95/format,webp',
+      // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/24e93720f9f253d833b5131b9241ee6d8f979ca5_1722662924.jpg?x-oss-process=image/quality,q_95',
+      // title: 'کمپین -  سوپراستارها - هوم - مرداد 1403', href: '/6'},
+      // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/71a123426127ae10b156d505afbca182d03d1d91_1722927806.gif?x-oss-process=image?x-oss-process=image/format,webp',
+      // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/71a123426127ae10b156d505afbca182d03d1d91_1722927806.gif?x-oss-process=image/quality,q_95',
+      // title: 'پارتنرشیپ-زرساب"', href: '/7'},
+      // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/4743e3c09d2113d86ae7dbe415d3fd1cac85f7ac_1722951209.jpg?x-oss-process=image/quality,q_95/format,webp',
+      // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/4743e3c09d2113d86ae7dbe415d3fd1cac85f7ac_1722951209.jpg?x-oss-process=image/quality,q_95',
+      // title: 'پارتنرشیپ-زرین', href: '/8'},
+    ], category: -1, categories: [
       {href: '/main/mobile/', title: 'کوهستانی',
       png: '/static/categories/mountain_0_exposed.webp'},
       {href: '/main/mobile/', title: 'پردسترس',
@@ -50,9 +61,9 @@ class App extends React.Component {
       png: '/static/categories/futuristic_1_exposed.webp'},
       {href: '/main/mobile/', title: 'سوییسی',
       png: '/static/categories/swedish_0_exposed.webp'},
-      {href: '/main/mobile/', title: 'تفریح‌وهیجان',
+      {href: '/main/mobile/', title: 'تفریحی‌هیجانی',
       png: '/static/categories/entertain_1_exposed.webp'},
-      {href: '/main/mobile/', title: 'تجربه جدید',
+      {href: '/main/mobile/', title: 'تجربه‌جدید',
       png: '/static/categories/hobit_0_exposed.webp'},
     ], products: [
       {title: "جالوس هوشمند", href: '/home/_',
@@ -128,7 +139,7 @@ class App extends React.Component {
       {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/host#all'}
     ], potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, foods: {bread: {img: 0}, pizza: {img: 0}, rice: {img: 0}, fries: {img: 0}, chicken_bbq: {img: 0}, kebab: {img: 0}, falafel: {img: 0}}};
   } async componentDidMount() { let app = this;
-    let stories = await fetch('http://localhost:5000/stories/go'); if (stories.status < 300) {
+    let stories = await fetch('/stories/_'); if (stories.status < 300) {
       stories = await stories.json(); app.setState({stories: Object.keys(stories).map((story) => ({title: story.split('_')[1], jpeg: '/stories/' + story + '.jpg', href: story, resolutions: stories[story][0], ccs: stories[story][1], markers: stories[story][2]}))})
     } let offers = await fetch('/properties/', {body: JSON.stringify({offer: {$gte: 5}}), method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); if (offers.status < 300) {
       let offer_nt = 7, offer_avg = 0; offers = await offers.json(); offers = offers.sort(() => Math.random() - 0.5);
@@ -143,34 +154,8 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
-          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>جالوس رو</h1>
-          <div class="w-full">
-            <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
-              <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
-                <source media="(min-width: 768px)" srcset="/static/slides/Go_Convert.webp"/>
-                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="/static/slides/Go_Convert-80.jpg" class="w-full h-auto xl:object-cover"/>
-              </picture>
-            </div>
-          </div>
-          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}></h2>
-          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>
-
-          لذت تجربه راندن وسیله برقی در هوای معتدل ودر طبیعت بکر شمالی و یا ماسه های ساحلی می تواند کیفیت هر سفری را افزایش دهد.
-
-          </p>
-          
-          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>کلید امن برای همه</h2>
-          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>
-
-          همچنین به دلیل سهولت استفاده از آن در خرید ها و مسیر های کوتاه و متوسط بسیار پرکاربر و مفرح است.
-داشتن آن برای سرگرم کردن فرزندتان می تواند کام آن ها را بسیار شیرین کند.
-
-          </p>
-          
-          <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'host'})}}>برای شروع همکاری وارد شوید</span>
-        </div>
         {/* #macro modules/articles */}
+        <div style={{paddingLeft: 10, paddingRight: 10}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0"></div>
         {/* #macro modules/pr_list */}
         {/* #macro modules/club_banner */}
         {/* #macro modules/category */}

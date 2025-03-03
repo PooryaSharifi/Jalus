@@ -4,7 +4,11 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, slide: 3, slides: [
+    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
+      {title: 'تازه‌ترین یادداشت', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین تبلیغ', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین مچ', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
+    ], secondMenuList: [
+      {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
+    ], slide: 3, slides: [
       {webp: '/static/slides/Rebuild_FirstHandedFactory.webp', 
       jpeg: '/static/slides/Rebuild_FirstHandedFactory-80.jpg',
       title: 'بوکینگ هوشند', href: '#', state: {potent: true, potentInterest: 'rebuild'}},
@@ -29,7 +33,7 @@ class App extends React.Component {
       // {webp: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/4743e3c09d2113d86ae7dbe415d3fd1cac85f7ac_1722951209.jpg?x-oss-process=image/quality,q_95/format,webp',
       // jpeg: 'https://dkstatics-public.digikala.com/digikala-adservice-banners/4743e3c09d2113d86ae7dbe415d3fd1cac85f7ac_1722951209.jpg?x-oss-process=image/quality,q_95',
       // title: 'پارتنرشیپ-زرین', href: '/8'},
-    ], category: -1, categories: [
+    ], category: -1, categoryShow: false, categories: [
       {href: '/main/mobile/', title: 'کوهستانی',
       png: '/static/categories/mountain_0_exposed.webp'},
       {href: '/main/mobile/', title: 'پردسترس',
