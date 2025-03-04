@@ -235,7 +235,9 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     user['detailed'], user['detailed_date'] = True, datetime.now()
     # try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
-    except: pass
+    except: 
+        try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این آگهی حذف شده است.')]]"); return
+        except: pass
     if 'title' not in user or not user['title']: user['title'] = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__title')]").get_attribute("innerHTML")
     if 'subtitles' not in user: user['subtitles'] = []
     try: user['subtitles'].append(browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-page-title__texts ')]//*[contains(concat(' ', @class, ' '), ' kt-page-title__subtitle ')]").get_attribute("innerHTML").split('|')[0].strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا'))
@@ -281,15 +283,17 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     images = browser.find_elements(by=By.XPATH, value="//img[contains(concat(' ', @class, ' '), ' kt-image-block__image ') and @src and string-length(@src)!=0]")
     images = list(set([img.get_attribute('src') for img in images]))
     user['_images'] = images  # <- IMAGES ->
+    precise_location = False
     try:
         # WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @src, ' '), 'mapimage')]"))).click()
-        WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @alt, ' '), 'موقعیت مکانی')]"))).click()
+        WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @alt, ' '), 'موقعیت مکانی')]"))).click()
         # lat_lng = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]")
-        lat_lng = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, "//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]"))).click()
+        lat_lng = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, "//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]")))
         lat_lng = urlparse(lat_lng.get_attribute('href'))
         lat, lng = lat_lng.query.split('&')
         lat, lng = float(lat.split('=')[1]), float(lng.split('=')[1])
         user['location'] = {'type': 'Point', 'coordinates': [lng, lat]}
+        precise_location = True
     except: pass
         # if 'location' not in user or not user['location']:
         #     for loc in user['subtitle'].split('،'):
@@ -301,7 +305,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     if d_consultants[1][0] / d_consultants[0][0] > 1.3: user['consultant'] = d_consultants[0][1]
     else: user['consultant'] = d_consultants[0][1] if random() < .6 else d_consultants[1][1]
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
-    print(f"{cs.OKGREEN}{cs.BOLD}Ad:{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+    print(f"{cs.OKGREEN}{cs.BOLD}Ad{'@' if precise_location else '?'}{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
