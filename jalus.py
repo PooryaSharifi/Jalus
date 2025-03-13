@@ -1,4 +1,4 @@
-import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, yaml, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings
+import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings
 from sanic import Sanic, Blueprint, response, exceptions
 from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
@@ -157,7 +157,6 @@ async def _fill(r, q):
     q = urllib.parse.unquote(q)
     if q not in wild_origins: origins = []
     else: origins = wild_origins[q][:4]
-    for ori in origins: ori['polygon'] = ori['polygon'].tolist()
     if q not in wild_filters: filters = []
     else: filters = wild_filters[q][:4]
     return response.json({'polygons': origins, 'filters': filters})
@@ -184,12 +183,12 @@ async def _qr_(r, home):
     qrcode.make('Some data here').save(img_io, 'JPEG', quality=70)
     img_io.seek(0)
     return response.raw(body=img_io.getvalue(), content_type='image/jpeg', headers={f'Content-Disposition': 'filename="key.jpeg"'})
-@app.get('/homes/<home>/-')
-async def _smart_home_state(r, home, ):
-    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties.yml', encoding='utf8') as f:
-        properties = yaml.safe_load(f.read()); properties = properties['properties']; properties = {p['id']: p for p in properties}
-        if home in properties: return response.json(properties[home]['spaces'])
-        else: raise exceptions.NotFound()
+# @app.get('/homes/<home>/-')
+# async def _smart_home_state(r, home, ):
+#     with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties.yml', encoding='utf8') as f:
+#         properties = yaml.safe_load(f.read()); properties = properties['properties']; properties = {p['id']: p for p in properties}
+#         if home in properties: return response.json(properties[home]['spaces'])
+#         else: raise exceptions.NotFound()
 @app.get('/homes/<home>')
 async def _smart_home(r, home, ): return response.html(await template('Home') if '-d' in sys.argv else await load_template(f'serv/Home.html'))
 pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj][ts]*'); pages = [os.path.basename(p).split('.')[0].lower() for p in pages]

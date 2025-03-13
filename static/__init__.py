@@ -118,6 +118,7 @@ with open('static/origins', encoding='utf-8') as origins:
     for iorig, orig in enumerate(origins): orig['polygon'] = polygons.vertices[polygons.regions[iorig]]
     table = dict()
     for origin in origins:
+        origin['polygon'] = origin['polygon'].tolist()
         for iori, ori in enumerate(origin['keywords']):
             if ori not in table: table[ori] = []
             table[ori].append(dict(origin, order=iori))
