@@ -1,7 +1,7 @@
 <div class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
   <div class="w-full py-3 lg:pt-4 lg:pb-10 flex flex-col items-center">
     <div class="mb-6 lg:mb-9 text-center">
-      <h3 class="text-h3">خرید بر اساس دسته‌بندی</h3>
+      <h3 class="text-h3">{this.state.categoryTitle || 'رزرو بر اساس دسته‌بندی'}</h3>
     </div>
     <div class="flex flex-col justify-center items-center">
       {this.state.categories.reduce((r,e,i) => (i % Math.min(8, Math.floor(window.innerWidth / 143)) ? r[r.length - 1].push(e): r.push([e])) && r, []).map((cats, cats_i) => (<div class="flex w-full flex-row items-center justify-center gap-2">
