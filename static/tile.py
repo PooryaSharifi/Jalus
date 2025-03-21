@@ -4,13 +4,12 @@ layer, format, area = sys.argv[1], {'b': 'png', 'r': 'png', 'y': 'jpg'}[sys.argv
 api = {'b': '`https://tile.jawg.io/dark/${z}/${x}/${y}.png?api-key=community`', 'r': '`https://mt1.google.com/vt/lyrs=r&x=${x}&y=${y}&z=${z}`', 'y': '`https://mt1.google.com/vt/lyrs=y&x=${x}&y=${y}&z=${z}`'}[layer]
 print(len(glob.glob(os.path.join(os.path.join(os.path.dirname(__file__), f'lyr{layer}'), '*'))))
 if layer == 'b':
-    if os.name == 'nt': files = glob.glob(f'C:\\Users\\Arsha\\Downloads\\*_*_*.{format}')
+    if os.name == 'nt': files = glob.glob(f'C:\\Users\\Arsha\\Downloads\\*_*_*.{format}'); print(len(files))
     else: files = glob.glob(f'/home/arsha/Downloads/*_*_*.{format}'); print(len(files))
     for f in files: z, x, y = os.path.basename(f).split('.')[0].split('_'); os.rename(f, os.path.join(os.path.join(os.path.dirname(__file__), f'lyr{layer}'), f'{z}_{x}_{y}.{format}'))
 else:
-    if os.name == 'nt': files = glob.glob(f'C:\\Users\\Arsha\\Downloads\\lyrs={layer}&x=*&y=*&z=*.{format}')
+    if os.name == 'nt': files = glob.glob(f'C:\\Users\\Arsha\\Downloads\\lyrs={layer}&x=*&y=*&z=*.{format}'); print(len(files))
     else: files = glob.glob(f'/home/arsha/Downloads/lyrs={layer}&x=*&y=*&z=*.{format}'); print(len(files))
-    print(len(files))
     for f in files: x = f.split('&x=')[1].split('&')[0]; y = f.split('&y=')[1].split('&')[0]; z = f.split('&z=')[1].split('_')[0]; os.rename(f, os.path.join(os.path.join(os.path.dirname(__file__), f'lyr{layer}'), f'{z}_{x}_{y}.{format}'))
 with open (os.path.join(os.path.dirname(__file__), f'lyr{layer}.wanted')) as file: not_found = list(file.readlines())
 with open (os.path.join(os.path.dirname(__file__), 'tile.js'), 'w') as f: f.write("""const inside = (vs, point) => {
