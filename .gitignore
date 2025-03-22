@@ -164,6 +164,9 @@ cython_debug/
 static/lyrb/
 static/lyrr/
 static/lyry/
+static/lyrb.wanted
+static/lyrr.wanted
+static/lyry.wanted
 static/stories/
 static/properties/
 static/potents.csv
