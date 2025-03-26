@@ -46,11 +46,13 @@ async def tile(r, layer, file):
         if z < 9: return await response.file(os.path.join(directory, f'blank.{mime}'))
         z -= 1; stack.insert((x % 2, y % 2)); x //= 2; y //= 2
         if os.path.exists(os.path.join(directory, f'{z}_{x}_{y}.{mime}')):
-            # load image
+            tile = Image.open(os.path.join(directory, f'{z}_{x}_{y}.{mime}'))
             while stack: pass
-                # crop image quarter
-                # pop
-            # return image
+                tile = tile.crop((128 * stack[-1][0], 128 * stack[-1][1], 128 + 128 * stack[-1][0], 128 + 128 * stack[-1][1]))
+                stack.pop()
+                tile = tile.resize((256, 256))
+            tile_io = BytesIO(); tile.save(tile_io, , quality=70); tile_io.seek(0)
+            return send_file(tile_io, mime_type=file.split('.')[-1])
 @app.listener('before_server_start')
 async def init_ones(sanic, loop): 
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
