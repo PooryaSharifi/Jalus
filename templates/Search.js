@@ -14,8 +14,8 @@ map.setMaxBounds([[-90, 23.826], [40.681, 63.325]]);
 window.lyrs = [['lyrb', 'مات', '/static/lyrb/{z}_{x}_{y}.png'], ['lyry', 'ماهواره', '/static/lyry/{z}_{x}_{y}.webp'], ['lyrr', 'سفید', '/static/lyrr/{z}_{x}_{y}.png']];
 window.lyr = L.tileLayer('/static/lyrb/{z}_{x}_{y}.png', {
   attribution: '',
-  maxZoom: 14,
-  maxNativeZoom: 14,
+  maxZoom: 17,
+  maxNativeZoom: 17,
   zoomControl: false,
   // crs: L.CRS.Simple,
 }); window.lyr.addTo(map);

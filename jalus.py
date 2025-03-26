@@ -7,6 +7,7 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 from static import load_template, template, wild_origins, wild_filters, decode, encode
 from io import BytesIO, StringIO
+from PIL import Image
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
 
 warnings.filterwarnings('ignore')
@@ -40,21 +41,21 @@ async def upload_static_file(r, path):
 @app.get('/static/<layer:(lyrb|lyrr|lyry)>/<file>')
 async def tile(r, layer, file):
     directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', layer)
-    if os.path.exists(os.path.join(directory, file)): return await response.file(os.path.join(directory, file))
+    if os.path.exists(os.path.join(directory, file)): return await response.file(os.path.join(directory, file), mime_type=f'image/{file.split(".")[-1]}')
     mime = file.split('.'); z, x, y = (int(v) for v in mime[0].split('_')); mime = mime[1]; stack = []
     while True:
         if z < 9: return await response.file(os.path.join(directory, f'blank.{mime}'))
-        z -= 1; stack.insert((x % 2, y % 2)); x //= 2; y //= 2
+        z -= 1; stack.append((x % 2, y % 2)); x //= 2; y //= 2
         if os.path.exists(os.path.join(directory, f'{z}_{x}_{y}.{mime}')):
             tile = Image.open(os.path.join(directory, f'{z}_{x}_{y}.{mime}'))
-            while stack: pass
+            while stack:
                 tile = tile.crop((128 * stack[-1][0], 128 * stack[-1][1], 128 + 128 * stack[-1][0], 128 + 128 * stack[-1][1]))
                 stack.pop()
                 tile = tile.resize((256, 256))
-            tile_io = BytesIO(); tile.save(tile_io, , quality=70); tile_io.seek(0)
-            return send_file(tile_io, mime_type=file.split('.')[-1])
+            tile_io = BytesIO(); tile.save(tile_io, file.split(".")[-1], quality=70); tile_io.seek(0)
+            return response.raw(tile_io.read(), content_type=f'image/{file.split(".")[-1]}')
 @app.listener('before_server_start')
-async def init_ones(sanic, loop): 
+async def init_ones(sanic, loop):
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
     with open('static/delicious.json', encoding='utf-8') as jf:
         collection = json.load(jf); await app.config['db']['laziz_delicious'].delete_many({'subject': {'$in': [document['subject'] for document in collection]}})
