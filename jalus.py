@@ -37,6 +37,20 @@ async def upload_static_file(r, path):
     async with aiofiles.open(path, 'wb') as f: await f.write(r.files["file"][0].body)
     f.close()
     return response.json({'OK': True})
+@app.get('/static/<layer:(lyrb|lyrr|lyry)>/<file>')
+async def tile(r, layer, file):
+    directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', layer)
+    if os.path.exists(os.path.join(directory, file)): return await response.file(os.path.join(directory, file))
+    mime = file.split('.'); z, x, y = (int(v) for v in mime[0].split('_')); mime = mime[1]; stack = []
+    while True:
+        if z < 9: return await response.file(os.path.join(directory, f'blank.{mime}'))
+        z -= 1; stack.insert((x % 2, y % 2)); x //= 2; y //= 2
+        if os.path.exists(os.path.join(directory, f'{z}_{x}_{y}.{mime}')):
+            # load image
+            while stack: pass
+                # crop image quarter
+                # pop
+            # return image
 @app.listener('before_server_start')
 async def init_ones(sanic, loop): 
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
