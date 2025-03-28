@@ -86,7 +86,7 @@ var polygon = ('%s' in polygons) ? polygons.%s : polygons.north, lngs = [], lats
 for (var i = 0; i < polygon.length; i ++) { lngs.push(polygon[i][1]); lats.push(polygon[i][0]); }
 var min_lng = Math.min(...lngs), max_lng = Math.max(...lngs), min_lat = Math.min(...lats), max_lat = Math.max(...lats);
 var lng = locations.%s[1], lat = locations.%s[0], min_z = Math.ceil(Math.min(Math.log2(180 / (max_lng - min_lng)), Math.log2(180 / (max_lat - min_lat)))) + 1;
-var max_z = Math.ceil(Math.max(Math.log2(180 / (max_lng - min_lng)), Math.log2(180 / (max_lat - min_lat)))) + 10, founds = %s, not_founds = %s;
+var max_z = Math.min(Math.ceil(Math.max(Math.log2(180 / (max_lng - min_lng)), Math.log2(180 / (max_lat - min_lat)))) + 10, 16), founds = %s, not_founds = %s;
 (async () => {for (var z = min_z; z <= max_z; z ++) {
     var t = tile(lng, lat, z); var xtile = t[0], ytile = t[1];
     for (var x = xtile - Math.pow(2, z - min_z); x <= xtile + Math.pow(2, z - min_z); x ++) {
