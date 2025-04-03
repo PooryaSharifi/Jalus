@@ -166,30 +166,32 @@ polygons = {
     ]
 }
 def h2(layer):
-    format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; j_set = glob.glob(f"lyr{layer}/*.{format}")
-    j_set = set([jpg.split('/')[-1].split('.')[0] for jpg in j_set])
+    #  directory = f"{os.path.dirname(os.path.abspath(__file__))}/lyr{layer}"
+    format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; directory = f"{os.path.dirname(os.path.abspath(__file__))}/lyr{layer}"; j_l = glob.glob(f"{directory}/*.{format}")
+    j_l = [jpg.split('/')[-1].split('.')[0] for jpg in j_l]; j_set = set(j_l)
     families = []
-    for jpg in j_set:
+    for jpg in j_l:
         z, x, y = jpg.split('_'); z, x, y = int(z), int(x), int(y)
-        if z != 13 or z != 15: continue
+        if z != 13 and z != 15: continue
         if f'{z + 1}_{x * 2}_{y * 2}' in j_set and f'{z + 1}_{x * 2 + 1}_{y * 2}' in j_set and \
                 f'{z + 1}_{x * 2}_{y * 2 + 1}' in j_set and f'{z + 1}_{x * 2 + 1}_{y * 2 + 1}' in j_set:
             families.append([
-                f'lyr{layer}/{z}_{x}_{y}.{format}', f'lyr{layer}/{z + 1}_{x * 2}_{y * 2}.{format}', 
-                f'lyr{layer}/{z + 1}_{x * 2 + 1}_{y * 2}.{format}', f'lyr{layer}/{z + 1}_{x * 2}_{y * 2 + 1}.{format}', 
-                f'lyr{layer}/{z + 1}_{x * 2 + 1}_{y * 2 + 1}.{format}'])
+                f'{directory}/{z}_{x}_{y}.{format}', f'{directory}/{z + 1}_{x * 2}_{y * 2}.{format}', 
+                f'{directory}/{z + 1}_{x * 2 + 1}_{y * 2}.{format}', f'{directory}/{z + 1}_{x * 2}_{y * 2 + 1}.{format}', 
+                f'{directory}/{z + 1}_{x * 2 + 1}_{y * 2 + 1}.{format}'])
             families[-1].append(sum([os.stat(f).st_size for f in families[-1]]))
     families = sorted(families, key=lambda family: family[-1])
     for family in families: family.pop()
+    print(len(families))
     for family in families[:20000]:
         imgs, lens = [], []
         for file in family:
             with open(file, 'rb') as f:
                 imgs.append(f.read())
                 lens.append(len(imgs[-1]).to_bytes(2, byteorder='big', signed=False))
-                os.remove(file)
+            os.remove(file)
         img = lens[0] + imgs[0] + lens[1] + imgs[1] + lens[2] + imgs[2] + lens[3] + imgs[3] + lens[4] + imgs[4]
-        with open(families[0].replace(format, 'h2'), 'wb') as f:
+        with open(family[0].replace(format, 'h2'), 'wb') as f:
             f.write(img)
 def merge(layer):
     format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; jpgs = glob.glob(f"lyr{layer}/*.{format}")
