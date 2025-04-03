@@ -122,4 +122,4 @@ var max_z = Math.min(Math.ceil(Math.max(Math.log2(180 / (max_lng - min_lng)), Ma
         }
     }
 }; not_founds = Object.keys(not_founds); for (var i = 0; i < not_founds.length; i ++) {var z = not_founds[i].split('_')[0], x = not_founds[i].split('_')[1], y = not_founds[i].split('_')[2]; await downloadImage(%s); await new Promise(r => setTimeout(r, 40));}})();
-""" % (area, area, area, area, str(sorted([os.path.basename(f).split('.')[0] for f in glob.glob(os.path.join(os.path.join(os.path.dirname(__file__), f'lyr{layer}'), '*'))])), {k: '' for k in ['6_41_25']}, api, api))
+""" % (area, area, area, area, str(sorted([os.path.basename(f).split('.')[0] for f in glob.glob(os.path.join(os.path.join(os.path.dirname(__file__), f'lyr{layer}'), '*'))])), {k: '' for k in []}, api, api))
