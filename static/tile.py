@@ -1,7 +1,6 @@
 import subprocess, glob, pymongo, os.path, os, numpy as np, math, sys
 from random import choices
 from PIL import Image
-from skimage.metrics import structural_similarity as ssim
 
 def downloader(layer, format):
     # y = hybrid, r = somehow altered roadmap, p = terrain, m = standard roadmap, h = roads only, s = satellite only
@@ -194,6 +193,7 @@ def h2(layer):
         with open(family[0].replace(format, 'h2'), 'wb') as f:
             f.write(img)
 def merge(layer):
+    from skimage.metrics import structural_similarity as ssim
     format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; jpgs = glob.glob(f"lyr{layer}/*.{format}")
     j_set = set([jpg.split('/')[-1].split('.')[0] for jpg in jpgs])
     par_j_set = set()
