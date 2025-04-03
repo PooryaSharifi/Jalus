@@ -44,8 +44,7 @@ async def tile(r, layer, file):
     mime = file.split('.'); z, x, y = (int(v) for v in mime[0].split('_')); mime = mime[1]; stack = []
     h2, n2 = '', 0; tile = None
     while True:
-        if z < 9: return await response.file(os.path.join(directory, f'blank.{mime}'))
-        child, parent = os.path.join(directory, f'{z}_{x}_{y}.'), os.path.join(directory, f'{z - 1}_{x // 2}_{y // 2}.h2'), ''
+        child, parent = os.path.join(directory, f'{z}_{x}_{y}.'), os.path.join(directory, f'{z - 1}_{x // 2}_{y // 2}.h2')
         if os.path.exists(child + mime):
             async with aiofiles.open(child + mime, 'rb') as f: tile = await f.read()
         elif os.path.exists(child + 'h2'): h2 = child + 'h2'
@@ -66,6 +65,7 @@ async def tile(r, layer, file):
             tile_io = BytesIO(); tile.save(tile_io, file.split(".")[-1], quality=70); tile_io.seek(0)
             return response.raw(tile_io.read(), content_type=f'image/{file.split(".")[-1]}')
         z -= 1; stack.append((x % 2, y % 2)); x //= 2; y //= 2
+        if z < 9: return await response.file(os.path.join(directory, f'blank.{mime}'))
 @app.listener('before_server_start')
 async def init_ones(sanic, loop):
     app.config['db'] = async_motor.AsyncIOMotorClient(db_uri, maxIdleTimeMS=10000, minPoolSize=10, maxPoolSize=50, connectTimeoutMS=10000, retryWrites=True, waitQueueTimeoutMS=10000, serverSelectionTimeoutMS=10000)[db_name]
