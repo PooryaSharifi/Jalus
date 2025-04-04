@@ -3,9 +3,9 @@
   <meta charset="utf-8" />
   <link rel="icon" href="/favicon.ico" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="اپلیکیشن نقشه اسکانها "/>
-  <title>نقشه اسکانها </title>
-  <meta name="apple-mobile-web-app-title" content="نقشه اسکانها ">
+  <meta name="description" content="اپلیکیشن نقشه املاک "/>
+  <title>نقشه املاک </title>
+  <meta name="apple-mobile-web-app-title" content="نقشه املاک ">
   <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,7 +16,7 @@
   <script src="/static/react-dom.production.min.js" crossorigin></script>
   
   <script src="/static/jDate.min.js"></script>
-  <link rel="stylesheet" href="/static/leaflet.css" /><script src="/static/leaflet.js"></script><link rel="stylesheet" href="/static/map.css"/> 
+  <link rel="stylesheet" href="/static/map.css"/> 
   <style>.touchable { cursor: pointer !important; transition: 0.07s ease-in-out !important; } .touchable:active { opacity: .2 !important; }
   .scrollview { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }</style>
 </head><body><div id="map" style="height: calc(100% - 127px); opacity: 1"></div><div id="app" style="height: calc(127px)"></div><script>"use strict";
@@ -261,8 +261,8 @@ map.setMaxBounds([[-90, 23.826], [40.681, 63.325]]);
 window.lyrs = [['lyrb', 'مات', '/static/lyrb/{z}_{x}_{y}.png'], ['lyry', 'ماهواره', '/static/lyry/{z}_{x}_{y}.webp'], ['lyrr', 'سفید', '/static/lyrr/{z}_{x}_{y}.png']];
 window.lyr = L.tileLayer('/static/lyrb/{z}_{x}_{y}.png', {
   attribution: '',
-  maxZoom: 17,
-  maxNativeZoom: 17,
+  maxZoom: 14,
+  maxNativeZoom: 14,
   zoomControl: false
   // crs: L.CRS.Simple,
 });
@@ -274,9 +274,7 @@ var App = /*#__PURE__*/function (_React$Component) {
   function App(props) {
     var _this;
     _classCallCheck(this, App);
-    _this = _super.call(this, props);
-    var app = _assertThisInitialized(_this);
-    window.app = _assertThisInitialized(_this); // condition: Clear, Cloudy, Rainy, Snowy
+    _this = _super.call(this, props); // condition: Clear, Cloudy, Rainy, Snowy
     /* delCookie('phone'); delCookie('session'); */
     var landing = parseInt(cookie('landing') | 0);
     landing = ++landing % 5;
@@ -305,9 +303,17 @@ var App = /*#__PURE__*/function (_React$Component) {
       otp: false,
       keys: {}
     };
+    var app = _assertThisInitialized(_this);
+    window.app = _assertThisInitialized(_this);
     _this.checkReserved = _this.checkReserved.bind(_assertThisInitialized(_this));
     _this.binSearch = _this.binSearch.bind(_assertThisInitialized(_this));
     _this.calendar = _this.calendar.bind(_assertThisInitialized(_this));
+    Object.defineProperty(String.prototype, 'translate', {
+      value: function value() {
+        return !app.state.trans ? this : tr_table[this.toLowerCase()];
+      },
+      enumerable: false
+    });
     return _this;
   }
   _createClass(App, [{
@@ -1085,9 +1091,9 @@ var App = /*#__PURE__*/function (_React$Component) {
           opacity: '98%',
           position: 'fixed',
           right: 5,
-          top: 4,
-          minHeight: 46,
-          width: 46,
+          top: 5,
+          minHeight: 50,
+          width: 50,
           borderRadius: 16,
           zIndex: 798,
           backgroundColor: '#ffffff',
@@ -1130,9 +1136,9 @@ var App = /*#__PURE__*/function (_React$Component) {
           opacity: '98%',
           position: 'fixed',
           right: 5,
-          top: 58,
-          minHeight: 46,
-          width: 46,
+          top: 60,
+          minHeight: 50,
+          width: 50,
           borderRadius: 16,
           zIndex: 798,
           backgroundColor: '#ffffff',
@@ -1140,12 +1146,12 @@ var App = /*#__PURE__*/function (_React$Component) {
           padding: 3,
           paddingBottom: 0,
           cursor: 'pointer',
-          height: this.state.expand_lyr ? 'auto' : 46
+          height: this.state.expand_lyr ? 'auto' : 50
         }
       }, /*#__PURE__*/React.createElement("div", {
         style: {
-          width: 40,
-          height: 40,
+          width: 44,
+          height: 44,
           borderRadius: 14,
           overflow: 'hidden',
           position: 'relative',
@@ -1171,8 +1177,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, window.lyrs[this.state.lyr][1]), /*#__PURE__*/React.createElement("div", {
         style: {
-          width: 40,
-          height: 40,
+          width: 44,
+          height: 44,
           borderRadius: 14,
           overflow: 'hidden',
           position: 'relative',
@@ -1202,8 +1208,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, this.state.lyr == 0 ? window.lyrs[1][1] : window.lyrs[0][1]), /*#__PURE__*/React.createElement("div", {
         style: {
-          width: 40,
-          height: 40,
+          width: 44,
+          height: 44,
           borderRadius: 14,
           overflow: 'hidden',
           position: 'relative',
