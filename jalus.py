@@ -10,6 +10,15 @@ from io import BytesIO, StringIO
 from PIL import Image
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
 
+def value(doc):
+    if doc['category'] == 'zamin': return doc['area'] + doc['width'] * doc['width']
+    elif doc['category'] == 'apartment': return (doc['area'] + doc['rooms'] * 12) * (1 + 2 ** -(doc['age'] / 10))
+    elif doc['category'] == 'garden': return doc['area'] + doc['floor_area'] * 5 * (1 + 2 ** -(doc['age'] / 10))
+    elif doc['category'] == 'villa': return doc['area'] + doc['floor_area'] * 1.3 * (1 + 2 ** -(doc['age'] / 10))
+    # score log(total_value - price) + log(value(swap) - value(doc)) + log(location(swap) - location(doc))
+    # score log(price - total_value) + log(value(doc) - value(swap)) + log(location(doc) - location(swap))
+    # hala age ham gir nayumad score sort kon 5 ta behesh bede
+
 warnings.filterwarnings('ignore')
 WorkerManager.THRESHOLD = 1200
 db_uri, db_name = "mongodb://{host}:{port}/".format(host="localhost", port=27017), os.path.basename(os.path.dirname(__file__)).capitalize()
@@ -25,7 +34,6 @@ app.blueprint(laziz_delicious, url_prefix='/laziz/delicious')
 app.blueprint(laziz_order, url_prefix='/laziz/order')
 app.blueprint(laziz, url_prefix='/laziz')
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
-app.add_route(lambda _: response.redirect('/properties/'), '/properties', name='properties_slash')
 app.add_route(lambda _: response.redirect('/dome'), '/zome', name='zome_dome')
 min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
 @app.get('/static/<path:path>')
@@ -193,10 +201,10 @@ async def _fill(r, q):
 async def _search(r, id_polygon_location=None):
     body = r.json if r.json else {}; body['detailed'] = True; body['phoned'] = True; body['imaged'] = True
     if '/' in id_polygon_location: z, lat, lng = id_polygon_location.split('/'); ep = 180 ** -z; polygon = [[lng - ep, lat - ep], [lng - ep, lat + ep], [lng + ep, lat + ep], [lng + ep, lat - ep]]
-    if ';' in id_polygon_location: polygon = id_polygon_location.split(';'); polygon = [[float(dim) for dim in p.split(',')] for p in polygons]
-    if not id_polygon_location.strip(): properties = await r.app.config['db']['users'].find(body).to_list(None)
-    elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).to_list(None)
-    else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).to_list(None)
+    if ';' in id_polygon_location: polygon = id_polygon_location.split(';'); polygon = [[float(dim) for dim in p.split(',')] for p in polygon]
+    if not id_polygon_location.strip(): properties = await r.app.config['db']['users'].find(body).limit(24).to_list(None)
+    elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).limit(24).to_list(None)
+    else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).limit(24).to_list(None)
     for pr in properties:
         for note in pr['notes']: note['date'] = str(note['date'])
         if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
@@ -205,6 +213,8 @@ async def _search(r, id_polygon_location=None):
     return response.json(properties)
 @app.get('/properties/<id_polygon_location:path>')
 async def _properties_get(r, id_polygon_location=None, ): return response.html(await template('Search') if '-d' in sys.argv else await load_template(f'serv/Search.html'))
+@app.get('/properties')
+async def __properties_get(r, id_polygon_location=None, ): return response.html(await template('Search') if '-d' in sys.argv else await load_template(f'serv/Search.html'))
 
 @app.get('/homes/<home>/qr')
 async def _qr_(r, home):
@@ -273,6 +283,33 @@ async def set_notes(r, collection, _id):
     print(r.json)
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': r.json}, upsert=True)
     if r.matched_count == 0: raise exceptions.NotFound(f"Could not find user with id={_id}")
+    return response.json({'OK': True})
+@app.post('/<collection:(users|ads)>/<_id>/swap')
+async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh biron document ro -> age matches un matches nadash bezaresh -> matches ro ham update kon
+    body = r.json; body['swapLocation'] = body['swapFill'][0]; body['swapCategory'] = body['swapCategories'][0]
+    body['swapLocation'].pop('order', None); body['swapLocation'].pop('polygon', None)
+    body['swapLocation']['location'] = {'type': 'Point', 'coordinates': body['swapLocation']['location']}  # todo check lng, lat
+    body.pop('swap', None); body.pop('swapFill', None); body.pop('swapCategories', None)
+    body['swapArea'] = int(re.sub('[^0-9]','', body['swapArea']))
+    body['swapCapacity'] = int(re.sub('[^0-9]','', body['swapCapacity']))
+    body['swapBudget'] = int(re.sub('[^0-9]','', body['swapBudget']))
+    body['swapLiquidity'] = int(re.sub('[^0-9]','', body['swapLiquidity']))
+    body['swapDebt'] = int(re.sub('[^0-9]','', body['swapDebt']))
+    doc = await app.config['db'][collection].find_one({'id': _id})
+    if not doc: raise exceptions.NotFound(f"Could not find user with id={_id}")
+    body['total_value'] = body['swapBudget'] + body['swapLiquidity'] + body['swapDebt'] + doc['price']
+    body = {'swap': body}
+    if 'unmatches' not in doc: body['unmatches'] = []
+    if 'matches' not in doc:
+        # ignore Q for now; Category, Location, Area, Capacity are all filters; total_value = home price + budget + gold + debt
+        # ya ba hame total_value ye nafar melk yeki ro mikhare ya melkesh ba total_value shakhse digari forush mire
+        # har kas all in mikone category ke dust dare olaviat dare
+        matches = await app.config['db'][collection].find({'category': body['swap']['swapCategory'][1], 'price': {'$gte': body['swap']['total_value'] * .8, '$lt': body['swap']['total_value'] * 1.2}, '$near': {'$geometry': body['swapLocation']['location'], 'spherical': True, '$maxDistance': 20000}}).limit(20).to_list(None)
+        matches.extend(await app.config['db'][collection].find({'swap.category': doc['category'], 'swap.total_value': {'$gte': doc['price'] * .8, '$lt': doc['price'] * 1.2}, '$near': {'$geometry': body['swapLocation']['location'], 'spherical': True, '$maxDistance': 20000}}).limit(20).to_list(None))
+        matches = matches.sorted()
+        body['matches'] = [{'date': datetime.now, 'id': doc['id'], 'title': doc['id'], 'phone': doc['phone']} for doc in matches][:5]
+    raise exceptions.NotFound(f"Could not find user with id={_id}")
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'swap': body}})
     return response.json({'OK': True})
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)

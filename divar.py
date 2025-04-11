@@ -172,7 +172,7 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
                 for sub in bottoms: subtitles.append(sub.get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا')); 
                 break
             # if not subtitles: print(traceback.format_exc()); assert 1 == 0
-            loc = list(reversed(wild_origins[city][0]['loc']))
+            loc = list(reversed(wild_origins[city][0]['loc'])); loc[0] += .024 * (random() - .5); loc[1] += .016 * (random() - .5)
             print(f"{cs.WARNING}{cs.BOLD}Pan {pan_cnt}:{cs.ENDC} {cs.OKCYAN}{refs[0].split('/')[-1]}{cs.ENDC} {title} {cs.CGREY}{subtitles[0]}{cs.ENDC}")
             # with open('../divar_pan.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump({'title': title, 'category': cat, 'subtitles': subtitles, 'link': refs[0], 'loc': loc, 'pan_date': pan_date}, default_flow_style=False, indent=2, allow_unicode=True))
             pds.append({
@@ -305,6 +305,32 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     if d_consultants[1][0] / d_consultants[0][0] > 1.3: user['consultant'] = d_consultants[0][1]
     else: user['consultant'] = d_consultants[0][1] if random() < .6 else d_consultants[1][1]
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
+    p_values = [*user['options'].values(), *user['rows'].values(), *user['subtitles']]
+    p_values = [v.split('') for v in p_values if 'تومان' in v]
+    fa_nums = {'۰': 0, '۱': 1, '۲': 2, '۳': 3, '۴': 4, '۵': 5, '٥': 5, '۶': 6, '۷': 7, '۸': 8, '۹': 9,}
+    p_values = [''.join([fa_nums.get(c, c) for c in v]) for v in p_values]
+    p_values = [int(re.sub('[^0-9]','', v)) for v in p_values if re.sub('[^0-9]','', v)]
+    user['price'] = max(p_values) if p_values else -1
+    area_values = []
+    if 'options' in user: area_values.extend([v for k, v in user['options'].items() if 'متراژ' in k])
+    if 'rows' in user: area_values.extend([v for k, v in user['rows'].items() if 'متراژ' in k])
+    area_values = [''.join([fa_nums.get(c, c) for c in v]) for v in area_values]
+    area_values = [int(re.sub('[^0-9]','', v)) for v in area_values if re.sub('[^0-9]','', v)]
+    user['area'] = max(area_values) if area_values else -1
+    user['floor_area'] = min(area_values) if area_values else -1
+    age_values = []
+    if 'options' in user: age_values.extend([v for k, v in user['options'].items() if 'ساخت' in k])
+    if 'rows' in user: age_values.extend([v for k, v in user['rows'].items() if 'ساخت' in k])
+    age_values = [''.join([fa_nums.get(c, c) for c in v]) for v in age_values]
+    age_values = [int(re.sub('[^0-9]','', v)) for v in age_values if re.sub('[^0-9]','', v)]
+    user['age'] = max(age_values) if age_values else -1
+    rooms_values = []
+    if 'options' in user: rooms_values.extend([v for k, v in user['options'].items() if 'اتاق' in k])
+    if 'rows' in user: rooms_values.extend([v for k, v in user['rows'].items() if 'اتاق' in k])
+    rooms_values = [''.join([fa_nums.get(c, c) for c in v]) for v in rooms_values]
+    rooms_values = [int(re.sub('[^0-9]','', v)) for v in rooms_values if re.sub('[^0-9]','', v)]
+    user['age'] = max(rooms_values) if rooms_values else -1
+    user['width'] = -1
     print(f"{cs.OKGREEN}{cs.BOLD}Ad{'@' if precise_location else '?'}{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True

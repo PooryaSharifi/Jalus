@@ -1,4 +1,4 @@
-/** #title جالوس #title **/
+/** #title املاک جالوس #title **/
 /** #links <link rel="stylesheet" href="/static/digikala.css"/><script src="/static/plyr.js" crossorigin="anonymous"></script><link rel="stylesheet" href="/static/plyr.css"/><link rel="stylesheet" href="/static/plyr.min.css"/> #links **/
 /** #elements <div id="app"></div><div onclick="(function(event) {if(event.target == document.getElementById('plyr')) {document.getElementById('plyr').style.display = 'none'; document.getElementById('plyr').innerHTML = ''}})(event)" style="display: none; background: #0004; position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 10" id="plyr"></div> #elements **/
 
@@ -20,6 +20,12 @@ class App extends React.Component {
       title: 'خدمات هوشمند و رفاهی رایگان', href: '/'},
       {webp: '/static/slides/Home_Transparency.webp',
       jpeg: '/static/slides/Home_Transparency-80.jpg',
+      title: 'شفافیت', href: '/host#transparency'},
+      {webp: '/static/slides/Estate_AI.webp',
+      jpeg: '/static/slides/Estate_AI.jpg',
+      title: 'شفافیت', href: '/host#transparency'},
+      {webp: '/static/slides/Estate_Sell.webp',
+      jpeg: '/static/slides/Estate_Sell.jpg',
       title: 'شفافیت', href: '/host#transparency'},
     ], category: -1, categoryShow: false, categoryTitle: 'خرید بر اساس دسته‌بندی', categories: [
       {href: '/main/mobile/', title: 'کوهستانی',
@@ -102,6 +108,19 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
+        <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>املاکی جالوس</h1>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>املاک جالوس چگونه کار می‌کند</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>در مرکز و هسته جالوس  الگوریتم مچینگی وجود دارد که به وسیله روش های هوش‌مصنوعی خریداران و فروشندگانی که که نیازهای مشترکی دارند را به هم مربوط می کند.
+در ایران به دلیل تورم نقطه به نقطه بالای چهل درصد. تمام مالداران و سرمایه گذاران تمایل دارند تا بعد از فروش ملک یا دیگر دارایی شان
+آنرا تبدیل به طلا یا ارز یا خودرو یا ملک یا زمینی دیگر در جایی دیگر کنند. در جالوس با حفظ محرمانگی اطلاعات و پرسیدن نیاز هر مالک یا سرمایه گذار بهترین پیشنهادهارا به او میکنیم تا کاربر بتواند بهترین انتخاب را داشته باشد
+سپس با تشکیل جلسه بین خریدار و فروشنده یا هر دو فروشنده در صورت معاوضه امکان داد و ستد باحفظ تمام حقوق تحت نظارت وکلایمان را فراهم می کنید</p>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>استفاده از هوش‌مصنوعی در داده‌های حجیم</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>تحلیل داده برای آدم وقتی داده زیاد میشه سخته یادش میره نمیتونه بهترین مشتری رو پیدا کنه نمیتونه پیگیری توی جستجو و هر کدوم مشتری هارو کنه اینه که هوش‌مصنوعی به کمک میاد</p>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>استفاده از نیروی انسانی و الگوریتم‌های کامپیوتری برای بهترین نتیجه</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>پیگیری تمام وقت تشکیل جلسات تماس های تلفنی به صورت درست تبلیغات عالی در پلتفرم ها</p>
+          <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'dual'})}}>برای شروع همکاری وارد شوید</span>
+        </div>
         {/* #macro modules/articles */}
         <div style={{paddingLeft: 10, paddingRight: 10}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0"></div>
         {/* #macro modules/pr_list */}
