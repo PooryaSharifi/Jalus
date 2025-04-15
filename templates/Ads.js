@@ -17,7 +17,7 @@ class App extends React.Component {
       let r = await fetch(`/ads/-?q=${this.state.searchInput}&p=${this.state.page + i}`);
       if (r.status != 200) continue;
       r = await r.json(); ads.push(...r);
-    } ads[0]['matches'] = [{date: '2024:01:01 12:12:12', title: '100 متر 2 خواب آپارتمان مبله بر جنت‌آباد', phone: '9133657623'}]; this.setState({ads: ads, match: 0});
+    } this.setState({ads: ads});
     var st, lastScrollTop = 0, height, lock = false; document.addEventListener('scroll', async (e) => {
       if (lock) return;
       st = window.pageYOffset || document.documentElement.scrollTop;
@@ -43,7 +43,7 @@ class App extends React.Component {
     for (let key in this.state) if(key.includes('swap')) body[key] = this.state[key];
     let r =  await fetch(`/ads/${this.state.ads[this.state.swap].id}/swap`, { method: 'POST', body: JSON.stringify(body),
       headers: {'Accept': 'application/json','Content-Type': 'application/json'}});
-    if (r.status == 200) {this.eraseSwap(); this.setState({swap: -1})}
+    if (r.status == 200) {r = await r.json(); this.eraseSwap(); this.state.ads[this.state.swap].swap = r.swap; this.state.ads[this.state.swap].matches = r.matches; this.setState({swap: -1})}
   } swapable() {
     return (this.state.swapBudget.replace(/^\D+/g, '') && this.state.swapArea.replace(/^\D+/g, '') &&
     this.state.swapCapacity.replace(/^\D+/g, '') && this.state.swapLiquidity.replace(/^\D+/g, '') &&
@@ -111,9 +111,13 @@ class App extends React.Component {
           <input value={this.state.swapDebt} placeholder="وام" style={{position: 'absolute', bottom: 41, width: 100, border: '1px grey solid', outline: 'none', borderRadius: 40, lineHeight: '3em', fontSize: '.95em', display: 'inline-block', left: 109, textAlign: 'center', backgroundColor: 'white'}} autocomplete="off" onKeyPress={async (e) => {if(e.key === 'Enter' && this.swapable()) await this.swap()}}
             onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'swap' && target.parentElement.id != 'swap' && target.parentElement.parentElement.id != 'swap' && target.parentElement.parentElement.parentElement.id != 'swap') {this.eraseSwap(); this.setState({swap: -1})}}} onChange={async (e) => {this.setState({swapDebt: e.target.value})}}/>
           <div class="touchable" style={{position: 'absolute', bottom: 41, width: 100, border: '2px solid', borderColor: this.swapable() ? '#039e92' : '#f43747', outline: 'none', borderRadius: 40, lineHeight: '3em', fontSize: '.95em', display: 'inline-block', left: 5, textAlign: 'center', backgroundColor: 'white', color: this.swapable() ? '#039e92' : '#f43747'}} autocomplete="off" onClick={async (e) => {if (this.swapable()) {await this.swap()} else {this.eraseSwap(); this.setState({swap: -1})}}}>{this.swapable() ? 'اعمال' : 'انصراف'}</div>
-        </div>} {this.state.match >= 0 && <div id="matches" style={{fontSize: '1.3em', position: 'fixed', bottom: 1, left: 80, right: 80, height: 222, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 898}}>
-          <div style={{height: 'calc(222px - 3em)', overflowY: 'scroll', overflowX: 'hidden'}}>{this.state.ads[this.state.match].matches.toReversed().map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}><span style={{color: '#a3a4ce', fontSize: 12, position: 'relative', top: -3, paddingLeft: 4}}>{t.date.split(' ')[1].split(':')[0]}:{t.date.split(' ')[1].split(':')[1]}</span>•</span><span style={{marginTop: 3, verticalAlign: 'middle', display: 'inline-block'}}>{t.title} - {t.phone}</span></div>)}</div>
-          <input autoFocus placeholder="یادداشت" style={{position: 'absolute', bottom: 0, width: 'calc(100% - 18px)', border: 'none', outline: 'none', borderTop: '1px grey solid', lineHeight: '3em', fontSize: '.95em', left: 9, right: 9}} autocomplete="off" onBlur={(e) => {let target = e.nativeEvent.explicitOriginalTarget; if(target.id != 'matches' && target.parentElement.id != 'matches' && target.parentElement.parentElement.id != 'matches') this.setState({match: -1}); else window.setTimeout(() => e.target.focus(), 0)}}/>
+        </div>} {this.state.match >= 0 && <div id="matches" style={{overflowX: 'hidden', fontSize: '1.3em', position: 'fixed', bottom: 1, left: 80, right: 80, height: 222, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 798}}>
+          <span class={this.state.ordered ? "bold" : "bold touchable"} style={{marginLeft: 2, marginTop: -1, display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.3em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1, float: 'left'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; this.setState({match: -1})}}>+</span>
+          <div style={{height: 'calc(222px - 3em)', overflowY: 'scroll', overflowX: 'hidden'}}>{this.state.ads[this.state.match].matches.toReversed().map((t, ti) => <div class="touchable" onClick={async (e) => {
+            e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); let r = await fetch(`/ads/${t.id}`); if (r.status == 200) {r = await r.json(); this.setState({show: r[0]});}
+          }}><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}><span style={{display: 'inline-block', height: 8, width: 8, borderRadius: 6, backgroundColor: '#bb2d3b', marginLeft: 10, marginRight: 6, verticalAlign: 'middle', position: 'relative', top: -3}} onClick={async (e) => {
+            e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); let r = fetch(`/ads/${this.state.ads[this.state.match].id}/unmatch/${t.id}`, {method: 'POST'}); if (r.status != 200) return; let matches = this.state.ads[this.state.match].matches; matches.splice(ti, 1); this.setState({match: this.state.match});
+          }}></span><span style={{color: '#a3a4ce', fontSize: 12, position: 'relative', top: -3, paddingLeft: 4}}>{t.date.split(' ')[1].split(':')[0]}:{t.date.split(' ')[1].split(':')[1]}</span></span><span style={{marginTop: 3, verticalAlign: 'middle', display: 'inline-block'}}>{t.title} - {t.phone}</span></div>)}</div>
         </div>} <div class="narrow_fit" style={{background: 'white', fontSize: '1.5em', paddingTop: 5}}>
           {this.state.ads.map((ad, adi) => <div class="touchable" style={{paddingTop: 10, paddingBottom: 5}} onClick={() => {console.log(ad.id); this.setState({show: ad})}}>
             <div class="narrow_fit_image" style={{flexShrink: 0, display: 'inline-block', verticalAlign: 'top', backgroundImage: `url(/static/properties/${ad.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 254, borderRadius: 8}}/>

@@ -310,6 +310,10 @@ async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh bir
         body['matches'] = [{'date': datetime.now, 'id': doc['id'], 'title': doc['id'], 'phone': doc['phone']} for doc in matches][:5]
     raise exceptions.NotFound(f"Could not find user with id={_id}")
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'swap': body}})
+    return response.json({'OK': True, 'body': body['swap'], 'matches': body['matches'] if 'matches' in body else doc['matches', doc]})
+@app.post('/<collection:(users|ads)>/<_id>/unmatch/<match_id>')
+async def unmatch(r, collection, _id, match_id):
+    await app.config['db'][collection].update_one({'id': _id}, {'$pull': {'matches': {'id': match_id}}, '$push': {'matches': {'id': match_id, 'date': datetime.now()}}})
     return response.json({'OK': True})
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
