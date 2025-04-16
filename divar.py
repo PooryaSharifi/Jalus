@@ -185,11 +185,16 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
         ads_length = len(ads)
         ads = [ad for ad in ads if ad['link'] not in cat]
         if not ads: break
-        try:
-            for ad in ads:
-                users.insert_one(ad)
-        except pymongo.errors.DuplicateKeyError: print(f"{cs.WARNING}{cs.BOLD}Pan: END{cs.ENDC}"); break
-        if ads_length != len(ads): break
+        new_flag = False
+        for ad in ads:  # age ye jadid didi vel nakon
+            try: users.insert_one(ad); new_flag = True
+            except: continue
+        if not new_flag: print(f"{cs.WARNING}{cs.BOLD}Pan: END{cs.ENDC}"); break
+        # try:  # age ye tekrari didi bia birun
+        #     for ad in ads:
+        #         users.insert_one(ad)
+        # except pymongo.errors.DuplicateKeyError: print(f"{cs.WARNING}{cs.BOLD}Pan: END{cs.ENDC}"); break
+        if ads_length != len(ads): print(f"{cs.WARNING}{cs.BOLD}Pan: END{cs.ENDC}"); break
         browser.execute_script("window.scrollTo(0, document.body.scrollHeight)"); time.sleep(10)
         load_more_class = 'post-list__load-more-btn-be092'; load_more = browser.find_elements(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {load_more_class} ')]")
         if load_more: load_more[0].click(); time.sleep(10)
