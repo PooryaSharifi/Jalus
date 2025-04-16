@@ -47,8 +47,8 @@ categories.extend([f'rent-{et}' for et in ['temporary-suite-apartment', 'tempora
 categories.extend(['contribution-construction', 'pre-sell-home'])
 categories = [(cat, 1 / 666 / ((2 + ic) ** (1 / 666) - 1)) for ic, cat in enumerate(categories)]
 cm = {
-    'browse-post-list': ['post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858'], 
-    'post-card-item': ['widget-col-d2306', 'post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972'],
+    'browse-post-list': ['post-list-eb562', 'post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858'], 
+    'post-card-item': ['widget-col-d2306', 'widget-col-d2306', 'post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972'],
     'kt-post-card__title': ['unsafe-kt-post-card__title', 'kt-post-card__title'],
     'kt-post-card__bottom-description': ['unsafe-kt-post-card__description', 'kt-post-card__description', 'kt-post-card__bottom-description'],
 }
@@ -311,9 +311,8 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     else: user['consultant'] = d_consultants[0][1] if random() < .6 else d_consultants[1][1]
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
     p_values = [*user['options'].values(), *user['rows'].values(), *user['subtitles']]
-    p_values = [v.split('') for v in p_values if 'تومان' in v]
-    fa_nums = {'۰': 0, '۱': 1, '۲': 2, '۳': 3, '۴': 4, '۵': 5, '٥': 5, '۶': 6, '۷': 7, '۸': 8, '۹': 9,}
-    p_values = [''.join([fa_nums.get(c, c) for c in v]) for v in p_values]
+    fa_nums = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '٥': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',}
+    p_values = [''.join([fa_nums.get(c, c) for c in v]) for v in p_values if 'تومان' in v]
     p_values = [int(re.sub('[^0-9]','', v)) for v in p_values if re.sub('[^0-9]','', v)]
     user['price'] = max(p_values) if p_values else -1
     area_values = []
