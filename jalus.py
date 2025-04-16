@@ -288,7 +288,7 @@ async def set_notes(r, collection, _id):
 async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh biron document ro -> age matches un matches nadash bezaresh -> matches ro ham update kon
     body = r.json; body['swapLocation'] = body['swapFill'][0]; body['swapCategory'] = body['swapCategories'][0]
     body['swapLocation'].pop('order', None); body['swapLocation'].pop('polygon', None)
-    body['swapLocation']['location'] = {'type': 'Point', 'coordinates': body['swapLocation']['location']}  # todo check lng, lat
+    body['swapLocation'] = {'type': 'Point', 'coordinates': body['swapLocation']['loc']}  # todo check lng, lat
     body.pop('swap', None); body.pop('swapFill', None); body.pop('swapCategories', None)
     body['swapArea'] = int(re.sub('[^0-9]','', body['swapArea']))
     body['swapCapacity'] = int(re.sub('[^0-9]','', body['swapCapacity']))
@@ -311,9 +311,10 @@ async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh bir
     raise exceptions.NotFound(f"Could not find user with id={_id}")
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'swap': body}})
     return response.json({'OK': True, 'body': body['swap'], 'matches': body['matches'] if 'matches' in body else doc['matches', doc]})
-@app.post('/<collection:(users|ads)>/<_id>/unmatch/<match_id>')
-async def unmatch(r, collection, _id, match_id):
-    await app.config['db'][collection].update_one({'id': _id}, {'$pull': {'matches': {'id': match_id}}, '$push': {'matches': {'id': match_id, 'date': datetime.now()}}})
+@app.route('/<collection:(users|ads)>/match', methods=['GET', 'POST'])
+async def rematch(r, collection):  # needs to go to a different routin
+    swappers = await app.config['db'][collection].find({'swap': {'$exists': True}, 'phoned': True}).to_list(None)
+    print(len(swappers))
     return response.json({'OK': True})
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
