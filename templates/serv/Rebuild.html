@@ -1950,11 +1950,11 @@ var App = /*#__PURE__*/function (_React$Component) {
                   _this2.setState({
                     leftMenu: 'ثبت و بستن'
                   });
-                  _context14.next = 14;
+                  _context14.next = 17;
                   break;
                 case 4:
                   if (!(_this2.state.leftMenu == 'ثبت و بستن')) {
-                    _context14.next = 14;
+                    _context14.next = 16;
                     break;
                   }
                   if (!(_this2.state.urlList.trim() == '')) {
@@ -1978,7 +1978,11 @@ var App = /*#__PURE__*/function (_React$Component) {
                   if (r.status == 200) _this2.setState({
                     leftMenu: 'لیست سرچ'
                   });
-                case 14:
+                  _context14.next = 17;
+                  break;
+                case 16:
+                  window.location.href = '/properties';
+                case 17:
                 case "end":
                   return _context14.stop();
               }

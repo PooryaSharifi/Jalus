@@ -261,7 +261,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       potentInterest: '',
       plyr: true,
       searchInput: ''
-    }, _defineProperty(_this$state, "noteInput", ''), _defineProperty(_this$state, "filter", {}), _defineProperty(_this$state, "page", 1), _defineProperty(_this$state, "searchExpand", false), _defineProperty(_this$state, "footExpand", false), _defineProperty(_this$state, "rows", 5), _defineProperty(_this$state, "trans", true), _defineProperty(_this$state, "background", 0), _defineProperty(_this$state, "leftMenu", 'لیست سرچ'), _defineProperty(_this$state, "urlList", ''), _defineProperty(_this$state, "category", -1), _defineProperty(_this$state, "categoryShow", false), _defineProperty(_this$state, "firstMenuShow", false), _defineProperty(_this$state, "firstMenuIndex", 0), _defineProperty(_this$state, "secondMenuShow", false), _defineProperty(_this$state, "secondMenuIndex", 0), _defineProperty(_this$state, "firstMenuList", [{
+    }, _defineProperty(_this$state, "noteInput", ''), _defineProperty(_this$state, "filter", {}), _defineProperty(_this$state, "page", 1), _defineProperty(_this$state, "searchExpand", false), _defineProperty(_this$state, "footExpand", false), _defineProperty(_this$state, "rows", 5), _defineProperty(_this$state, "trans", true), _defineProperty(_this$state, "background", 0), _defineProperty(_this$state, "leftMenu", 'جست‌وجو نقشه'), _defineProperty(_this$state, "urlList", ''), _defineProperty(_this$state, "category", -1), _defineProperty(_this$state, "categoryShow", false), _defineProperty(_this$state, "firstMenuShow", false), _defineProperty(_this$state, "firstMenuIndex", 0), _defineProperty(_this$state, "secondMenuShow", false), _defineProperty(_this$state, "secondMenuIndex", 0), _defineProperty(_this$state, "firstMenuList", [{
       title: 'تازه‌ترین یادداشت',
       action: function () {
         var _action = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -1941,11 +1941,11 @@ var App = /*#__PURE__*/function (_React$Component) {
                   _this4.setState({
                     leftMenu: 'ثبت و بستن'
                   });
-                  _context17.next = 14;
+                  _context17.next = 17;
                   break;
                 case 4:
                   if (!(_this4.state.leftMenu == 'ثبت و بستن')) {
-                    _context17.next = 14;
+                    _context17.next = 16;
                     break;
                   }
                   if (!(_this4.state.urlList.trim() == '')) {
@@ -1969,7 +1969,11 @@ var App = /*#__PURE__*/function (_React$Component) {
                   if (r.status == 200) _this4.setState({
                     leftMenu: 'لیست سرچ'
                   });
-                case 14:
+                  _context17.next = 17;
+                  break;
+                case 16:
+                  window.location.href = '/properties';
+                case 17:
                 case "end":
                   return _context17.stop();
               }
