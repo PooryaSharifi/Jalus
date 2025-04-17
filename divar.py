@@ -111,7 +111,8 @@ def otp(phone):
     # user = [{'link': 'https://divar.ir/v/_/wZSwa-DW'}]
     if not user: return
     browser.get(user[0]['link'])
-    WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__get-contact ')]"))).click()
+    try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__get-contact ')]"))).click()
+    except: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__non-experimental ')]"))).click()
     try:
         WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//p[text()[contains(., 'شمارهٔ موبایل')]]")))  # class="kt-base-row__title kt-unexpandable-row__title"
         phone = WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href,'tel:')]")))  # class="kt-base-row__title kt-unexpandable-row__title"

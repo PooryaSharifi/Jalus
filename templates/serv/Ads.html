@@ -246,7 +246,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       swap: -1,
       swapLocation: '',
       swapQ: '',
-      swapCategories: [['مغازه و دفتر', 'rent-office'], ['ویلا', 'buy-villa'], ['آپارتمان', 'buy-apartment'], ['اجاره ویلا', 'rent-villa'], ['اجاره آپارتمان', 'rent-apartment'], ['باغ و کلنگی', 'buy-old-house'], ['باغ و زمین', 'industrial-agricultural-property'], ['دلار،طلا', 'gold']],
+      swapCategories: [['مغازه و دفتر', 'rent-office', 'rent-commercial-property'], ['ویلا', 'buy-villa', 'buy-residential'], ['آپارتمان', 'buy-apartment', 'buy-residential'], ['اجاره ویلا', 'rent-villa', 'rent-residential'], ['اجاره آپارتمان', 'rent-apartment', 'rent-residential'], ['باغ و کلنگی', 'buy-old-house', 'buy-residential'], ['باغ و زمین', 'industrial-agricultural-property', 'buy-residential'], ['دلار،طلا', 'gold']],
       swapBudget: '',
       swapArea: '',
       swapCapacity: '',
@@ -541,7 +541,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         swapDebt: '',
         swapArea: '',
         swapCapacity: '',
-        swapCategories: [['مغازه و دفتر', 'rent-office'], ['ویلا', 'buy-villa'], ['آپارتمان', 'buy-apartment'], ['اجاره ویلا', 'rent-villa'], ['اجاره آپارتمان', 'rent-apartment'], ['باغ و کلنگی', 'buy-old-house'], ['باغ و زمین', 'industrial-agricultural-property'], ['دلار،طلا', 'gold']]
+        swapCategories: [['مغازه و دفتر', 'rent-office', 'rent-commercial-property'], ['ویلا', 'buy-villa', 'buy-residential'], ['آپارتمان', 'buy-apartment', 'buy-residential'], ['اجاره ویلا', 'rent-villa', 'rent-residential'], ['اجاره آپارتمان', 'rent-apartment', 'rent-residential'], ['باغ و کلنگی', 'buy-old-house', 'buy-residential'], ['باغ و زمین', 'industrial-agricultural-property', 'buy-residential'], ['دلار،طلا', 'gold']]
       });
     }
   }, {
@@ -2497,7 +2497,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           return _this4.setState({
             swap: _this4.state.note,
             note: -1,
-            swapCategories: [['مغازه و دفتر', 'rent-office'], ['ویلا', 'buy-villa'], ['آپارتمان', 'buy-apartment'], ['اجاره ویلا', 'rent-villa'], ['اجاره آپارتمان', 'rent-apartment'], ['باغ و کلنگی', 'buy-old-house'], ['باغ و زمین', 'industrial-agricultural-property']]
+            swapCategories: [['مغازه و دفتر', 'rent-office', 'rent-commercial-property'], ['ویلا', 'buy-villa', 'buy-residential'], ['آپارتمان', 'buy-apartment', 'buy-residential'], ['اجاره ویلا', 'rent-villa', 'rent-residential'], ['اجاره آپارتمان', 'rent-apartment', 'rent-residential'], ['باغ و کلنگی', 'buy-old-house', 'buy-residential'], ['باغ و زمین', 'industrial-agricultural-property', 'buy-residential'], ['دلار،طلا', 'gold']]
           });
         }
       }, "\uD83D\uDD00"), /*#__PURE__*/React.createElement("a", {
@@ -3471,7 +3471,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             marginRight: 5,
             lineHeight: '20px'
           }
-        }, ad.notes.length.farsify()), /*#__PURE__*/React.createElement("span", {
+        }, 'matches' in ad ? ad.matches.length.farsify() : '۰'), /*#__PURE__*/React.createElement("span", {
           style: {
             fontSize: '1.6em',
             verticalAlign: 'middle'
