@@ -1,4 +1,4 @@
-import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob, tempfile, subprocess, math
+import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob, tempfile, subprocess, math, random, pymongo
 from base64 import (urlsafe_b64encode, urlsafe_b64decode)
 from string import ascii_lowercase
 from scipy.spatial import Voronoi, SphericalVoronoi
@@ -52,6 +52,50 @@ async def util_score():
     scores = [d['score'] for d in ds]
     scores = list(sorted(scores))
     print(len(scores), scores[0], scores[-1], scores[-200])
+async def util_mature():
+    for collection in ['ads', 'users']:
+        ads = pymongo.MongoClient("mongodb://localhost:27017")['Jalus'][collection]
+        _ads = list(ads.find({}))
+        locations = set()
+        for user in _ads:
+            p_values = [*user['options'].values(), *user['rows'].values(), *user['subtitles']]
+            fa_nums = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '٥': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',}
+            p_values = [''.join([fa_nums.get(c, c) for c in v]) for v in p_values if 'تومان' in v]
+            p_values = [int(re.sub('[^0-9]','', v)) for v in p_values if re.sub('[^0-9]','', v)]
+            user['price'] = user['price'] if 'price' in user else (max(p_values) if p_values else -1)
+            area_values = []
+            if 'options' in user: area_values.extend([v for k, v in user['options'].items() if 'متراژ' in k])
+            if 'rows' in user: area_values.extend([v for k, v in user['rows'].items() if 'متراژ' in k])
+            area_values = [''.join([fa_nums.get(c, c) for c in v]) for v in area_values]
+            area_values = [int(re.sub('[^0-9]','', v)) for v in area_values if re.sub('[^0-9]','', v)]
+            user['area'] = user['area'] if 'area' in user else (max(area_values) if area_values else -1)
+            user['floor_area'] = user['floor_area'] if 'floor_area' in user else (min(area_values) if area_values else -1)
+            age_values = []
+            if 'options' in user: age_values.extend([v for k, v in user['options'].items() if 'ساخت' in k])
+            if 'rows' in user: age_values.extend([v for k, v in user['rows'].items() if 'ساخت' in k])
+            age_values = [''.join([fa_nums.get(c, c) for c in v]) for v in age_values]
+            age_values = [int(re.sub('[^0-9]','', v)) for v in age_values if re.sub('[^0-9]','', v)]
+            user['age'] = user['age'] if 'age' in user else max(age_values) if age_values else -1
+            rooms_values = []
+            if 'options' in user: rooms_values.extend([v for k, v in user['options'].items() if 'اتاق' in k])
+            if 'rows' in user: rooms_values.extend([v for k, v in user['rows'].items() if 'اتاق' in k])
+            rooms_values = [''.join([fa_nums.get(c, c) for c in v]) for v in rooms_values]
+            rooms_values = [int(re.sub('[^0-9]','', v)) for v in rooms_values if re.sub('[^0-9]','', v)]
+            user['rooms'] = user['rooms'] if 'rooms' in user else (max(rooms_values) if rooms_values else -1)
+            user['width'] = user['width'] if 'width' in user else -1
+            if 'stat' not in user: user['state'] = [random.random() for _ in range(5)]
+            if tuple(user['location']['coordinates']) in locations:
+                user['location']['coordinates'][0] += .048 * (random.random() - .5)
+                user['location']['coordinates'][1] += .032 * (random.random() - .5)
+            locations.add(tuple(user['location']['coordinates']))
+            kt_chip = user['title'].strip() + ' ' + user['description'].strip(); kt_chip = [w for w in kt_chip.split() if w]; kt_chip_succeeded = False
+            if 'آپارتمان' in kt_chip and 'residential' in user['category']: user['category'] = user['category'].replace('residential', 'apartment'); kt_chip = kt_chip if kt_chip_succeeded else 'آپارتمان'
+            elif ('منزل' in kt_chip or 'خانه' in kt_chip or 'ویلا' in kt_chip) and 'residential' in user['category']: user['category'] = user['category'].replace('residential', 'villa'); kt_chip = kt_chip if kt_chip_succeeded else 'منزل و خانه و ویلا'
+            elif 'کلنگی' in kt_chip and 'residential' in user['category']: user['category'] = user['category'].replace('residential', 'old-house'); kt_chip = kt_chip if kt_chip_succeeded else 'کلنگی'
+            if ('زمین' in kt_chip or 'باغ' in kt_chip or 'کشاورزی' in kt_chip) and 'commercial-property' in user['category']: user['category'] = user['category'].replace('commercial-property', 'industrial-agricultural-property'); kt_chip = kt_chip if kt_chip_succeeded else 'کشاورزی و باغ و زمین'
+            elif ('مطب' in kt_chip or 'دفتر' in kt_chip or 'اداری' in kt_chip) and 'commercial-property' in user['category']: user['category'] = user['category'].replace('commercial-property', 'office'); kt_chip = kt_chip if kt_chip_succeeded else 'اداری و دفتر و مطب'
+            elif ('تجاری' in kt_chip or 'مغازه' in kt_chip) and 'commercial-property' in user['category']: user['category'] = user['category'].replace('commercial-property', 'store'); kt_chip = kt_chip if kt_chip_succeeded else 'مغازه و تجاری'
+            ads.replace_one({'_id': user['_id']}, user)
 
 class OctetJWK:
     def __init__(self, key: bytes, kid=None, **options): self.key, self.kid, self.options = key, kid, {k: v for k, v in options.items() if k in {'use', 'key_ops', 'alg', 'x5u', 'x5c', 'x5t', 'x5t#s256'}}
