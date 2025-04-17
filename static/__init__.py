@@ -1,4 +1,4 @@
-import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob, tempfile, subprocess
+import os, sys, re, os.path, asyncio, ujson as json, hmac, hashlib, numpy as np, glob, tempfile, subprocess, math
 from base64 import (urlsafe_b64encode, urlsafe_b64decode)
 from string import ascii_lowercase
 from scipy.spatial import Voronoi, SphericalVoronoi
@@ -103,6 +103,30 @@ def decode(message: str, key=secret, do_verify=True, algorithms = {'HS256': hs25
 # print(encode(b':{_-+\/}'))
 # print(decode(encode(b':{_-+\/}')).decode())
 
+def capacity(doc):
+    if 'category' in doc:
+        if 'apartment' in doc['category']: return doc['area'] + (doc['rooms'] * 12 if 'rooms' in doc else 12)
+        if 'villa' in doc['category']: return doc['area'] + (doc['floor_area'] * 1.3 if 'floor_area' in doc else doc['area'] / 2)
+        if 'old-house' in doc['category']: return doc['area'] + (doc['floor_area'] * 4 if 'floor_area' in doc else doc['area'] / 6)
+        if 'industrial-agricultural' in doc['category']: return doc['area'] + (doc['width'] * doc['width'] if 'width' in doc else doc['area'] / 2)
+        if 'office' in doc['category']: return doc['area'] + (doc['width'] * doc['width'] if 'width' in doc else doc['area'] / 2)
+        if 'store' in doc['category']: return doc['area'] + (doc['width'] * doc['width'] if 'width' in doc else doc['area'] / 2)
+        return doc['area']
+    if 'swapCategory' in doc:
+        if any(['apartment' in cat for cat in doc['swapCategory']]): return doc['swapArea'] + doc['swapCapacity'] * 12
+        if any(['villa' in cat for cat in doc['swapCategory']]): return doc['swapArea'] + doc['swapCapacity'] * 1.3
+        if any(['old-house' in cat for cat in doc['swapCategory']]): return doc['swapArea'] + doc['swapCapacity'] * 4
+        if any(['industrial-agricultural' in cat for cat in doc['swapCategory']]): return doc['swapArea'] + doc['swapCapacity'] * doc['swapCapacity']
+        if any(['office' in cat for cat in doc['swapCategory']]): return doc['swapArea'] + doc['swapCapacity'] * doc['swapCapacity']
+        if any(['store' in cat for cat in doc['swapCategory']]): return doc['swapArea'] + doc['swapCapacity'] * doc['swapCapacity']
+        return doc['swapArea']
+def distance(lng1, lat1, lng0, lat0):
+    d_lat = lat0 * math.pi / 180 - lat1 * math.pi / 180
+    d_lng = lng0 * math.pi / 180 - lng1 * math.pi / 180
+    a = math.sin(d_lat / 2) * math.sin(d_lat / 2) + \
+        math.cos(lat1 * math.pi / 180) * math.cos(lat0 * math.pi / 180) * \
+        math.sin(d_lng / 2) * math.sin(d_lng / 2)
+    return 2 * math.atan2(math.sqrt(a), math.sqrt(1-a)) * 6378.137
 def cart(lat, lng): lat, lng = np.deg2rad(lat), np.deg2rad(lng); return np.cos(lat) * np.cos(lng), np.cos(lat) * np.sin(lng), np.sin(lat)
 def decart(x, y, z): return np.rad2deg(np.arcsin(z)), np.rad2deg(np.arcsin(y / (1 - z ** 2) ** .5))
 with open('static/origins', encoding='utf-8') as origins:

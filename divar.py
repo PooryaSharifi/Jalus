@@ -253,12 +253,6 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         try: user['description'] = description[0].get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا')
         except: return False
     else: user['description'] = ''; print("NO DESCRIPTION")
-    title_description = user['title'].strip() + ' ' + user['description'].strip()
-    title_description = [w for w in title_description.split() if w]
-    if 'معاوضه' in title_description:
-        swap_index = title_description.index('معاوضه')
-        user['swap'] = {'q': '', 'location': {'type': 'Point', 'coordinates': [0, 0]}, 'category': '', 'budget': 0, 'date': datetime.now()}
-        if swap_index + 2 < len(title_description) and title_description[swap_index + 1] == 'با': user['swap']['q'] = title_description[swap_index + 2]
     # options = browser.find_elements(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-group-row-item--info-row ') and .//*[contains(concat(' ', @class, ' '), ' kt-group-row-item__title ')] and .//*[contains(concat(' ', @class, ' '), ' kt-group-row-item__value ')] and .//*[contains(concat(' ', @class, ' '), ' kt-group-row__heading ')] and .//*[contains(concat(' ', @class, ' '), ' kt-group-row__data-row ')]]")
     options = browser.find_elements(by=By.XPATH, value="//*[contains(concat(' ', @class, ' '), ' kt-group-row-item--info-row ')]")
     ks = [op.text for op in options[:len(options) // 2]]; vs = [op.text for op in options[len(options) // 2:]]
@@ -335,6 +329,20 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     rooms_values = [int(re.sub('[^0-9]','', v)) for v in rooms_values if re.sub('[^0-9]','', v)]
     user['age'] = max(rooms_values) if rooms_values else -1
     user['width'] = -1
+    try: kt_chip = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' post-page__section--padded ')]//button[contains(concat(' ', @class, ' '), ' kt-chip')]//span").get_attribute("innerHTML"); kt_chip_succeeded = True
+    except: kt_chip = user['title'].strip() + ' ' + user['description'].strip(); kt_chip = [w for w in kt_chip.split() if w]; kt_chip_succeeded = False
+    if 'آپارتمان' in kt_chip and 'residential' in user['category']: user['category'] = user['category'].replace('residential', 'apartment'); kt_chip = kt_chip if kt_chip_succeeded else 'آپارتمان'
+    elif ('منزل' in kt_chip or 'خانه' in kt_chip or 'ویلا' in kt_chip) and 'residential' in user['category']: user['category'] = user['category'].replace('residential', 'villa'); kt_chip = kt_chip if kt_chip_succeeded else 'منزل و خانه و ویلا'
+    elif 'کلنگی' in kt_chip and 'residential' in user['cateogry']: user['category'] = user['category'].replace('residential', 'old-house'); kt_chip = kt_chip if kt_chip_succeeded else 'کلنگی'
+    if ('زمین' in kt_chip or 'باغ' in kt_chip or 'کشاورزی' in kt_chip) and 'commercial-property' in user['cateogry']: user['category'] = user['category'].replace('commercial-property', 'industrial-agricultural-property'); kt_chip = kt_chip if kt_chip_succeeded else 'کشاورزی و باغ و زمین'
+    elif ('مطب' in kt_chip or 'دفتر' in kt_chip or 'اداری' in kt_chip) and 'commercial-property' in user['cateogry']: user['category'] = user['category'].replace('commercial-property', 'office'); kt_chip = kt_chip if kt_chip_succeeded else 'اداری و دفتر و مطب'
+    elif ('تجاری' in kt_chip or 'مغازه' in kt_chip) and 'commercial-property' in user['cateogry']: user['category'] = user['category'].replace('commercial-property', 'store'); kt_chip = kt_chip if kt_chip_succeeded else 'مغازه و تجاری'
+    
+    title_description = user['title'].strip() + ' ' + user['description'].strip(); title_description = [w for w in title_description.split() if w]
+    if 'معاوضه' in title_description:
+        swap_index = title_description.index('معاوضه')
+        user['swap'] = {'swapArea': 0, 'swapCapacity': 0, 'swapBudget': 0, 'swapLiquidity': 0, 'swapDebt': 0, 'swapQ': '', 'swapLocation': {'type': 'Point', 'coordinates': [0, 0]}, 'swapCategory': [kt_chip, user['category']], 'date': datetime.now()}
+        if swap_index + 2 < len(title_description) and title_description[swap_index + 1] == 'با': user['swap']['q'] = title_description[swap_index + 2]
     print(f"{cs.OKGREEN}{cs.BOLD}Ad{'@' if precise_location else '?'}{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True

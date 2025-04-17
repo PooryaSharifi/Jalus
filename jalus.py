@@ -1,23 +1,15 @@
-import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings
+import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings, math
 from sanic import Sanic, Blueprint, response, exceptions
 from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
+from pymongo import GEOSPHERE
 from random import choice, randint, random
 from bson import ObjectId
 from datetime import datetime, timedelta
-from static import load_template, template, wild_origins, wild_filters, decode, encode
+from static import load_template, template, wild_origins, wild_filters, decode, encode, distance, capacity
 from io import BytesIO, StringIO
 from PIL import Image
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
-
-def value(doc):
-    if doc['category'] == 'zamin': return doc['area'] + doc['width'] * doc['width']
-    elif doc['category'] == 'apartment': return (doc['area'] + doc['rooms'] * 12) * (1 + 2 ** -(doc['age'] / 10))
-    elif doc['category'] == 'garden': return doc['area'] + doc['floor_area'] * 5 * (1 + 2 ** -(doc['age'] / 10))
-    elif doc['category'] == 'villa': return doc['area'] + doc['floor_area'] * 1.3 * (1 + 2 ** -(doc['age'] / 10))
-    # score log(total_value - price) + log(value(swap) - value(doc)) + log(location(swap) - location(doc))
-    # score log(price - total_value) + log(value(doc) - value(swap)) + log(location(doc) - location(swap))
-    # hala age ham gir nayumad score sort kon 5 ta behesh bede
 
 warnings.filterwarnings('ignore')
 WorkerManager.THRESHOLD = 1200
@@ -84,6 +76,8 @@ async def init_ones(sanic, loop):
     # await Key.get_collection().create_index([("home", 1), ("phone", 1), ("fix", 1)], )  # , unique=True)
     await sanic.config['db']['users'].create_index([('title', 'text'), ('description', 'text')], weights={'title': 2, 'description': 1})
     await sanic.config['db']['ads'].create_index([('title', 'text'), ('description', 'text')], weights={'title': 2, 'description': 1})
+    await sanic.config['db']['users'].create_index([('location', GEOSPHERE)])
+    await sanic.config['db']['ads'].create_index([('location', GEOSPHERE)])
 
 @app.listener('after_server_stop')
 async def close_connection(app, loop): app.config['db'].close()
@@ -207,6 +201,8 @@ async def _search(r, id_polygon_location=None):
     else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).limit(24).to_list(None)
     for pr in properties:
         for note in pr['notes']: note['date'] = str(note['date'])
+        if 'matches' in pr:
+            for match in pr['matches']: match['date'] = str(match['date'])
         if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
         del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
@@ -239,6 +235,8 @@ async def get_documents(r, collection, ids):
     ads = await app.config['db'][collection].find({'id': {'$in': ids}}).to_list(None)
     for pr in ads:
         for note in pr['notes']: note['date'] = str(note['date'])
+        if 'matches' in pr:
+            for match in pr['matches']: match['date'] = str(match['date'])
         if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
         del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
@@ -251,9 +249,13 @@ async def search_documents(r, collection):
     ads = await app.config['db'][collection].find(body).sort([order]).skip(limit * (page - 1)).limit(limit).to_list(None)
     for pr in ads: 
         for note in pr['notes']: note['date'] = str(note['date'])
+        if 'matches' in pr:
+            for match in pr['matches']: match['date'] = str(match['date'])
         if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
         del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
+        print('matches' in pr)
+        print(pr)
     return response.json(ads)
 @app.get('/<collection:(users|ads)>/<_id>/x')
 async def del_document(r, collection, _id): r = await app.config['db'][collection].delete_one({'id': _id}); return response.json({'OK': True, 'c': r.deleted_count})
@@ -295,6 +297,7 @@ async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh bir
     body['swapBudget'] = int(re.sub('[^0-9]','', body['swapBudget']))
     body['swapLiquidity'] = int(re.sub('[^0-9]','', body['swapLiquidity']))
     body['swapDebt'] = int(re.sub('[^0-9]','', body['swapDebt']))
+    body['date'] = datetime.now()
     doc = await app.config['db'][collection].find_one({'id': _id})
     if not doc: raise exceptions.NotFound(f"Could not find user with id={_id}")
     body['total_value'] = body['swapBudget'] + body['swapLiquidity'] + body['swapDebt'] + doc['price']
@@ -304,17 +307,27 @@ async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh bir
         # ignore Q for now; Category, Location, Area, Capacity are all filters; total_value = home price + budget + gold + debt
         # ya ba hame total_value ye nafar melk yeki ro mikhare ya melkesh ba total_value shakhse digari forush mire
         # har kas all in mikone category ke dust dare olaviat dare
-        matches = await app.config['db'][collection].find({'category': body['swap']['swapCategory'][1], 'price': {'$gte': body['swap']['total_value'] * .8, '$lt': body['swap']['total_value'] * 1.2}, '$near': {'$geometry': body['swapLocation']['location'], 'spherical': True, '$maxDistance': 20000}}).limit(20).to_list(None)
-        matches.extend(await app.config['db'][collection].find({'swap.category': doc['category'], 'swap.total_value': {'$gte': doc['price'] * .8, '$lt': doc['price'] * 1.2}, '$near': {'$geometry': body['swapLocation']['location'], 'spherical': True, '$maxDistance': 20000}}).limit(20).to_list(None))
-        matches = matches.sorted()
-        body['matches'] = [{'date': datetime.now, 'id': doc['id'], 'title': doc['id'], 'phone': doc['phone']} for doc in matches][:5]
-    raise exceptions.NotFound(f"Could not find user with id={_id}")
-    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'swap': body}})
+        matches = await app.config['db'][collection].find({'$or': [{'category': cat} for cat in body['swap']['swapCategory'][1:]], 'price': {'$gte': body['swap']['total_value'] * .8, '$lt': body['swap']['total_value'] * 1.2}, 'location': {'$near': {'$geometry': body['swap']['swapLocation']}}}).limit(20).to_list(None)
+        matches.extend(await app.config['db'][collection].find({'$or': [{'swap.category': cat} for cat in doc['category'][1:]], 'swap.total_value': {'$gte': doc['price'] * .8, '$lt': doc['price'] * 1.2}, 'location': {'$near': {'$geometry': body['swap']['swapLocation']}}}).limit(20).to_list(None))
+        matches = sorted(matches, key=lambda doc: doc['area'])  # capacity(doc) - capacity(doc.swap)
+        body['matches'] = [{'date': datetime.now(), 'id': doc['id'], 'title': doc['title'], 'phone': doc['phone']} for doc in matches][:5]
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': body})
+    for match in body['matches']: match['date'] = str(match['date'])
     return response.json({'OK': True, 'body': body['swap'], 'matches': body['matches'] if 'matches' in body else doc['matches', doc]})
 @app.route('/<collection:(users|ads)>/match', methods=['GET', 'POST'])
 async def rematch(r, collection):  # needs to go to a different routin
-    swappers = await app.config['db'][collection].find({'swap': {'$exists': True}, 'phoned': True}).to_list(None)
-    print(len(swappers))
+    all = await app.config['db'][collection].find({'phoned': True}).to_list(None)
+    swappers = [doc for doc in all if 'swap' in doc]
+    #  > category <
+    for swap in swappers:
+        target = [doc for doc in all if doc['category'] == swap['category'] and doc['id'] != swap['id'] and doc['id'] not in swap['unmatches']]
+        for doc in target: doc['distance'] = distance(*swap['swap']['swapLocation']['coordinates'], *doc['location']['coordinates'])
+        for doc in target: doc['d_capacity'] = capacity(doc) - capacity(swap['swap'])
+        for doc in target: doc['d_value'] = (swap['swap']['total_value'] - doc['price']) / 10000000
+        for doc in target: doc['match_score'] = math.log(doc['distance']) + math.log(doc['d_capacity']) + math.log(doc['d_value'])
+        target = sorted(target, key=lambda doc: doc['match_socre'])
+        target = [{'date': datetime.now(), 'id': doc['id'], 'title': doc['title'], 'phone': doc['phone']} for doc in target][:randint(3,7)]
+        await app.config['db'][collection].update_one({'_id': swap['_id']}, {'$set': target})
     return response.json({'OK': True})
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
