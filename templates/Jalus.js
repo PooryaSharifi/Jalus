@@ -86,9 +86,10 @@ class App extends React.Component {
       png: '/static/icon/jalus_app_dual-8.png'},
       {title: "هوای بهتر", href: '/',
       png: '/static/icon/jalus_app_wind.webp'},
-    ], articles: [
-      {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", href: '/0',
-      jpeg: '/static/articles/private_villa.0.jpg'},
+    ], article: -1, articles: [
+      {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", href: '/0', jpeg: '/static/articles/private_villa.0.jpg',
+        body: [['img', '/static/articles/private_villa.0.jpg'], ['h2', 'لذت امینت در ویلای دربستی'], ['p', 'تا به حال شده که آره و اینا']]
+      },
       {title: "بهترین شرایط سفر به شمال", href: '/1',
       jpeg: '/static/articles/best_trip_condition.0.jpg'},
       {title: "راهنمای تور سفر نقاط گیلان و مازندران ", href: '/2',
@@ -117,8 +118,20 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
+        {this.state.article != -1 && <div style={{paddingLeft: 10, paddingRight: 10}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
+          {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
+          <div class="w-full">
+            <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+              <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+                <source media="(min-width: 768px)" srcset=""/>
+                <source media="(min-width: 767px)" srcset=""/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src={e[1]} class="w-full h-auto xl:object-cover"/>
+              </picture>
+            </div>
+          </div> : 'VIDEO')))}
+        </div>}
         {/* #macro modules/articles */}
-        <div style={{paddingLeft: 10, paddingRight: 10}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0"></div>
         {/* #macro modules/pr_list */}
         {/* #macro modules/club_banner */}
         {/* #macro modules/category */}
