@@ -87,15 +87,22 @@ class App extends React.Component {
       {title: "هوای بهتر", href: '/',
       png: '/static/icon/jalus_app_wind.webp'},
     ], article: -1, articles: [
-      {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", href: '/0', jpeg: '/static/articles/private_villa.0.jpg',
-        body: [['img', '/static/articles/private_villa.0.jpg'], ['h2', 'لذت امینت در ویلای دربستی'], ['p', 'تا به حال شده که آره و اینا']]
-      },
-      {title: "بهترین شرایط سفر به شمال", href: '/1',
-      jpeg: '/static/articles/best_trip_condition.0.jpg'},
-      {title: "راهنمای تور سفر نقاط گیلان و مازندران ", href: '/2',
-      jpeg: '/static/articles/north_guide.0.webp'},
-      {title: "کمپینگ ایمن بادست خالی در شمال", href: '/3',
-      jpeg: '/static/articles/camping.0.jpg'},
+      {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", jpeg: '/static/articles/private_villa.0.jpg', body: [
+        ['img', '/static/articles/private_villa.0.jpg'], ['h2', 'لذت امینت در ویلای دربستی'], ['p', 'در ویلاهای دربستی جالوس لذت و امینت و راحتی را درکنار دوستان و خانواده خود تجربه کنید و در کنار آنها تجربه به‌یادماندنی را به ارمغان آورید همچنین با استفاده از امکاناتی که جالوس هوشمند و بوفه در اختیار شما قرار می‌گیرد آنرا  کاملتر و زیباتر کنید'], 
+        ['h2', ''], ['p', '']
+      ]},
+      {title: "بهترین شرایط سفر به شمال", jpeg: '/static/articles/best_trip_condition.0.jpg', body: [
+        ['img', '/static/articles/best_trip_condition.0.jpg'], ['h2', ''], ['p', ''],
+        ['h2', 'تعداد نفرات'], ['p', 'ش'], ['h2', 'زمان سفر'], ['p', 'e'],
+        ['h2', 'هزینه سفر'], ['p', ''], ['h2', 'ویلا: ساحلی یا جنگلی'], ['p', ''],
+      ]},
+      {title: "راهنمای تور سفر نقاط گیلان و مازندران ", jpeg: '/static/articles/north_guide.0.webp', body: [
+        ['img', '/static/articles/north_guide.0.webp']
+      ]},
+      {title: "کمپینگ ایمن بادست خالی در شمال", jpeg: '/static/articles/camping.0.jpg', body: [
+        ['img', '/static/articles/camping.0.jpg'], ['h2', 'واسه یه کمپینگ خوب فقط یک‌قدم بردار بقیش با ما'], ['p', 'حتما شما هم در یوتیوب یا اینستاگرام تجربه های کمپینگ در مناطق خوش آب‌وهوای ایران و جهان رو دیدید که با امکانات مورد نیاز و چادرزدن در مناطق امن و مخصوص بهترین تصاویر را به نمایش میگذارند. اگر شما هم علاق به کمب زدن به صورت تکی یا تیمی دارید میتوانید روی جالوس حساب کنید'], 
+        ['h2', 'مکان‌ها و لوازم'], ['p', 'مواردی که جالوس در اختیار کاربران و مشتریان همیشگی خود میگذارد شامل 1.چادرهای عایق گرما و آب 2. شومینه قابل حمل 3. ترموس برای نگهداری مواد غذایی و همینطور اراضی امنی که تحت محافظت قرار گرفته اند تا به شما مسافران جالوس بهترین تجربه کمپینگ ارایه شود ']
+      ]},
     ], stories: [], offers: [], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
@@ -118,14 +125,13 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        {this.state.article != -1 && <div style={{paddingLeft: 10, paddingRight: 10}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
-          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
+        {this.state.article != -1 && <div style={{maxWidth: 768}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
           {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
-          <div class="w-full">
+          <div class="w-full" style={{marginBottom: 8}}>
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
               <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
-                <source media="(min-width: 768px)" srcset=""/>
-                <source media="(min-width: 767px)" srcset=""/>
+                <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
                 <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src={e[1]} class="w-full h-auto xl:object-cover"/>
               </picture>
             </div>

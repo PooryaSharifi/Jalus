@@ -71,15 +71,16 @@ class App extends React.Component {
       png: '/static/icon/jalus_app_dual-8.png'},
       {title: "هوای بهتر", href: '/',
       png: '/static/icon/jalus_app_wind.webp'},
-    ], articles: [
-      {title: "هفت عادت استراتژیست کنکوری", href: '/0',
-      jpeg: '/static/articles/Strategist_7.jpg'},
-      {title: "قبل کنکور این کتابارو با جون‌ودل حسش کن", href: '/1',
-      jpeg: '/static/articles/Strategist_4books.png'},
-      {title: "مدیریت سه چیز احساسات زمان تمرکز", href: '/2',
-      jpeg: '/static/articles/Strategist_war.jpg'},
-      {title: "کمپ مطالعه در حضور دکتر پوریا شریفی", href: '/3',
-      jpeg: '/static/articles/Strategist_camp.jpg'},
+    ], article: -1, articles: [
+      {title: "هفت عادت استراتژیست کنکوری", jpeg: '/static/articles/Strategist_7.jpg', body: [
+        ['img', '/static/articles/Strategist_7.jpg']
+      ]}, {title: "قبل کنکور این کتابارو با جون‌ودل حسش کن", jpeg: '/static/articles/Strategist_4books.png', body: [
+        ['img', '/static/articles/Strategist_4books.png']
+      ]}, {title: "مدیریت سه چیز احساسات زمان تمرکز", jpeg: '/static/articles/Strategist_war.jpg', body: [
+        ['img', '/static/articles/Strategist_war.jpg']
+      ]}, {title: "کمپ مطالعه در حضور دکتر پوریا شریفی", jpeg: '/static/articles/Strategist_camp.jpg', body: [
+        ['img', '/static/articles/Strategist_camp.jpg']
+      ]},
     ], stories: [], offers: [], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
@@ -102,7 +103,7 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        {this.state.article == -1 ? <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>استراتژیست</h1>
           <div class="w-full">
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
@@ -132,8 +133,18 @@ class App extends React.Component {
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>دانلود مشاهده جزوه</p>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>دانلود مشاهده آزمون</p>
           <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>میزبان جالوس شو و همه چیزرو در دست بگیر</h2>
-          
-        </div>
+        </div> : <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
+          {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
+          <div class="w-full" style={{marginBottom: 8}}>
+            <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+              <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+                <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src={e[1]} class="w-full h-auto xl:object-cover"/>
+              </picture>
+            </div>
+          </div> : 'VIDEO')))}
+        </div>}
         {/* #macro modules/articles */}
         {/* #macro modules/pr_list */}
         {/* #macro modules/club_banner */}

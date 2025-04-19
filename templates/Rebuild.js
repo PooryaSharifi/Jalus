@@ -68,15 +68,20 @@ class App extends React.Component {
       png: '/static/icon/jalus_app_dual-8.png'},
       {title: "هوای بهتر", href: '/',
       png: '/static/icon/jalus_app_wind.webp'},
-    ], articles: [
-      {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", href: '/0',
-      jpeg: '/static/articles/private_villa.0.jpg'},
-      {title: "بهترین شرایط سفر به شمال", href: '/1',
-      jpeg: '/static/articles/best_trip_condition.0.jpg'},
-      {title: "راهنمای تور سفر نقاط گیلان و مازندران ", href: '/2',
-      jpeg: '/static/articles/north_guide.0.webp'},
-      {title: "کمپینگ ایمن بادست خالی در شمال", href: '/3',
-      jpeg: '/static/articles/camping.0.jpg'},
+    ], article: -1, articles: [
+      {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", jpeg: '/static/articles/private_villa.0.jpg', body: [
+        ['img', '/static/articles/private_villa.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]}, {title: "بهترین شرایط سفر به شمال", jpeg: '/static/articles/best_trip_condition.0.jpg', body: [
+        ['img', '/static/articles/best_trip_condition.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]}, {title: "راهنمای تور سفر نقاط گیلان و مازندران ", jpeg: '/static/articles/north_guide.0.webp', body: [
+        ['img', '/static/articles/north_guide.0.webp'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]}, {title: "کمپینگ ایمن بادست خالی در شمال", jpeg: '/static/articles/camping.0.jpg', body: [
+        ['img', '/static/articles/camping.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]},
     ], stories: [], offers: [], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
@@ -99,7 +104,7 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        {this.state.article == -1 ? <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>بازسازی به سبک جالوس</h1>
           <div style={{paddingLeft: '10%', paddingRight: '10%'}}>
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
@@ -125,7 +130,18 @@ class App extends React.Component {
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>کاربازسازی در مجموعه جالوس به یک روتین پرتکرار تبدیل شده می‌توان گفت که تجربه کار هماهنگ و تیمی مجموعه در کنار هم سبب هم‌افزایی و ارائه خدمات بهتر شده است
           بهینه سازی در استفاده از وقت کارگر و اوستاکار و همچنین استفاده درست از متریال های دست اول تولید کنندگان مهمترین عامل خدمات باکیفیت و با قیمت رقابتی گروه ما می‌باشد</p>
           <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'rebuild'})}}>برای شروع همکاری وارد شوید</span>
-        </div>
+        </div> : <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
+          {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
+          <div class="w-full" style={{marginBottom: 8}}>
+            <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+              <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+                <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src={e[1]} class="w-full h-auto xl:object-cover"/>
+              </picture>
+            </div>
+          </div> : 'VIDEO')))}
+        </div>}
         {/* #macro modules/articles */}
         {/* #macro modules/pr_list */}
         {/* #macro modules/club_banner */}

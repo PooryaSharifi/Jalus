@@ -14893,3 +14893,11 @@ nav.BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0 {
   overflow-y: hidden;
   overflow-x: scroll;
 }
+
+nav.BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@media (max-width: 768px) {.ads-dialogue_box{left: 5px; right: 5px}}
+@media (min-width: 768px) {.ads-dialogue_box{left: 80px; right: 80px}}

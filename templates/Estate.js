@@ -77,15 +77,20 @@ class App extends React.Component {
       png: '/static/icon/jalus_app_dual-8.png'},
       {title: "هوای بهتر", href: '/',
       png: '/static/icon/jalus_app_wind.webp'},
-    ], articles: [
-      {title: "همه‌چیز درمورد قراردادن آگهی آنلاین مسکن", href: '/0',
-      jpeg: '/static/articles/estate-online.jpg'},
-      {title: "قرارگیری و دسترسی ملک و نحوه قیمت‌گذاری", href: '/1',
-      jpeg: '/static/articles/map-estate.jpg'},
-      {title: "روش مذاکره درجلسه خریدوفروش", href: '/2',
-      jpeg: '/static/articles/negotiation.jpg'},
-      {title: "راه‌حل املاکی که فروش نمی‌روند", href: '/3',
-      jpeg: '/static/articles/not-sold-yet.webp'},
+    ], article: -1, articles: [
+      {title: "همه‌چیز درمورد قراردادن آگهی آنلاین مسکن", jpeg: '/static/articles/estate-online.jpg', body: [
+        ['img', '/static/articles/private_villa.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]}, {title: "قرارگیری و دسترسی ملک و نحوه قیمت‌گذاری", jpeg: '/static/articles/map-estate.jpg', body: [
+        ['img', '/static/articles/private_villa.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]}, {title: "روش مذاکره درجلسه خریدوفروش", jpeg: '/static/articles/negotiation.jpg', body: [
+        ['img', '/static/articles/private_villa.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]}, {title: "راه‌حل املاکی که فروش نمی‌روند", jpeg: '/static/articles/not-sold-yet.webp', body: [
+        ['img', '/static/articles/private_villa.0.jpg'], ['h2', 'سلام'], ['p', 'سلام بامرام'],
+        ['h2', 'بای'], ['p', 'بای بای ']
+      ]},
     ], stories: [], offers: [], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
@@ -108,7 +113,7 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        <div style={{paddingLeft: 10, paddingRight: 10, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        {this.state.article == -1 ? <div style={{maxWidth: 960, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>املاکی جالوس</h1>
           <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>املاک جالوس چگونه کار می‌کند</h2>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>در مرکز و هسته جالوس  الگوریتم مچینگی وجود دارد که به وسیله روش های هوش‌مصنوعی خریداران و فروشندگانی که که نیازهای مشترکی دارند را به هم مربوط می کند.
@@ -119,8 +124,19 @@ class App extends React.Component {
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>تحلیل داده برای آدم وقتی داده زیاد میشه سخته یادش میره نمیتونه بهترین مشتری رو پیدا کنه نمیتونه پیگیری توی جستجو و هر کدوم مشتری هارو کنه اینه که هوش‌مصنوعی به کمک میاد</p>
           <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>استفاده از نیروی انسانی و الگوریتم‌های کامپیوتری برای بهترین نتیجه</h2>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>پیگیری تمام وقت تشکیل جلسات تماس های تلفنی به صورت درست تبلیغات عالی در پلتفرم ها</p>
-          <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'dual'})}}>برای شروع همکاری وارد شوید</span>
-        </div>
+          <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {window.location.replace('/ads')}}>صفحه اپراتوری مچینگ املاک</span>
+        </div> : <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
+          {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
+          <div class="w-full" style={{marginBottom: 8}}>
+            <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+              <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+                <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src={e[1]} class="w-full h-auto xl:object-cover"/>
+              </picture>
+            </div>
+          </div> : 'VIDEO')))}
+        </div>}
         {/* #macro modules/articles */}
         <div style={{paddingLeft: 10, paddingRight: 10}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0"></div>
         {/* #macro modules/pr_list */}

@@ -466,7 +466,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full"></div>
+      
     </nav>
   </header>
   {this.state.categoryShow && <div style={{position: 'absolute', overflow: 'hidden', width: 115, backgroundColor: 'white', borderRadius: 10, border: '1px solid #949494', marginTop: 3, marginRight: 35, boxShadow: '0 0 1px 1px #ededed'}}>
