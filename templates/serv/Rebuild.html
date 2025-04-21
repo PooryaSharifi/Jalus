@@ -9,7 +9,9 @@
   <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content, user-scalable=no, target-densityDpi=device-dpi">
+  <!-- <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi"> -->
+  <!-- vs initial-scale=1; interactive-widget=resizes-content; user-scalable=no -->
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
   <script src="/static/react.production.min.js" crossorigin></script>
@@ -352,85 +354,85 @@ var App = /*#__PURE__*/function (_React$Component) {
       category: -1,
       categoryShow: false,
       categories: [{
-        href: '/main/mobile/',
+        href: '/properties?lyr=1&category=mountain',
         title: 'کوهستانی',
         png: '/static/categories/mountain_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=1&category=accessible',
         title: 'پردسترس',
         png: '/static/categories/accessible_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/users?category=beach',
         title: 'ساحلی',
         png: '/static/categories/beach_3_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=2&category=yeylaghi',
         title: 'ییلاقی',
         png: '/static/categories/yeylaghi_1_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=2&category=gheshlaghi',
         title: 'قشلاقی',
         png: '/static/categories/gheshlaghi_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=1&category=whole',
         title: 'دربستی',
         png: '/static/categories/darbasti_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/users?category=infinity',
         title: 'وییو ابدی',
         png: '/static/categories/abadi_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=1&category=tent',
         title: 'کلبه‌ای',
         png: '/static/categories/X_1_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=2&category=pool',
         title: 'استخردار',
         png: '/static/categories/pool_9_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=1&category=jungle',
         title: 'جنگلی',
         png: '/static/categories/jungle_5_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/properties?lyr=0&category=economy',
         title: 'اقتصادی',
         png: '/static/categories/economic_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/users?category=classic',
         title: 'سنتی',
         png: '/static/categories/sonnati_3_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/users?category=modern',
         title: 'مدرن',
         png: '/static/categories/futuristic_1_exposed.webp'
       }, {
-        href: '/main/mobile/',
+        href: '/users?category=swedish',
         title: 'سوییسی',
         png: '/static/categories/swedish_0_exposed.webp'
       }, {
-        href: '/main/mobile/',
-        title: 'تفریح‌وهیجان',
+        href: '/users?category=action',
+        title: 'تفریحی‌هیجانی',
         png: '/static/categories/entertain_1_exposed.webp'
       }, {
-        href: '/main/mobile/',
-        title: 'تجربه جدید',
+        href: '/users?category=new',
+        title: 'تجربه‌جدید',
         png: '/static/categories/hobit_0_exposed.webp'
       }],
       products: [{
         title: "جالوس هوشمند",
-        href: '/home/_',
+        href: '/home',
         png: '/static/icon/jalus_app_phone-8.png'
       }, {
         title: "کلید بلاکچین",
         href: '/host#key',
         png: '/static/icon/jalus_app_key-8.png'
       }, {
-        title: "جالوس‌پلاس",
-        href: '/3',
+        title: "جالوس املاک",
+        href: '/estate',
         png: '/static/icon/jalus_app_plus.png'
       }, {
         title: "حراج تابستانی",
-        href: '/4',
+        href: '/users',
         png: '/static/icon/jalus_app_off.jpg'
       }, {
         title: "جالوس اسکان",
@@ -438,15 +440,15 @@ var App = /*#__PURE__*/function (_React$Component) {
         png: '/static/icon/jalus_app_tent-8.png'
       }, {
         title: "اسکان لحظه‌آخری",
-        href: '/properties?date=1',
+        href: '/users?date=1',
         png: '/static/icon/jalus_app_lastsecond-8.png'
       }, {
         title: "سازه دومنظوره",
-        href: '/greenhome',
+        href: '/dual',
         png: '/static/icon/jalus_app_dual-8.png'
       }, {
-        title: "هوای بهتر",
-        href: '/',
+        title: "خانه سبز",
+        href: '/dual',
         png: '/static/icon/jalus_app_wind.webp'
       }],
       article: -1,
@@ -2470,8 +2472,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         d: "M11.414 12l4.293 4.293-1.414 1.414-5-5a1 1 0 010-1.414l5-5 1.414 1.414L11.414 12z"
       }))))))))), this.state.article == -1 ? /*#__PURE__*/React.createElement("div", {
         style: {
-          paddingLeft: 10,
-          paddingRight: 10,
+          maxWidth: 960,
           paddingBottom: 20
         },
         "class": "container-2xl-w mx-auto lg:px-4 2xl:px-0"
@@ -3176,7 +3177,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#expandLess"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "expandLess",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M7.707 14.707l-1.414-1.414 5-5a1 1 0 011.414 0l5 5-1.414 1.414L12 10.414l-4.293 4.293z"
@@ -3522,12 +3522,13 @@ var App = /*#__PURE__*/function (_React$Component) {
         type: "image/jpeg",
         srcset: "/static/icon/jalus_red_white.svg"
       }), /*#__PURE__*/React.createElement("img", {
-        "class": "w-full inline-block",
+        "class": "inline-block",
         src: "/static/icon/jalus_red_white.svg",
         width: "44",
         height: "44",
         style: {
-          objectFit: 'cover'
+          objectFit: 'cover',
+          width: 'auto'
         },
         alt: "\u062C\u0627\u0644\u0648\u0633",
         title: ""
