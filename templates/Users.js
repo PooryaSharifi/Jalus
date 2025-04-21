@@ -4,7 +4,7 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {swap: -1, swapLocation: [51.64841, 32.70773], swapQ: 'test', swapCategory: 'cat', swapBudget: 0, note: -1, noteInput: '', ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', noteInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'جست‌وجو نقشه', urlList: '', category: -1, categoryShow: false, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
+    this.state = {menuHeight: 108, swap: -1, swapLocation: [51.64841, 32.70773], swapQ: 'test', swapCategory: 'cat', swapBudget: 0, note: -1, noteInput: '', ads: [], show: {}, phone: cookie('phone'), session: cookie('session'), keys: {}, potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', noteInput: '', filter: {}, page: 1, searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, leftMenu: 'جست‌وجو نقشه', urlList: '', category: -1, categoryShow: false, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
       {title: 'تازه‌ترین یادداشت', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین تبلیغ', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین مچ', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
     ], secondMenuList: [
       {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
@@ -61,6 +61,13 @@ class App extends React.Component {
       }
       this.setState({ads: this.state.ads});
     }, 180000);  // 180000
+    window.Y = window.pageYOffset || document.documentElement.scrollTop;
+    window.addEventListener("scroll", () => {
+      window.NY = window.pageYOffset || document.documentElement.scrollTop;
+      if (window.NY > window.Y) this.setState({menuHeight: 68})
+      else this.setState({menuHeight: 108})
+      window.Y = window.NY;
+    })
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>

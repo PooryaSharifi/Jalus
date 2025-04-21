@@ -4,7 +4,7 @@
 
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;
-    this.state = {ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
+    this.state = {menuHeight: 108, ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
       {title: 'تازه‌ترین یادداشت', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین تبلیغ', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین مچ', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
     ], secondMenuList: [
       {title: 'تازه‌ترین الف'}, {title: 'تازه‌ترین ب'}, {title: 'تازه‌ترین پ'}, 
@@ -74,7 +74,7 @@ class App extends React.Component {
       png: '/static/icon/jalus_app_phone-8.png'},
       {title: "کلید بلاکچین", href: '/host#key',
       png: '/static/icon/jalus_app_key-8.png'},
-      {title: "جالوس‌پلاس", href: '/3',
+      {title: "جالوس املاک", href: '/estate',
       png: '/static/icon/jalus_app_plus.png'},
       {title: "حراج تابستانی", href: '/users',
       png: '/static/icon/jalus_app_off.jpg'},
@@ -82,9 +82,9 @@ class App extends React.Component {
       png: '/static/icon/jalus_app_tent-8.png'},
       {title: "اسکان لحظه‌آخری", href: '/users?date=1',
       png: '/static/icon/jalus_app_lastsecond-8.png'},
-      {title: "سازه دومنظوره", href: '/greenhome',
+      {title: "سازه دومنظوره", href: '/dual',
       png: '/static/icon/jalus_app_dual-8.png'},
-      {title: "هوای بهتر", href: '/',
+      {title: "خانه سبز", href: '/dual',
       png: '/static/icon/jalus_app_wind.webp'},
     ], article: -1, articles: [
       {title: "همه چیز درباره‌ی خدمات ویلاهای دربستی", jpeg: '/static/articles/private_villa.0.jpg', body: [
@@ -118,6 +118,13 @@ class App extends React.Component {
       offer_avg /= offers.length; offers = offers.filter((offer => offer.offer >= offer_avg && offer_nt -- > 0)); this.setState({offers: offers})
     }
     setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
+    window.Y = window.pageYOffset || document.documentElement.scrollTop;
+    window.addEventListener("scroll", () => {
+      window.NY = window.pageYOffset || document.documentElement.scrollTop;
+      if (window.NY > window.Y) this.setState({menuHeight: 68})
+      else this.setState({menuHeight: 108})
+      window.Y = window.NY;
+    })
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>

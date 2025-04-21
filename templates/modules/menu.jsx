@@ -2,7 +2,7 @@
   id="base_layout_desktop_fixed_header" width="1270" height="108">
   <header
     class="w-full flex flex-col bg-neutral-000 relative BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__QxTqh BaseLayoutDesktopHeader_BaseLayoutDesktopHeader--nav-open__cty_v"
-    style={{height: 108}}>
+    style={{height: this.state.menuHeight || 108, overflowY: 'hidden'}}>
     <div class="w-full bg-neutral-000 relative z-5">
       <div class=" flex w-full container-4xl-w mx-auto relative justify-between md:px-4 grow">
         <div class="w-full py-3 flex relative z-2">

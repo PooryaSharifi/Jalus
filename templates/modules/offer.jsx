@@ -1,6 +1,6 @@
 <div class="container-2xl-w mx-auto lg:px-4 2xl:px-0 px-5">
   <div>
-    <a class="relative overflow-hidden bg-neutral-100 user-select-none w-full flex flex-col lg:flex-row justify-between rounded-large lg:items-center px-5 lg:px-10 pt-4 pb-3 styles_AmazingShortcut__main__EbBRH" target="_blank" href="/fresh/incredible-offers/">
+    <a class="relative overflow-hidden bg-neutral-100 user-select-none w-full flex flex-col lg:flex-row justify-between rounded-large lg:items-center px-5 lg:px-10 pt-4 pb-3 styles_AmazingShortcut__main__EbBRH" target="_blank" href={`/users?offer=1`}>
       <div class="absolute left-0 top-0 bottom-0 right-0 z-1"
         style={{background: 'url(/static/icon/fresh-pattern.svg) left center no-repeat'}}>
       </div>
@@ -27,7 +27,7 @@
       <div class="flex items-center justify-between lg:justify-start mt-4 lg:mt-0 lg:mr-4 z-1">
         <div class="flex items-center lg:justify-end flex-nowrap lg:flex-wrap overflow-hidden styles_AmazingShortcut__productItems__B6LWb">
           {this.state.offers.map((offer) => (
-            <div class="relative bg-neutral-000 rounded-circle flex items-center justify-center p-1.5 ml-2 lg:mb-4" href="/product/dkp-4849693/%D9%BE%D9%86%DB%8C%D8%B1-%D9%BE%DB%8C%D8%AA%D8%B2%D8%A7-%D9%85%D9%88%D8%B2%D8%A7%D8%B1%D9%84%D8%A7-2000-%DA%AF%D8%B1%D9%85/">
+            <a class="relative bg-neutral-000 rounded-circle flex items-center justify-center p-1.5 ml-2 lg:mb-4" href={`/properties/${offer.id}`}>
               <div class="overflow-hidden rounded-circle">
                 <div style={{width: 64, height: 64, lineHeight: 0}}>
                   <picture>
@@ -40,14 +40,14 @@
               <div class="px-1 text-white rounded-large flex items-center justify-center ProductPrice_ProductPrice__discountWrapper__1Ru_1 bg-hint-object-error absolute right-0 bottom-0 z-1">
                 <span class="text-body2-strong" data-testid="price-discount-percent">{offer.offer.farsify()}٪</span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
         <div class="bg-neutral-000 p-3 lg:py-3 lg:px-5 text-button-2 flex items-center justify-center text-fresh-700 styles_AmazingShortcut__button__DU7l4">
           <span class="hidden lg:inline whitespace-nowrap cursor-pointer">بیش از ۵۰ ویلا</span>
           <div class="flex mr-0 lg:mr-2"><svg style={{width: 20, height: 20, fill: 'var(--color-fresh-700)'}}>
               <use xlinkHref="#arrowLeft">
-                <symbol id="arrowLeft" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M11.293 19.707l1.414-1.414L7.414 13H20v-2H7.414l5.293-5.293-1.414-1.414-7 7a1 1 0 000 1.414l7 7z" clip-rule="evenodd"></path></symbol>
+                <symbol id="arrowLeft" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M11.293 19.707l1.414-1.414L7.414 13H20v-2H7.414l5.293-5.293-1.414-1.414-7 7a1 1 0 000 1.414l7 7z" clip-rule="evenodd"></path></symbol>
               </use>
             </svg>
           </div>
