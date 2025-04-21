@@ -24,7 +24,7 @@
               بالا</span>
             <div class="flex"><svg style={{width: 24, height: 24, fill: 'var(--color-icon-low-emphasis)'}}>
                 <use xlinkHref="#expandLess">
-                  <symbol id="expandLess" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.707 14.707l-1.414-1.414 5-5a1 1 0 011.414 0l5 5-1.414 1.414L12 10.414l-4.293 4.293z"></path></symbol>
+                  <symbol id="expandLess" viewBox="0 0 24 24"><path d="M7.707 14.707l-1.414-1.414 5-5a1 1 0 011.414 0l5 5-1.414 1.414L12 10.414l-4.293 4.293z"></path></symbol>
                 </use>
               </svg></div>
           </div>
@@ -165,7 +165,7 @@
             <picture>
               <source type="image/webp" srcset="/static/icon/jalus_red_white.svg"/>
               <source type="image/jpeg" srcset="/static/icon/jalus_red_white.svg"/>
-              <img class="w-full inline-block" src="/static/icon/jalus_red_white.svg" width="44" height="44" style={{objectFit: 'cover'}} alt="جالوس" title=""/>
+              <img class="inline-block" src="/static/icon/jalus_red_white.svg" width="44" height="44" style={{objectFit: 'cover', width: 'auto'}} alt="جالوس" title=""/>
             </picture>
           </div>
           <div class="text-h3 shrink-0 mr-4"> دانلود اپلیکیشن جالوس</div>

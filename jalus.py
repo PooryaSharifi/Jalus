@@ -254,8 +254,6 @@ async def search_documents(r, collection):
         if 'swap' in pr and pr['swap'] and 'date' in pr['swap']: pr['swap']['date'] = str(pr['swap']['date'])
         pr['location'] = list(reversed(pr['location']['coordinates'])); pr.pop('served_date', None)
         del pr['_id']; del pr['pan_date']; del pr['detailed_date']; del pr['phoned_date']; del pr['imaged_date']
-        print('matches' in pr)
-        print(pr)
     return response.json(ads)
 @app.get('/<collection:(users|ads)>/<_id>/x')
 async def del_document(r, collection, _id): r = await app.config['db'][collection].delete_one({'id': _id}); return response.json({'OK': True, 'c': r.deleted_count})
@@ -276,18 +274,18 @@ async def update_new_partial_document(r, collection, _id):
     return response.json({'OK': True, 'c': r.matched_count})
 @app.put('/<collection:(users|ads)>/<_id>/notes')
 async def append_note(r, collection, _id):
-    print(r.body.decode())
-    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'last_note_date': datetime.now()}, '$push': {'notes': {'note': r.body.decode(), 'date': datetime.now()}}}, upsert=True)
+    session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
+    r = await app.config['db'][collection].update_one({'id': _id}, {'$set': {'last_note_date': datetime.now()}, '$push': {'notes': {'note': r.body.decode(), 'date': datetime.now(), 'author': session['phone']}}}, upsert=True)
     if r.matched_count == 0: raise exceptions.NotFound(f"Could not find user with id={_id}")
     return response.json({'OK': True})
 @app.post('/<collection:(users|ads)>/<_id>/notes')  # for deletion
 async def set_notes(r, collection, _id):
-    print(r.json)
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': r.json}, upsert=True)
     if r.matched_count == 0: raise exceptions.NotFound(f"Could not find user with id={_id}")
     return response.json({'OK': True})
 @app.post('/<collection:(users|ads)>/<_id>/swap')
 async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh biron document ro -> age matches un matches nadash bezaresh -> matches ro ham update kon
+    session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
     body = r.json; body['swapLocation'] = body['swapFill'][0]; body['swapCategory'] = body['swapCategories'][0]
     body['swapLocation'].pop('order', None); body['swapLocation'].pop('polygon', None)
     body['swapLocation'] = {'type': 'Point', 'coordinates': body['swapLocation']['loc']}  # todo check lng, lat
@@ -297,7 +295,7 @@ async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh bir
     body['swapBudget'] = int(re.sub('[^0-9]','', body['swapBudget']))
     body['swapLiquidity'] = int(re.sub('[^0-9]','', body['swapLiquidity']))
     body['swapDebt'] = int(re.sub('[^0-9]','', body['swapDebt']))
-    body['date'] = datetime.now()
+    body['date'] = datetime.now(); body['author'] = session['phone']
     doc = await app.config['db'][collection].find_one({'id': _id})
     if not doc: raise exceptions.NotFound(f"Could not find user with id={_id}")
     body['total_value'] = body['swapBudget'] + body['swapLiquidity'] + body['swapDebt'] + doc['price']
@@ -311,6 +309,7 @@ async def set_swap(r, collection, _id):  # swap ha int beshan -> aval bekesh bir
         matches.extend(await app.config['db'][collection].find({'$or': [{'swap.category': cat} for cat in doc['category'][1:]], 'swap.total_value': {'$gte': doc['price'] * .8, '$lt': doc['price'] * 1.2}, 'location': {'$near': {'$geometry': body['swap']['swapLocation']}}}).limit(20).to_list(None))
         matches = sorted(matches, key=lambda doc: doc['area'])  # capacity(doc) - capacity(doc.swap)
         body['matches'] = [{'date': datetime.now(), 'id': doc['id'], 'title': doc['title'], 'phone': doc['phone']} for doc in matches][:5]
+        body['last_match_date'] = datetime.now()
     r = await app.config['db'][collection].update_one({'id': _id}, {'$set': body})
     for match in body['matches']: match['date'] = str(match['date'])
     return response.json({'OK': True, 'body': body['swap'], 'matches': body['matches'] if 'matches' in body else doc['matches', doc]})
@@ -327,7 +326,7 @@ async def rematch(r, collection):  # needs to go to a different routin
         for doc in target: doc['match_score'] = math.log(doc['distance']) + math.log(doc['d_capacity']) + math.log(doc['d_value'])
         target = sorted(target, key=lambda doc: doc['match_socre'])
         target = [{'date': datetime.now(), 'id': doc['id'], 'title': doc['title'], 'phone': doc['phone']} for doc in target][:randint(3,7)]
-        await app.config['db'][collection].update_one({'_id': swap['_id']}, {'$set': target})
+        await app.config['db'][collection].update_one({'_id': swap['_id']}, {'$set': {'matches': target, 'last_match_date': datetime.now()}})
     return response.json({'OK': True})
 @app.post('/trade/s')
 async def _get_signals(r, ): global signals; signals = r.json if r.body else signals; return response.json({}) if r.body else response.json(signals)
