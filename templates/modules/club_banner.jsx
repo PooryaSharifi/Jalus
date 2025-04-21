@@ -2,7 +2,7 @@
   <div
     class="w-full py-4 lg:py-3 px-4 flex flex-col lg:flex-row items-center justify-between lg:rounded-large mt-2 styles_widgetClub__main__YyXEj">
     <div class="flex items-center justify-between lg:mr-6 w-full lg:w-unset"><a class="styles_Link__RMyqc"
-        data-cro-id="hp-club-cta" href="/club/">
+        data-cro-id="hp-club-cta" href="/club">
         <div style={{width: 119, height: 33, lineHeight: 0}}><img class="w-full inline-block"
             src="/static/icon/jalus_gaf_white.svg" width="119" height="33" style={{objectFit: 'contain'}}
             alt="دیجی‌کلاب" title=""/></div>
@@ -10,7 +10,7 @@
     <div class="flex items-center mt-3 lg:mt-0">
       <div class="flex gap-1 rounded-medium overflow-hidden"><span data-cro-id="hp-club-lucky-spinner"><a
             class="flex-1 flex flex-col lg:flex-row items-center lg:justify-between bg-neutral-000 overflow-hidden  styles_widgetClub__section__rWZdP styles_widgetClub__section__rWZdP"
-            href="/club/wheel-spinner">
+            href="/club?extend=wheel-spinner">
             <div class="flex flex-col lg:flex-row items-center lg:mr-4 my-2 lg:my-0">
               <div class="flex"><svg style={{width: 20, height: 20, fill: 'var(--color-blue-700)'}}>
                   <use xlinkHref="#luckyDraw"></use>
@@ -29,7 +29,7 @@
             </div>
           </a></span><span data-cro-id="hp-club-mission"><a
             class="flex-1 flex flex-col lg:flex-row items-center lg:justify-between bg-neutral-000 overflow-hidden  styles_widgetClub__section__rWZdP styles_widgetClub__section__rWZdP"
-            href="/club/missions/">
+            href="/club?extend=missions">
             <div class="flex flex-col lg:flex-row items-center lg:mr-4 my-2 lg:my-0">
               <div class="flex"><svg style={{width: 20, height: 20, fill: 'var(--color-blue-700)'}}>
                   <use xlinkHref="#clubMission"></use>
@@ -48,7 +48,7 @@
             </div>
           </a></span><span data-cro-id="hp-club-rewards"><a
             class="flex-1 flex flex-col lg:flex-row items-center lg:justify-between bg-neutral-000 overflow-hidden  styles_widgetClub__section__rWZdP styles_widgetClub__section__rWZdP"
-            href="/club/rewards/">
+            href="/club?extend=rewards">
             <div class="flex flex-col lg:flex-row items-center lg:mr-4 my-2 lg:my-0">
               <div class="flex"><svg style={{width: 20, height: 20, fill: 'var(--color-blue-700)'}}>
                   <use xlinkHref="#voucher"></use>

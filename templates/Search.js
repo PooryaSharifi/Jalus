@@ -1,6 +1,9 @@
 /** #title نقشه اسکانها #title **/
 /** #links <link rel="stylesheet" href="/static/leaflet.css" /><script src="/static/leaflet.js"></script><link rel="stylesheet" href="/static/map.css"/> #links **/
 /** #elements <div id="map" style="height: calc(100% - 127px); opacity: 1"></div><div id="app" style="height: calc(127px)"></div> #elements **/
+// مپ یا سرچ کتگوری نداشت فعلا آیکون گذاشتم تا کاملش کنیم.
+// اضافه کن هر تغییری تو نقشه دوباره صدا بزنه و فچ کنه - بعدشmongo cluster
+// دو مدل آیکون یکی فقط قیمت یکی تصویر و قیمت
 let params = new URLSearchParams(window.location.search);
 params = Object.fromEntries(params);
 params.lyr = 'lyr' in params ? parseInt(params.lyr) : 0;

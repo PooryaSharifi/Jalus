@@ -27,7 +27,7 @@
       <div class="flex items-center justify-between lg:justify-start mt-4 lg:mt-0 lg:mr-4 z-1">
         <div class="flex items-center lg:justify-end flex-nowrap lg:flex-wrap overflow-hidden styles_AmazingShortcut__productItems__B6LWb">
           {this.state.offers.map((offer) => (
-            <a class="relative bg-neutral-000 rounded-circle flex items-center justify-center p-1.5 ml-2 lg:mb-4" href={`/properties/${offer.id}`}>
+            <a class="relative bg-neutral-000 rounded-circle flex items-center justify-center p-1.5 ml-2 lg:mb-4" href={`/users?ids=${offer.id}`}>
               <div class="overflow-hidden rounded-circle">
                 <div style={{width: 64, height: 64, lineHeight: 0}}>
                   <picture>
