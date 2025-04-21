@@ -240,6 +240,7 @@ var App = /*#__PURE__*/function (_React$Component) {
     var app = _assertThisInitialized(_this);
     window.app = _assertThisInitialized(_this);
     _this.state = {
+      menuHeight: 108,
       ordered: false,
       phone: cookie('phone'),
       session: cookie('session'),
@@ -433,8 +434,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         href: '/host#key',
         png: '/static/icon/jalus_app_key-8.png'
       }, {
-        title: "جالوس‌پلاس",
-        href: '/3',
+        title: "جالوس املاک",
+        href: '/estate',
         png: '/static/icon/jalus_app_plus.png'
       }, {
         title: "حراج تابستانی",
@@ -450,11 +451,11 @@ var App = /*#__PURE__*/function (_React$Component) {
         png: '/static/icon/jalus_app_lastsecond-8.png'
       }, {
         title: "سازه دومنظوره",
-        href: '/greenhome',
+        href: '/dual',
         png: '/static/icon/jalus_app_dual-8.png'
       }, {
-        title: "هوای بهتر",
-        href: '/',
+        title: "خانه سبز",
+        href: '/dual',
         png: '/static/icon/jalus_app_wind.webp'
       }],
       article: -1,
@@ -545,6 +546,7 @@ var App = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function () {
       var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var _this2 = this;
         var app, stories, offers, offer_nt, offer_avg, i;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
@@ -616,7 +618,17 @@ var App = /*#__PURE__*/function (_React$Component) {
                   slide: (app.state.slide + 1) % app.state.slides.length
                 });
               }, 7000);
-            case 23:
+              window.Y = window.pageYOffset || document.documentElement.scrollTop;
+              window.addEventListener("scroll", function () {
+                window.NY = window.pageYOffset || document.documentElement.scrollTop;
+                if (window.NY > window.Y) _this2.setState({
+                  menuHeight: 68
+                });else _this2.setState({
+                  menuHeight: 108
+                });
+                window.Y = window.NY;
+              });
+            case 25:
             case "end":
               return _context4.stop();
           }
@@ -630,7 +642,7 @@ var App = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
       var app = this;
       return /*#__PURE__*/React.createElement("div", null, this.state.potent ? /*#__PURE__*/React.createElement("div", {
         style: {
@@ -641,7 +653,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) _this2.setState({
+          if (e.target === e.currentTarget) _this3.setState({
             potent: false,
             potentInterest: ''
           });
@@ -712,7 +724,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee5$(_context5) {
               while (1) switch (_context5.prev = _context5.next) {
                 case 0:
-                  _this2.setState({
+                  _this3.setState({
                     potentPhone: e.target.value
                   });
                 case 1:
@@ -735,25 +747,25 @@ var App = /*#__PURE__*/function (_React$Component) {
                     _context6.next = 25;
                     break;
                   }
-                  if (_this2.state.potentPhone.trim()) {
+                  if (_this3.state.potentPhone.trim()) {
                     _context6.next = 3;
                     break;
                   }
                   return _context6.abrupt("return");
                 case 3:
-                  if (!(_this2.state.potentInterest === '')) {
+                  if (!(_this3.state.potentInterest === '')) {
                     _context6.next = 16;
                     break;
                   }
                   _context6.next = 6;
-                  return fetch("/otp/".concat(_this2.state.potentPhone.trim().deFarsify(), "/"));
+                  return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/"));
                 case 6:
                   r = _context6.sent;
                   if (!(r.status < 300)) {
                     _context6.next = 14;
                     break;
                   }
-                  if (_this2.state.potentPhone) {
+                  if (_this3.state.potentPhone) {
                     _context6.next = 10;
                     break;
                   }
@@ -763,7 +775,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   return r.json();
                 case 12:
                   r = _context6.sent;
-                  _this2.setState({
+                  _this3.setState({
                     otp: true
                   });
                 case 14:
@@ -772,8 +784,8 @@ var App = /*#__PURE__*/function (_React$Component) {
                 case 16:
                   body = new FormData();
                   body.append('user', '_');
-                  body.append('phone', _this2.state.potentPhone);
-                  body.append('interest', _this2.state.potentInterest);
+                  body.append('phone', _this3.state.potentPhone);
+                  body.append('interest', _this3.state.potentInterest);
                   body.append('link', '/properties/_');
                   body.append('lat', .0);
                   body.append('lng', .0);
@@ -810,19 +822,19 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee8$(_context8) {
               while (1) switch (_context8.prev = _context8.next) {
                 case 0:
-                  _this2.setState({
+                  _this3.setState({
                     potentOtp: e.target.value
                   }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
                     var r;
                     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
                       while (1) switch (_context7.prev = _context7.next) {
                         case 0:
-                          if (!(_this2.state.potentOtp.length == 4)) {
+                          if (!(_this3.state.potentOtp.length == 4)) {
                             _context7.next = 9;
                             break;
                           }
                           _context7.next = 3;
-                          return fetch("/otp/".concat(_this2.state.potentPhone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
+                          return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
                         case 3:
                           r = _context7.sent;
                           if (!(r.status < 300)) {
@@ -835,9 +847,9 @@ var App = /*#__PURE__*/function (_React$Component) {
                           r = _context7.sent;
                           if (r.OK) {
                             setCookie('session', r.session);
-                            setCookie('phone', _this2.state.potentPhone.trim().deFarsify());
-                            _this2.setState({
-                              phone: _this2.state.potentPhone.trim().deFarsify(),
+                            setCookie('phone', _this3.state.potentPhone.trim().deFarsify());
+                            _this3.setState({
+                              phone: _this3.state.potentPhone.trim().deFarsify(),
                               session: r.session,
                               potent: false
                             });
@@ -873,16 +885,16 @@ var App = /*#__PURE__*/function (_React$Component) {
                   e.preventDefault();
                   e.stopPropagation();
                   e.nativeEvent.stopImmediatePropagation();
-                  if (!(_this2.state.potentInterest === '')) {
+                  if (!(_this3.state.potentInterest === '')) {
                     _context9.next = 28;
                     break;
                   }
-                  if (!(_this2.state.otp && _this2.state.potentOtp.length == 4)) {
+                  if (!(_this3.state.otp && _this3.state.potentOtp.length == 4)) {
                     _context9.next = 15;
                     break;
                   }
                   _context9.next = 7;
-                  return fetch("/otp/".concat(_this2.state.potentPhone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
+                  return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
                 case 7:
                   r = _context9.sent;
                   if (!(r.status < 300)) {
@@ -895,9 +907,9 @@ var App = /*#__PURE__*/function (_React$Component) {
                   r = _context9.sent;
                   if (r.OK) {
                     setCookie('session', r.session);
-                    setCookie('phone', _this2.state.potentPhone.trim().deFarsify());
-                    _this2.setState({
-                      phone: _this2.state.potentPhone.trim().deFarsify(),
+                    setCookie('phone', _this3.state.potentPhone.trim().deFarsify());
+                    _this3.setState({
+                      phone: _this3.state.potentPhone.trim().deFarsify(),
                       session: r.session,
                       potent: false
                     });
@@ -907,14 +919,14 @@ var App = /*#__PURE__*/function (_React$Component) {
                   break;
                 case 15:
                   _context9.next = 17;
-                  return fetch("/otp/".concat(_this2.state.potentPhone.trim().deFarsify(), "/"));
+                  return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/"));
                 case 17:
                   _r = _context9.sent;
                   if (!(_r.status < 300)) {
                     _context9.next = 26;
                     break;
                   }
-                  if (_this2.state.potentPhone) {
+                  if (_this3.state.potentPhone) {
                     _context9.next = 21;
                     break;
                   }
@@ -925,7 +937,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                 case 23:
                   _r = _context9.sent;
                   console.log(_r);
-                  _this2.setState({
+                  _this3.setState({
                     otp: true
                   });
                 case 26:
@@ -934,8 +946,8 @@ var App = /*#__PURE__*/function (_React$Component) {
                 case 28:
                   body = new FormData();
                   body.append('user', '_');
-                  body.append('phone', _this2.state.potentPhone);
-                  body.append('interest', _this2.state.potentInterest);
+                  body.append('phone', _this3.state.potentPhone);
+                  body.append('interest', _this3.state.potentInterest);
                   body.append('link', '/properties/_');
                   body.append('lat', .0);
                   body.append('lng', .0);
@@ -1014,7 +1026,8 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("header", {
         "class": "w-full flex flex-col bg-neutral-000 relative BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__QxTqh BaseLayoutDesktopHeader_BaseLayoutDesktopHeader--nav-open__cty_v",
         style: {
-          height: 108
+          height: this.state.menuHeight || 108,
+          overflowY: 'hidden'
         }
       }, /*#__PURE__*/React.createElement("div", {
         "class": "w-full bg-neutral-000 relative z-5"
@@ -1132,7 +1145,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         autocomplete: "off",
         value: this.state.searchInput,
         onBlur: function onBlur() {
-          _this2.setState({
+          _this3.setState({
             searchExpand: false
           });
         },
@@ -1141,7 +1154,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee10$(_context10) {
               while (1) switch (_context10.prev = _context10.next) {
                 case 0:
-                  _this2.setState({
+                  _this3.setState({
                     searchInput: e.target.value
                   });
                 case 1:
@@ -1163,12 +1176,12 @@ var App = /*#__PURE__*/function (_React$Component) {
                     _context11.next = 4;
                     break;
                   }
-                  _this2.setState({
+                  _this3.setState({
                     searchExpand: false,
                     page: 1
                   });
                   _context11.next = 4;
-                  return _this2.search();
+                  return _this3.search();
                 case 4:
                 case "end":
                   return _context11.stop();
@@ -1546,7 +1559,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       })))))))))))))))))) : /*#__PURE__*/React.createElement("div", {
         "class": "lg:text-body-2 text-button-1 flex items-center h-full text-body-2 text-neutral-500",
         onClick: function onClick() {
-          _this2.setState({
+          _this3.setState({
             searchExpand: true
           });
         }
@@ -1580,14 +1593,14 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("a", {
         "class": "styles_Link__RMyqc",
         onClick: function onClick() {
-          if (_this2.state.session) {
+          if (_this3.state.session) {
             delCookie('phone');
             delCookie('session');
-            _this2.setState({
+            _this3.setState({
               'phone': '',
               'session': ''
             });
-          } else _this2.setState({
+          } else _this3.setState({
             potent: true,
             potentInterest: ''
           });
@@ -1768,8 +1781,8 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA",
         onClick: function onClick() {
-          return _this2.setState({
-            categoryShow: !_this2.state.categoryShow
+          return _this3.setState({
+            categoryShow: !_this3.state.categoryShow
           });
         }
       }, /*#__PURE__*/React.createElement("div", {
@@ -1807,8 +1820,8 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee12$(_context12) {
               while (1) switch (_context12.prev = _context12.next) {
                 case 0:
-                  _this2.setState({
-                    firstMenuShow: !_this2.state.firstMenuShow
+                  _this3.setState({
+                    firstMenuShow: !_this3.state.firstMenuShow
                   });
                 case 1:
                 case "end":
@@ -1848,8 +1861,8 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee13$(_context13) {
               while (1) switch (_context13.prev = _context13.next) {
                 case 0:
-                  _this2.setState({
-                    secondMenuShow: !_this2.state.secondMenuShow
+                  _this3.setState({
+                    secondMenuShow: !_this3.state.secondMenuShow
                   });
                 case 1:
                 case "end":
@@ -1953,31 +1966,31 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee14$(_context14) {
               while (1) switch (_context14.prev = _context14.next) {
                 case 0:
-                  if (!(_this2.state.leftMenu == 'لیست سرچ')) {
+                  if (!(_this3.state.leftMenu == 'لیست سرچ')) {
                     _context14.next = 4;
                     break;
                   }
-                  _this2.setState({
+                  _this3.setState({
                     leftMenu: 'ثبت و بستن'
                   });
                   _context14.next = 17;
                   break;
                 case 4:
-                  if (!(_this2.state.leftMenu == 'ثبت و بستن')) {
+                  if (!(_this3.state.leftMenu == 'ثبت و بستن')) {
                     _context14.next = 16;
                     break;
                   }
-                  if (!(_this2.state.urlList.trim() == '')) {
+                  if (!(_this3.state.urlList.trim() == '')) {
                     _context14.next = 8;
                     break;
                   }
-                  _this2.setState({
+                  _this3.setState({
                     leftMenu: 'لیست سرچ'
                   });
                   return _context14.abrupt("return");
                 case 8:
                   fd = new FormData();
-                  fd.append('file', new Blob([_this2.state.urlList]));
+                  fd.append('file', new Blob([_this3.state.urlList]));
                   _context14.next = 12;
                   return fetch('/static/divar.csv?override=true', {
                     method: 'post',
@@ -1985,7 +1998,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   });
                 case 12:
                   r = _context14.sent;
-                  if (r.status == 200) _this2.setState({
+                  if (r.status == 200) _this3.setState({
                     leftMenu: 'لیست سرچ'
                   });
                   _context14.next = 17;
@@ -2066,7 +2079,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         },
         onBlur: function onBlur() {
           setTimeout(function () {
-            _this2.setState({
+            _this3.setState({
               categoryShow: false
             });
           }, 200);
@@ -2092,7 +2105,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   _context15.next = 3;
                   return c.action();
                 case 3:
-                  _this2.setState({
+                  _this3.setState({
                     category: ci,
                     categoryShow: false
                   });
@@ -2125,7 +2138,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         },
         onBlur: function onBlur() {
           setTimeout(function () {
-            _this2.setState({
+            _this3.setState({
               firstMenuShow: false
             });
           }, 200);
@@ -2151,7 +2164,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   _context16.next = 3;
                   return c.action();
                 case 3:
-                  _this2.setState({
+                  _this3.setState({
                     firstMenuIndex: ci,
                     firstMenuShow: false
                   });
@@ -2184,7 +2197,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         },
         onBlur: function onBlur() {
           setTimeout(function () {
-            _this2.setState({
+            _this3.setState({
               secondMenuShow: false
             });
           }, 200);
@@ -2210,7 +2223,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   _context17.next = 3;
                   return c.action();
                 case 3:
-                  _this2.setState({
+                  _this3.setState({
                     secondMenuIndex: ci,
                     secondMenuShow: false
                   });
@@ -2335,7 +2348,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"
       }, this.state.slides.map(function (slide, slide_i) {
         return /*#__PURE__*/React.createElement("span", {
-          className: "inline-block rounded-circle mx-1 bg-neutral-900 styles_MainHomeTopSlider__pagination__mWfm2 ".concat(_this2.state.slide == slide_i ? 'styles_MainHomeTopSlider__pagination--active__kVM8V' : '')
+          className: "inline-block rounded-circle mx-1 bg-neutral-900 styles_MainHomeTopSlider__pagination__mWfm2 ".concat(_this3.state.slide == slide_i ? 'styles_MainHomeTopSlider__pagination--active__kVM8V' : '')
         });
       })), /*#__PURE__*/React.createElement("div", {
         "class": "swiper-wrapper",
@@ -2345,7 +2358,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, this.state.slides.map(function (slide, slide_i) {
         return /*#__PURE__*/React.createElement("div", {
-          className: "swiper-slide ".concat(_this2.state.slide == slide_i ? 'swiper-slide-active' : '', " ").concat(_this2.state.slide == (slide_i + _this2.state.slides.length - 1) % _this2.state.slides.length ? 'swiper-slide-prev' : '', " ").concat(_this2.state.slide == (slide_i + 1) % _this2.state.slides.length ? 'swiper-slide-next' : ''),
+          className: "swiper-slide ".concat(_this3.state.slide == slide_i ? 'swiper-slide-active' : '', " ").concat(_this3.state.slide == (slide_i + _this3.state.slides.length - 1) % _this3.state.slides.length ? 'swiper-slide-prev' : '', " ").concat(_this3.state.slide == (slide_i + 1) % _this3.state.slides.length ? 'swiper-slide-next' : ''),
           style: {
             width: window.innerWidth
           }
@@ -2355,7 +2368,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           "class": "block h-full w-full styles_MainHomeTopSliderItem__widget__n1DJ1",
           href: slide.href,
           onClick: function onClick() {
-            if ('state' in slide) _this2.setState(slide.state);
+            if ('state' in slide) _this3.setState(slide.state);
           }
         }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
           "class": "user-select-none absolute z-1 top-0 w-full h-full styles_MainHomeTopSliderItem__image__pk1m6",
@@ -2423,8 +2436,8 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex",
         onClick: function onClick() {
-          _this2.setState({
-            slide: (_this2.state.slide + _this2.state.slides.length - 1) % _this2.state.slides.length
+          _this3.setState({
+            slide: (_this3.state.slide + _this3.state.slides.length - 1) % _this3.state.slides.length
           });
         }
       }, /*#__PURE__*/React.createElement("svg", {
@@ -2446,8 +2459,8 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex",
         onClick: function onClick() {
-          _this2.setState({
-            slide: (_this2.state.slide + 1) % _this2.state.slides.length
+          _this3.setState({
+            slide: (_this3.state.slide + 1) % _this3.state.slides.length
           });
         }
       }, /*#__PURE__*/React.createElement("svg", {
@@ -2535,7 +2548,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           return _regeneratorRuntime().wrap(function _callee18$(_context18) {
             while (1) switch (_context18.prev = _context18.next) {
               case 0:
-                _this2.setState({
+                _this3.setState({
                   article: -1
                 });
               case 1:
@@ -2568,7 +2581,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee19$(_context19) {
               while (1) switch (_context19.prev = _context19.next) {
                 case 0:
-                  _this2.setState({
+                  _this3.setState({
                     article: ai
                   }, function () {
                     document.getElementById("article").scrollIntoView({
@@ -2667,7 +2680,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("a", {
         "class": "styles_Link__RMyqc",
         "data-cro-id": "hp-club-cta",
-        href: "/digiclub/"
+        href: "/club"
       }, /*#__PURE__*/React.createElement("div", {
         style: {
           width: 119,
@@ -2692,7 +2705,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "data-cro-id": "hp-club-lucky-spinner"
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex-1 flex flex-col lg:flex-row items-center lg:justify-between bg-neutral-000 overflow-hidden  styles_widgetClub__section__rWZdP styles_widgetClub__section__rWZdP",
-        href: "https://games.digikala.com/digiclub/wheel-spinner"
+        href: "/club?extend=wheel-spinner"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex flex-col lg:flex-row items-center lg:mr-4 my-2 lg:my-0"
       }, /*#__PURE__*/React.createElement("div", {
@@ -2732,7 +2745,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "data-cro-id": "hp-club-mission"
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex-1 flex flex-col lg:flex-row items-center lg:justify-between bg-neutral-000 overflow-hidden  styles_widgetClub__section__rWZdP styles_widgetClub__section__rWZdP",
-        href: "/digiclub/missions/"
+        href: "/club?extend=missions"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex flex-col lg:flex-row items-center lg:mr-4 my-2 lg:my-0"
       }, /*#__PURE__*/React.createElement("div", {
@@ -2772,7 +2785,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "data-cro-id": "hp-club-rewards"
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex-1 flex flex-col lg:flex-row items-center lg:justify-between bg-neutral-000 overflow-hidden  styles_widgetClub__section__rWZdP styles_widgetClub__section__rWZdP",
-        href: "/digiclub/rewards/"
+        href: "/club?extend=rewards"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex flex-col lg:flex-row items-center lg:mr-4 my-2 lg:my-0"
       }, /*#__PURE__*/React.createElement("div", {
@@ -2856,7 +2869,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("a", {
         "class": "relative overflow-hidden bg-neutral-100 user-select-none w-full flex flex-col lg:flex-row justify-between rounded-large lg:items-center px-5 lg:px-10 pt-4 pb-3 styles_AmazingShortcut__main__EbBRH",
         target: "_blank",
-        href: "/fresh/incredible-offers/"
+        href: "/users?offer=1"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "absolute left-0 top-0 bottom-0 right-0 z-1",
         style: {
@@ -2921,9 +2934,9 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex items-center lg:justify-end flex-nowrap lg:flex-wrap overflow-hidden styles_AmazingShortcut__productItems__B6LWb"
       }, this.state.offers.map(function (offer) {
-        return /*#__PURE__*/React.createElement("div", {
+        return /*#__PURE__*/React.createElement("a", {
           "class": "relative bg-neutral-000 rounded-circle flex items-center justify-center p-1.5 ml-2 lg:mb-4",
-          href: "/product/dkp-4849693/%D9%BE%D9%86%DB%8C%D8%B1-%D9%BE%DB%8C%D8%AA%D8%B2%D8%A7-%D9%85%D9%88%D8%B2%D8%A7%D8%B1%D9%84%D8%A7-2000-%DA%AF%D8%B1%D9%85/"
+          href: "/users?ids=".concat(offer.id)
         }, /*#__PURE__*/React.createElement("div", {
           "class": "overflow-hidden rounded-circle"
         }, /*#__PURE__*/React.createElement("div", {
@@ -2970,7 +2983,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#arrowLeft"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "arrowLeft",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
@@ -3638,8 +3650,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         href: "https://www.digikala.com/tags/"
       }, "\u0628\u0631\u0686\u0633\u0628 \u0647\u0627")), "\u060C \u0627\u0645\u06A9\u0627\u0646 \u0645\u0634\u0627\u0647\u062F\u0647 \u0648 \u062E\u0631\u06CC\u062F \u0627\u0646\u0648\u0627\u0639 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u0628\u0627 \u0637\u0631\u062D \u0647\u0627\u06CC \u0628\u0648\u0645\u06CC \u0648\u062C\u0648\u062F \u062F\u0627\u0631\u062F.\xA0\xA0\u062C\u0627\u0644\u0648\u0633 \u0647\u0645\u0686\u0646\u06CC\u0646 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646\u06A9\u0647 \u062D\u0627\u0644 \u0648 \u0647\u0648\u0627\u06CC \u0639\u06CC\u062F \u0631\u0627 \u0628\u0647 \u0627\u0639\u0636\u0627\u06CC \u062E\u0648\u062F \u0647\u062F\u06CC\u0647 \u06A9\u0646\u062F\u060C\xA0\u062A\u0642\u0648\u06CC\u0645 \u06F1\u06F4\u06F0\u06F1\u060C \u0627\u0646\u0648\u0627\u0639 \u0627\u06CC\u062F\u0647\xA0\u0639\u06A9\u0633 \u067E\u0631\u0648\u0641\u0627\u06CC\u0644 \u0639\u06CC\u062F \u0646\u0648\u0631\u0648\u0632\u060C\xA0\u0622\u0647\u0646\u06AF\u200C\u0647\u0627\u06CC \u0639\u06CC\u062F \u0646\u0648\u0631\u0648\u0632\xA0\u0648 \u0645\u0648\u0632\u06CC\u06A9\u200C\u0647\u0627\u06CC \u0634\u0627\u062F \u0628\u0647\u0627\u0631\u06CC\u060C \u0648\u0633\u0627\u06CC\u0644 \u0645\u0631\u0628\u0648\u0637 \u0628\u0647\xA0\u062E\u0627\u0646\u0647\u200C\u062A\u06A9\u0627\u0646\u06CC\xA0\u0648\xA0\u0627\u0646\u0648\u0627\u0639 \u0644\u0628\u0627\u0633 \u0647\u0627\u06CC \u0639\u06CC\u062F\xA0 \u0631\u0627 \u0628\u0631\u0627\u06CC \u0634\u0645\u0627 \u0641\u0631\u0627\u0647\u0645 \u06A9\u0631\u062F\u0647 \u0627\u0633\u062A \u062A\u0627 \u0628\u062A\u0648\u0627\u0646\u06CC\u062F \u062F\u0631 \u06A9\u0646\u0627\u0631 \u062E\u0631\u06CC\u062F \u062E\u0648\u062F\u060C \u0627\u0632 \u0627\u06CC\u0646 \u062D\u0627\u0644 \u0648 \u0647\u0648\u0627\u06CC \u062A\u0627\u0632\u0647 \u0646\u0647\u0627\u06CC\u062A \u0644\u0630\u062A \u0631\u0627 \u0628\u0628\u0631\u06CC\u062F."), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0")), /*#__PURE__*/React.createElement("span", {
         onClick: function onClick() {
-          _this2.setState({
-            footExpand: !_this2.state.footExpand
+          _this3.setState({
+            footExpand: !_this3.state.footExpand
           });
         },
         "class": "inline-flex items-center cursor-pointer styles_Anchor--secondary__3KsgY text-button-2 flex mt-2 items-center user-select-none"

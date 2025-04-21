@@ -242,6 +242,7 @@ var App = /*#__PURE__*/function (_React$Component) {
     var app = _assertThisInitialized(_this);
     window.app = _assertThisInitialized(_this);
     _this.state = (_this$state = {
+      menuHeight: 108,
       match: -1,
       swap: -1,
       swapLocation: '',
@@ -667,7 +668,17 @@ var App = /*#__PURE__*/function (_React$Component) {
                   }
                 }, _callee7);
               })), 180000); // 180000
-            case 30:
+              window.Y = window.pageYOffset || document.documentElement.scrollTop;
+              window.addEventListener("scroll", function () {
+                window.NY = window.pageYOffset || document.documentElement.scrollTop;
+                if (window.NY > window.Y) _this3.setState({
+                  menuHeight: 68
+                });else _this3.setState({
+                  menuHeight: 108
+                });
+                window.Y = window.NY;
+              });
+            case 32:
             case "end":
               return _context8.stop();
           }
@@ -1066,7 +1077,8 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("header", {
         "class": "w-full flex flex-col bg-neutral-000 relative BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__QxTqh BaseLayoutDesktopHeader_BaseLayoutDesktopHeader--nav-open__cty_v",
         style: {
-          height: 108
+          height: this.state.menuHeight || 108,
+          overflowY: 'hidden'
         }
       }, /*#__PURE__*/React.createElement("div", {
         "class": "w-full bg-neutral-000 relative z-5"
@@ -2560,8 +2572,6 @@ var App = /*#__PURE__*/function (_React$Component) {
           fontSize: '1.3em',
           position: 'fixed',
           bottom: 1,
-          left: 80,
-          right: 80,
           height: 222,
           overflow: 'hidden',
           background: '#ffff',
@@ -3149,8 +3159,6 @@ var App = /*#__PURE__*/function (_React$Component) {
           fontSize: '1.3em',
           position: 'fixed',
           bottom: 1,
-          left: 80,
-          right: 80,
           height: 222,
           overflowY: 'scroll',
           background: '#ffff',
