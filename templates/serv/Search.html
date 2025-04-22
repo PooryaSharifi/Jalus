@@ -318,13 +318,20 @@ var App = /*#__PURE__*/function (_React$Component) {
     _this.checkReserved = _this.checkReserved.bind(_assertThisInitialized(_this));
     _this.binSearch = _this.binSearch.bind(_assertThisInitialized(_this));
     _this.calendar = _this.calendar.bind(_assertThisInitialized(_this));
+    window.onpopstate = function (e) {
+      if (!window.history.state) return;
+      app.setState({
+        show: {}
+      }, function () {
+        window.history.replaceState({}, null, window.history.state.url);
+      });
+    };
     return _this;
   }
   _createClass(App, [{
     key: "checkReserved",
     value: function () {
       var _checkReserved = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var _this2 = this;
         var r, calendar, j, key, i, _jDate, _jDate2, binCalendar;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
@@ -366,9 +373,7 @@ var App = /*#__PURE__*/function (_React$Component) {
               this.setState({
                 show: this.state.show,
                 landing: false
-              }, function () {
-                window.history.replaceState({}, null, "/properties/".concat(_this2.state.show.id));
-              });
+              }, function () {});
             case 15:
             case "end":
               return _context.stop();
@@ -445,7 +450,7 @@ var App = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function () {
       var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        var _this3 = this;
+        var _this2 = this;
         var r, i, calendarBias, flag, _loop, h, _h, key, _jDate3, _jDate4;
         return _regeneratorRuntime().wrap(function _callee6$(_context7) {
           while (1) switch (_context7.prev = _context7.next) {
@@ -484,7 +489,9 @@ var App = /*#__PURE__*/function (_React$Component) {
                           _context3.next = 11;
                           break;
                         }
-                        window.history.replaceState({}, null, "/properties/".concat(ps[i].id));
+                        window.history.pushState({
+                          url: window.location.href
+                        }, null, "/properties/".concat(ps[i].id));
                         window.app.setState({
                           show: ps[i],
                           landing: false
@@ -523,7 +530,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   return p1.stat[0] - p0.stat[0];
                 })
               }, function () {
-                map.panTo(_construct(L.LatLng, _toConsumableArray(_this3.state.properties[0].location)), {
+                map.panTo(_construct(L.LatLng, _toConsumableArray(_this2.state.properties[0].location)), {
                   animate: true,
                   duration: .3,
                   easeLinearity: .9
@@ -552,22 +559,28 @@ var App = /*#__PURE__*/function (_React$Component) {
                 return _regeneratorRuntime().wrap(function _loop$(_context5) {
                   while (1) switch (_context5.prev = _context5.next) {
                     case 0:
-                      if (_this3.state.properties[h].id == window.location.pathname.split('/')[2]) _this3.setState({
-                        show: _this3.state.properties[h],
-                        landing: false
-                      }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-                        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-                          while (1) switch (_context4.prev = _context4.next) {
-                            case 0:
-                              map.panTo(_construct(L.LatLng, _toConsumableArray(_this3.state.properties[h].location)));
-                              window.history.replaceState({}, null, "/properties/".concat(_this3.state.show.id));
-                              window.app.checkReserved();
-                            case 3:
-                            case "end":
-                              return _context4.stop();
-                          }
-                        }, _callee4);
-                      })));
+                      if (_this2.state.properties[h].id == window.location.pathname.split('/')[2]) {
+                        console.log(_this2.state.properties[h].phone);
+                        _this2.setState({
+                          show: _this2.state.properties[h],
+                          landing: false
+                        }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+                          return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                            while (1) switch (_context4.prev = _context4.next) {
+                              case 0:
+                                map.panTo(_construct(L.LatLng, _toConsumableArray(_this2.state.properties[h].location)));
+                                window.history.pushState({
+                                  url: window.location.href
+                                }, null, "/properties/".concat(_this2.state.show.id));
+                                _context4.next = 4;
+                                return _this2.checkReserved();
+                              case 4:
+                              case "end":
+                                return _context4.stop();
+                            }
+                          }, _callee4);
+                        })));
+                      }
                     case 1:
                     case "end":
                       return _context5.stop();
@@ -632,12 +645,14 @@ var App = /*#__PURE__*/function (_React$Component) {
                 return _regeneratorRuntime().wrap(function _callee5$(_context6) {
                   while (1) switch (_context6.prev = _context6.next) {
                     case 0:
-                      map.panTo(_construct(L.LatLng, _toConsumableArray(_this3.state.properties[i].location)), {
+                      map.panTo(_construct(L.LatLng, _toConsumableArray(_this2.state.properties[i].location)), {
                         animate: true,
                         duration: .3,
                         easeLinearity: .9
                       });
-                      window.history.replaceState({}, null, "/properties/".concat(_this3.state.show.id));
+                      window.history.pushState({
+                        url: window.location.href
+                      }, null, "/properties/".concat(_this2.state.show.id));
                       window.app.checkReserved();
                     case 3:
                     case "end":
@@ -662,7 +677,7 @@ var App = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "calendar",
     value: function calendar() {
-      var _this4 = this;
+      var _this3 = this;
       return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
         style: {
           position: 'relative',
@@ -717,14 +732,14 @@ var App = /*#__PURE__*/function (_React$Component) {
           d = _ref5[2];
         return /*#__PURE__*/React.createElement("span", {
           onClick: function onClick() {
-            if (m === faNow[1] && d < faNow[2] || _this4.binSearch(di)[0] || _this4.state.calendarRange[0] !== -1 && Math.abs(_this4.binSearch(di)[1] - _this4.binSearch(_this4.state.calendarRange[0])[1]) > 0) _this4.setState({
+            if (m === faNow[1] && d < faNow[2] || _this3.binSearch(di)[0] || _this3.state.calendarRange[0] !== -1 && Math.abs(_this3.binSearch(di)[1] - _this3.binSearch(_this3.state.calendarRange[0])[1]) > 0) _this3.setState({
               calendarRange: [-1, -1]
             });else {
-              if (_this4.state.calendarRange[0] === -1) _this4.setState({
+              if (_this3.state.calendarRange[0] === -1) _this3.setState({
                 calendarRange: [di, di]
-              });else if (_this4.state.calendarRange[0] === _this4.state.calendarRange[1]) _this4.setState({
-                calendarRange: [Math.min(_this4.state.calendarRange[0], di), Math.max(_this4.state.calendarRange[0], di)]
-              });else _this4.setState({
+              });else if (_this3.state.calendarRange[0] === _this3.state.calendarRange[1]) _this3.setState({
+                calendarRange: [Math.min(_this3.state.calendarRange[0], di), Math.max(_this3.state.calendarRange[0], di)]
+              });else _this3.setState({
                 calendarRange: [di, di]
               });
             }
@@ -739,12 +754,12 @@ var App = /*#__PURE__*/function (_React$Component) {
             display: 'inline-block',
             fontSize: '1.13em',
             fontWeight: 500,
-            color: _this4.binSearch(di)[0] ? '#fce9eb' : m === faNow[1] && d < faNow[2] ? '#e310256F' : _this4.state.calendarRange[0] <= di && di <= _this4.state.calendarRange[1] ? '#fff9fa' : '#212232',
-            backgroundColor: _this4.binSearch(di)[0] ? '#ee6f7b' : _this4.state.calendarRange[0] <= di && di <= _this4.state.calendarRange[1] ? '#e31025' : 'transparent',
-            borderTopLeftRadius: _this4.state.calendarRange[0] === di || _this4.binSearch(di)[0] == 2 || _this4.binSearch(di)[0] == 4 ? 22 : 0,
-            borderBottomLeftRadius: _this4.state.calendarRange[0] === di || _this4.binSearch(di)[0] == 2 || _this4.binSearch(di)[0] == 4 ? 22 : 0,
-            borderBottomRightRadius: _this4.state.calendarRange[1] === di || _this4.binSearch(di)[0] == 3 || _this4.binSearch(di)[0] == 4 ? 22 : 0,
-            borderTopRightRadius: _this4.state.calendarRange[1] === di || _this4.binSearch(di)[0] == 3 || _this4.binSearch(di)[0] == 4 ? 22 : 0
+            color: _this3.binSearch(di)[0] ? '#fce9eb' : m === faNow[1] && d < faNow[2] ? '#e310256F' : _this3.state.calendarRange[0] <= di && di <= _this3.state.calendarRange[1] ? '#fff9fa' : '#212232',
+            backgroundColor: _this3.binSearch(di)[0] ? '#ee6f7b' : _this3.state.calendarRange[0] <= di && di <= _this3.state.calendarRange[1] ? '#e31025' : 'transparent',
+            borderTopLeftRadius: _this3.state.calendarRange[0] === di || _this3.binSearch(di)[0] == 2 || _this3.binSearch(di)[0] == 4 ? 22 : 0,
+            borderBottomLeftRadius: _this3.state.calendarRange[0] === di || _this3.binSearch(di)[0] == 2 || _this3.binSearch(di)[0] == 4 ? 22 : 0,
+            borderBottomRightRadius: _this3.state.calendarRange[1] === di || _this3.binSearch(di)[0] == 3 || _this3.binSearch(di)[0] == 4 ? 22 : 0,
+            borderTopRightRadius: _this3.state.calendarRange[1] === di || _this3.binSearch(di)[0] == 3 || _this3.binSearch(di)[0] == 4 ? 22 : 0
           }
         }, d === 1 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
           style: {
@@ -766,7 +781,7 @@ var App = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this,
+      var _this4 = this,
         _jDate5,
         _jDate6;
       return /*#__PURE__*/React.createElement("div", {
@@ -942,10 +957,10 @@ var App = /*#__PURE__*/function (_React$Component) {
             color: 'rgba(247, 253, 255, .95)',
             borderStyle: 'solid',
             borderWidth: 2,
-            borderColor: _this5.state.category == category ? '#ab5a51' : '#636063'
+            borderColor: _this4.state.category == category ? '#ab5a51' : '#636063'
           },
           onClick: function onClick() {
-            _this5.setState({
+            _this4.setState({
               category: category
             });
           }
@@ -960,11 +975,11 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("svg", {
         onClick: function onClick() {
-          if (_this5.state.property == _this5.state.properties.length - 1) return;
-          _this5.setState({
-            property: _this5.state.property + 1
+          if (_this4.state.property == _this4.state.properties.length - 1) return;
+          _this4.setState({
+            property: _this4.state.property + 1
           }, function () {
-            map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
+            map.panTo(_construct(L.LatLng, _toConsumableArray(_this4.state.properties[_this4.state.property].location)), {
               animate: true,
               duration: .3,
               easeLinearity: .9
@@ -989,11 +1004,11 @@ var App = /*#__PURE__*/function (_React$Component) {
         "stroke-width": "1"
       })), /*#__PURE__*/React.createElement("svg", {
         onClick: function onClick() {
-          if (_this5.state.property == 0) return;
-          _this5.setState({
-            property: _this5.state.property - 1
+          if (_this4.state.property == 0) return;
+          _this4.setState({
+            property: _this4.state.property - 1
           }, function () {
-            map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
+            map.panTo(_construct(L.LatLng, _toConsumableArray(_this4.state.properties[_this4.state.property].location)), {
               animate: true,
               duration: .3,
               easeLinearity: .9
@@ -1030,7 +1045,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           marginRight: 6
         },
         onClick: function onClick() {
-          _this5.setState({
+          _this4.setState({
             calendared: true
           });
         }
@@ -1052,15 +1067,15 @@ var App = /*#__PURE__*/function (_React$Component) {
           return _regeneratorRuntime().wrap(function _callee7$(_context8) {
             while (1) switch (_context8.prev = _context8.next) {
               case 0:
-                stat = (_this5.state.stat + 1) % 5;
-                _this5.setState({
+                stat = (_this4.state.stat + 1) % 5;
+                _this4.setState({
                   stat: stat,
                   property: 0,
-                  properties: _this5.state.properties.sort(function (p0, p1) {
+                  properties: _this4.state.properties.sort(function (p0, p1) {
                     return p1.stat[stat] - p0.stat[stat];
                   })
                 }, function () {
-                  map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
+                  map.panTo(_construct(L.LatLng, _toConsumableArray(_this4.state.properties[_this4.state.property].location)), {
                     animate: true,
                     duration: .3,
                     easeLinearity: .9
@@ -1074,11 +1089,11 @@ var App = /*#__PURE__*/function (_React$Component) {
         }))
       }, ['پرامکانات‌ترین', 'اقتصادی‌ترین', 'جادارترین', 'پردسترس‌ترین', 'خاص‌ترین'][this.state.stat]), /*#__PURE__*/React.createElement("svg", {
         onClick: function onClick() {
-          if (_this5.state.property == 0) return;
-          _this5.setState({
-            property: _this5.state.property - 1
+          if (_this4.state.property == 0) return;
+          _this4.setState({
+            property: _this4.state.property - 1
           }, function () {
-            map.panTo(_construct(L.LatLng, _toConsumableArray(_this5.state.properties[_this5.state.property].location)), {
+            map.panTo(_construct(L.LatLng, _toConsumableArray(_this4.state.properties[_this4.state.property].location)), {
               animate: true,
               duration: .3,
               easeLinearity: .9
@@ -1154,7 +1169,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          _this5.setState({
+          _this4.setState({
             searchExpand: true
           });
         }
@@ -1200,8 +1215,8 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) _this5.setState({
-            expand_lyr: !_this5.state.expand_lyr
+          if (e.target === e.currentTarget) _this4.setState({
+            expand_lyr: !_this4.state.expand_lyr
           });
         }
       }), /*#__PURE__*/React.createElement("div", {
@@ -1228,9 +1243,9 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
           if (e.target === e.currentTarget) {
-            window.lyr.setUrl(window.lyrs[_this5.state.lyr == 0 ? 1 : 0][2]);
-            _this5.setState({
-              lyr: _this5.state.lyr == 0 ? 1 : 0,
+            window.lyr.setUrl(window.lyrs[_this4.state.lyr == 0 ? 1 : 0][2]);
+            _this4.setState({
+              lyr: _this4.state.lyr == 0 ? 1 : 0,
               expand_lyr: false
             });
           }
@@ -1259,9 +1274,9 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
           if (e.target === e.currentTarget) {
-            window.lyr.setUrl(window.lyrs[_this5.state.lyr == 2 ? 1 : 2][2]);
-            _this5.setState({
-              lyr: _this5.state.lyr == 2 ? 1 : 2,
+            window.lyr.setUrl(window.lyrs[_this4.state.lyr == 2 ? 1 : 2][2]);
+            _this4.setState({
+              lyr: _this4.state.lyr == 2 ? 1 : 2,
               expand_lyr: false
             });
           }
@@ -1289,7 +1304,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) _this5.setState({
+          if (e.target === e.currentTarget) _this4.setState({
             ordered: false
           });
         }
@@ -1325,7 +1340,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         autocomplete: "off",
         value: this.state.searchInput,
         onBlur: function onBlur() {
-          _this5.setState({
+          _this4.setState({
             searchExpand: false
           });
         },
@@ -1334,7 +1349,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee8$(_context9) {
               while (1) switch (_context9.prev = _context9.next) {
                 case 0:
-                  _this5.setState({
+                  _this4.setState({
                     searchInput: e.target.value
                   });
                 case 1:
@@ -1353,7 +1368,7 @@ var App = /*#__PURE__*/function (_React$Component) {
               while (1) switch (_context10.prev = _context10.next) {
                 case 0:
                   if (e.key === 'Enter') {
-                    _this5.setState({
+                    _this4.setState({
                       searchInput: '',
                       searchExpand: false
                     });
@@ -1383,7 +1398,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) _this5.setState({
+          if (e.target === e.currentTarget) _this4.setState({
             landing: false
           });
         }
@@ -1475,7 +1490,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          _this5.setState({
+          _this4.setState({
             landing: false
           });
         }
@@ -1494,11 +1509,12 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (_this5.state.ordered) return;
-          if (e.target === e.currentTarget) _this5.setState({
+          if (_this4.state.ordered) return;
+          if (e.target === e.currentTarget) _this4.setState({
             show: {}
           }, function () {
-            window.history.replaceState({}, null, "/properties/".concat(map.getZoom(), "/").concat(map.getCenter().lat.toFixed(2), "/").concat(map.getCenter().lng.toFixed(2)));
+            if (window.history.state) window.history.replaceState({}, null, window.history.state.url);
+            history.back();
           });
         }
       }, /*#__PURE__*/React.createElement("div", {
@@ -1536,11 +1552,12 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (_this5.state.ordered) return;
-          _this5.setState({
+          if (_this4.state.ordered) return;
+          _this4.setState({
             show: {}
           }, function () {
-            window.history.replaceState({}, null, "/properties/".concat(map.getZoom(), "/").concat(map.getCenter().lat.toFixed(2), "/").concat(map.getCenter().lng.toFixed(2)));
+            if (window.history.state) window.history.replaceState({}, null, window.history.state.url);
+            history.back();
           });
         }
       }, "+"), /*#__PURE__*/React.createElement("span", {
@@ -1607,9 +1624,9 @@ var App = /*#__PURE__*/function (_React$Component) {
           cursor: 'pointer'
         },
         onClick: function onClick() {
-          window.open("tel:".concat(_this5.state.show.phone), '_self');
+          window.open("tel:".concat(_this4.state.show.phone), '_self');
         }
-      }, ('0' + this.state.show.phone.slice(3)).farsify()), /*#__PURE__*/React.createElement("div", {
+      }, this.state.show.phone.farsify()), /*#__PURE__*/React.createElement("div", {
         style: {
           "float": 'right'
         }
@@ -1643,7 +1660,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             fontWeight: 500,
             lineHeight: 1.5
           }
-        }, _this5.state.show.options[k].farsify()));
+        }, _this4.state.show.options[k].farsify()));
       })), " ", /*#__PURE__*/React.createElement("hr", {
         className: "divider"
       }), 'rows' in this.state.show && Object.keys(this.state.show.rows).map(function (k) {
@@ -1689,7 +1706,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }
-        }, _this5.state.show.rows[k].farsify()))), /*#__PURE__*/React.createElement("hr", {
+        }, _this4.state.show.rows[k].farsify()))), /*#__PURE__*/React.createElement("hr", {
           className: "divider"
         }));
       }), 'features' in this.state.show && /*#__PURE__*/React.createElement("div", {
@@ -1702,7 +1719,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           className: "column",
           style: {
             flexGrow: 1,
-            color: _this5.state.show.features[k] ? 'rgba(0,0,0,.87)' : 'rgba(0,0,0,.32)',
+            color: _this4.state.show.features[k] ? 'rgba(0,0,0,.87)' : 'rgba(0,0,0,.32)',
             display: 'flex',
             flexDirection: 'column',
             flexBasis: '33.333%',
@@ -1734,10 +1751,10 @@ var App = /*#__PURE__*/function (_React$Component) {
         }, k), /*#__PURE__*/React.createElement("span", {
           style: {
             fontSize: '1.125rem',
-            fontWeight: _this5.state.show.features[k] ? 500 : 400,
+            fontWeight: _this4.state.show.features[k] ? 500 : 400,
             lineHeight: 1.5
           }
-        }, k, !_this5.state.show.features[k] && ' ندارد'));
+        }, k, !_this4.state.show.features[k] && ' ندارد'));
       })), /*#__PURE__*/React.createElement("div", {
         classNmae: 'p'
       }, this.state.show.description), this.calendar(), this.state.ordered ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
@@ -1801,31 +1818,31 @@ var App = /*#__PURE__*/function (_React$Component) {
             return _regeneratorRuntime().wrap(function _callee11$(_context12) {
               while (1) switch (_context12.prev = _context12.next) {
                 case 0:
-                  if (!(_this5.state.calendarRange[0] === -1 && !_this5.state.ordered)) {
+                  if (!(_this4.state.calendarRange[0] === -1 && !_this4.state.ordered)) {
                     _context12.next = 2;
                     break;
                   }
                   return _context12.abrupt("return");
                 case 2:
-                  _this5.setState({
-                    ordered: !_this5.state.ordered
+                  _this4.setState({
+                    ordered: !_this4.state.ordered
                   }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
                     var _jDate7, _jDate8, _jDate9, _jDate10, r, _r;
                     return _regeneratorRuntime().wrap(function _callee10$(_context11) {
                       while (1) switch (_context11.prev = _context11.next) {
                         case 0:
                           window.show.scrollTo(0, window.show.scrollHeight);
-                          if (!_this5.state.ordered) {
+                          if (!_this4.state.ordered) {
                             _context11.next = 14;
                             break;
                           }
                           _context11.next = 4;
-                          return fetch("/key/".concat(_this5.state.show.id, "/").concat(_this5.state.show.sms, "/").concat((_jDate7 = jDate).jalaliToGregorian.apply(_jDate7, _toConsumableArray(_this5.state.calendar[_this5.state.calendarRange[0]])).join('-'), "/").concat((_jDate8 = jDate).jalaliToGregorian.apply(_jDate8, _toConsumableArray(_this5.state.calendar[_this5.state.calendarRange[1]])).join('-'), "/").concat(_this5.state.show.price * (Math.round((_construct(Date, _toConsumableArray((_jDate9 = jDate).jalaliToGregorian.apply(_jDate9, _toConsumableArray(_this5.state.calendar[_this5.state.calendarRange[1]])))) - _construct(Date, _toConsumableArray((_jDate10 = jDate).jalaliToGregorian.apply(_jDate10, _toConsumableArray(_this5.state.calendar[_this5.state.calendarRange[0]]))))) / (1000 * 60 * 60 * 24)) + 1) + parseInt(_this5.state.phone.substr(_this5.state.phone.length - 2))), {
+                          return fetch("/key/".concat(_this4.state.show.id, "/").concat(_this4.state.show.sms, "/").concat((_jDate7 = jDate).jalaliToGregorian.apply(_jDate7, _toConsumableArray(_this4.state.calendar[_this4.state.calendarRange[0]])).join('-'), "/").concat((_jDate8 = jDate).jalaliToGregorian.apply(_jDate8, _toConsumableArray(_this4.state.calendar[_this4.state.calendarRange[1]])).join('-'), "/").concat(_this4.state.show.price * (Math.round((_construct(Date, _toConsumableArray((_jDate9 = jDate).jalaliToGregorian.apply(_jDate9, _toConsumableArray(_this4.state.calendar[_this4.state.calendarRange[1]])))) - _construct(Date, _toConsumableArray((_jDate10 = jDate).jalaliToGregorian.apply(_jDate10, _toConsumableArray(_this4.state.calendar[_this4.state.calendarRange[0]]))))) / (1000 * 60 * 60 * 24)) + 1) + parseInt(_this4.state.phone.substr(_this4.state.phone.length - 2))), {
                             method: 'POST',
                             headers: {
                               'Accept': 'application/json',
                               'Content-Type': 'application/json',
-                              'Authorization': _this5.state.session
+                              'Authorization': _this4.state.session
                             }
                           });
                         case 4:
@@ -1850,12 +1867,12 @@ var App = /*#__PURE__*/function (_React$Component) {
                           break;
                         case 14:
                           _context11.next = 16;
-                          return fetch("/key/".concat(_this5.state.show.id), {
+                          return fetch("/key/".concat(_this4.state.show.id), {
                             method: 'DELETE',
                             headers: {
                               'Accept': 'application/json',
                               'Content-Type': 'application/json',
-                              'Authorization': _this5.state.session
+                              'Authorization': _this4.state.session
                             }
                           });
                         case 16:
@@ -1868,10 +1885,10 @@ var App = /*#__PURE__*/function (_React$Component) {
                           return _r.json();
                         case 20:
                           _r = _context11.sent;
-                          if (_r.OK) _this5.setState({
+                          if (_r.OK) _this4.setState({
                             calendarRange: [-1, -1]
-                          });else _this5.setState({
-                            ordered: !_this5.state.ordered
+                          });else _this4.setState({
+                            ordered: !_this4.state.ordered
                           });
                         case 22:
                         case "end":
@@ -1904,7 +1921,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) _this5.setState({
+          if (e.target === e.currentTarget) _this4.setState({
             ordered: false
           });
         }
@@ -1943,7 +1960,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           color: '#343747'
         },
         onChange: function onChange(e) {
-          _this5.setState({
+          _this4.setState({
             phone: e.target.value
           });
         }
@@ -1972,7 +1989,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                     break;
                   }
                   _context14.next = 3;
-                  return fetch("/otp/".concat(_this5.state.phone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
+                  return fetch("/otp/".concat(_this4.state.phone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
                 case 3:
                   r = _context14.sent;
                   if (!(r.status < 300)) {
@@ -1985,25 +2002,25 @@ var App = /*#__PURE__*/function (_React$Component) {
                   r = _context14.sent;
                   if (r.OK) {
                     setCookie('session', r.session);
-                    setCookie('phone', _this5.state.phone);
-                    _this5.setState({
+                    setCookie('phone', _this4.state.phone);
+                    _this4.setState({
                       session: r.session
                     }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12() {
                       var _r2;
                       return _regeneratorRuntime().wrap(function _callee12$(_context13) {
                         while (1) switch (_context13.prev = _context13.next) {
                           case 0:
-                            if (!(!_this5.state.show.isEmpty() && _this5.state.ordered && _this5.state.calendarRange[0] != -1)) {
+                            if (!(!_this4.state.show.isEmpty() && _this4.state.ordered && _this4.state.calendarRange[0] != -1)) {
                               _context13.next = 11;
                               break;
                             }
                             _context13.next = 3;
-                            return fetch("/key/".concat(_this5.state.show.id, "/_/").concat(_this5.state.calendar[_this5.state.calendarRange[0]].join('-'), "/").concat(_this5.state.calendar[_this5.state.calendarRange[1]].join('-')), {
+                            return fetch("/key/".concat(_this4.state.show.id, "/_/").concat(_this4.state.calendar[_this4.state.calendarRange[0]].join('-'), "/").concat(_this4.state.calendar[_this4.state.calendarRange[1]].join('-')), {
                               method: 'POST',
                               headers: {
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/json',
-                                'Authorization': _this5.state.session
+                                'Authorization': _this4.state.session
                               }
                             });
                           case 3:
@@ -2022,8 +2039,8 @@ var App = /*#__PURE__*/function (_React$Component) {
                               _context13.next = 11;
                               break;
                             }
-                            _this5.setState({
-                              ordered: !_this5.state.ordered
+                            _this4.setState({
+                              ordered: !_this4.state.ordered
                             });
                           case 11:
                           case "end":
@@ -2060,14 +2077,14 @@ var App = /*#__PURE__*/function (_React$Component) {
               while (1) switch (_context15.prev = _context15.next) {
                 case 0:
                   _context15.next = 2;
-                  return fetch("/otp/".concat(_this5.state.phone.trim().deFarsify(), "/"));
+                  return fetch("/otp/".concat(_this4.state.phone.trim().deFarsify(), "/"));
                 case 2:
                   r = _context15.sent;
                   if (!(r.status < 300)) {
                     _context15.next = 10;
                     break;
                   }
-                  if (_this5.state.phone) {
+                  if (_this4.state.phone) {
                     _context15.next = 6;
                     break;
                   }
@@ -2077,7 +2094,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                   return r.json();
                 case 8:
                   r = _context15.sent;
-                  _this5.setState({
+                  _this4.setState({
                     otp: true
                   });
                 case 10:
@@ -2106,7 +2123,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.preventDefault();
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
-          if (e.target === e.currentTarget) _this5.setState({
+          if (e.target === e.currentTarget) _this4.setState({
             calendared: false
           });
         }
@@ -2143,7 +2160,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           margin: 9
         },
         onClick: function onClick() {
-          _this5.setState({
+          _this4.setState({
             calendared: false
           });
         }

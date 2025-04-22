@@ -2857,7 +2857,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         onClick: function onClick() {
           window.open("tel:".concat(_this4.state.show.phone), '_self');
         }
-      }, ('0' + this.state.show.phone.slice(3)).farsify()), /*#__PURE__*/React.createElement("div", {
+      }, this.state.show.phone.farsify()), /*#__PURE__*/React.createElement("div", {
         style: {
           "float": 'right'
         }

@@ -2266,6 +2266,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }, /*#__PURE__*/React.createElement("div", {
           "class": "ml-3 lg:ml-0 w-[84px] shrink-0 cursor-pointer",
           onClick: function onClick() {
+            window.history.pushState({}, '');
             loadStory(story.title, story.resolutions.map(function (res) {
               return '/static/stories/' + story.href + '.' + res + '.mp4';
             }), story.ccs.map(function (cc) {
@@ -2483,7 +2484,9 @@ var App = /*#__PURE__*/function (_React$Component) {
         d: "M11.414 12l4.293 4.293-1.414 1.414-5-5a1 1 0 010-1.414l5-5 1.414 1.414L11.414 12z"
       }))))))))), this.state.article != -1 && /*#__PURE__*/React.createElement("div", {
         style: {
-          maxWidth: 768
+          maxWidth: 768,
+          paddingLeft: 14,
+          paddingRight: 14
         },
         "class": "container-2xl-w mx-auto lg:px-4 2xl:px-0"
       }, /*#__PURE__*/React.createElement("h1", {

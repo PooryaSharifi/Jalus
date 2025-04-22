@@ -2265,6 +2265,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }, /*#__PURE__*/React.createElement("div", {
           "class": "ml-3 lg:ml-0 w-[84px] shrink-0 cursor-pointer",
           onClick: function onClick() {
+            window.history.pushState({}, '');
             loadStory(story.title, story.resolutions.map(function (res) {
               return '/static/stories/' + story.href + '.' + res + '.mp4';
             }), story.ccs.map(function (cc) {
@@ -2483,7 +2484,9 @@ var App = /*#__PURE__*/function (_React$Component) {
       }))))))))), this.state.article == -1 ? /*#__PURE__*/React.createElement("div", {
         style: {
           maxWidth: 768,
-          paddingBottom: 20
+          paddingBottom: 20,
+          paddingLeft: 14,
+          paddingRight: 14
         },
         "class": "container-2xl-w mx-auto lg:px-4 2xl:px-0"
       }, /*#__PURE__*/React.createElement("h1", {
@@ -2570,7 +2573,9 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, "\u0645\u06CC\u0632\u0628\u0627\u0646 \u062C\u0627\u0644\u0648\u0633 \u0634\u0648 \u0648 \u0647\u0645\u0647 \u0686\u06CC\u0632\u0631\u0648 \u062F\u0631 \u062F\u0633\u062A \u0628\u06AF\u06CC\u0631")) : /*#__PURE__*/React.createElement("div", {
         style: {
           maxWidth: 768,
-          paddingBottom: 20
+          paddingBottom: 20,
+          paddingLeft: 14,
+          paddingRight: 14
         },
         "class": "container-2xl-w mx-auto lg:px-4 2xl:px-0"
       }, /*#__PURE__*/React.createElement("h1", {
