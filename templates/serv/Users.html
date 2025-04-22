@@ -9,7 +9,9 @@
   <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content, user-scalable=no, target-densityDpi=device-dpi">
+  <!-- <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi"> -->
+  <!-- vs initial-scale=1; interactive-widget=resizes-content; user-scalable=no -->
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
   <script src="/static/react.production.min.js" crossorigin></script>
@@ -2216,7 +2218,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }, c.title);
       }))), /*#__PURE__*/React.createElement("div", {
         style: {
-          height: 108
+          height: this.state.menuHeight
         }
       }), this.state.leftMenu == 'ثبت و بستن' && /*#__PURE__*/React.createElement("textarea", {
         style: (_ref16 = {

@@ -9,7 +9,9 @@
   <link rel="apple-touch-icon" href="/static/icon/app-icon.webp" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content, user-scalable=no, target-densityDpi=device-dpi">
+  <!-- <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0, target-densityDpi=device-dpi"> -->
+  <!-- vs initial-scale=1; interactive-widget=resizes-content; user-scalable=no -->
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
   <script src="/static/react.production.min.js" crossorigin></script>
@@ -3075,7 +3077,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#expandLess"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "expandLess",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M7.707 14.707l-1.414-1.414 5-5a1 1 0 011.414 0l5 5-1.414 1.414L12 10.414l-4.293 4.293z"
@@ -3421,12 +3422,13 @@ var App = /*#__PURE__*/function (_React$Component) {
         type: "image/jpeg",
         srcset: "/static/icon/jalus_red_white.svg"
       }), /*#__PURE__*/React.createElement("img", {
-        "class": "w-full inline-block",
+        "class": "inline-block",
         src: "/static/icon/jalus_red_white.svg",
         width: "44",
         height: "44",
         style: {
-          objectFit: 'cover'
+          objectFit: 'cover',
+          width: 'auto'
         },
         alt: "\u062C\u0627\u0644\u0648\u0633",
         title: ""
