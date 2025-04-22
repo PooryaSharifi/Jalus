@@ -111,7 +111,7 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        {this.state.article == -1 ? <div style={{maxWidth: 960, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        {this.state.article == -1 ? <div style={{maxWidth: 960, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>بازسازی به سبک جالوس</h1>
           <div style={{paddingLeft: '10%', paddingRight: '10%'}}>
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
@@ -137,7 +137,7 @@ class App extends React.Component {
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>کاربازسازی در مجموعه جالوس به یک روتین پرتکرار تبدیل شده می‌توان گفت که تجربه کار هماهنگ و تیمی مجموعه در کنار هم سبب هم‌افزایی و ارائه خدمات بهتر شده است
           بهینه سازی در استفاده از وقت کارگر و اوستاکار و همچنین استفاده درست از متریال های دست اول تولید کنندگان مهمترین عامل خدمات باکیفیت و با قیمت رقابتی گروه ما می‌باشد</p>
           <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'rebuild'})}}>برای شروع همکاری وارد شوید</span>
-        </div> : <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        </div> : <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
           {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
           <div class="w-full" style={{marginBottom: 8}}>

@@ -114,7 +114,7 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        {this.state.article == -1 ? <div style={{maxWidth: 960, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        {this.state.article == -1 ? <div style={{maxWidth: 960, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>سبز دومظوره</h1>
           <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>بناهای باغی</h2>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>بناها و سازه هایی که در باغات احداث شده‌اند معمولاً و به طورعمده خالی از سکنه هستند زیرا به عنوان خانه دووم محسوب شده و برای دورهمی استفاده می‌گردند این بناها عمدتا در اطراف شهرها احداث شده و دسترسی به اندازه خانه‌های شهری ندارند.
@@ -130,7 +130,7 @@ class App extends React.Component {
   این طرح همان طور که درفیلم و عکس‌های آن نمایان است به سادگی انجم پذیر است و برای همه ابعاد و نقشه‌ای قابل اجراست. تمامی تمهیدات آن اندیشیده شده است و می‌تواند به راحتی به خانه هوشمند متصل شود.
   برای مشاهده نمونه کار و آشنایی بیشتر ثبت‌نام کنید تا همکاران ما با شما تماس بگیرند</p>
           <span style={{backgroundColor: '#343747', borderRadius: 999, color: '#fdfdfd', padding: 6, paddingLeft: 12, paddingRight: 12, fontSize: '1.85em', position: 'relative', top: 15, cursor: 'pointer'}} onClick={() => {this.setState({potent: true, potentInterest: 'dual'})}}>برای شروع همکاری وارد شوید</span>
-        </div> : <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        </div> : <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
           {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
           <div class="w-full" style={{marginBottom: 8}}>

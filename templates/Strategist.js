@@ -110,7 +110,7 @@ class App extends React.Component {
         <div style={{height: 105}}></div>
         {/* #macro modules/story */}
         {/* #macro modules/slider */}
-        {this.state.article == -1 ? <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        {this.state.article == -1 ? <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>استراتژیست</h1>
           <div class="w-full">
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
@@ -140,7 +140,7 @@ class App extends React.Component {
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>دانلود مشاهده جزوه</p>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>دانلود مشاهده آزمون</p>
           <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>میزبان جالوس شو و همه چیزرو در دست بگیر</h2>
-        </div> : <div style={{maxWidth: 768, paddingBottom: 20}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        </div> : <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
           {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
           <div class="w-full" style={{marginBottom: 8}}>

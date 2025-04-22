@@ -33,6 +33,7 @@ class App extends React.Component {
     this.state = {searchExpand: false, searchInput: '', searchLocations: [], searchProperties: [], searchFeatures: [], expand_lyr: false, lyr: params.lyr, landing: landing == 1, 
       properties: [], property: 0, category: null, stat: 0, show: {}, calendared: false, calendar: [], calendarBias: 0, calendarRange: [-1, -1], ordered: false, phone: cookie('phone'), session: cookie('session'), otp: false, keys: {}}
     this.checkReserved = this.checkReserved.bind(this); this.binSearch = this.binSearch.bind(this); this.calendar = this.calendar.bind(this);
+    window.onpopstate = e => {if (!window.history.state) return; app.setState({show: {}}, () => {window.history.replaceState({}, null, window.history.state.url)})}
   } async checkReserved() { if ('calendarReserved' in this.state.show) return;
     let r = await fetch(`/key/${this.state.show.id}`); r = await r.json(); let calendar = [];
     for (var j = 0; j < r.length; j ++) { let key = r[j]; calendar.push([-1, -1]);
@@ -42,7 +43,7 @@ class App extends React.Component {
       } if (calendar.length > 1 && calendar[calendar.length - 1][0] - calendar[calendar.length - 2][1] === 1) {calendar[calendar.length - 2][1] = calendar[calendar.length - 1][1]; calendar.pop()}
     } let binCalendar = []; calendar = [[4, 5], [7, 7], [9, 11], [25, 32]];
     for (var j = 0; j < calendar.length; j ++) { binCalendar.push([calendar[j][0], false]); binCalendar.push([calendar[j][1], true]); }
-    this.state.show.calendarReserved = binCalendar; this.setState({show: this.state.show, landing: false}, () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`);});
+    this.state.show.calendarReserved = binCalendar; this.setState({show: this.state.show, landing: false}, () => {});
   } async checkPayed() { if (!this.state.session) return;
     let r = await fetch('/key', {method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': this.state.session}});
     if (r.status < 300) {
@@ -64,7 +65,7 @@ class App extends React.Component {
       let ps = window.app.state.properties, target = e.target;
       if (target.tagName == 'SPAN') target = target.parentElement;
       for (var i = 0; i < ps.length; i ++) if (ps[i].id == target.id) {
-        window.history.replaceState({}, null, `/properties/${ps[i].id}`);
+        window.history.pushState({url: window.location.href}, null, `/properties/${ps[i].id}`);
         window.app.setState({show: ps[i], landing: false}); window.app.checkReserved(); break
       }
     }; r.map((property, idx) => {
@@ -81,8 +82,11 @@ class App extends React.Component {
     } this.state.calendar.pop(); 
     this.setState({calendar: this.state.calendar, calendarBias: calendarBias});
     if (window.location.pathname.split('/').length == 3) {
-      for (let h = 0; h < this.state.properties.length; h ++) {if (this.state.properties[h].id == window.location.pathname.split('/')[2])
-        this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});}
+      for (let h = 0; h < this.state.properties.length; h ++)
+        if (this.state.properties[h].id == window.location.pathname.split('/')[2]) {
+          console.log(this.state.properties[h].phone)
+          this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); await this.checkReserved();});
+      }
     }
     await this.checkPayed();
     for (let h in this.state.keys) { let key = this.state.keys[h];
@@ -92,7 +96,7 @@ class App extends React.Component {
           if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.head.split(' ')[0].split('-')).join('-')) this.state.calendarRange[0] = i;
           if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.tail.split(' ')[0].split('-')).join('-')) this.state.calendarRange[1] = i;
         } for (i = 0; i < this.state.properties.length; i ++) if (this.state.properties[i].id  == key.home) break;
-        this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});
+        this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});
       }
     }
     // , async () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()}
@@ -167,17 +171,17 @@ class App extends React.Component {
           <div style={{paddingRight: '.9rem', paddingLeft: '.9rem'}}><span style={{display: 'inline-block', width: 6, height: 6, backgroundColor: 'black', borderRadius: 6, marginLeft: 6}}></span>{'درتقویم تاریخ سفرتان را انتخاب کنید > در نقشه به جست و جو بپردازید > باانتخاب گزینه رزرو و پرداخت مبلغ کلید وای‌فای تان را دریافت کنید'}</div>
           <div className="touchable" style={{padding: '13px 14px 15px 14px', color: 'white', backgroundColor: '#e31025', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.02em', margin: 9}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); this.setState({landing: false})}}>{'بستن'}</div>
         </div>
-      </div>} {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) this.setState({show: {}}, () => {window.history.replaceState({}, null, `/properties/${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`)})}}>
+      </div>} {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) this.setState({show: {}}, () => {if (window.history.state) window.history.replaceState({}, null, window.history.state.url); history.back()})}}>
         <div ref={(elem) => {window.show = elem;}} className="scroll" style={{height: '100%', backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
           <div style={{paddingRight: '1em', direction: 'rtl', }}>
             <div>
-              <span class={this.state.ordered ? "bold" : "bold touchable"} style={{left: 'calc(0px)', top: '12px', position: 'relative', display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.05em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; this.setState({show: {}}, () => {window.history.replaceState({}, null, `/properties/${map.getZoom()}/${map.getCenter().lat.toFixed(2)}/${map.getCenter().lng.toFixed(2)}`)})}}>+</span>
+              <span class={this.state.ordered ? "bold" : "bold touchable"} style={{left: 'calc(0px)', top: '12px', position: 'relative', display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.05em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; this.setState({show: {}}, () => {if (window.history.state) window.history.replaceState({}, null, window.history.state.url); history.back()})}}>+</span>
               <span class="bold touchable" style={{left: 'calc(8px)', top: '10px', position: 'relative', display: 'inline-block', fontSize: '.95em', padding: 8, paddingBottom: 3, color: '#bb2d3b', float: 'left'}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.show.scrollTo(0, window.show.scrollHeight);}}>{this.state.ordered ? 'لغو' : 'سفارش'}</span>
             </div>
           </div>
           <div style={{marginTop: '1.05em', display: 'flex', flexDirection: 'row', overflowX: 'auto', direction: 'rtl'}}>{ this.state.show.images.map((im) => <div style={{flexShrink: 0, display: 'inline-block', backgroundImage: `url(/static/properties/${im})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 200, width: '100%'}}/>)}</div>
           <div style={{fontSize: '1.5rem', fontWeight: 500, lineHeight: 1.5, paddingTop: '.8em', paddingBottom: '.9em', paddingRight: '.75em'}}>{this.state.show.title}</div>
-          <div style={{height: '2em', paddingLeft: '1.2em', paddingRight: '1.8em', paddingBottom: '.5em'}}><a style={{textDecoration: 'none' ,float: 'left', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={() => {window.open(`tel:${this.state.show.phone}`, '_self')}}>{('0' + this.state.show.phone.slice(3)).farsify()}</a><div style={{float: 'right'}}>تماس</div></div>
+          <div style={{height: '2em', paddingLeft: '1.2em', paddingRight: '1.8em', paddingBottom: '.5em'}}><a style={{textDecoration: 'none' ,float: 'left', color: '#343747', fontWeight: 500, cursor: 'pointer'}} onClick={() => {window.open(`tel:${this.state.show.phone}`, '_self')}}>{this.state.show.phone.farsify()}</a><div style={{float: 'right'}}>تماس</div></div>
           {'options' in this.state.show && (<div style={{display: 'flex', flexFlow: 'row wrap'}}>
             {Object.keys(this.state.show.options).map(k => (<div className="column" style={{flexGrow: 1, color: 'rgba(0,0,0,.87)', display: 'flex', flexDirection: 'column', flexBasis: '33.333%', padding: '16px 0', position: 'relative', textAlign: 'center'}}>
               <span style={{color: 'rgba(0,0,0,.56)', marginBottom: '4px', fontSize: '.875rem'}}>{k}</span>

@@ -7577,7 +7577,7 @@ window.loadStory = function(title, videos, ccs, markers) {
       const e = new window.ks("#player", {
         debug: !0,
         title: title,
-        iconUrl: "/static/plyr.svg",
+        iconUrl: "/static/icon/plyr.svg",
         keyboard: {global: !0},
         tooltips: {controls: !0},
         captions: {active: !0},

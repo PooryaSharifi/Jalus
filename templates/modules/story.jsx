@@ -4,7 +4,7 @@
       <div style={{overflowX: 'scroll'}} class="swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events swiper-container-rtl">
         <div class="swiper-wrapper">
           {this.state.stories.map((story) => (<div class="swiper-slide" style={{width: 'auto', height: 'auto', marginLeft: 24}}>
-            <div class="ml-3 lg:ml-0 w-[84px] shrink-0 cursor-pointer" onClick={() => {loadStory(story.title, story.resolutions.map((res) => ('/static/stories/' + story.href + '.' + res + '.mp4')), story.ccs.map((cc) => ('/static/stories/' + story.href + '.' + cc + '.vtt')), story.markers)}}>
+            <div class="ml-3 lg:ml-0 w-[84px] shrink-0 cursor-pointer" onClick={() => {window.history.pushState({}, ''); loadStory(story.title, story.resolutions.map((res) => ('/static/stories/' + story.href + '.' + res + '.mp4')), story.ccs.map((cc) => ('/static/stories/' + story.href + '.' + cc + '.vtt')), story.markers)}}>
               <div class="styles_container__ipSg9 rounded-circle shrink-0 w-full aspect-square relative flex items-center justify-center">
                 <div class="rounded-circle overflow-hidden bg-white aspect-square styles_innerContainer__6FPF0 flex items-center justify-center">
                   <div class="rounded-circle overflow-hidden flex items-center justify-center styles_image__ggcBy" style={{borderRadius: 99999, lineHeight: 0}}>
