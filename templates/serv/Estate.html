@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="/static/digikala.css"/><script src="/static/plyr.js" crossorigin="anonymous"></script><link rel="stylesheet" href="/static/plyr.css"/><link rel="stylesheet" href="/static/plyr.min.css"/> 
   <style>.touchable { cursor: pointer !important; transition: 0.07s ease-in-out !important; } .touchable:active { opacity: .2 !important; }
   .scrollview { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }</style>
-</head><body><div id="app"></div><div onclick="(function(event) {if(event.target == document.getElementById('plyr')) {document.getElementById('plyr').style.display = 'none'; document.getElementById('plyr').innerHTML = ''}})(event)" style="display: none; background: #0004; position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 10" id="plyr"></div><script>"use strict";
+</head><body><div id="app"></div><div onclick="(function(event) {if(event.target == document.getElementById('plyr')) {history.back(); document.getElementById('plyr').style.display = 'none'; document.getElementById('plyr').innerHTML = ''}})(event)" style="display: none; background: #0004; position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 10" id="plyr"></div><script>"use strict";
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
@@ -626,7 +626,14 @@ var App = /*#__PURE__*/function (_React$Component) {
                 });
                 window.Y = window.NY;
               });
-            case 25:
+              window.onpopstate = function (e) {
+                var plyr = document.getElementById('plyr');
+                if (plyr) {
+                  plyr.style.display = 'none';
+                  plyr.innerHTML = '';
+                }
+              };
+            case 26:
             case "end":
               return _context4.stop();
           }
