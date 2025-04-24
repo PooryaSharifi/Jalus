@@ -283,7 +283,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     images = browser.find_elements(by=By.XPATH, value="//img[contains(concat(' ', @class, ' '), ' kt-image-block__image ') and @src and string-length(@src)!=0]")
     images = list(set([img.get_attribute('src') for img in images]))
     user['_images'] = images  # <- IMAGES ->
-    precise_location = False
+    user['precise_location'] = False
     try:
         # WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @src, ' '), 'mapimage')]"))).click()
         WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @alt, ' '), 'موقعیت مکانی')]"))).click()
@@ -293,7 +293,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         lat, lng = lat_lng.query.split('&')
         lat, lng = float(lat.split('=')[1]), float(lng.split('=')[1])
         user['location'] = {'type': 'Point', 'coordinates': [lng, lat]}
-        precise_location = True
+        user['precise_location'] = True
     except: pass
         # if 'location' not in user or not user['location']:
         #     for loc in user['subtitle'].split('،'):
@@ -344,7 +344,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         swap_index = title_description.index('معاوضه')
         user['swap'] = {'swapArea': 0, 'swapCapacity': 0, 'swapBudget': 0, 'swapLiquidity': 0, 'swapDebt': 0, 'swapQ': '', 'swapLocation': {'type': 'Point', 'coordinates': [0, 0]}, 'swapCategory': [kt_chip, user['category']], 'date': datetime.now()}
         if swap_index + 2 < len(title_description) and title_description[swap_index + 1] == 'با': user['swap']['q'] = title_description[swap_index + 2]
-    print(f"{cs.OKGREEN}{cs.BOLD}Ad{'@' if precise_location else '?'}{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+    print(f"{cs.OKGREEN}{cs.BOLD}Ad{'@' if user['precise_location'] else '?'}{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
