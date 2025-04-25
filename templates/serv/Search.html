@@ -318,14 +318,6 @@ var App = /*#__PURE__*/function (_React$Component) {
     _this.checkReserved = _this.checkReserved.bind(_assertThisInitialized(_this));
     _this.binSearch = _this.binSearch.bind(_assertThisInitialized(_this));
     _this.calendar = _this.calendar.bind(_assertThisInitialized(_this));
-    window.onpopstate = function (e) {
-      if (!window.history.state) return;
-      app.setState({
-        show: {}
-      }, function () {
-        window.history.replaceState({}, null, window.history.state.url);
-      });
-    };
     return _this;
   }
   _createClass(App, [{
@@ -560,7 +552,6 @@ var App = /*#__PURE__*/function (_React$Component) {
                   while (1) switch (_context5.prev = _context5.next) {
                     case 0:
                       if (_this2.state.properties[h].id == window.location.pathname.split('/')[2]) {
-                        console.log(_this2.state.properties[h].phone);
                         _this2.setState({
                           show: _this2.state.properties[h],
                           landing: false
@@ -664,6 +655,17 @@ var App = /*#__PURE__*/function (_React$Component) {
               _context7.next = 27;
               break;
             case 44:
+              window.onpopstate = function (e) {
+                if (_this2.state.show.isEmpty()) return;
+                app.setState({
+                  show: {}
+                }, function () {
+                  window.history.replaceState({}, null);
+                });
+              };
+              // , async () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()}
+              // TODO oonja ke vasate buy mire login va; oonja ke buy mikone vo ghablesh login hast, va didMount -> checkForPendingLoop(); age peding dasht mimoone too divare oonsafe tekoonam nemikhore (khastam quit kone payam dialogue midim ke baz shode dari boro beband), key dasht mire too home, va ellaa /search
+            case 45:
             case "end":
               return _context7.stop();
           }
@@ -1510,12 +1512,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
           if (_this4.state.ordered) return;
-          if (e.target === e.currentTarget) _this4.setState({
-            show: {}
-          }, function () {
-            if (window.history.state) window.history.replaceState({}, null, window.history.state.url);
-            history.back();
-          });
+          if (e.target === e.currentTarget) history.back();
         }
       }, /*#__PURE__*/React.createElement("div", {
         ref: function ref(elem) {
@@ -1553,12 +1550,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           e.stopPropagation();
           e.nativeEvent.stopImmediatePropagation();
           if (_this4.state.ordered) return;
-          _this4.setState({
-            show: {}
-          }, function () {
-            if (window.history.state) window.history.replaceState({}, null, window.history.state.url);
-            history.back();
-          });
+          history.back();
         }
       }, "+"), /*#__PURE__*/React.createElement("span", {
         "class": "bold touchable",
