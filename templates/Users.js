@@ -72,7 +72,7 @@ class App extends React.Component {
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
         {/* #macro modules/menu */}
-        <div style={{height: this.state.menuHeight}}></div>
+        <div style={{height: 108, backgroundColor: 'white'}}></div>
         {this.state.leftMenu == 'ثبت و بستن' && <textarea style={{border: 'none', outline: 'none', borderTop: '1px grey solid', position: 'fixed', zIndex: 899, left: 150, right: 150, border: '1px solid grey', borderRadius: 8, marginTop: 10, direction: 'ltr', padding: 4, minHeight: 250}} value={this.state.urlList} onChange={async (e) => {this.setState({urlList: e.target.value})}}></textarea>}
         {this.state.note >= 0 && <div id="notes" style={{fontSize: '1.3em', position: 'fixed', bottom: 1, left: 80, right: 80, height: 222, overflowY: 'scroll', background: '#ffff', borderRadius: 8, border: '1px solid grey', zIndex: 898}}>
           <div style={{height: 'calc(222px - 3em)', overflowY: 'scroll', overflowX: 'hidden'}}>{this.state.ads[this.state.note].notes.toReversed().map(t => <div><span style={{marginRight: 9, marginLeft: 4, marginTop: 5, verticalAlign: 'middle', display: 'inline-block', fontSize: '1.4em'}}><span style={{color: '#a3a4ce', fontSize: 12, position: 'relative', top: -3, paddingLeft: 4}}>{t.date.split(' ')[1].split(':')[0]}:{t.date.split(' ')[1].split(':')[1]}</span>•</span>{t.note}</div>)}</div>

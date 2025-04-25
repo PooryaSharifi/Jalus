@@ -33,7 +33,6 @@ class App extends React.Component {
     this.state = {searchExpand: false, searchInput: '', searchLocations: [], searchProperties: [], searchFeatures: [], expand_lyr: false, lyr: params.lyr, landing: landing == 1, 
       properties: [], property: 0, category: null, stat: 0, show: {}, calendared: false, calendar: [], calendarBias: 0, calendarRange: [-1, -1], ordered: false, phone: cookie('phone'), session: cookie('session'), otp: false, keys: {}}
     this.checkReserved = this.checkReserved.bind(this); this.binSearch = this.binSearch.bind(this); this.calendar = this.calendar.bind(this);
-    window.onpopstate = e => {if (!window.history.state) return; app.setState({show: {}}, () => {window.history.replaceState({}, null, window.history.state.url)})}
   } async checkReserved() { if ('calendarReserved' in this.state.show) return;
     let r = await fetch(`/key/${this.state.show.id}`); r = await r.json(); let calendar = [];
     for (var j = 0; j < r.length; j ++) { let key = r[j]; calendar.push([-1, -1]);
@@ -84,11 +83,9 @@ class App extends React.Component {
     if (window.location.pathname.split('/').length == 3) {
       for (let h = 0; h < this.state.properties.length; h ++)
         if (this.state.properties[h].id == window.location.pathname.split('/')[2]) {
-          console.log(this.state.properties[h].phone)
           this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); await this.checkReserved();});
       }
-    }
-    await this.checkPayed();
+    } await this.checkPayed();
     for (let h in this.state.keys) { let key = this.state.keys[h];
       if ('fix' in key && key.fix === false) {
         this.state.ordered = true; var i = 0;
@@ -99,6 +96,7 @@ class App extends React.Component {
         this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});
       }
     }
+    window.onpopstate = e => {if (this.state.show.isEmpty()) return; app.setState({show: {}}, () => {window.history.replaceState({}, null)})}
     // , async () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()}
     // TODO oonja ke vasate buy mire login va; oonja ke buy mikone vo ghablesh login hast, va didMount -> checkForPendingLoop(); age peding dasht mimoone too divare oonsafe tekoonam nemikhore (khastam quit kone payam dialogue midim ke baz shode dari boro beband), key dasht mire too home, va ellaa /search
   } calendar () {
@@ -171,11 +169,11 @@ class App extends React.Component {
           <div style={{paddingRight: '.9rem', paddingLeft: '.9rem'}}><span style={{display: 'inline-block', width: 6, height: 6, backgroundColor: 'black', borderRadius: 6, marginLeft: 6}}></span>{'درتقویم تاریخ سفرتان را انتخاب کنید > در نقشه به جست و جو بپردازید > باانتخاب گزینه رزرو و پرداخت مبلغ کلید وای‌فای تان را دریافت کنید'}</div>
           <div className="touchable" style={{padding: '13px 14px 15px 14px', color: 'white', backgroundColor: '#e31025', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.02em', margin: 9}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); this.setState({landing: false})}}>{'بستن'}</div>
         </div>
-      </div>} {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) this.setState({show: {}}, () => {if (window.history.state) window.history.replaceState({}, null, window.history.state.url); history.back()})}}>
+      </div>} {!this.state.show.isEmpty() && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 799, padding: 14, backgroundColor: '#1111126A'}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; if(e.target === e.currentTarget) history.back() }}>
         <div ref={(elem) => {window.show = elem;}} className="scroll" style={{height: '100%', backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
           <div style={{paddingRight: '1em', direction: 'rtl', }}>
             <div>
-              <span class={this.state.ordered ? "bold" : "bold touchable"} style={{left: 'calc(0px)', top: '12px', position: 'relative', display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.05em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; this.setState({show: {}}, () => {if (window.history.state) window.history.replaceState({}, null, window.history.state.url); history.back()})}}>+</span>
+              <span class={this.state.ordered ? "bold" : "bold touchable"} style={{left: 'calc(0px)', top: '12px', position: 'relative', display: 'inline-block', transform: 'rotate(45deg)', fontSize: '1.05em', padding: 8, paddingBottom: 3, color: '#bb2d3b', opacity: this.state.ordered ? .6 : 1}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if (this.state.ordered) return; history.back()}}>+</span>
               <span class="bold touchable" style={{left: 'calc(8px)', top: '10px', position: 'relative', display: 'inline-block', fontSize: '.95em', padding: 8, paddingBottom: 3, color: '#bb2d3b', float: 'left'}} onClick={(e) => { e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); window.show.scrollTo(0, window.show.scrollHeight);}}>{this.state.ordered ? 'لغو' : 'سفارش'}</span>
             </div>
           </div>
