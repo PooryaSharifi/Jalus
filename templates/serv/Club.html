@@ -1037,8 +1037,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("header", {
         "class": "w-full flex flex-col bg-neutral-000 relative BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__QxTqh BaseLayoutDesktopHeader_BaseLayoutDesktopHeader--nav-open__cty_v",
         style: {
-          height: this.state.menuHeight || 108,
-          overflowY: 'hidden'
+          height: this.state.menuHeight || 108
         }
       }, /*#__PURE__*/React.createElement("div", {
         "class": "w-full bg-neutral-000 relative z-5"
@@ -1572,6 +1571,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         onClick: function onClick() {
           _this3.setState({
             searchExpand: true
+          }, function () {
+            window.history.pushState({}, '');
           });
         }
       }, this.state.searchInput === '' ? 'جستجو' : this.state.searchInput)))))), /*#__PURE__*/React.createElement("div", {
@@ -1614,6 +1615,8 @@ var App = /*#__PURE__*/function (_React$Component) {
           } else _this3.setState({
             potent: true,
             potentInterest: ''
+          }, function () {
+            window.history.pushState({}, '');
           });
         }
       }, /*#__PURE__*/React.createElement("button", {
@@ -1784,6 +1787,9 @@ var App = /*#__PURE__*/function (_React$Component) {
       }))), /*#__PURE__*/React.createElement("div", {
         "class": "flex items-center justify-center relative grow"
       }, "\u062B\u0628\u062A \u0633\u0641\u0627\u0631\u0634"))))))))), /*#__PURE__*/React.createElement("nav", {
+        style: {
+          display: this.state.menuHeight > 100 ? 'flex' : 'none'
+        },
         "class": "BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0 flex items-center flex-wrap justify-between bg-neutral-000 grow flex-col"
       }, /*#__PURE__*/React.createElement("div", {
         "class": " flex w-full container-4xl-w mx-auto relative justify-between md:px-4 grow"
@@ -1794,6 +1800,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         onClick: function onClick() {
           return _this3.setState({
             categoryShow: !_this3.state.categoryShow
+          }, function () {
+            if (_this3.state.categoryShow) window.history.pushState({}, '');
           });
         }
       }, /*#__PURE__*/React.createElement("div", {
@@ -1833,6 +1841,8 @@ var App = /*#__PURE__*/function (_React$Component) {
                 case 0:
                   _this3.setState({
                     firstMenuShow: !_this3.state.firstMenuShow
+                  }, function () {
+                    if (_this3.state.firstMenuShow) window.history.pushState({}, '');
                   });
                 case 1:
                 case "end":
@@ -1874,6 +1884,8 @@ var App = /*#__PURE__*/function (_React$Component) {
                 case 0:
                   _this3.setState({
                     secondMenuShow: !_this3.state.secondMenuShow
+                  }, function () {
+                    if (_this3.state.secondMenuShow) window.history.pushState({}, '');
                   });
                 case 1:
                 case "end":
@@ -3784,5 +3796,46 @@ var App = /*#__PURE__*/function (_React$Component) {
   }]);
   return App;
 }(React.Component);
-ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById('app'));
+ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById('app'), function () {
+  window.init_history_length = history.length;
+  window.onpopstate = function (e) {
+    if (window.init_history_length == history.length) return;
+    var plyr = document.getElementById('plyr');
+    if (window.app.state.searchExpand) {
+      window.app.setState({
+        searchExpand: false
+      });
+    } else if (window.app.state.firstMenuShow) {
+      window.app.setState({
+        firstMenuShow: false
+      });
+    } else if (window.app.state.secondMenuShow) {
+      window.app.setState({
+        secondMenuShow: false
+      });
+    } else if (window.app.state.potent) {
+      window.app.setState({
+        potent: false,
+        potentInterest: ''
+      });
+    } else if (window.app.state.categoryShow) {
+      window.app.setState({
+        categoryShow: false
+      });
+    } else if (window.app.state.article >= 0) {
+      window.app.setState({
+        article: -1
+      });
+    } else if (window.app.state.show && !window.app.state.show.isEmpty()) {
+      window.app.setState({
+        show: {}
+      }, function () {
+        window.history.replaceState({}, null);
+      });
+    } else if (plyr) {
+      plyr.style.display = 'none';
+      plyr.innerHTML = '';
+    }
+  };
+});
 </script></body></html>

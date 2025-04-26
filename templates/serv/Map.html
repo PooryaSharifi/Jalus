@@ -2119,5 +2119,46 @@ var App = /*#__PURE__*/function (_React$Component) {
   }]);
   return App;
 }(React.Component);
-ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById('app'));
+ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById('app'), function () {
+  window.init_history_length = history.length;
+  window.onpopstate = function (e) {
+    if (window.init_history_length == history.length) return;
+    var plyr = document.getElementById('plyr');
+    if (window.app.state.searchExpand) {
+      window.app.setState({
+        searchExpand: false
+      });
+    } else if (window.app.state.firstMenuShow) {
+      window.app.setState({
+        firstMenuShow: false
+      });
+    } else if (window.app.state.secondMenuShow) {
+      window.app.setState({
+        secondMenuShow: false
+      });
+    } else if (window.app.state.potent) {
+      window.app.setState({
+        potent: false,
+        potentInterest: ''
+      });
+    } else if (window.app.state.categoryShow) {
+      window.app.setState({
+        categoryShow: false
+      });
+    } else if (window.app.state.article >= 0) {
+      window.app.setState({
+        article: -1
+      });
+    } else if (window.app.state.show && !window.app.state.show.isEmpty()) {
+      window.app.setState({
+        show: {}
+      }, function () {
+        window.history.replaceState({}, null);
+      });
+    } else if (plyr) {
+      plyr.style.display = 'none';
+      plyr.innerHTML = '';
+    }
+  };
+});
 </script></body></html>
