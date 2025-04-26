@@ -2,7 +2,7 @@
   id="base_layout_desktop_fixed_header" width="1270" height="108">
   <header
     class="w-full flex flex-col bg-neutral-000 relative BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__QxTqh BaseLayoutDesktopHeader_BaseLayoutDesktopHeader--nav-open__cty_v"
-    style={{height: this.state.menuHeight || 108, overflowY: 'hidden'}}>
+    style={{height: this.state.menuHeight || 108}}>
     <div class="w-full bg-neutral-000 relative z-5">
       <div class=" flex w-full container-4xl-w mx-auto relative justify-between md:px-4 grow">
         <div class="w-full py-3 flex relative z-2">
@@ -283,7 +283,7 @@
                             </div>
                           </div>
                         </div>
-                      </div>) : (<div class="lg:text-body-2 text-button-1 flex items-center h-full text-body-2 text-neutral-500" onClick={() => {this.setState({searchExpand: true})}}>{this.state.searchInput === '' ? 'جستجو' : this.state.searchInput}</div>)}
+                      </div>) : (<div class="lg:text-body-2 text-button-1 flex items-center h-full text-body-2 text-neutral-500" onClick={() => {this.setState({searchExpand: true}, () => {window.history.pushState({}, '')})}}>{this.state.searchInput === '' ? 'جستجو' : this.state.searchInput}</div>)}
                         </span>
                       </div>
                     </div>
@@ -299,7 +299,7 @@
             </div>
           </div>
           <div class="flex items-center justify-end">
-            <a class="styles_Link__RMyqc" onClick={() => {if (this.state.session) {delCookie('phone'); delCookie('session'); this.setState({'phone': '', 'session': ''})} else this.setState({potent: true, potentInterest: ''})}}>
+            <a class="styles_Link__RMyqc" onClick={() => {if (this.state.session) {delCookie('phone'); delCookie('session'); this.setState({'phone': '', 'session': ''})} else this.setState({potent: true, potentInterest: ''}, () => {window.history.pushState({}, '')})}}>
               <button class="relative flex items-center user-select-none styles_btn__Q4MvL text-button-2 styles_btn--medium__4GoNC styles_btn--neutralOutlined__mLWvq styles_btn--black__xj6Mt rounded-medium whitespace-nowrap shrink-0 ml-2 lg:ml-0" data-cro-id="header-profile">
                 <div class="flex items-center justify-center styles_btn__loading__d5Rcc"><svg width="24" height="24" id="e302pyQgejw1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
                     <path class="styles_Loading__circle1__K7HNJ"
@@ -371,12 +371,10 @@
         </div>
       </div>
     </div>
-    <nav
-      class="BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0 flex items-center flex-wrap justify-between bg-neutral-000 grow flex-col">
+    <nav style={{display: this.state.menuHeight > 100 ? 'flex' : 'none'}} class="BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0 flex items-center flex-wrap justify-between bg-neutral-000 grow flex-col">
       <div class=" flex w-full container-4xl-w mx-auto relative justify-between md:px-4 grow">
-        <div
-          class="flex relative base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navContainer__hGPBW">
-          <div class="flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA" onClick={() => this.setState({categoryShow: !this.state.categoryShow})}>
+        <div class="flex relative base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navContainer__hGPBW">
+          <div class="flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA" onClick={() => this.setState({categoryShow: !this.state.categoryShow}, () => {if (this.state.categoryShow) window.history.pushState({}, '')})}>
             <div class="digikala-nav-item leading-0 h-full flex items-center flex items-center"><span
                 data-cro-id="header-main-menu"
                 class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-neutral-700 text-body1-strong">
@@ -393,7 +391,7 @@
           <div class="flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA">
             <div class="digikala-nav-item leading-0 h-full flex items-center px-2 px-3">
               <a class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2" 
-                data-cro-id="header-main-menu" onClick={async (e) => {this.setState({firstMenuShow: !this.state.firstMenuShow})}}>
+                data-cro-id="header-main-menu" onClick={async (e) => {this.setState({firstMenuShow: !this.state.firstMenuShow}, () => {if (this.state.firstMenuShow) window.history.pushState({}, '')})}}>
                 <div class="flex ml-1 text-neutral-400"><svg
                     style={{width: 18, height: 18, fill: 'var(--color-icon-low-emphasis)'}}>
                     <use xlinkHref="#amazing">
@@ -403,7 +401,7 @@
               </a></div>
             <div class="digikala-nav-item leading-0 h-full flex items-center px-2 px-3">
               <a class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2"
-                data-cro-id="header-main-menu" onClick={async (e) => {this.setState({secondMenuShow: !this.state.secondMenuShow})}}>
+                data-cro-id="header-main-menu" onClick={async (e) => {this.setState({secondMenuShow: !this.state.secondMenuShow}, () => {if (this.state.secondMenuShow) window.history.pushState({}, '')})}}>
                 <div class="flex ml-1 text-neutral-400">
                   <div
                     style={{width: 18, height: 18, fontSize: 18, fontWeight: 'normal', color: 'var(--color-icon-low-emphasis)'}}

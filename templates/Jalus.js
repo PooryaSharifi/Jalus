@@ -125,7 +125,6 @@ class App extends React.Component {
       else this.setState({menuHeight: 108})
       window.Y = window.NY;
     })
-    window.onpopstate = e => { let plyr = document.getElementById('plyr'); if (plyr) {plyr.style.display = 'none'; plyr.innerHTML = ''} }
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>

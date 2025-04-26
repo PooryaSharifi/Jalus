@@ -14863,7 +14863,7 @@ button.swiper-pagination-bullet {
   .lg\:ml-0 {margin-left: 0;}
   .narrow_fit_image {width: 100%}
   .narrow_fit_text {width: 100%; padding-top: 6px}
-  .narrow_sub {margin-top: 20px}
+  .narrow_sub {margin-top: 20px; font-size: .85em}
 }
 
 @media (max-width: 1024px) {

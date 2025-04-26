@@ -30,8 +30,41 @@ var hash = L.hash(map);
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this;  // condition: Clear, Cloudy, Rainy, Snowy
     /* delCookie('phone'); delCookie('session'); */ let landing = parseInt(cookie('landing') | 0); landing = (++ landing) % 5; setCookie('landing', landing);
-    this.state = {searchExpand: false, searchInput: '', searchLocations: [], searchProperties: [], searchFeatures: [], expand_lyr: false, lyr: params.lyr, landing: landing == 1, 
-      properties: [], property: 0, category: null, stat: 0, show: {}, calendared: false, calendar: [], calendarBias: 0, calendarRange: [-1, -1], ordered: false, phone: cookie('phone'), session: cookie('session'), otp: false, keys: {}}
+    this.state = {searchExpand: false, searchInput: '', searchLocations: [], searchProperties: [], searchFeatures: [], expand_lyr: false, lyr: params.lyr, landing: landing == 1, properties: [], property: 0, stat: 0, show: {}, 
+      calendared: false, calendar: [], calendarBias: 0, calendarRange: [-1, -1], ordered: false, phone: cookie('phone'), session: cookie('session'), otp: false, keys: {}, category: null, category: -1, categoryShow: false, categories: [
+        {href: '/properties?lyr=1&category=mountain', title: 'کوهستانی',
+        png: '/static/categories/mountain_0_exposed.webp'},
+        {href: '/properties?lyr=1&category=accessible', title: 'پردسترس',
+        png: '/static/categories/accessible_0_exposed.webp'},
+        {href: '/users?category=beach', title: 'ساحلی',
+        png: '/static/categories/beach_3_exposed.webp'},
+        {href: '/properties?lyr=2&category=yeylaghi', title: 'ییلاقی',
+        png: '/static/categories/yeylaghi_1_exposed.webp'},
+        {href: '/properties?lyr=2&category=gheshlaghi', title: 'قشلاقی',
+        png: '/static/categories/gheshlaghi_0_exposed.webp'},
+        {href: '/properties?lyr=1&category=whole', title: 'دربستی',
+        png: '/static/categories/darbasti_0_exposed.webp'},
+        {href: '/users?category=infinity', title: 'ویو ابدی',
+        png: '/static/categories/abadi_0_exposed.webp'},
+        {href: '/properties?lyr=1&category=tent', title: 'کلبه‌ای',
+        png: '/static/categories/X_1_exposed.webp'},
+        {href: '/properties?lyr=2&category=pool', title: 'استخردار',
+        png: '/static/categories/pool_9_exposed.webp'},
+        {href: '/properties?lyr=1&category=jungle', title: 'جنگلی',
+        png: '/static/categories/jungle_5_exposed.webp'},
+        {href: '/properties?lyr=0&category=economy', title: 'اقتصادی',
+        png: '/static/categories/economic_0_exposed.webp'},
+        {href: '/users?category=classic', title: 'سنتی',
+        png: '/static/categories/sonnati_3_exposed.webp'},
+        {href: '/users?category=modern', title: 'مدرن',
+        png: '/static/categories/futuristic_1_exposed.webp'},
+        {href: '/users?category=swedish', title: 'سوییسی',
+        png: '/static/categories/swedish_0_exposed.webp'},
+        {href: '/users?category=action', title: 'تفریحی‌هیجانی',
+        png: '/static/categories/entertain_1_exposed.webp'},
+        {href: '/users?category=new', title: 'تجربه‌جدید',
+        png: '/static/categories/hobit_0_exposed.webp'},
+      ]}
     this.checkReserved = this.checkReserved.bind(this); this.binSearch = this.binSearch.bind(this); this.calendar = this.calendar.bind(this);
   } async checkReserved() { if ('calendarReserved' in this.state.show) return;
     let r = await fetch(`/key/${this.state.show.id}`); r = await r.json(); let calendar = [];
@@ -80,12 +113,6 @@ class App extends React.Component {
       this.state.calendar.push([now[0], now[1], now[2]]);
     } this.state.calendar.pop(); 
     this.setState({calendar: this.state.calendar, calendarBias: calendarBias});
-    if (window.location.pathname.split('/').length == 3) {
-      for (let h = 0; h < this.state.properties.length; h ++)
-        if (this.state.properties[h].id == window.location.pathname.split('/')[2]) {
-          this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); await this.checkReserved();});
-      }
-    } await this.checkPayed();
     for (let h in this.state.keys) { let key = this.state.keys[h];
       if ('fix' in key && key.fix === false) {
         this.state.ordered = true; var i = 0;
@@ -95,8 +122,13 @@ class App extends React.Component {
         } for (i = 0; i < this.state.properties.length; i ++) if (this.state.properties[i].id  == key.home) break;
         this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});
       }
-    }
-    window.onpopstate = e => {if (this.state.show.isEmpty()) return; app.setState({show: {}}, () => {window.history.replaceState({}, null)})}
+    } if (window.location.pathname.split('/').length == 3) {
+      for (let h = 0; h < this.state.properties.length; h ++)
+        if (this.state.properties[h].id == window.location.pathname.split('/')[2]) {
+          this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); }); break
+        }
+    } await this.checkPayed();
+    // window.onpopstate = e => {if (this.state.show.isEmpty()) return; app.setState({show: {}}, () => {window.history.replaceState({}, null)})}
     // , async () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()}
     // TODO oonja ke vasate buy mire login va; oonja ke buy mikone vo ghablesh login hast, va didMount -> checkForPendingLoop(); age peding dasht mimoone too divare oonsafe tekoonam nemikhore (khastam quit kone payam dialogue midim ke baz shode dari boro beband), key dasht mire too home, va ellaa /search
   } calendar () {
@@ -126,20 +158,20 @@ class App extends React.Component {
           <line x1={maxStat[3][0] + cStat[0]} y1={maxStat[3][1] + cStat[1]} x2={cStat[0]} y2={cStat[1]} style={{stroke: 'rgba(200, 100, 89, .8)', strokeWidth: 1, strokeDasharray: '5,5'}} />
           <line x1={maxStat[4][0] + cStat[0]} y1={maxStat[4][1] + cStat[1]} x2={cStat[0]} y2={cStat[1]} style={{stroke: 'rgba(200, 100, 89, .8)', strokeWidth: 1, strokeDasharray: '5,5'}} />
         </svg>
-        <div className="categories scroll" style={{width: 'calc(100% - 107px)', marginLeft: 107, display: 'flex', flexDirection: 'row', overflowX: 'auto', paddingTop: 3, paddingBottom: 4, paddingLeft: 3, paddingRight: 3, direction: 'rtl', position: 'absolute', bottom: 0}}>
+        {/* <div className="categories scroll" style={{width: 'calc(100% - 107px)', marginLeft: 107, display: 'flex', flexDirection: 'row', overflowX: 'auto', paddingTop: 3, paddingBottom: 4, paddingLeft: 3, paddingRight: 3, direction: 'rtl', position: 'absolute', bottom: 0}}>
           {[...new Set(this.state.properties.map(pr => pr.category))].map((category, idx) => <span className="touchable" style={{fontSize: '.88em', display: 'inline-block', width: 'auto', margin: 4, padding: 10, paddingLeft: 22, paddingRight: 22, lineHeight: '14px', backgroundColor: 'rgba(89, 89, 89, 0.75)', borderRadius: 7 + 27, color: 'rgba(247, 253, 255, .95)', borderStyle: 'solid', borderWidth: 2, borderColor: this.state.category == category ? '#ab5a51' : '#636063'}} onClick={() => {this.setState({category: category})}}>{category}</span>)}
-        </div>
+        </div> */}
         <div style={{position: 'absolute', right: 0, bottom: 111, zIndex: 699, direction: 'rtl'}}>
           <svg onClick={() => {if(this.state.property == this.state.properties.length - 1) return; this.setState({property: this.state.property + 1}, () => {map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {animate: true, duration: .3, easeLinearity: .9});})}} class="touchable" style={{opacity: this.state.property == this.state.properties.length - 1 ? .6 : 1, backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr], display: 'inline-block', width: 30, height: 30, borderRadius: 15, verticalAlign: 'middle', marginRight: 5}}><polygon points="11 10, 11 20, 20, 15" stroke="rgba(200, 100, 89, .5)" fill="white" stroke-width="1" /></svg>
           <svg onClick={() => {if(this.state.property == 0) return; this.setState({property: this.state.property - 1}, () => {map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {animate: true, duration: .3, easeLinearity: .9});})}} class="touchable" style={{opacity: this.state.property == 0 ? .6 : 1, backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr], display: 'inline-block', width: 30, height: 30, borderRadius: 15, verticalAlign: 'middle', marginRight: 6}}><polygon points="19 10, 19 20, 10, 15" stroke="rgba(200, 100, 89, .5)" fill="white" stroke-width="1" /></svg>
           <span class="touchable" style={{backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr], display: 'inline-block', color: 'white', height: 28, borderRadius: 15, verticalAlign: 'middle', paddingLeft: 8, paddingRight: 10, marginRight: 6}} onClick={() => {this.setState({calendared: true})}}>تقویم</span>
           <span class="touchable" style={{backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr], display: 'inline-block', color: 'white', height: 28, borderRadius: 15, verticalAlign: 'middle', paddingLeft: 8, paddingRight: 10, marginRight: 6}} onClick={async () => {let stat = (this.state.stat + 1) % 5; this.setState({stat: stat, property: 0, properties: this.state.properties.sort((p0, p1) => p1.stat[stat] - p0.stat[stat])}, () => {map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {animate: true, duration: .3, easeLinearity: .9})})}}>{['پرامکانات‌ترین', 'اقتصادی‌ترین', 'جادارترین', 'پردسترس‌ترین', 'خاص‌ترین', ][this.state.stat]}</span>
-          <svg onClick={() => {if(this.state.property == 0) return; this.setState({property: this.state.property - 1}, () => {map.panTo(new L.LatLng(...this.state.properties[this.state.property].location), {animate: true, duration: .3, easeLinearity: .9});})}} class="touchable" style={{backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr], display: 'inline-block', width: 30, height: 30, borderRadius: 15, verticalAlign: 'middle', marginRight: 6, paddingLeft: 2, paddingTop: 3}}><path fill="white" d="M15.278 20.72a3.086 3.086 0 0 1-.621-.9H8.409a2.706 2.706 0 0 1-2.7-2.7V8.267a3 3 0 0 1 .895-5.865 3 3 0 0 1 .908 5.859v1.951h7.025a2.99 2.99 0 1 1 .006 1.8H7.512v5.106a.9.9 0 0 0 .9.9h6.047a3 3 0 1 1 .822 2.7Zm.922-2.121a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.2 1.197Zm0-7.5a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.2 1.197Zm-10.8-5.7a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.2 1.197Z" data-name="Path 3355"/></svg>
+          <svg onClick={() => this.setState({categoryShow: !this.state.categoryShow}, () => {if (this.state.categoryShow) window.history.pushState({}, '')})} class="touchable" style={{backgroundColor: ["rgba(200, 100, 89, .8)", '#c41a2f', '#c41a2f'][this.state.lyr], display: 'inline-block', width: 30, height: 30, borderRadius: 15, verticalAlign: 'middle', marginRight: 6, paddingLeft: 2, paddingTop: 3}}><path fill="white" d="M15.278 20.72a3.086 3.086 0 0 1-.621-.9H8.409a2.706 2.706 0 0 1-2.7-2.7V8.267a3 3 0 0 1 .895-5.865 3 3 0 0 1 .908 5.859v1.951h7.025a2.99 2.99 0 1 1 .006 1.8H7.512v5.106a.9.9 0 0 0 .9.9h6.047a3 3 0 1 1 .822 2.7Zm.922-2.121a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.2 1.197Zm0-7.5a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.2 1.197Zm-10.8-5.7a1.2 1.2 0 1 0 1.2-1.2 1.2 1.2 0 0 0-1.2 1.197Z" data-name="Path 3355"/></svg>
         </div>
         <div style={{position: 'absolute', right: 8, bottom: 81, color: ['#edf3f5', '#545747', '#545747'][this.state.lyr], fontSize: '1.02em'}}>{this.state.properties.length ? this.state.properties[this.state.property].title : '-'}</div>
         <div style={{position: 'absolute', right: 8, bottom: 48, color: ['#edf3f5', '#545747', '#545747'][this.state.lyr], fontSize: '.92em', fontWeight: 500}}><span style={{display: 'inline-block', marginRight: 2}}>تومان</span>{(this.state.properties.length ? String(this.state.properties[this.state.property].price) : '-').replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify()}</div>
       </div> <div style={{opacity: '98%', position: 'fixed', right: 5, top: 4, minHeight: 46, width: 46, borderRadius: 16, zIndex: 798, backgroundColor: '#ffffff', overflow: 'hidden', padding: 3, paddingBottom: 0, cursor: 'pointer', textAlign: 'center'}}>
-        <svg style={{width: 36, height: 36, fill: '#3a3a3a', padding: 5, position: 'relative', left: 1, top: 4}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); this.setState({searchExpand: true})}}>
+        <svg style={{width: 36, height: 36, fill: '#3a3a3a', padding: 5, position: 'relative', left: 1, top: 4}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); this.setState({searchExpand: true}, () => {window.history.pushState({}, '')})}}>
           <use xlinkHref="#searchSearch">
             <symbol id="searchSearch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path fill-rule="evenodd" d="M10.5 18a7.5 7.5 0 115.973-2.963l4.369 4.246-1.394 1.434-4.387-4.263A7.467 7.467 0 0110.5 18zm5.5-7.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z" clip-rule="evenodd"></path>
@@ -155,7 +187,7 @@ class App extends React.Component {
         <div style={{fontSize: '.7em', fontWeight: 500, textAlign: 'center', marginTop: -2, marginBottom: 0}}>{this.state.lyr == 2 ? window.lyrs[1][1] : window.lyrs[2][1]}</div>
       </div> {this.state.searchExpand && <div style={{position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, zIndex: 899, backgroundColor: '#1111126A', padding: 14}} onClick={(e) => {e.preventDefault(); e.stopPropagation(); e.nativeEvent.stopImmediatePropagation(); if(e.target === e.currentTarget) this.setState({ordered: false})}}>
         <div className="scroll" style={{height: '100%', backgroundColor: 'white', borderRadius: 16, direction: 'rtl', overflowY: 'scroll'}}>
-          <input class="none" style={{'-webkit-appearance': 'none', outline: 'none', display: 'block', width: '100%', borderRadius: 10, borderWidth: 0, borderColor: 'white', lineHeight: '1.6em', fontSize: '1.3em', padding: '.4em', direction: 'rtl', color: '#343747'}} autoFocus type="text" name="search-input" placeholder="جستجو" autocomplete="off" value={this.state.searchInput} onBlur={() => {this.setState({searchExpand: false})}} onChange={async (e) => {this.setState({searchInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {
+          <input class="none" style={{'-webkit-appearance': 'none', outline: 'none', display: 'block', width: '100%', borderRadius: 10, borderWidth: 0, borderColor: 'white', lineHeight: '1.6em', fontSize: '1.3em', padding: '.4em', direction: 'rtl', color: '#343747'}} autoFocus type="text" name="search-input" placeholder="جستجو" autocomplete="off" value={this.state.searchInput} onBlur={() => {history.back()}} onChange={async (e) => {this.setState({searchInput: e.target.value})}} onKeyPress={async (e) => {if(e.key === 'Enter') {
             this.setState({searchInput: '', searchExpand: false})
           }}}/>
         </div>
@@ -227,6 +259,9 @@ class App extends React.Component {
           <div style={{fontSize: '1.1rem', paddingRight: '.9rem', paddingLeft: '.9rem', textAlign: 'justify',  textJustify: 'inter-word', lineHeight: 2, color: 'rgba(0,0,0,.87)', whiteSpace: 'pre-line'}}>با اعمال تقویم اسکان‌های خالی در بازه انتخاب شده نمایان می‌شوند</div>
           <div className="touchable" style={{padding: '13px 14px 15px 14px', color: 'white', backgroundColor: '#e31025', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.02em', margin: 9}} onClick={() => {this.setState({calendared: false})}}>{'اعمال'}</div>
         </div>
+      </div>} {this.state.categoryShow && <div style={{direction: 'rtl', fontSize: '.8em', position: 'fixed', bottom: 145, right: 6, zIndex: 999, overflow: 'hidden', width: 115, backgroundColor: ['#353331', '#ffffff', '#ffffff'][this.state.lyr], borderRadius: 10, border: '1px solid', borderColor: ['#343332', '#d4d4d4', '#d4d4d4'][this.state.lyr], boxShadow: ['0 0 1px 1px #353331', '0 0 1px 1px #ededed', '0 0 1px 1px #ededed'][this.state.lyr]}}>
+        <input autoFocus style={{height: 0, position: 'absolute', margin: 0, border: 'none', marginTop: -6}} onBlur={() => {setTimeout(() => {this.setState({categoryShow: false})}, 200)}}/>
+        {this.state.categories.map((c, ci) => <div class="touchable" style={{fontWeight: 400, lineHeight: 2.1, color: ['#ffffff', '#656971', '#656971'][this.state.lyr], paddingRight: 6}} onClick={async () => {if('action' in c) await c.action(); this.setState({category: ci, categoryShow: false})}}>{c.title}</div>)}
       </div>}
     </div>)
   }
