@@ -229,6 +229,8 @@ async def _smart_home(r, home, ): return response.html(await template('Home') if
 pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj][ts]*'); pages = [os.path.basename(p).split('.')[0].lower() for p in pages]
 @app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz', '$$']])}|)>")
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
+@app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz', '$$']])}|)>/<app>")
+async def _app_page(r, page=None, app=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 @app.get('/<collection:(users|ads)>/<ids>')
 async def get_documents(r, collection, ids):
     ids = ids.split(','); ids = [d.strip() for d in ids]

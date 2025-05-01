@@ -3,7 +3,7 @@
     <div class="px-5">
       <div class="flex justify-between items-center select-none">
         <div class="ml-4" style={{height: 30, lineHeight: 0}}><img class="w-full inline-block"
-            src="/static/icon/jalus_shakhabeet_red.svg" height="30" style={{objectFit: 'contain'}} alt="jalus - جالوس"
+            src={`/static/icon/${this.state.page ? this.state.page : 'jalus'}_shakhabeet_red.svg`} height="30" style={{objectFit: 'contain'}} alt={(this.state.page && this.state.page) ? `${this.state.page} - ${this.state.fr_page}` : "jalus - جالوس"}
             title=""/></div><button
           class="relative flex items-center user-select-none styles_btn__Q4MvL text-button-2 styles_btn--medium__4GoNC styles_btn--neutralOutlined__mLWvq styles_btn--black__xj6Mt rounded-medium flex justify-center items-center px-3 sm:px-4 py-1 rounded cursor-pointer">
           <div class="flex items-center justify-center styles_btn__loading__d5Rcc"><svg width="24" height="24"
@@ -71,17 +71,17 @@
         </a></div>
       <div class="flex flex-wrap w-full justify-between mb-8">
         <div class="block lg:grow w-6/12 lg:w-unset">
-          <p class="text-neutral-700 text-h5 mb-2 block">با جالوس</p><a
+          <p class="text-neutral-700 text-h5 mb-2 block">با {this.state.fr_page || 'جالوس'}</p><a
             class="text-body-1 text-neutral-500 mb-2 block" data-cro-id="footer-with-jalus"
-            href="https://about.digikala.com/newsroom/">اتاق خبر جالوس</a><a
+            href="https://about.digikala.com/newsroom/">اتاق خبر {this.state.fr_page || 'جالوس'}</a><a
             class="text-body-1 text-neutral-500 mb-2 block" data-cro-id="footer-with-jalus"
-            href="/landings/seller-introduction/">میزبانی در جالوس</a><a
+            href="/landings/seller-introduction/">میزبانی در {this.state.fr_page || 'جالوس'}</a><a
             class="text-body-1 text-neutral-500 mb-2 block" data-cro-id="footer-with-jalus"
             href="https://careers.digikala.com/">فرصت‌های شغلی</a><a class="text-body-1 text-neutral-500 mb-2 block"
             data-cro-id="footer-with-jalus" href="https://digikalapublic.whistleblowernetwork.net/frontpage">گزارش
-            تخلف در جالوس</a><a class="text-body-1 text-neutral-500 mb-2 block" data-cro-id="footer-with-jalus"
-            href="/page/contact-us/">تماس با جالوس</a><a class="text-body-1 text-neutral-500 mb-2 block"
-            data-cro-id="footer-with-jalus" href="https://about.digikala.com/">درباره جالوس</a>
+            تخلف در {this.state.fr_page || 'جالوس'}</a><a class="text-body-1 text-neutral-500 mb-2 block" data-cro-id="footer-with-jalus"
+            href="/page/contact-us/">تماس با {this.state.fr_page || 'جالوس'}</a><a class="text-body-1 text-neutral-500 mb-2 block"
+            data-cro-id="footer-with-jalus" href="https://about.digikala.com/">درباره {this.state.fr_page || 'جالوس'}</a>
         </div>
         <div class="block lg:grow w-6/12 lg:w-unset">
           <p class="text-neutral-700 text-h5 mb-2 block">خدمات مشتریان</p><a
@@ -95,7 +95,7 @@
             href="/page/bug-report/">گزارش باگ</a>
         </div>
         <div class="block lg:grow w-6/12 lg:w-unset hidden md:block">
-          <p class="text-neutral-700 text-h5 mb-2 block">راهنمای خرید از جالوس</p><a
+          <p class="text-neutral-700 text-h5 mb-2 block">راهنمای خرید از {this.state.fr_page || 'جالوس'}</p><a
             class="text-body-1 text-neutral-500 mb-2 block" data-cro-id="footer-buying-guide"
             href="/faq/question/649/">نحوه ثبت سفارش</a><a class="text-body-1 text-neutral-500 mb-2 block"
             data-cro-id="footer-buying-guide" href="/faq/question/79/">رویه ارسال کلید هوشمند</a><a
@@ -168,7 +168,7 @@
               <img class="inline-block" src="/static/icon/jalus_red_white.svg" width="44" height="44" style={{objectFit: 'cover', width: 'auto'}} alt="جالوس" title=""/>
             </picture>
           </div>
-          <div class="text-h3 shrink-0 mr-4"> دانلود اپلیکیشن جالوس</div>
+          <div class="text-h3 shrink-0 mr-4"> دانلود اپلیکیشن {this.state.fr_page || 'جالوس'}</div>
         </div>
         <div class="flex items-center justify-end grow">
           <div class="flex items-center justify-center lg:justify-end flex-wrap lg:grow"><a
@@ -206,9 +206,8 @@
       </div>
       <div class="flex items-start justify-between border-complete-t py-8 border-n-200 flex-wrap lg:flex-nowrap">
         <div class="grow">
-          <div style={{height: this.state.footExpand ? '100%' : '125px'}} class="relative seo lg:ml-10 ml-0 text-neutral-500 text-body-2 overflow-hidden styles_BaseLayoutStaticFooterAboutUs__content__d9jew_ARSHA">
+          {this.state.foot || <div style={{height: this.state.footExpand ? '100%' : '125px'}} class="relative seo lg:ml-10 ml-0 text-neutral-500 text-body-2 overflow-hidden styles_BaseLayoutStaticFooterAboutUs__content__d9jew_ARSHA">
             <h1><strong>فروشگاه اینترنتی جالوس، بررسی، انتخاب و خرید آنلاین</strong></h1>
-
             <p>یک<strong> خرید</strong> اینترنتی مطمئن، نیازمند فروشگاهی است که بتواند کالاهایی متنوع، باکیفیت و دارای
               قیمت مناسب را در مدت زمان ی کوتاه به دست مشتریان خود برساند و ضمانت بازگشت کالا هم داشته باشد؛
               ویژگی‌هایی که فروشگاه اینترنتی جالوس سال‌هاست بر روی آن‌ها کار کرده و توانسته از این طریق مشتریان
@@ -222,18 +221,14 @@
               ساده و به دور از پیچیدگی، قرار داده است که شامل 8 نوع ارسال کالا به روش‌های زیر است: ارسال امروز، دریافت
               حضوری، دریافت از گنجه، ارسال توسط فروشنده، ارسال عادی، ارسال کالاهای بزرگ، سنگین و فوق سنگین، ارسال سریع
               سوپرمارکتی، ارسال با پست</p>
-
             <p>کدام محصولات در جالوس قابل سفارش هستند؟</p>
-
             <p>تقریبا می‌توان گفت محصولی وجود ندارد که جالوس برای مشتریان خود در سراسر کشور فراهم نکرده باشد. شما
               می‌توانید در تمامی روزهای هفته و تمامی شبانه روز&nbsp;جالوس که محصولات دارای تخفیف عالی می‌شوند،
               سفارش خود را به سادگی ثبت کرده و در روز و محدوده زمانی مناسب خود، درب منزل تحویل بگیرید. بعضی از
               گروه‌های اصلی و زیر مجموعه‌های پرطرفدار محصولات جالوس شامل مواردی می‌شود که در ادامه به معرفی آن‌ها
               می‌پردازیم که&nbsp;امکان <a href="https://www.digikala.com/landing/sameday-delivery/"><strong>ارسال
                   امروز</strong></a> برای آن ها وجود دارد.&nbsp;</p>
-
             <p>کالای دیجیتال</p>
-
             <p>انواع گوشی موبایل از برندهای مختلفی مثل آیفون، &nbsp;<a
                 href="https://www.digikala.com/search/category-mobile-phone/samsung/" target="_blank">گوشی
                 سامسونگ</a>،&nbsp;<a href="https://www.digikala.com/search/category-mobile-phone/nokia/"
@@ -250,30 +245,22 @@
                 target="_blank">مودم ایرانسل</a>،&nbsp;<a
                 href="https://www.digikala.com/search/category-lighting-antenna/" target="_blank">آنتن</a>&nbsp;و ...
               تنها بخشی از محصولاتی هستند که زیر مجموعه کالای دیجیتال در جالوس قرار دارند.</p>
-
             <p>خودرو، ابزار و تجهیزات صنعتی</p>
-
             <p>انواع خودروهای ایرانی و خارجی از برندهای مطرحی مثل هوندا، کیا و...، موتور سیکلت از برندهایی مثل کویر
               موتور و...، لوازم جانبی خودرو مثل سیستم صوتی تصویر، ضبط و...، لوازم یدکی مثل دیسک و صفحه کلاج و... و
               لوازم مصرفی خودرو مثل&nbsp;<a href="https://www.digikala.com/search/category-car-coating/sana-3d/"
                 target="_blank">کفپوش سانا</a>&nbsp;در این گروه قرار می‌گیرند.</p>
-
             <p>مد و پوشاک</p>
-
             <p>محصولاتی مثل انواع لباس مثل لباس مجلسی زنانه و مردانه، لباس راحتی، لباس ورزشی، اکسسوری، کیف، کفش، عینک
               آفتابی، لباس زیر، شال و روسری و... جزو مواردی هستند که می‌توانید آن‌ها را از برندهای مطرح ایرانی و خارجی
               موجود در جالوس مثل آدیداس، نایکی، دبنهامز، آلدو، درسا و... خریداری کنید.</p>
-
             <p>اسباب بازی کودک و نوزاد</p>
-
             <p>در این دسته از کالاهای جالوس، انواع لوازم بهداشتی و حمام کودک و نوزاد، انواع پوشاک و کفش،&nbsp;<a
                 href="https://www.digikala.com/search/category-tablet/" target="_blank">تبلت</a>،&nbsp;<a
                 href="https://www.digikala.com/search/category-toys/" target="_blank">اسباب‌بازی</a>، لوازم اتاق خواب
               کودک، لوازم ایمنی، لوازم شخصی و غذا خوری و ... قرار می‌گیرد تا خرید را برای پدر و مادرها به کاری سریع و
               آسان تبدیل کند.</p>
-
             <p>کالاهای سوپر مارکتی</p>
-
             <p>هر چیزی از مواد خوراکی که به آن نیاز دارید، در&nbsp;<a
                 href="https://www.digikala.com/main/food-beverage/" target="_blank">سوپرمارکت</a>&nbsp;جالوس پیدا
               می‌شود، محصولات پرطرفداری مثل&nbsp;<a href="https://www.digikala.com/search/category-peanut-butter/"
@@ -284,9 +271,7 @@
                 target="_blank">زعفران</a>، شکلات، انواع نان و ... از برندهای معتبر و معروفی مثل&nbsp;<a
                 href="https://www.digikala.com/brand/nestle/" target="_blank">نستله</a>، نوتلا، استارباکس، مزمز، چی
               توز و ... همگی در اختیار شما هستند و تا رسیدن به آشپزخانه شما تنها چند کلیک فاصله دارند.</p>
-
             <p>زیبایی و سلامت</p>
-
             <p>انواع لوازم آرایش مثل لاک، رنگ مو، لوازم آرایش لب، چشم، صورت و... همگی در جالوس موجود هستند. همچنین
               محصولات بهداشتی مثل انواع شامپو، <a href="https://www.digikala.com/search/category-sunscreen-cream/">کرم
                 ضد آفتاب</a>،&nbsp;<a href="https://www.digikala.com/search/category-face-masque/"
@@ -298,9 +283,7 @@
               مثل&nbsp;<a href="https://www.digikala.com/search/category-women-gold-jewelry-sets/"
                 target="_blank">سرویس طلا</a>، سرویس نقره و... به همراه وسایل مراقبت شخصی طبی در گروه زیبایی و سلامت
               جالوس قرار می‌گیرد. در این بخش برندهای مطرحی مثل اسنس، پنبه ریز، سینره و... حضور دارند.</p>
-
             <p>خانه و آشپزخانه</p>
-
             <p>یکی از متنوع‌ترین بخش‌های جالوس، بخش لوازم خانه و آشپزخانه است که از محصولاتی مثل صندلی گیمینگ در
               بخش صندلی‌ها گرفته تا انواع&nbsp;<a href="https://www.digikala.com/search/category-household-furniture/"
                 target="_blank">مبل راحتی</a>، انواع آبگرمکن مثل&nbsp;<a
@@ -310,9 +293,7 @@
                 اسنوا</a>، شیرآلات مختلف مثل شیرآلات قهرمان و...، ظروف و همچنین لوازم برقی آشپزخانه مثل توستر و... را
               شامل می‌شود و امکان خریدی عالی را برای مشتریان فراهم کرده است. در بخش لوازم خانگی جالوس، برندهای
               معتبری مثل تفال، اخوان، فیلیپس، ال جی، اسنوا، جی پلاس و... حضور دارند.</p>
-
             <p>کتاب، لوازم تحریر و هنر</p>
-
             <p>بخش هنر، کتاب، رمان و لوازم تحریر جالوس نیز یکی از متنوع‌ترین بخش‌های این فروشگاه اینترنتی است.
               انواع کتاب و مجله، <a href="https://www.digikala.com/landing/language-learning-books/">کتاب زبان</a>،
               بازی، لوازم تحریر با طرح‌های مختلف مانند <a href="https://www.digikala.com/tags/miraculous/">دختر
@@ -321,15 +302,11 @@
                 target="_blank">سنتور</a>،&nbsp;<a href="https://www.digikala.com/search/category-percussion/"
                 target="_blank">هنگ درام</a>&nbsp; و... با بهترین قیمت‌ها و از بهترین برندها در دسترس شما قرار دارند.
             </p>
-
             <p>ورزش و سفر</p>
-
             <p>هر نوع وسیله و لباس ورزشی که فکرش را کنید، انواع وسایل کمپینگ و کوهنوردی، ساک و قمقمه ورزشی و... در این
               بخش قرار می‌گیرند. همچنین شما می‌توانید وسایل مد نظر خود را بر اساس نوع ورزش (آبی، هوازی، بدنسازی و...)
               در دسته‌بندی‌های جالوس پیدا کنید.</p>
-
             <p>محصولات بومی و محلی</p>
-
             <p>و در آخر جالوس از طریق به فروش رساندن محصولات بومی و سنتی متفاوتی مثل انواع خوراکی، گلیم و گبه،
               ابزار و ... تلاش کرده تا بین هنر ایرانی و متقاضیان آن کوتاه‌ترین راه را پیدا کند. در این بخش شما
               می‌توانید انواع محصولات از جمله ظروف زیبای مخصوص به&nbsp;سفره هفت‌سین&nbsp; و پذیرایی از مهمانان در
@@ -340,17 +317,12 @@
               کند،&nbsp;تقویم ۱۴۰۱، انواع ایده&nbsp;عکس پروفایل عید نوروز،&nbsp;آهنگ‌های عید نوروز&nbsp;و موزیک‌های
               شاد بهاری، وسایل مربوط به&nbsp;خانه‌تکانی&nbsp;و&nbsp;انواع لباس های عید&nbsp; را برای شما فراهم کرده
               است تا بتوانید در کنار خرید خود، از این حال و هوای تازه نهایت لذت را ببرید.</p>
-
             <p>&nbsp;</p>
-
             <p>&nbsp;</p>
-
             <p>&nbsp;</p>
-
             <p>&nbsp;</p>
-
             <p>&nbsp;</p>
-          </div>
+          </div>}
           <span onClick={() => {this.setState({footExpand: !this.state.footExpand})}} class="inline-flex items-center cursor-pointer styles_Anchor--secondary__3KsgY text-button-2 flex mt-2 items-center user-select-none"><span>مشاهده
               {this.state.footExpand ? ' کمتر' : ' بیشتر'}</span>
             <div class="flex"><svg style={{width: 18, height: 18, fill: 'var(--color-icon-secondary)'}}>
@@ -390,8 +362,8 @@
       </div>
       <div
         class="flex text-caption text-neutral-500 text-center items-center flex-col justify-between border-complete-t py-8">
-        برای استفاده از مطالب جالوس، داشتن «هدف غیرتجاری» و ذکر «منبع» کافیست. تمام حقوق اين وب‌سايت نیز برای شرکت
-        نوآوران شریف سازه (فروشگاه آنلاین جالوس) است.</div>
+        برای استفاده از مطالب {this.state.fr_page || 'جالوس'}، داشتن «هدف غیرتجاری» و ذکر «منبع» کافیست. تمام حقوق اين وب‌سايت نیز برای شرکت
+        نوآوران شریف سازه (فروشگاه آنلاین {this.state.fr_page || 'جالوس'}) است.</div>
     </div>
   </div>
   <div class="w-full bg-neutral-100">

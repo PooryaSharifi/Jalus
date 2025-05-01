@@ -9,7 +9,7 @@
           <div class="flex flex-1 items-center grow"><a class="ml-5 shrink-0" data-cro-id="header-digikala-logo"
               href="/">
               <div style={{width: 115, height: 30, lineHeight: 0}}><img class="w-full inline-block"
-                  src="/static/icon/jalus_gaf_red.svg" width="115" height="30" style={{objectFit: 'contain'}}
+                  src={`/static/icon/${this.state.page ? this.state.page : 'jalus'}_gaf_red.svg`} width="115" height="30" style={{objectFit: 'contain'}}
                   alt="لوگوی دیجیکالا" title=""/></div>
             </a>
             <div class="flex grow ml-auto">
@@ -382,7 +382,7 @@
                   <svg style={{width: 20, height: 20, fill: 'var(--color-icon-high-emphasis)'}}>
                     <use xlinkHref="#hamburgerMenu"></use>
                   </svg>
-                </div>دسته‌بندی {this.state.category == -1 ? ('href' in this.state.categories[0] ? 'اسکان' : 'آگهی') : this.state.categories[this.state.category].title}‌ها<span class="relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"></span>
+                </div>{this.state.page == 'strategist' ? 'بودجه‌بندی' : 'دسته‌بندی'} {this.state.category == -1 ? (this.state.page == 'strategist' ? 'دروس' : 'href' in this.state.categories[0] ? 'اسکان' : 'آگهی') : this.state.categories[this.state.category].title}{this.state.page == 'strategist' ? '' : '‌ها'}<span class="relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"></span>
               </span>
               <div class="base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__megaMenuContainer__ipIFg absolute bg-neutral-000 shadow-3-bottom z-4"
                 style={{width: 'auto', height: 774}}></div>
@@ -416,7 +416,7 @@
                     <use xlinkHref="#giftCard">
                       <symbol id="giftCard" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18"><path d="M11.25 10.5H15V12h-3.75v-1.5z"></path><path fill-rule="evenodd" d="M3 3h12a2.25 2.25 0 012.25 2.25v7.5A2.25 2.25 0 0115 15H3a2.25 2.25 0 01-2.25-2.25v-7.5A2.25 2.25 0 013 3zm0 1.5a.75.75 0 00-.75.75v7.5c0 .414.336.75.75.75h3v-2.69l-.97.97-1.06-1.06.988-.989A2.25 2.25 0 116 5.378V4.5H3zm3 3.75V7.5a.75.75 0 10-.75.75H6zm1.5-2.872V4.5H15a.75.75 0 01.75.75v7.5a.75.75 0 01-.75.75H7.5v-2.69l.97.97 1.06-1.06-.988-.989A2.25 2.25 0 107.5 5.378zm0 2.872h.75a.75.75 0 10-.75-.75v.75z" clip-rule="evenodd"></path></symbol>
                     </use>
-                  </svg></div>کارت هدیه
+                  </svg></div>{this.state.page == 'strategist' ? 'تخمین رتبه' : 'کارت هدیه'}
               </a></div>
             <div class="digikala-nav-item leading-0 h-full flex items-center px-2 px-3"><a
                 class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2"
@@ -426,16 +426,16 @@
                     <use xlinkHref="#searchTrend">
                       <symbol id="searchTrend" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12.015 9.105c.222.397.41.73.466.842.361.724.519 1.31.519 2.053a2 2 0 01-4 0l.003-4.557c0-.953-1.206-1.367-1.79-.613C5.087 9.572 4 11.906 4 13.889 4 18.365 7.578 22 12 22c4.422 0 8-3.635 8-8.111 0-2.968-2.45-6.78-7.295-11.598a1 1 0 00-1.6.262c-.807 1.615-.807 3.28 0 4.894.178.356.582 1.076.91 1.658zM7 12a4 4 0 108 0c0-1.078-.238-1.962-.73-2.947-.079-.156-.31-.569-.566-1.024a50.532 50.532 0 01-.81-1.476c-.273-.546-.404-1.079-.393-1.612C16.18 8.811 18 11.834 18 13.889 18 17.267 15.31 20 12 20s-6-2.733-6-6.111c0-.87.33-1.925 1-3.154V12z" clip-rule="evenodd"></path></symbol>
                     </use>
-                  </svg></div>ترندها
+                  </svg></div>{this.state.page == 'strategist' ? 'آزمون' : 'ترندها'}
               </a></div>
           </div>
           <div class="flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA">
             <div class="digikala-nav-item leading-0 h-full flex items-center px-2 px-3"><a
                 class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2" data-cro-id=""
-                href="/faq/">سوالی دارید؟</a></div>
+                href="/faq/">{this.state.page == 'strategist' ? 'سوالات' : 'سوالی دارید؟'}</a></div>
             <div class="digikala-nav-item leading-0 h-full flex items-center px-2 px-3"><a
                 class="flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2" data-cro-id=""
-                href="/landings/seller-introduction/">در جالوس میزبانی کنید!</a></div>
+                href="/landings/seller-introduction/">{this.state.page == 'strategist' ? 'دیوسالاران' : 'در جالوس میزبانی کنید!'}</a></div>
           </div>
           <div
             class="absolute bottom-0 bg-primary-700 left-0 z-4 base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__indicator__KRIzY"

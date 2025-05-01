@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between lg:mr-6 w-full lg:w-unset"><a class="styles_Link__RMyqc"
         data-cro-id="hp-club-cta" href="/club">
         <div style={{width: 119, height: 33, lineHeight: 0}}><img class="w-full inline-block"
-            src="/static/icon/jalus_gaf_white.svg" width="119" height="33" style={{objectFit: 'contain'}}
+            src={`/static/icon/${this.state.page ? this.state.page : 'jalus'}_gaf_white.svg`} width="119" height="33" style={{objectFit: 'contain'}}
             alt="دیجی‌کلاب" title=""/></div>
       </a></div>
     <div class="flex items-center mt-3 lg:mt-0">
