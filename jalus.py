@@ -231,6 +231,9 @@ pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 @app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz', '$$']])}|)>/<app>")
 async def _app_page(r, page=None, app=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
+@app.post('strategist/predict')
+async def _strategist_predict(r, ):
+    response.json({'OK': True, 'c': r.deleted_count})
 @app.get('/<collection:(users|ads)>/<ids>')
 async def get_documents(r, collection, ids):
     ids = ids.split(','); ids = [d.strip() for d in ids]

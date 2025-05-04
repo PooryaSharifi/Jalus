@@ -206,8 +206,8 @@
       </div>
       <div class="flex items-start justify-between border-complete-t py-8 border-n-200 flex-wrap lg:flex-nowrap">
         <div class="grow">
-          {this.state.foot || <div style={{height: this.state.footExpand ? '100%' : '125px'}} class="relative seo lg:ml-10 ml-0 text-neutral-500 text-body-2 overflow-hidden styles_BaseLayoutStaticFooterAboutUs__content__d9jew_ARSHA">
-            <h1><strong>فروشگاه اینترنتی جالوس، بررسی، انتخاب و خرید آنلاین</strong></h1>
+          <div style={{height: this.state.footExpand ? '100%' : '125px'}} class="relative seo lg:ml-10 ml-0 text-neutral-500 text-body-2 overflow-hidden styles_BaseLayoutStaticFooterAboutUs__content__d9jew_ARSHA">
+            {this.state.foot ? <>{this.state.foot_title && <h1><strong>{this.state.foot_title}</strong></h1>}<p>{this.state.foot}</p></> : <><h1><strong>فروشگاه اینترنتی جالوس، بررسی، انتخاب و خرید آنلاین</strong></h1>
             <p>یک<strong> خرید</strong> اینترنتی مطمئن، نیازمند فروشگاهی است که بتواند کالاهایی متنوع، باکیفیت و دارای
               قیمت مناسب را در مدت زمان ی کوتاه به دست مشتریان خود برساند و ضمانت بازگشت کالا هم داشته باشد؛
               ویژگی‌هایی که فروشگاه اینترنتی جالوس سال‌هاست بر روی آن‌ها کار کرده و توانسته از این طریق مشتریان
@@ -322,7 +322,7 @@
             <p>&nbsp;</p>
             <p>&nbsp;</p>
             <p>&nbsp;</p>
-          </div>}
+          </>}</div>
           <span onClick={() => {this.setState({footExpand: !this.state.footExpand})}} class="inline-flex items-center cursor-pointer styles_Anchor--secondary__3KsgY text-button-2 flex mt-2 items-center user-select-none"><span>مشاهده
               {this.state.footExpand ? ' کمتر' : ' بیشتر'}</span>
             <div class="flex"><svg style={{width: 18, height: 18, fill: 'var(--color-icon-secondary)'}}>
