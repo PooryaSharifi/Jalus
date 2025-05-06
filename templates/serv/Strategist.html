@@ -30,6 +30,7 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
@@ -230,7 +231,26 @@ window.tr_table = {
   'cappuccino': 'کاپوچینو',
   'latte': 'لته',
   'americano': 'آمریکانو',
-  'hot chocolate': 'هات چاکلت'
+  'hot chocolate': 'هات چاکلت',
+  'health': 'سلامت‌وبهداشت',
+  'discrete': 'گسسته',
+  'philosophy': 'فلسفه',
+  'geology': 'زمین‌شناسی',
+  'finance': 'اقتصاد',
+  'geograpy': 'جغرافیا',
+  'religion': 'دین‌وزندگی',
+  'english': 'انگلیسی',
+  'litrature': 'فارسی',
+  'arabic': 'عربی',
+  'geometry': 'هندسه',
+  'physics': 'فیزیک',
+  'chemistry': 'شیمی',
+  'biology': 'زیست',
+  'history': 'تاریخ',
+  'sociology': 'اجتماعی',
+  'mathematics': 'ریاضی',
+  'psychology': 'روانشناسی',
+  'logic': 'منطق'
 };
 var App = /*#__PURE__*/function (_React$Component) {
   _inherits(App, _React$Component);
@@ -241,18 +261,26 @@ var App = /*#__PURE__*/function (_React$Component) {
     _this = _super.call(this, props);
     var app = _assertThisInitialized(_this);
     window.app = _assertThisInitialized(_this);
+    window.mode_11 = ['معدل کل', 'تراز کل', 'ریز نمره'];
+    window.mode_12 = ['معدل کل', 'تراز کل', 'ریز نمره'];
+    window.mode_13 = ['درصد کلی', 'تراز کنکور', 'درصد دروس'];
+    window.field = [['empirical', 'تجربی'], ['technical', 'ریاضی'], ['humanity', 'انسانی']];
+    window.quota = [[1, 'منطقه یک'], [2, 'منطقه دو'], [3, 'منطقه سه'], [5, 'سهمیه ۵ درصد'], [15, 'سهمیه ۱۵ درصد']];
     _this.state = {
+      page: 'strategist',
+      fr_page: 'استراتژیست',
       menuHeight: 108,
       ordered: false,
       phone: cookie('phone'),
       session: cookie('session'),
       keys: {},
+      leftMenu: 'مسیر قهرمانی',
       firstMenuShow: false,
       firstMenuIndex: 0,
       secondMenuShow: false,
       secondMenuIndex: 0,
       firstMenuList: [{
-        title: 'تازه‌ترین یادداشت',
+        title: 'پیام‌های مشاور',
         action: function () {
           var _action = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
             return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -273,57 +301,24 @@ var App = /*#__PURE__*/function (_React$Component) {
           return action;
         }()
       }, {
-        title: 'تازه‌ترین تبلیغ',
-        action: function () {
-          var _action2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-            return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-              while (1) switch (_context2.prev = _context2.next) {
-                case 0:
-                  _this.state.order = '!pan_date';
-                  _context2.next = 3;
-                  return _this.search();
-                case 3:
-                case "end":
-                  return _context2.stop();
-              }
-            }, _callee2);
-          }));
-          function action() {
-            return _action2.apply(this, arguments);
-          }
-          return action;
-        }()
+        title: 'تازه‌ترین مطلب',
+        href: '/strategist/articles'
       }, {
-        title: 'تازه‌ترین مچ',
-        action: function () {
-          var _action3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-            return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-              while (1) switch (_context3.prev = _context3.next) {
-                case 0:
-                  _this.state.order = '!last_match_date';
-                  _context3.next = 3;
-                  return _this.search();
-                case 3:
-                case "end":
-                  return _context3.stop();
-              }
-            }, _callee3);
-          }));
-          function action() {
-            return _action3.apply(this, arguments);
-          }
-          return action;
-        }()
+        title: 'تازه‌ترین پادکست',
+        href: '/strategist/podcasts'
       }],
       secondMenuList: [{
-        title: 'تازه‌ترین الف'
+        title: 'سوالات درک مطلب',
+        href: '/strategist/exam?category=dark'
       }, {
-        title: 'تازه‌ترین ب'
+        title: 'تست هفتگی',
+        href: '/strategist/exam'
       }, {
-        title: 'تازه‌ترین پ'
+        title: 'رفع اشکال',
+        href: '/strategist/exam?category=reminder'
       }],
       sessions: [],
-      slide: 3,
+      slide: 2,
       slides: [{
         webp: '/static/slides/Strategist_thoughts.webp',
         jpeg: '/static/slides/Strategist_thoughts-80.jpg',
@@ -362,104 +357,65 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }],
       category: -1,
+      categoryTitle: 'مطالعه اختصاصی هر درس',
       categoryShow: false,
       categories: [{
-        href: '/properties?lyr=1&category=mountain',
-        title: 'کوهستانی',
-        png: '/static/categories/mountain_0_exposed.webp'
+        href: '/strategist/zist',
+        title: 'زیست',
+        png: '/static/categories/biology_2.webp'
       }, {
-        href: '/properties?lyr=1&category=accessible',
-        title: 'پردسترس',
-        png: '/static/categories/accessible_0_exposed.webp'
+        href: '/strategist/riazi',
+        title: 'ریاضی',
+        png: '/static/categories/mathematics_0.webp'
       }, {
-        href: '/users?category=beach',
-        title: 'ساحلی',
-        png: '/static/categories/beach_3_exposed.webp'
+        href: '/strategist/shimi',
+        title: 'شیمی',
+        png: '/static/categories/chemistry_1.webp'
       }, {
-        href: '/properties?lyr=2&category=yeylaghi',
-        title: 'ییلاقی',
-        png: '/static/categories/yeylaghi_1_exposed.webp'
+        href: '/strategist/fizik',
+        title: 'فیزیک',
+        png: '/static/categories/physics_3.webp'
       }, {
-        href: '/properties?lyr=2&category=gheshlaghi',
-        title: 'قشلاقی',
-        png: '/static/categories/gheshlaghi_0_exposed.webp'
+        href: '/strategist/farsi',
+        title: 'ادبیات',
+        png: '/static/categories/litrature_0.webp'
       }, {
-        href: '/properties?lyr=1&category=whole',
-        title: 'دربستی',
-        png: '/static/categories/darbasti_0_exposed.webp'
+        href: '/strategist/dini',
+        title: 'دین‌وزندگی',
+        png: '/static/categories/relagion_2.webp'
       }, {
-        href: '/users?category=infinity',
-        title: 'وییو ابدی',
-        png: '/static/categories/abadi_0_exposed.webp'
+        href: '/strategist/arabi',
+        title: 'عربی',
+        png: '/static/categories/arabic_1.webp'
       }, {
-        href: '/properties?lyr=1&category=tent',
-        title: 'کلبه‌ای',
-        png: '/static/categories/X_1_exposed.webp'
+        href: '/strategist/englisi',
+        title: 'انگلیسی',
+        png: '/static/categories/english_0.webp'
       }, {
-        href: '/properties?lyr=2&category=pool',
-        title: 'استخردار',
-        png: '/static/categories/pool_9_exposed.webp'
+        href: '/strategist/zamin',
+        title: 'زمین‌شناسی',
+        png: '/static/categories/geology_0.webp'
       }, {
-        href: '/properties?lyr=1&category=jungle',
-        title: 'جنگلی',
-        png: '/static/categories/jungle_5_exposed.webp'
-      }, {
-        href: '/properties?lyr=0&category=economy',
-        title: 'اقتصادی',
-        png: '/static/categories/economic_0_exposed.webp'
-      }, {
-        href: '/users?category=classic',
-        title: 'سنتی',
-        png: '/static/categories/sonnati_3_exposed.webp'
-      }, {
-        href: '/users?category=modern',
-        title: 'مدرن',
-        png: '/static/categories/futuristic_1_exposed.webp'
-      }, {
-        href: '/users?category=swedish',
-        title: 'سوییسی',
-        png: '/static/categories/swedish_0_exposed.webp'
-      }, {
-        href: '/users?category=action',
-        title: 'تفریحی‌هیجانی',
-        png: '/static/categories/entertain_1_exposed.webp'
-      }, {
-        href: '/users?category=new',
-        title: 'تجربه‌جدید',
-        png: '/static/categories/hobit_0_exposed.webp'
+        href: '/strategist/gosaste',
+        title: 'گسسته',
+        png: '/static/categories/discrete_0.webp'
       }],
       products: [{
-        title: "جالوس هوشمند",
-        href: '/home',
-        png: '/static/icon/jalus_app_phone-8.png'
+        title: "تخمین‌رتبه هوش‌مصنوعی",
+        href: '/strategist/takhmin',
+        png: '/static/icon/Strategist_app_predict-8.png'
       }, {
-        title: "کلید بلاکچین",
-        href: '/host#key',
-        png: '/static/icon/jalus_app_key-8.png'
+        title: "آزمون هفتگی",
+        href: '/strategist/exam',
+        png: '/static/icon/Strategist_app_exam-8.png'
       }, {
-        title: "جالوس املاک",
-        href: '/estate',
+        title: "دیوسالاران",
+        href: '/strategist/deev',
+        png: '/static/icon/Strategist_app_deev-8.png'
+      }, {
+        title: "استراتژی پلاس",
+        href: '/strategist/plus',
         png: '/static/icon/jalus_app_plus.png'
-      }, {
-        title: "حراج تابستانی",
-        href: '/users',
-        png: '/static/icon/jalus_app_off.jpg'
-      }, {
-        title: "جالوس اسکان",
-        href: '/properties',
-        png: '/static/icon/jalus_app_tent-8.png'
-      }, {
-        title: "اسکان لحظه‌آخری",
-        href: '/users?date=1',
-        png: '/static/icon/jalus_app_lastsecond-8.png'
-      }, {
-        title: "سازه دومنظوره",
-        href: '/dual',
-        png: '/static/icon/jalus_app_dual-8.png'
-      }, {
-        title: "خانه سبز",
-        href: '/dual',
-        png: '/static/icon/jalus_app_wind.webp'
       }],
       article: -1,
       articles: [{
@@ -480,7 +436,23 @@ var App = /*#__PURE__*/function (_React$Component) {
         body: [['img', '/static/articles/Strategist_camp.jpg']]
       }],
       stories: [],
-      offers: [],
+      offers: [{
+        name: 'مریلا زارعی',
+        achievement: 'برق شریف',
+        quota: 121
+      }, {
+        name: 'مصطفی اجاقی',
+        achievement: 'کامپیوتر شریف',
+        quota: 58
+      }, {
+        name: 'محمد امیدی',
+        achievement: 'دندانپزشکی آزاد اصفهان',
+        quota: 760
+      }, {
+        name: 'نیوشا آقایی',
+        achievement: 'پزشکی اصفهان',
+        quota: 840
+      }],
       foot_logos: [{
         svg: '/static/icon/jalus_host.svg',
         href: '/host'
@@ -506,6 +478,9 @@ var App = /*#__PURE__*/function (_React$Component) {
         svg: '/static/icon/jalus_smart.svg',
         href: '/host#all'
       }],
+      app: window.location.pathname.split('/').filter(function (keyword) {
+        return keyword;
+      })[1] || '',
       potent: false,
       potentOtp: '',
       otp: false,
@@ -519,54 +494,90 @@ var App = /*#__PURE__*/function (_React$Component) {
       trans: true,
       background: 0,
       microwave: 0,
-      foods: {
-        bread: {
-          img: 0
-        },
-        pizza: {
-          img: 0
-        },
-        rice: {
-          img: 0
-        },
-        fries: {
-          img: 0
-        },
-        chicken_bbq: {
-          img: 0
-        },
-        kebab: {
-          img: 0
-        },
-        falafel: {
-          img: 0
-        }
-      }
+      foot: 'استراتژیست زندگی قهرمانان رو ترویج میکنه. دیوسالارانی که به خاطر هدفشون حتی سیم‌کشی مغذشونو تغییر میدن و با جنگاوری قبولی تو رشته مورد علاقشونو زندگی می‌کنن. با یه آمارگیری ساده میشه دید موفقیت نه به بهره هوشی یا ژن خوب بستگی داره بلکه ممارست و آوردن چنتا عادتای تست شده به زندگیت و رعایت چنتا فوت و فن دقیقه که سبب میشه تو مسیرت قهرمان بشی درسته که تو هر راهی قهرمان یدونست و طبق آمار و احتمال، امکانش کمه که تو اون یه نفر باشی. اما بدون با زندگی کردن زندگی یه قهرمان، قطعا اون یه نفر تویی همین الان که داری این متنو میخونی داری از پنچ درصد گنجایش مغزت استفاده می‌کنی. پس اگه تا ته مسیر رو همرای کنی خبرای خوبی در انتظارته. اگه مسیرو بدونی و بلد باشی تخته گاز برونی قطعا سریع تر از رقبا به جایی که میخوای میرسی. کافی این دوی ماراتون کنکور رو پیوسته و دقیق پیش بری و به تیم من اعتماد کنی. چرا که هم خودم هم تیمم با همین چیزا به هدف رسیدن',
+      foot_title: 'منشور دیوسالاران کنکور',
+      predict_result: {},
+      predict: {
+        religion_all_11: '',
+        english_all_11: '',
+        litrature_all_11: '',
+        arabic_all_11: '',
+        geometry_technical_11: '',
+        physics_technical_11: '',
+        chemistry_empirical_11: '',
+        biology_empirical_11: '',
+        history_humanity_11: '',
+        sociology_humanity_11: '',
+        physics_technical_12: '',
+        physics_empirical_12: '',
+        mathematics_all_12: '',
+        chemistry_technical_12: '',
+        chemistry_empirical_12: '',
+        arabic_all_12: '',
+        religion_all_12: '',
+        english_all_12: '',
+        litrature_all_12: '',
+        sociology_all_12: '',
+        health_all_12: '',
+        discrete_technical_12: '',
+        philosophy_humanity_12: '',
+        language_humanity_12: '',
+        biology_empirical_12: '',
+        mathematics_all_13: '',
+        physics_empirical_13: '',
+        chemistry_empirical_13: '',
+        biology_empirical_13: '',
+        geology_empirical_13: '',
+        chemistry_technical_13: '',
+        physics_technical_13: '',
+        finance_humanity_13: '',
+        litrature_humanity_13: '',
+        arabic_humanity_13: '',
+        history_humanity_13: '',
+        geograpy_humanity_13: '',
+        sociology_humanity_13: '',
+        psychology_humanity_13: '',
+        philosophy_humanity_13: '',
+        logic_humanity_13: '',
+        total_all_11: '',
+        total_all_12: '',
+        total_all_13: ''
+      },
+      mode_11: parseInt(cookie('mode_11') || '0'),
+      prev_mode_11: parseInt(cookie('mode_11') || '0'),
+      mode_12: parseInt(cookie('mode_12') || '0'),
+      prev_mode_12: parseInt(cookie('mode_12') || '0'),
+      mode_13: parseInt(cookie('mode_13') || '0'),
+      prev_mode_13: parseInt(cookie('mode_13') || '0'),
+      field: parseInt(cookie('field') || '0'),
+      field_show: false,
+      quota: parseInt(cookie('quota') || '0'),
+      prev_quota: parseInt(cookie('quota') || '0')
     };
     return _this;
   }
   _createClass(App, [{
     key: "componentDidMount",
     value: function () {
-      var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var _this2 = this;
-        var app, stories, offers, offer_nt, offer_avg, i;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        var app, stories;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
               app = this;
-              _context4.next = 3;
-              return fetch('http://localhost:5000/stories/host');
+              _context2.next = 3;
+              return fetch('http://localhost:5000/stories/strategist');
             case 3:
-              stories = _context4.sent;
+              stories = _context2.sent;
               if (!(stories.status < 300)) {
-                _context4.next = 9;
+                _context2.next = 9;
                 break;
               }
-              _context4.next = 7;
+              _context2.next = 7;
               return stories.json();
             case 7:
-              stories = _context4.sent;
+              stories = _context2.sent;
               app.setState({
                 stories: Object.keys(stories).map(function (story) {
                   return {
@@ -580,47 +591,7 @@ var App = /*#__PURE__*/function (_React$Component) {
                 })
               });
             case 9:
-              _context4.next = 11;
-              return fetch('/properties/', {
-                body: JSON.stringify({
-                  offer: {
-                    $gte: 5
-                  }
-                }),
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                }
-              });
-            case 11:
-              offers = _context4.sent;
-              if (!(offers.status < 300)) {
-                _context4.next = 22;
-                break;
-              }
-              offer_nt = 7, offer_avg = 0;
-              _context4.next = 16;
-              return offers.json();
-            case 16:
-              offers = _context4.sent;
-              offers = offers.sort(function () {
-                return Math.random() - 0.5;
-              });
-              for (i = 0; i < offers.length; i++) offer_avg += offers[i].offer;
-              offer_avg /= offers.length;
-              offers = offers.filter(function (offer) {
-                return offer.offer >= offer_avg && offer_nt-- > 0;
-              });
-              this.setState({
-                offers: offers
-              });
-            case 22:
-              setInterval(function () {
-                app.setState({
-                  slide: (app.state.slide + 1) % app.state.slides.length
-                });
-              }, 7000);
+              // setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
               window.Y = window.pageYOffset || document.documentElement.scrollTop;
               window.addEventListener("scroll", function () {
                 window.NY = window.pageYOffset || document.documentElement.scrollTop;
@@ -638,11 +609,11 @@ var App = /*#__PURE__*/function (_React$Component) {
                   plyr.innerHTML = '';
                 }
               };
-            case 26:
+            case 12:
             case "end":
-              return _context4.stop();
+              return _context2.stop();
           }
-        }, _callee4, this);
+        }, _callee2, this);
       }));
       function componentDidMount() {
         return _componentDidMount.apply(this, arguments);
@@ -730,66 +701,66 @@ var App = /*#__PURE__*/function (_React$Component) {
         disabled: this.state.otp ? true : false,
         value: this.state.potentPhone,
         onChange: (/*#__PURE__*/function () {
-          var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(e) {
-            return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-              while (1) switch (_context5.prev = _context5.next) {
+          var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e) {
+            return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+              while (1) switch (_context3.prev = _context3.next) {
                 case 0:
                   _this3.setState({
                     potentPhone: e.target.value
                   });
                 case 1:
                 case "end":
-                  return _context5.stop();
+                  return _context3.stop();
               }
-            }, _callee5);
+            }, _callee3);
           }));
           return function (_x) {
             return _ref.apply(this, arguments);
           };
         }()),
         onKeyPress: (/*#__PURE__*/function () {
-          var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(e) {
+          var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(e) {
             var r, body;
-            return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-              while (1) switch (_context6.prev = _context6.next) {
+            return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+              while (1) switch (_context4.prev = _context4.next) {
                 case 0:
                   if (!(e.key === 'Enter')) {
-                    _context6.next = 25;
+                    _context4.next = 25;
                     break;
                   }
                   if (_this3.state.potentPhone.trim()) {
-                    _context6.next = 3;
+                    _context4.next = 3;
                     break;
                   }
-                  return _context6.abrupt("return");
+                  return _context4.abrupt("return");
                 case 3:
                   if (!(_this3.state.potentInterest === '')) {
-                    _context6.next = 16;
+                    _context4.next = 16;
                     break;
                   }
-                  _context6.next = 6;
+                  _context4.next = 6;
                   return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/"));
                 case 6:
-                  r = _context6.sent;
+                  r = _context4.sent;
                   if (!(r.status < 300)) {
-                    _context6.next = 14;
+                    _context4.next = 14;
                     break;
                   }
                   if (_this3.state.potentPhone) {
-                    _context6.next = 10;
+                    _context4.next = 10;
                     break;
                   }
-                  return _context6.abrupt("return");
+                  return _context4.abrupt("return");
                 case 10:
-                  _context6.next = 12;
+                  _context4.next = 12;
                   return r.json();
                 case 12:
-                  r = _context6.sent;
+                  r = _context4.sent;
                   _this3.setState({
                     otp: true
                   });
                 case 14:
-                  _context6.next = 25;
+                  _context4.next = 25;
                   break;
                 case 16:
                   body = new FormData();
@@ -799,16 +770,16 @@ var App = /*#__PURE__*/function (_React$Component) {
                   body.append('link', '/properties/_');
                   body.append('lat', .0);
                   body.append('lng', .0);
-                  _context6.next = 25;
+                  _context4.next = 25;
                   return fetch('/potent', {
                     method: 'post',
                     body: body
                   });
                 case 25:
                 case "end":
-                  return _context6.stop();
+                  return _context4.stop();
               }
-            }, _callee6);
+            }, _callee4);
           }));
           return function (_x2) {
             return _ref2.apply(this, arguments);
@@ -828,33 +799,33 @@ var App = /*#__PURE__*/function (_React$Component) {
         autocomplete: "off",
         value: this.state.potentOtp,
         onChange: (/*#__PURE__*/function () {
-          var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(e) {
-            return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-              while (1) switch (_context8.prev = _context8.next) {
+          var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(e) {
+            return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+              while (1) switch (_context6.prev = _context6.next) {
                 case 0:
                   _this3.setState({
                     potentOtp: e.target.value
-                  }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+                  }, /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
                     var r;
-                    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-                      while (1) switch (_context7.prev = _context7.next) {
+                    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+                      while (1) switch (_context5.prev = _context5.next) {
                         case 0:
                           if (!(_this3.state.potentOtp.length == 4)) {
-                            _context7.next = 9;
+                            _context5.next = 9;
                             break;
                           }
-                          _context7.next = 3;
+                          _context5.next = 3;
                           return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
                         case 3:
-                          r = _context7.sent;
+                          r = _context5.sent;
                           if (!(r.status < 300)) {
-                            _context7.next = 9;
+                            _context5.next = 9;
                             break;
                           }
-                          _context7.next = 7;
+                          _context5.next = 7;
                           return r.json();
                         case 7:
-                          r = _context7.sent;
+                          r = _context5.sent;
                           if (r.OK) {
                             setCookie('session', r.session);
                             setCookie('phone', _this3.state.potentPhone.trim().deFarsify());
@@ -866,15 +837,15 @@ var App = /*#__PURE__*/function (_React$Component) {
                           }
                         case 9:
                         case "end":
-                          return _context7.stop();
+                          return _context5.stop();
                       }
-                    }, _callee7);
+                    }, _callee5);
                   })));
                 case 1:
                 case "end":
-                  return _context8.stop();
+                  return _context6.stop();
               }
-            }, _callee8);
+            }, _callee6);
           }));
           return function (_x3) {
             return _ref3.apply(this, arguments);
@@ -887,34 +858,34 @@ var App = /*#__PURE__*/function (_React$Component) {
         type: "submit",
         "data-cro-id": "login-register",
         onClick: (/*#__PURE__*/function () {
-          var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(e) {
+          var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(e) {
             var r, _r, body;
-            return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-              while (1) switch (_context9.prev = _context9.next) {
+            return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+              while (1) switch (_context7.prev = _context7.next) {
                 case 0:
                   e.preventDefault();
                   e.stopPropagation();
                   e.nativeEvent.stopImmediatePropagation();
                   if (!(_this3.state.potentInterest === '')) {
-                    _context9.next = 28;
+                    _context7.next = 28;
                     break;
                   }
                   if (!(_this3.state.otp && _this3.state.potentOtp.length == 4)) {
-                    _context9.next = 15;
+                    _context7.next = 15;
                     break;
                   }
-                  _context9.next = 7;
+                  _context7.next = 7;
                   return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/").concat(e.target.value.trim().deFarsify()));
                 case 7:
-                  r = _context9.sent;
+                  r = _context7.sent;
                   if (!(r.status < 300)) {
-                    _context9.next = 13;
+                    _context7.next = 13;
                     break;
                   }
-                  _context9.next = 11;
+                  _context7.next = 11;
                   return r.json();
                 case 11:
-                  r = _context9.sent;
+                  r = _context7.sent;
                   if (r.OK) {
                     setCookie('session', r.session);
                     setCookie('phone', _this3.state.potentPhone.trim().deFarsify());
@@ -925,33 +896,33 @@ var App = /*#__PURE__*/function (_React$Component) {
                     });
                   }
                 case 13:
-                  _context9.next = 26;
+                  _context7.next = 26;
                   break;
                 case 15:
-                  _context9.next = 17;
+                  _context7.next = 17;
                   return fetch("/otp/".concat(_this3.state.potentPhone.trim().deFarsify(), "/"));
                 case 17:
-                  _r = _context9.sent;
+                  _r = _context7.sent;
                   if (!(_r.status < 300)) {
-                    _context9.next = 26;
+                    _context7.next = 26;
                     break;
                   }
                   if (_this3.state.potentPhone) {
-                    _context9.next = 21;
+                    _context7.next = 21;
                     break;
                   }
-                  return _context9.abrupt("return");
+                  return _context7.abrupt("return");
                 case 21:
-                  _context9.next = 23;
+                  _context7.next = 23;
                   return _r.json();
                 case 23:
-                  _r = _context9.sent;
+                  _r = _context7.sent;
                   console.log(_r);
                   _this3.setState({
                     otp: true
                   });
                 case 26:
-                  _context9.next = 37;
+                  _context7.next = 37;
                   break;
                 case 28:
                   body = new FormData();
@@ -961,16 +932,16 @@ var App = /*#__PURE__*/function (_React$Component) {
                   body.append('link', '/properties/_');
                   body.append('lat', .0);
                   body.append('lng', .0);
-                  _context9.next = 37;
+                  _context7.next = 37;
                   return fetch('/potent', {
                     method: 'post',
                     body: body
                   });
                 case 37:
                 case "end":
-                  return _context9.stop();
+                  return _context7.stop();
               }
-            }, _callee9);
+            }, _callee7);
           }));
           return function (_x4) {
             return _ref5.apply(this, arguments);
@@ -1058,7 +1029,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("img", {
         "class": "w-full inline-block",
-        src: "/static/icon/jalus_gaf_red.svg",
+        src: "/static/icon/".concat(this.state.page ? this.state.page : 'jalus', "_gaf_red.svg"),
         width: "115",
         height: "30",
         style: {
@@ -1091,7 +1062,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchSearch"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchSearch",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
@@ -1159,43 +1129,43 @@ var App = /*#__PURE__*/function (_React$Component) {
           });
         },
         onChange: (/*#__PURE__*/function () {
-          var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(e) {
-            return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-              while (1) switch (_context10.prev = _context10.next) {
+          var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(e) {
+            return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+              while (1) switch (_context8.prev = _context8.next) {
                 case 0:
                   _this3.setState({
                     searchInput: e.target.value
                   });
                 case 1:
                 case "end":
-                  return _context10.stop();
+                  return _context8.stop();
               }
-            }, _callee10);
+            }, _callee8);
           }));
           return function (_x5) {
             return _ref6.apply(this, arguments);
           };
         }()),
         onKeyPress: (/*#__PURE__*/function () {
-          var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(e) {
-            return _regeneratorRuntime().wrap(function _callee11$(_context11) {
-              while (1) switch (_context11.prev = _context11.next) {
+          var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(e) {
+            return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+              while (1) switch (_context9.prev = _context9.next) {
                 case 0:
                   if (!(e.key === 'Enter')) {
-                    _context11.next = 4;
+                    _context9.next = 4;
                     break;
                   }
                   _this3.setState({
                     searchExpand: false,
                     page: 1
                   });
-                  _context11.next = 4;
+                  _context9.next = 4;
                   return _this3.search();
                 case 4:
                 case "end":
-                  return _context11.stop();
+                  return _context9.stop();
               }
-            }, _callee11);
+            }, _callee9);
           }));
           return function (_x6) {
             return _ref7.apply(this, arguments);
@@ -1405,7 +1375,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchPlaceSuggest"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchPlaceSuggest",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M17 8.414L6.707 18.707l-1.414-1.414L15.586 7H9V5h9a1 1 0 011 1v9h-2V8.414z"
@@ -1444,7 +1413,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchPlaceSuggest"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchPlaceSuggest",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M17 8.414L6.707 18.707l-1.414-1.414L15.586 7H9V5h9a1 1 0 011 1v9h-2V8.414z"
@@ -1483,7 +1451,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchPlaceSuggest"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchPlaceSuggest",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M17 8.414L6.707 18.707l-1.414-1.414L15.586 7H9V5h9a1 1 0 011 1v9h-2V8.414z"
@@ -1522,7 +1489,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchPlaceSuggest"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchPlaceSuggest",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M17 8.414L6.707 18.707l-1.414-1.414L15.586 7H9V5h9a1 1 0 011 1v9h-2V8.414z"
@@ -1561,7 +1527,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchPlaceSuggest"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchPlaceSuggest",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M17 8.414L6.707 18.707l-1.414-1.414L15.586 7H9V5h9a1 1 0 011 1v9h-2V8.414z"
@@ -1627,7 +1592,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         width: "24",
         height: "24",
         id: "e302pyQgejw1",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
         "shape-rendering": "geometricPrecision",
         "text-rendering": "geometricPrecision"
@@ -1675,7 +1639,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#registerationSignIn"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "registerationSignIn",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, this.state.session ? /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
@@ -1705,7 +1668,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#cartOff"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "cartOff",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
@@ -1749,7 +1711,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         width: "24",
         height: "24",
         id: "e302pyQgejw1",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
         "shape-rendering": "geometricPrecision",
         "text-rendering": "geometricPrecision"
@@ -1818,7 +1779,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("use", {
         xlinkHref: "#hamburgerMenu"
-      }))), "\u062F\u0633\u062A\u0647\u200C\u0628\u0646\u062F\u06CC ", this.state.category == -1 ? 'href' in this.state.categories[0] ? 'اسکان' : 'آگهی' : this.state.categories[this.state.category].title, "\u200C\u0647\u0627", /*#__PURE__*/React.createElement("span", {
+      }))), this.state.page == 'strategist' ? 'بودجه‌بندی' : 'دسته‌بندی', " ", this.state.category == -1 ? this.state.page == 'strategist' ? 'دروس' : 'href' in this.state.categories[0] ? 'اسکان' : 'آگهی' : this.state.categories[this.state.category].title, this.state.page == 'strategist' ? '' : '‌ها', /*#__PURE__*/React.createElement("span", {
         "class": "relative min-w-px min-h-5 top-2 bg-neutral-200 transform mr-5 mt-1"
       })), /*#__PURE__*/React.createElement("div", {
         "class": "base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__megaMenuContainer__ipIFg absolute bg-neutral-000 shadow-3-bottom z-4",
@@ -1834,9 +1795,9 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2",
         "data-cro-id": "header-main-menu",
         onClick: (/*#__PURE__*/function () {
-          var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(e) {
-            return _regeneratorRuntime().wrap(function _callee12$(_context12) {
-              while (1) switch (_context12.prev = _context12.next) {
+          var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(e) {
+            return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+              while (1) switch (_context10.prev = _context10.next) {
                 case 0:
                   _this3.setState({
                     firstMenuShow: !_this3.state.firstMenuShow
@@ -1845,9 +1806,9 @@ var App = /*#__PURE__*/function (_React$Component) {
                   });
                 case 1:
                 case "end":
-                  return _context12.stop();
+                  return _context10.stop();
               }
-            }, _callee12);
+            }, _callee10);
           }));
           return function (_x7) {
             return _ref8.apply(this, arguments);
@@ -1865,7 +1826,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#amazing"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "amazing",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
@@ -1877,9 +1837,9 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2",
         "data-cro-id": "header-main-menu",
         onClick: (/*#__PURE__*/function () {
-          var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(e) {
-            return _regeneratorRuntime().wrap(function _callee13$(_context13) {
-              while (1) switch (_context13.prev = _context13.next) {
+          var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(e) {
+            return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+              while (1) switch (_context11.prev = _context11.next) {
                 case 0:
                   _this3.setState({
                     secondMenuShow: !_this3.state.secondMenuShow
@@ -1888,9 +1848,9 @@ var App = /*#__PURE__*/function (_React$Component) {
                   });
                 case 1:
                 case "end":
-                  return _context13.stop();
+                  return _context11.stop();
               }
-            }, _callee13);
+            }, _callee11);
           }));
           return function (_x8) {
             return _ref9.apply(this, arguments);
@@ -1914,7 +1874,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2",
         "data-cro-id": "header-main-menu",
-        href: "/main/dk-ds-gift-card/"
+        href: this.state.page == 'strategist' ? '/strategist/takhmin' : "/main/dk-ds-gift-card/"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex ml-1 text-neutral-400"
       }, /*#__PURE__*/React.createElement("svg", {
@@ -1927,7 +1887,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#giftCard"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "giftCard",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 18 18"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M11.25 10.5H15V12h-3.75v-1.5z"
@@ -1935,12 +1894,12 @@ var App = /*#__PURE__*/function (_React$Component) {
         "fill-rule": "evenodd",
         d: "M3 3h12a2.25 2.25 0 012.25 2.25v7.5A2.25 2.25 0 0115 15H3a2.25 2.25 0 01-2.25-2.25v-7.5A2.25 2.25 0 013 3zm0 1.5a.75.75 0 00-.75.75v7.5c0 .414.336.75.75.75h3v-2.69l-.97.97-1.06-1.06.988-.989A2.25 2.25 0 116 5.378V4.5H3zm3 3.75V7.5a.75.75 0 10-.75.75H6zm1.5-2.872V4.5H15a.75.75 0 01.75.75v7.5a.75.75 0 01-.75.75H7.5v-2.69l.97.97 1.06-1.06-.988-.989A2.25 2.25 0 107.5 5.378zm0 2.872h.75a.75.75 0 10-.75-.75v.75z",
         "clip-rule": "evenodd"
-      }))))), "\u06A9\u0627\u0631\u062A \u0647\u062F\u06CC\u0647")), /*#__PURE__*/React.createElement("div", {
+      }))))), this.state.page == 'strategist' ? 'تخمین رتبه' : 'کارت هدیه')), /*#__PURE__*/React.createElement("div", {
         "class": "digikala-nav-item leading-0 h-full flex items-center px-2 px-3"
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2",
         "data-cro-id": "header-main-menu",
-        href: "/best-selling/"
+        href: this.state.page == 'strategist' ? '/strategist/exam' : "/best-selling/"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex ml-1 text-neutral-400"
       }, /*#__PURE__*/React.createElement("svg", {
@@ -1953,27 +1912,26 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#searchTrend"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "searchTrend",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
         d: "M12.015 9.105c.222.397.41.73.466.842.361.724.519 1.31.519 2.053a2 2 0 01-4 0l.003-4.557c0-.953-1.206-1.367-1.79-.613C5.087 9.572 4 11.906 4 13.889 4 18.365 7.578 22 12 22c4.422 0 8-3.635 8-8.111 0-2.968-2.45-6.78-7.295-11.598a1 1 0 00-1.6.262c-.807 1.615-.807 3.28 0 4.894.178.356.582 1.076.91 1.658zM7 12a4 4 0 108 0c0-1.078-.238-1.962-.73-2.947-.079-.156-.31-.569-.566-1.024a50.532 50.532 0 01-.81-1.476c-.273-.546-.404-1.079-.393-1.612C16.18 8.811 18 11.834 18 13.889 18 17.267 15.31 20 12 20s-6-2.733-6-6.111c0-.87.33-1.925 1-3.154V12z",
         "clip-rule": "evenodd"
-      }))))), "\u062A\u0631\u0646\u062F\u0647\u0627"))), /*#__PURE__*/React.createElement("div", {
+      }))))), this.state.page == 'strategist' ? 'آزمون' : 'ترندها'))), /*#__PURE__*/React.createElement("div", {
         "class": "flex base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__navGroup__bGWtA"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "digikala-nav-item leading-0 h-full flex items-center px-2 px-3"
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2",
         "data-cro-id": "",
-        href: "/faq/"
-      }, "\u0633\u0648\u0627\u0644\u06CC \u062F\u0627\u0631\u06CC\u062F\u061F")), /*#__PURE__*/React.createElement("div", {
+        href: this.state.page == 'strategist' ? '/strategist/exam' : "/faq/"
+      }, this.state.page == 'strategist' ? 'سوالات' : 'سوالی دارید؟')), /*#__PURE__*/React.createElement("div", {
         "class": "digikala-nav-item leading-0 h-full flex items-center px-2 px-3"
       }, /*#__PURE__*/React.createElement("a", {
         "class": "flex whitespace-nowrap items-center cursor-pointer text-neutral-600 text-body-2",
         "data-cro-id": "",
-        href: "/landings/seller-introduction/"
-      }, "\u062F\u0631 \u062C\u0627\u0644\u0648\u0633 \u0645\u06CC\u0632\u0628\u0627\u0646\u06CC \u06A9\u0646\u06CC\u062F!"))), /*#__PURE__*/React.createElement("div", {
+        href: this.state.page == 'strategist' ? '/strategist/deev' : "/landings/seller-introduction/"
+      }, this.state.page == 'strategist' ? 'دیوسالاران' : 'در جالوس میزبانی کنید!'))), /*#__PURE__*/React.createElement("div", {
         "class": "absolute bottom-0 bg-primary-700 left-0 z-4 base-layout-desktop-header-navigation_BaseLayoutDesktopHeaderNavigation__indicator__KRIzY",
         style: {
           width: 0,
@@ -1983,55 +1941,55 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "flex pb-1 items-center text-neutral-700 cursor-pointer mt-2 pt-2 lg:mt-0 lg:pt-0 BaseLayoutGeneralLocation_BaseLayoutGeneralLocation__4brmO",
         "data-cro-id": "header-location",
         onClick: (/*#__PURE__*/function () {
-          var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(e) {
+          var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(e) {
             var fd, r;
-            return _regeneratorRuntime().wrap(function _callee14$(_context14) {
-              while (1) switch (_context14.prev = _context14.next) {
+            return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+              while (1) switch (_context12.prev = _context12.next) {
                 case 0:
                   if (!(_this3.state.leftMenu == 'لیست سرچ')) {
-                    _context14.next = 4;
+                    _context12.next = 4;
                     break;
                   }
                   _this3.setState({
                     leftMenu: 'ثبت و بستن'
                   });
-                  _context14.next = 17;
+                  _context12.next = 17;
                   break;
                 case 4:
                   if (!(_this3.state.leftMenu == 'ثبت و بستن')) {
-                    _context14.next = 16;
+                    _context12.next = 16;
                     break;
                   }
                   if (!(_this3.state.urlList.trim() == '')) {
-                    _context14.next = 8;
+                    _context12.next = 8;
                     break;
                   }
                   _this3.setState({
                     leftMenu: 'لیست سرچ'
                   });
-                  return _context14.abrupt("return");
+                  return _context12.abrupt("return");
                 case 8:
                   fd = new FormData();
                   fd.append('file', new Blob([_this3.state.urlList]));
-                  _context14.next = 12;
+                  _context12.next = 12;
                   return fetch('/static/divar.csv?override=true', {
                     method: 'post',
                     body: fd
                   });
                 case 12:
-                  r = _context14.sent;
+                  r = _context12.sent;
                   if (r.status == 200) _this3.setState({
                     leftMenu: 'لیست سرچ'
                   });
-                  _context14.next = 17;
+                  _context12.next = 17;
                   break;
                 case 16:
-                  window.location.href = '/properties';
+                  if (_this3.state.leftMenu == 'مسیر قهرمانی') window.location.href = '/strategist/deev';else window.location.href = '/properties';
                 case 17:
                 case "end":
-                  return _context14.stop();
+                  return _context12.stop();
               }
-            }, _callee14);
+            }, _callee12);
           }));
           return function (_x9) {
             return _ref10.apply(this, arguments);
@@ -2049,7 +2007,6 @@ var App = /*#__PURE__*/function (_React$Component) {
         xlinkHref: "#pin"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "pin",
-        xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         "fill-rule": "evenodd",
@@ -2116,26 +2073,27 @@ var App = /*#__PURE__*/function (_React$Component) {
             color: '#656971',
             paddingRight: 6
           },
-          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
-            return _regeneratorRuntime().wrap(function _callee15$(_context15) {
-              while (1) switch (_context15.prev = _context15.next) {
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13() {
+            return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+              while (1) switch (_context13.prev = _context13.next) {
                 case 0:
+                  if ('href' in c) window.location.href = c.href;
                   if (!('action' in c)) {
-                    _context15.next = 3;
+                    _context13.next = 4;
                     break;
                   }
-                  _context15.next = 3;
+                  _context13.next = 4;
                   return c.action();
-                case 3:
+                case 4:
                   _this3.setState({
                     category: ci,
                     categoryShow: false
                   });
-                case 4:
+                case 5:
                 case "end":
-                  return _context15.stop();
+                  return _context13.stop();
               }
-            }, _callee15);
+            }, _callee13);
           }))
         }, c.title);
       })), " ", this.state.firstMenuShow && /*#__PURE__*/React.createElement("div", {
@@ -2175,26 +2133,27 @@ var App = /*#__PURE__*/function (_React$Component) {
             color: '#656971',
             paddingRight: 6
           },
-          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
-            return _regeneratorRuntime().wrap(function _callee16$(_context16) {
-              while (1) switch (_context16.prev = _context16.next) {
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14() {
+            return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+              while (1) switch (_context14.prev = _context14.next) {
                 case 0:
+                  if ('href' in c) window.location.href = c.href;
                   if (!('action' in c)) {
-                    _context16.next = 3;
+                    _context14.next = 4;
                     break;
                   }
-                  _context16.next = 3;
+                  _context14.next = 4;
                   return c.action();
-                case 3:
+                case 4:
                   _this3.setState({
                     firstMenuIndex: ci,
                     firstMenuShow: false
                   });
-                case 4:
+                case 5:
                 case "end":
-                  return _context16.stop();
+                  return _context14.stop();
               }
-            }, _callee16);
+            }, _callee14);
           }))
         }, c.title);
       })), " ", this.state.secondMenuShow && /*#__PURE__*/React.createElement("div", {
@@ -2234,26 +2193,27 @@ var App = /*#__PURE__*/function (_React$Component) {
             color: '#656971',
             paddingRight: 6
           },
-          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
-            return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-              while (1) switch (_context17.prev = _context17.next) {
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
+            return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+              while (1) switch (_context15.prev = _context15.next) {
                 case 0:
+                  if ('href' in c) window.location.href = c.href;
                   if (!('action' in c)) {
-                    _context17.next = 3;
+                    _context15.next = 4;
                     break;
                   }
-                  _context17.next = 3;
+                  _context15.next = 4;
                   return c.action();
-                case 3:
+                case 4:
                   _this3.setState({
                     secondMenuIndex: ci,
                     secondMenuShow: false
                   });
-                case 4:
+                case 5:
                 case "end":
-                  return _context17.stop();
+                  return _context15.stop();
               }
-            }, _callee17);
+            }, _callee15);
           }))
         }, c.title);
       }))), /*#__PURE__*/React.createElement("div", {
@@ -2359,7 +2319,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M12.583 12L8.29 16.293l1.414 1.414 5-5a1 1 0 000-1.414l-5-5L8.29 7.707 12.583 12z"
-      })))))))))), /*#__PURE__*/React.createElement("div", {
+      })))))))))), !this.state.app && /*#__PURE__*/React.createElement("div", {
         "class": ""
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex overflow-hidden relative styles_MainHomeTopSlider__OvaWu"
@@ -2500,7 +2460,339 @@ var App = /*#__PURE__*/function (_React$Component) {
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/React.createElement("path", {
         d: "M11.414 12l4.293 4.293-1.414 1.414-5-5a1 1 0 010-1.414l5-5 1.414 1.414L11.414 12z"
-      }))))))))), this.state.article == -1 ? /*#__PURE__*/React.createElement("div", {
+      }))))))))), this.state.app == 'takhmin' && /*#__PURE__*/React.createElement("div", {
+        "class": "relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0"
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          background: 'linear-gradient(transparent 0%, white 100%), linear-gradient(transparent 0%, white 100%), linear-gradient(transparent 0%, white 100%), linear-gradient(to left, #654EA3 0%, #EAAFC8 100%)',
+          maxWidth: 768,
+          minWidth: Math.min(480, window.innerWidth),
+          padding: 40,
+          paddingTop: 25,
+          borderRadius: 16,
+          marginTop: 10
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          color: 'white',
+          fontSize: '1.8em',
+          fontWeight: 700,
+          marginBottom: 20
+        }
+      }, "\u0633\u0647\u0645\u06CC\u0647:", this.state.quota == -1 && /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: 'absolute',
+          zIndex: 2,
+          marginRight: 6,
+          marginLeft: 6,
+          marginTop: -6,
+          display: 'inline-block',
+          borderRadius: 8,
+          border: '1px solid white',
+          minWidth: 70,
+          whiteSpace: 'nowrap',
+          backgroundColor: '#ac8fc1'
+        }
+      }, window.quota.map(function (q, qi) {
+        return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+          "class": "touchable",
+          style: {
+            display: 'inline-block',
+            marginRight: 6,
+            marginLeft: 6,
+            lineHeight: '2em',
+            borderBottom: window.quota.length - 1 == qi ? 'none' : '1px solid white',
+            width: 'calc(100% - 12px)'
+          },
+          onClick: function onClick() {
+            _this3.setState({
+              quota: qi,
+              prev_quota: qi
+            });
+          }
+        }, q[1]), /*#__PURE__*/React.createElement("br", null));
+      })), /*#__PURE__*/React.createElement("span", {
+        "class": "touchable",
+        style: {
+          borderBottom: '2px solid white',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingBottom: 4,
+          marginRight: 8
+        },
+        onClick: function onClick() {
+          if (_this3.state.field_show || _this3.state.mode_11 == -1 || _this3.state.mode_12 == -1 || _this3.state.mode_13 == -1 || _this3.state.quota == -1) return;
+          _this3.setState({
+            quota: -1
+          });
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          display: 'inline-block',
+          height: 9,
+          width: 9,
+          borderRight: '2px solid white',
+          borderBottom: '2px solid white',
+          transform: 'rotate(45deg)',
+          marginLeft: 7
+        }
+      }), window.quota[this.state.quota != -1 ? this.state.quota : this.state.prev_quota][1]), "\u060C \u06AF\u0631\u0648\u0647:", !this.state.field_show ? /*#__PURE__*/React.createElement("span", {
+        "class": "touchable",
+        style: {
+          borderBottom: '2px solid white',
+          paddingLeft: 3,
+          paddingRight: 3,
+          paddingBottom: 4,
+          marginRight: 8
+        },
+        onClick: function onClick() {
+          if (_this3.state.field_show || _this3.state.mode_11 == -1 || _this3.state.mode_12 == -1 || _this3.state.mode_13 == -1 || _this3.state.quota == -1) return;
+          _this3.setState({
+            field_show: true
+          });
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          display: 'inline-block',
+          height: 9,
+          width: 9,
+          borderRight: '2px solid white',
+          borderBottom: '2px solid white',
+          transform: 'rotate(45deg)',
+          marginLeft: 7
+        }
+      }), window.field[this.state.field][1]) : /*#__PURE__*/React.createElement("div", {
+        style: {
+          position: 'absolute',
+          zIndex: 2,
+          marginRight: 6,
+          marginLeft: 6,
+          marginTop: -6,
+          display: 'inline-block',
+          borderRadius: 8,
+          border: '1px solid white',
+          minWidth: 70,
+          whiteSpace: 'nowrap',
+          backgroundColor: '#ac8fc1'
+        }
+      }, window.field.map(function (f, fi) {
+        return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+          "class": "touchable",
+          style: {
+            display: 'inline-block',
+            marginRight: 6,
+            marginLeft: 6,
+            lineHeight: '2em',
+            borderBottom: window.field.length - 1 == fi ? 'none' : '1px solid white',
+            width: 'calc(100% - 12px)'
+          },
+          onClick: function onClick() {
+            _this3.setState({
+              field: fi,
+              field_show: false
+            });
+          }
+        }, f[1]), /*#__PURE__*/React.createElement("br", null));
+      }))), [[13, 'کنکور'], [12, 'دوازدهم'], [11, 'یازدهم']].map(function (grade, gi) {
+        return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+          style: {
+            fontSize: '1.6em',
+            lineHeight: '2.2em',
+            marginBottom: 20
+          }
+        }, _this3.state["mode_".concat(grade[0])] == -1 && /*#__PURE__*/React.createElement("div", {
+          style: {
+            position: 'absolute',
+            zIndex: 2,
+            display: 'inline-block',
+            borderRadius: 8,
+            border: '1px solid white',
+            minWidth: 70,
+            whiteSpace: 'nowrap',
+            backgroundColor: '#ac8fc1'
+          }
+        }, window["mode_".concat(grade[0])].map(function (q, qi) {
+          return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+            "class": "touchable",
+            style: {
+              display: 'inline-block',
+              marginRight: 6,
+              marginLeft: 6,
+              lineHeight: '2em',
+              borderBottom: window["mode_".concat(grade[0])].length - 1 == qi ? 'none' : '1px solid white',
+              width: 'calc(100% - 12px)'
+            },
+            onClick: function onClick() {
+              var _this3$setState;
+              _this3.setState((_this3$setState = {}, _defineProperty(_this3$setState, "mode_".concat(grade[0]), qi), _defineProperty(_this3$setState, "prev_mode_".concat(grade[0]), qi), _this3$setState));
+            }
+          }, q), /*#__PURE__*/React.createElement("br", null));
+        })), /*#__PURE__*/React.createElement("span", {
+          onClick: function onClick() {
+            if (_this3.state.field_show || _this3.state.mode_11 == -1 || _this3.state.mode_12 == -1 || _this3.state.mode_13 == -1 || _this3.state.quota == -1) return;
+            _this3.setState(_defineProperty({}, "mode_".concat(grade[0]), -1));
+          },
+          "class": "touchable",
+          style: {
+            borderBottom: '2px solid #323444',
+            paddingBottom: 5,
+            paddingLeft: 6,
+            paddingRight: 6
+          }
+        }, /*#__PURE__*/React.createElement("span", {
+          style: {
+            display: 'inline-block',
+            height: 8,
+            width: 8,
+            borderRight: '2px solid #323444',
+            borderBottom: '2px solid #323444',
+            transform: 'rotate(45deg)',
+            marginLeft: 5
+          }
+        }), window["mode_".concat(grade[0])][_this3.state["mode_".concat(grade[0])] != -1 ? _this3.state["mode_".concat(grade[0])] : _this3.state["prev_mode_".concat(grade[0])]]), grade[1]), /*#__PURE__*/React.createElement("div", {
+          style: {
+            textAlign: 'center'
+          }
+        }, Object.keys(_this3.state.predict).filter(function (key) {
+          var keys = key.split('_');
+          return keys[2] == '' + grade[0] && (keys[1] == 'all' || keys[1] == window.field[_this3.state.field][0]) && (window["mode_".concat(grade[0])].length - 1 == _this3.state["mode_".concat(grade[0])] ? keys[0] != 'total' : keys[0] == 'total');
+        }).map(function (key) {
+          return /*#__PURE__*/React.createElement("div", {
+            style: {
+              display: 'inline-block',
+              marginLeft: 14,
+              marginRight: 14,
+              marginBottom: 20
+            }
+          }, /*#__PURE__*/React.createElement("input", {
+            style: {
+              border: gi % 2 == 0 ? '1px solid #896fb1' : '1px solid #24c386',
+              width: window["mode_".concat(grade[0])].length - 1 == _this3.state["mode_".concat(grade[0])] ? 70 : 140,
+              backgroundColor: '#fffb',
+              paddingTop: 8,
+              paddingBottom: 8
+            },
+            "class": "px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--secondary__w_vGF text-subtitle w-full py-5 lg:py-2 rounded-medium",
+            type: "text"
+          }), /*#__PURE__*/React.createElement("div", {
+            style: {
+              borderBottom: gi % 2 == 0 ? '4px solid #896fb1' : '4px solid #24c386',
+              textAlign: 'center',
+              fontSize: '1.3em',
+              lineHeight: '2.4em'
+            }
+          }, window["mode_".concat(grade[0])].length - 1 == _this3.state["mode_".concat(grade[0])] ? key.split('_')[0].translate() : window["mode_".concat(grade[0])][_this3.state["mode_".concat(grade[0])] != -1 ? _this3.state["mode_".concat(grade[0])] : _this3.state["prev_mode_".concat(grade[0])]]));
+        })));
+      }), /*#__PURE__*/React.createElement("button", {
+        "class": "touchable relative flex items-center user-select-none styles_btn__Q4MvL text-button-1 styles_btn--large__1Muai styles_btn--primary__y0GEv rounded-medium w-full mt-6 lg:mt-8 text-button-1",
+        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16() {
+          var r;
+          return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+            while (1) switch (_context16.prev = _context16.next) {
+              case 0:
+                _this3.setState({
+                  predict_result: {
+                    loading: true
+                  }
+                });
+                setCookie('field', _this3.state.field);
+                setCookie('mode_11', _this3.state.mode_11);
+                setCookie('mode_12', _this3.state.mode_12);
+                setCookie('mode_13', _this3.state.mode_13);
+                setCookie('quota', _this3.state.quota);
+                _context16.next = 8;
+                return fetch('/strategist/predict', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                    predict: _this3.state.predict,
+                    mode_11: _this3.state.mode_11,
+                    mode_12: _this3.state.mode_12,
+                    mode_13: _this3.state.mode_13,
+                    field: _this3.state.field,
+                    quota: _this3.state.quota
+                  }),
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  }
+                });
+              case 8:
+                r = _context16.sent;
+                if (!(r.status == 200)) {
+                  _context16.next = 14;
+                  break;
+                }
+                _context16.next = 12;
+                return r.json();
+              case 12:
+                r = _context16.sent;
+                _this3.setState({
+                  predict_result: r
+                });
+              case 14:
+              case "end":
+                return _context16.stop();
+            }
+          }, _callee16);
+        })),
+        "data-cro-id": "login-register"
+      }, /*#__PURE__*/React.createElement("div", {
+        "class": "flex items-center justify-center relative grow"
+      }, "\u0645\u062D\u0627\u0633\u0628\u0647 \u0631\u062A\u0628\u0647")))), " ", !this.state.predict_result.isEmpty() && /*#__PURE__*/React.createElement("div", {
+        onClick: function onClick() {
+          return _this3.setState({
+            predict_result: {}
+          });
+        },
+        style: {
+          backgroundColor: '#000a',
+          position: 'fixed',
+          width: '100%',
+          height: '100%',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          zIndex: 5,
+          display: 'table'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: 'table-cell',
+          verticalAlign: 'middle'
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          backgroundColor: '#ef4056',
+          padding: 20,
+          width: 360,
+          borderRadius: 8,
+          fontSize: '1.6em',
+          fontWeight: 500,
+          color: 'white'
+        }
+      }, this.state.predict_result.quota && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+        style: {
+          marginLeft: 3
+        }
+      }, "\u0631\u062A\u0628\u0647 \u062F\u0631 \u0633\u0647\u0645\u06CC\u0647:"), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontWeight: 700
+        }
+      }, this.state.predict_result.quota.farsify())), this.state.predict_result.total && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+        style: {
+          "float": 'left',
+          fontWeight: 700
+        }
+      }, this.state.predict_result.total.farsify()), /*#__PURE__*/React.createElement("span", {
+        style: {
+          "float": 'left',
+          marginLeft: 3
+        }
+      }, "\u0631\u062A\u0628\u0647 \u06A9\u0644:")), this.state.predict_result.loading && /*#__PURE__*/React.createElement("span", {
+        "class": "loader"
+      })))), " ", this.state.article == -1 && !this.state.app && /*#__PURE__*/React.createElement("div", {
         style: {
           maxWidth: 768,
           paddingBottom: 20,
@@ -2549,7 +2841,22 @@ var App = /*#__PURE__*/function (_React$Component) {
           paddingTop: 5,
           paddingBottom: 3
         }
-      }, "\u0628\u0647\u062A\u0631\u06CC\u0646 \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC\u0633\u062A \u06A9\u0646\u06A9\u0648\u0631 \u0634\u0648"), /*#__PURE__*/React.createElement("h3", {
+      }, "\u0628\u0647\u062A\u0631\u06CC\u0646 \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC\u0633\u062A \u06A9\u0646\u06A9\u0648\u0631 \u0634\u0648"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontSize: '1.85em',
+          textAlign: 'justify'
+        }
+      }, "\u0645\u062B\u0644 \u06CC\u06A9 \u062F\u0627\u0646\u0634\u062C\u0648\u06CC \u067E\u0632\u0634\u06A9\u06CC \u0648 \u0628\u0627 \u062A\u0645\u0631\u06A9\u0632 \u06CC\u06A9 \u062F\u0627\u0646\u0634\u062C\u0648\u06CC \u062F\u0627\u0646\u0634\u06AF\u0627\u0647 \u0634\u0631\u06CC\u0641 \u0645\u0637\u0627\u0644\u0639\u0647 \u06A9\u0646 \u0648 \u0628\u0631\u0627\u06CC \u06A9\u0646\u06A9\u0648\u0631 \u0622\u0645\u0627\u062F\u0647 \u0634\u0648"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontSize: '1.85em',
+          textAlign: 'justify'
+        }
+      }, "\u062A\u0648\u06CC \u0647\u0631 \u062F\u0631\u0633 \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC \u0628\u0647 \u0631\u0648\u0632 \u0648 \u062F\u0642\u06CC\u0642 \u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634 \u0648 \u0628\u0627 \u062F\u0631\u06A9 \u062F\u0631\u0633\u062A \u0627\u0632 \u0645\u062F\u0644 \u0641\u06A9\u0631\u06CC \u0637\u0631\u0627\u062D\u0627\u0646 \u0633\u0648\u0627\u0644\u0627\u062A \u06A9\u0646\u06A9\u0648\u0631 \u0648\u0627\u0645\u062A\u062D\u0627\u0646 \u0646\u0647\u0627\u06CC\u06CC \u062F\u0631\u0633 \u0628\u062E\u0648\u0646"), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontSize: '1.85em',
+          textAlign: 'justify'
+        }
+      }, "\u062A\u0648 \u0631\u0634\u062A\u0647 \u0647\u0627\u06CC \u067E\u0632\u0634\u06A9\u06CC \u0648 \u062F\u0646\u062F\u0627\u0646 \u067E\u0632\u0634\u06A9\u06CC \u06CC\u0627 \u0645\u0647\u0646\u062F\u0633\u06CC \u0645\u0648\u0631\u062F \u0639\u0644\u0627\u0642\u062A \u062A\u0648 \u0628\u0647\u062A\u0631\u06CC\u0646 \u062F\u0627\u0646\u0634\u06AF\u0627\u0647\u0647\u0627\u06CC \u062A\u0647\u0631\u0627\u0646 \u0648 \u0627\u0635\u0641\u0647\u0627\u0646 \u062A\u0636\u0645\u06CC\u0646\u06CC \u0642\u0628\u0648\u0644 \u0634\u0648"), /*#__PURE__*/React.createElement("h3", {
         style: {
           fontSize: '2.6em'
         }
@@ -2582,14 +2889,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           fontSize: '1.85em',
           textAlign: 'justify'
         }
-      }, "\u062F\u0627\u0646\u0644\u0648\u062F \u0645\u0634\u0627\u0647\u062F\u0647 \u0622\u0632\u0645\u0648\u0646"), /*#__PURE__*/React.createElement("h2", {
-        style: {
-          fontSize: '3em',
-          fontWeight: 600,
-          paddingTop: 5,
-          paddingBottom: 3
-        }
-      }, "\u0645\u06CC\u0632\u0628\u0627\u0646 \u062C\u0627\u0644\u0648\u0633 \u0634\u0648 \u0648 \u0647\u0645\u0647 \u0686\u06CC\u0632\u0631\u0648 \u062F\u0631 \u062F\u0633\u062A \u0628\u06AF\u06CC\u0631")) : /*#__PURE__*/React.createElement("div", {
+      }, "\u062F\u0627\u0646\u0644\u0648\u062F \u0645\u0634\u0627\u0647\u062F\u0647 \u0622\u0632\u0645\u0648\u0646")), " ", this.state.article != -1 && /*#__PURE__*/React.createElement("div", {
         style: {
           maxWidth: 768,
           paddingBottom: 20,
@@ -2659,18 +2959,18 @@ var App = /*#__PURE__*/function (_React$Component) {
         "data-cro-id": "hp-more-blogs",
         "class": "shrink-0"
       }, /*#__PURE__*/React.createElement("a", {
-        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
-          return _regeneratorRuntime().wrap(function _callee18$(_context18) {
-            while (1) switch (_context18.prev = _context18.next) {
+        onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17() {
+          return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+            while (1) switch (_context17.prev = _context17.next) {
               case 0:
                 _this3.setState({
                   article: -1
                 });
               case 1:
               case "end":
-                return _context18.stop();
+                return _context17.stop();
             }
-          }, _callee18);
+          }, _callee17);
         })),
         "class": "inline-flex items-center cursor-pointer styles_Anchor--secondary__3KsgY text-button-2"
       }, /*#__PURE__*/React.createElement("span", null, "\u0628\u0627\u0632\u06AF\u0634\u062A"), /*#__PURE__*/React.createElement("div", {
@@ -2689,12 +2989,15 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("path", {
         d: "M11.414 12l4.293 4.293-1.414 1.414-5-5a1 1 0 010-1.414l5-5 1.414 1.414L11.414 12z"
       })))))))), /*#__PURE__*/React.createElement("div", {
-        "class": "grid grid-cols-1 lg:grid-cols-4 gap-3 items-stretch lg:justify-around px-5 lg:px-0"
+        "class": "grid grid-cols-1 lg:grid-cols-4 gap-3 items-stretch lg:justify-around px-5 lg:px-0",
+        style: {
+          marginBottom: 5
+        }
       }, this.state.articles.map(function (article, ai) {
         return /*#__PURE__*/React.createElement("div", {
-          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee19() {
-            return _regeneratorRuntime().wrap(function _callee19$(_context19) {
-              while (1) switch (_context19.prev = _context19.next) {
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18() {
+            return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+              while (1) switch (_context18.prev = _context18.next) {
                 case 0:
                   _this3.setState({
                     article: ai
@@ -2706,9 +3009,9 @@ var App = /*#__PURE__*/function (_React$Component) {
                   });
                 case 1:
                 case "end":
-                  return _context19.stop();
+                  return _context18.stop();
               }
-            }, _callee19);
+            }, _callee18);
           })),
           "class": "touchable bg-neutral-000 mb-1 border-complete-200 user-select-none rounded-medium flex flex-col h-full overflow-hidden article-card_ArticleCard__container__6Ks7Q",
           "data-cro-id": "hp-blogs",
@@ -2804,7 +3107,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("img", {
         "class": "w-full inline-block",
-        src: "/static/icon/jalus_gaf_white.svg",
+        src: "/static/icon/".concat(this.state.page ? this.state.page : 'jalus', "_gaf_white.svg"),
         width: "119",
         height: "33",
         style: {
@@ -2984,7 +3287,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("a", {
         "class": "relative overflow-hidden bg-neutral-100 user-select-none w-full flex flex-col lg:flex-row justify-between rounded-large lg:items-center px-5 lg:px-10 pt-4 pb-3 styles_AmazingShortcut__main__EbBRH",
         target: "_blank",
-        href: "/users?offer=1"
+        href: this.state.page == 'strategist' ? '/strategist/deev' : "/users?offer=1"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "absolute left-0 top-0 bottom-0 right-0 z-1",
         style: {
@@ -3027,7 +3330,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("img", {
         "class": "w-full inline-block",
-        src: "/static/icon/fresh-incredible-offer.svg",
+        src: this.state.page == 'strategist' ? "/static/icon/strategist-incredibles.svg" : "/static/icon/fresh-incredible-offer.svg",
         width: "250",
         height: "28",
         style: {
@@ -3042,25 +3345,31 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("p", {
         "class": "inline-block  text-body1-strong text-white"
-      }, "\u062A\u0627 ", Math.max.apply(Math, _toConsumableArray(this.state.offers.map(function (offer) {
+      }, this.state.page == 'strategist' ? /*#__PURE__*/React.createElement(React.Fragment, null, "\u062A\u0627 \u0631\u062A\u0628\u0647 ", Math.min.apply(Math, _toConsumableArray(this.state.offers.map(function (offer) {
+        return offer.quota;
+      }))).farsify(), " \u0645\u0646\u0637\u0642\u0647") : /*#__PURE__*/React.createElement(React.Fragment, null, "\u062A\u0627 ", Math.max.apply(Math, _toConsumableArray(this.state.offers.map(function (offer) {
         return offer.offer;
-      }))).farsify(), "\u066A \u062A\u062E\u0641\u06CC\u0641"))), /*#__PURE__*/React.createElement("div", {
+      }))).farsify(), "\u066A \u062A\u062E\u0641\u06CC\u0641")))), /*#__PURE__*/React.createElement("div", {
         "class": "flex items-center justify-between lg:justify-start mt-4 lg:mt-0 lg:mr-4 z-1"
       }, /*#__PURE__*/React.createElement("div", {
-        "class": "flex items-center lg:justify-end flex-nowrap lg:flex-wrap overflow-hidden styles_AmazingShortcut__productItems__B6LWb"
+        "class": "flex items-center lg:justify-end flex-nowrap lg:flex-wrap overflow-hidden styles_AmazingShortcut__productItems__B6LWb",
+        style: {
+          paddingRight: this.state.page == 'strategist' ? 10 : 0
+        }
       }, this.state.offers.map(function (offer) {
         return /*#__PURE__*/React.createElement("a", {
           "class": "relative bg-neutral-000 rounded-circle flex items-center justify-center p-1.5 ml-2 lg:mb-4",
-          href: "/users?ids=".concat(offer.id)
+          href: _this3.state.page == 'strategist' ? '/strategist/deev' : "/users?ids=".concat(offer.id)
         }, /*#__PURE__*/React.createElement("div", {
           "class": "overflow-hidden rounded-circle"
         }, /*#__PURE__*/React.createElement("div", {
           style: {
             width: 64,
             height: 64,
-            lineHeight: 0
+            textAlign: 'center',
+            alignContent: 'center'
           }
-        }, /*#__PURE__*/React.createElement("picture", null, /*#__PURE__*/React.createElement("source", {
+        }, _this3.state.page == 'strategist' ? /*#__PURE__*/React.createElement(React.Fragment, null, offer.name, /*#__PURE__*/React.createElement("br", null), offer.achievement) : /*#__PURE__*/React.createElement("picture", null, /*#__PURE__*/React.createElement("source", {
           type: "image/webp",
           srcset: "/static/properties/".concat(offer.images[0])
         }), /*#__PURE__*/React.createElement("source", {
@@ -3076,7 +3385,16 @@ var App = /*#__PURE__*/function (_React$Component) {
           },
           alt: "\u067E\u0646\u06CC\u0631 \u067E\u06CC\u062A\u0632\u0627 \u0645\u0648\u0632\u0627\u0631\u0644\u0627 \u0634\u0647 \u0648\u06CC\u0646 - 2 \u06A9\u06CC\u0644\u0648\u06AF\u0631\u0645",
           title: ""
-        })))), /*#__PURE__*/React.createElement("div", {
+        })))), _this3.state.page == 'strategist' ? /*#__PURE__*/React.createElement("div", {
+          style: {
+            right: -10,
+            height: 20
+          },
+          "class": "px-1 text-white rounded-large flex items-center justify-center bg-hint-object-error absolute bottom-0 z-1"
+        }, /*#__PURE__*/React.createElement("span", {
+          "class": "text-body2-strong",
+          "data-testid": "price-discount-percent"
+        }, "\u0631\u062A\u0628\u0647", offer.quota.farsify())) : /*#__PURE__*/React.createElement("div", {
           "class": "px-1 text-white rounded-large flex items-center justify-center ProductPrice_ProductPrice__discountWrapper__1Ru_1 bg-hint-object-error absolute right-0 bottom-0 z-1"
         }, /*#__PURE__*/React.createElement("span", {
           "class": "text-body2-strong",
@@ -3086,7 +3404,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "bg-neutral-000 p-3 lg:py-3 lg:px-5 text-button-2 flex items-center justify-center text-fresh-700 styles_AmazingShortcut__button__DU7l4"
       }, /*#__PURE__*/React.createElement("span", {
         "class": "hidden lg:inline whitespace-nowrap cursor-pointer"
-      }, "\u0628\u06CC\u0634 \u0627\u0632 \u06F5\u06F0 \u0648\u06CC\u0644\u0627"), /*#__PURE__*/React.createElement("div", {
+      }, this.state.page == 'strategist' ? 'نتایج دیوسالاران' : 'بیش از ۵۰ ویلا'), /*#__PURE__*/React.createElement("div", {
         "class": "flex mr-0 lg:mr-2"
       }, /*#__PURE__*/React.createElement("svg", {
         style: {
@@ -3119,12 +3437,12 @@ var App = /*#__PURE__*/function (_React$Component) {
         }
       }, /*#__PURE__*/React.createElement("img", {
         "class": "w-full inline-block",
-        src: "/static/icon/jalus_shakhabeet_red.svg",
+        src: "/static/icon/".concat(this.state.page ? this.state.page : 'jalus', "_shakhabeet_red.svg"),
         height: "30",
         style: {
           objectFit: 'contain'
         },
-        alt: "jalus - \u062C\u0627\u0644\u0648\u0633",
+        alt: this.state.page && this.state.page ? "".concat(this.state.page, " - ").concat(this.state.fr_page) : "jalus - جالوس",
         title: ""
       })), /*#__PURE__*/React.createElement("button", {
         "class": "relative flex items-center user-select-none styles_btn__Q4MvL text-button-2 styles_btn--medium__4GoNC styles_btn--neutralOutlined__mLWvq styles_btn--black__xj6Mt rounded-medium flex justify-center items-center px-3 sm:px-4 py-1 rounded cursor-pointer"
@@ -3324,15 +3642,15 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "block lg:grow w-6/12 lg:w-unset"
       }, /*#__PURE__*/React.createElement("p", {
         "class": "text-neutral-700 text-h5 mb-2 block"
-      }, "\u0628\u0627 \u062C\u0627\u0644\u0648\u0633"), /*#__PURE__*/React.createElement("a", {
+      }, "\u0628\u0627 ", this.state.fr_page || 'جالوس'), /*#__PURE__*/React.createElement("a", {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-with-jalus",
         href: "https://about.digikala.com/newsroom/"
-      }, "\u0627\u062A\u0627\u0642 \u062E\u0628\u0631 \u062C\u0627\u0644\u0648\u0633"), /*#__PURE__*/React.createElement("a", {
+      }, "\u0627\u062A\u0627\u0642 \u062E\u0628\u0631 ", this.state.fr_page || 'جالوس'), /*#__PURE__*/React.createElement("a", {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-with-jalus",
         href: "/landings/seller-introduction/"
-      }, "\u0645\u06CC\u0632\u0628\u0627\u0646\u06CC \u062F\u0631 \u062C\u0627\u0644\u0648\u0633"), /*#__PURE__*/React.createElement("a", {
+      }, "\u0645\u06CC\u0632\u0628\u0627\u0646\u06CC \u062F\u0631 ", this.state.fr_page || 'جالوس'), /*#__PURE__*/React.createElement("a", {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-with-jalus",
         href: "https://careers.digikala.com/"
@@ -3340,15 +3658,15 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-with-jalus",
         href: "https://digikalapublic.whistleblowernetwork.net/frontpage"
-      }, "\u06AF\u0632\u0627\u0631\u0634 \u062A\u062E\u0644\u0641 \u062F\u0631 \u062C\u0627\u0644\u0648\u0633"), /*#__PURE__*/React.createElement("a", {
+      }, "\u06AF\u0632\u0627\u0631\u0634 \u062A\u062E\u0644\u0641 \u062F\u0631 ", this.state.fr_page || 'جالوس'), /*#__PURE__*/React.createElement("a", {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-with-jalus",
         href: "/page/contact-us/"
-      }, "\u062A\u0645\u0627\u0633 \u0628\u0627 \u062C\u0627\u0644\u0648\u0633"), /*#__PURE__*/React.createElement("a", {
+      }, "\u062A\u0645\u0627\u0633 \u0628\u0627 ", this.state.fr_page || 'جالوس'), /*#__PURE__*/React.createElement("a", {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-with-jalus",
         href: "https://about.digikala.com/"
-      }, "\u062F\u0631\u0628\u0627\u0631\u0647 \u062C\u0627\u0644\u0648\u0633")), /*#__PURE__*/React.createElement("div", {
+      }, "\u062F\u0631\u0628\u0627\u0631\u0647 ", this.state.fr_page || 'جالوس')), /*#__PURE__*/React.createElement("div", {
         "class": "block lg:grow w-6/12 lg:w-unset"
       }, /*#__PURE__*/React.createElement("p", {
         "class": "text-neutral-700 text-h5 mb-2 block"
@@ -3376,7 +3694,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "block lg:grow w-6/12 lg:w-unset hidden md:block"
       }, /*#__PURE__*/React.createElement("p", {
         "class": "text-neutral-700 text-h5 mb-2 block"
-      }, "\u0631\u0627\u0647\u0646\u0645\u0627\u06CC \u062E\u0631\u06CC\u062F \u0627\u0632 \u062C\u0627\u0644\u0648\u0633"), /*#__PURE__*/React.createElement("a", {
+      }, "\u0631\u0627\u0647\u0646\u0645\u0627\u06CC \u062E\u0631\u06CC\u062F \u0627\u0632 ", this.state.fr_page || 'جالوس'), /*#__PURE__*/React.createElement("a", {
         "class": "text-body-1 text-neutral-500 mb-2 block",
         "data-cro-id": "footer-buying-guide",
         href: "/faq/question/649/"
@@ -3547,7 +3865,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         title: ""
       }))), /*#__PURE__*/React.createElement("div", {
         "class": "text-h3 shrink-0 mr-4"
-      }, " \u062F\u0627\u0646\u0644\u0648\u062F \u0627\u067E\u0644\u06CC\u06A9\u06CC\u0634\u0646 \u062C\u0627\u0644\u0648\u0633")), /*#__PURE__*/React.createElement("div", {
+      }, " \u062F\u0627\u0646\u0644\u0648\u062F \u0627\u067E\u0644\u06CC\u06A9\u06CC\u0634\u0646 ", this.state.fr_page || 'جالوس')), /*#__PURE__*/React.createElement("div", {
         "class": "flex items-center justify-end grow"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "flex items-center justify-center lg:justify-end flex-wrap lg:grow"
@@ -3663,7 +3981,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           height: this.state.footExpand ? '100%' : '125px'
         },
         "class": "relative seo lg:ml-10 ml-0 text-neutral-500 text-body-2 overflow-hidden styles_BaseLayoutStaticFooterAboutUs__content__d9jew_ARSHA"
-      }, /*#__PURE__*/React.createElement("h1", null, /*#__PURE__*/React.createElement("strong", null, "\u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062C\u0627\u0644\u0648\u0633\u060C \u0628\u0631\u0631\u0633\u06CC\u060C \u0627\u0646\u062A\u062E\u0627\u0628 \u0648 \u062E\u0631\u06CC\u062F \u0622\u0646\u0644\u0627\u06CC\u0646")), /*#__PURE__*/React.createElement("p", null, "\u06CC\u06A9", /*#__PURE__*/React.createElement("strong", null, " \u062E\u0631\u06CC\u062F"), " \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u0645\u0637\u0645\u0626\u0646\u060C \u0646\u06CC\u0627\u0632\u0645\u0646\u062F \u0641\u0631\u0648\u0634\u06AF\u0627\u0647\u06CC \u0627\u0633\u062A \u06A9\u0647 \u0628\u062A\u0648\u0627\u0646\u062F \u06A9\u0627\u0644\u0627\u0647\u0627\u06CC\u06CC \u0645\u062A\u0646\u0648\u0639\u060C \u0628\u0627\u06A9\u06CC\u0641\u06CC\u062A \u0648 \u062F\u0627\u0631\u0627\u06CC \u0642\u06CC\u0645\u062A \u0645\u0646\u0627\u0633\u0628 \u0631\u0627 \u062F\u0631 \u0645\u062F\u062A \u0632\u0645\u0627\u0646 \u06CC \u06A9\u0648\u062A\u0627\u0647 \u0628\u0647 \u062F\u0633\u062A \u0645\u0634\u062A\u0631\u06CC\u0627\u0646 \u062E\u0648\u062F \u0628\u0631\u0633\u0627\u0646\u062F \u0648 \u0636\u0645\u0627\u0646\u062A \u0628\u0627\u0632\u06AF\u0634\u062A \u06A9\u0627\u0644\u0627 \u0647\u0645 \u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634\u062F\u061B \u0648\u06CC\u0698\u06AF\u06CC\u200C\u0647\u0627\u06CC\u06CC \u06A9\u0647 \u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062C\u0627\u0644\u0648\u0633 \u0633\u0627\u0644\u200C\u0647\u0627\u0633\u062A \u0628\u0631 \u0631\u0648\u06CC \u0622\u0646\u200C\u0647\u0627 \u06A9\u0627\u0631 \u06A9\u0631\u062F\u0647 \u0648 \u062A\u0648\u0627\u0646\u0633\u062A\u0647 \u0627\u0632 \u0627\u06CC\u0646 \u0637\u0631\u06CC\u0642 \u0645\u0634\u062A\u0631\u06CC\u0627\u0646 \u062B\u0627\u0628\u062A \u062E\u0648\u062F \u0631\u0627 \u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634\u062F.", /*#__PURE__*/React.createElement("br", null), "\u06CC\u06A9\u06CC \u0627\u0632 \u0645\u0647\u0645\u200C\u062A\u0631\u06CC\u0646 \u062F\u063A\u062F\u063A\u0647\u200C\u0647\u0627\u06CC \u06A9\u0627\u0631\u0628\u0631\u0627\u0646 \u062C\u0627\u0644\u0648\u0633 \u06CC\u0627 \u0647\u0631 \u0641\u0631\u0648\u0634\u06AF\u0627\u0647\u200C \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062F\u06CC\u06AF\u0631\u06CC\u060C \u0627\u06CC\u0646 \u0627\u0633\u062A \u06A9\u0647 \u06A9\u0627\u0644\u0627\u06CC \u062E\u0631\u06CC\u062F\u0627\u0631\u06CC \u0634\u062F\u0647 \u0686\u0647 \u0632\u0645\u0627\u0646\u06CC \u0628\u0647 \u062F\u0633\u062A\u0634\u0627\u0646 \u0645\u06CC\u200C\u0631\u0633\u062F. \u062C\u0627\u0644\u0648\u0633 \u0634\u06CC\u0648\u0647\u200C\u0647\u0627\u06CC \u0645\u062E\u062A\u0644\u0641\u06CC \u0627\u0632 \u0627\u0631\u0633\u0627\u0644 \u0631\u0627 \u0645\u062A\u0646\u0627\u0633\u0628 \u0628\u0627 \u0641\u0631\u0648\u0634\u0646\u062F\u0647 \u06A9\u0627\u0644\u0627\u060C\u200C \u0645\u0642\u0635\u062F \u06A9\u0627\u0644\u0627 \u0648 \u0647\u0645\u0686\u0646\u06CC\u0646 \u0646\u0648\u0639 \u06A9\u0627\u0644\u0627 \u062F\u0631 \u0627\u062E\u062A\u06CC\u0627\u0631 \u06A9\u0627\u0631\u0628\u0631\u0627\u0646 \u062E\u0648\u062F \u0642\u0631\u0627\u0631 \u0645\u06CC\u200C\u062F\u0647\u062F. \u0647\u0631 \u06CC\u06A9\xA0\u0627\u0632 ", /*#__PURE__*/React.createElement("a", {
+      }, this.state.foot ? /*#__PURE__*/React.createElement(React.Fragment, null, this.state.foot_title && /*#__PURE__*/React.createElement("h1", null, /*#__PURE__*/React.createElement("strong", null, this.state.foot_title)), /*#__PURE__*/React.createElement("p", null, this.state.foot)) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, /*#__PURE__*/React.createElement("strong", null, "\u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062C\u0627\u0644\u0648\u0633\u060C \u0628\u0631\u0631\u0633\u06CC\u060C \u0627\u0646\u062A\u062E\u0627\u0628 \u0648 \u062E\u0631\u06CC\u062F \u0622\u0646\u0644\u0627\u06CC\u0646")), /*#__PURE__*/React.createElement("p", null, "\u06CC\u06A9", /*#__PURE__*/React.createElement("strong", null, " \u062E\u0631\u06CC\u062F"), " \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u0645\u0637\u0645\u0626\u0646\u060C \u0646\u06CC\u0627\u0632\u0645\u0646\u062F \u0641\u0631\u0648\u0634\u06AF\u0627\u0647\u06CC \u0627\u0633\u062A \u06A9\u0647 \u0628\u062A\u0648\u0627\u0646\u062F \u06A9\u0627\u0644\u0627\u0647\u0627\u06CC\u06CC \u0645\u062A\u0646\u0648\u0639\u060C \u0628\u0627\u06A9\u06CC\u0641\u06CC\u062A \u0648 \u062F\u0627\u0631\u0627\u06CC \u0642\u06CC\u0645\u062A \u0645\u0646\u0627\u0633\u0628 \u0631\u0627 \u062F\u0631 \u0645\u062F\u062A \u0632\u0645\u0627\u0646 \u06CC \u06A9\u0648\u062A\u0627\u0647 \u0628\u0647 \u062F\u0633\u062A \u0645\u0634\u062A\u0631\u06CC\u0627\u0646 \u062E\u0648\u062F \u0628\u0631\u0633\u0627\u0646\u062F \u0648 \u0636\u0645\u0627\u0646\u062A \u0628\u0627\u0632\u06AF\u0634\u062A \u06A9\u0627\u0644\u0627 \u0647\u0645 \u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634\u062F\u061B \u0648\u06CC\u0698\u06AF\u06CC\u200C\u0647\u0627\u06CC\u06CC \u06A9\u0647 \u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062C\u0627\u0644\u0648\u0633 \u0633\u0627\u0644\u200C\u0647\u0627\u0633\u062A \u0628\u0631 \u0631\u0648\u06CC \u0622\u0646\u200C\u0647\u0627 \u06A9\u0627\u0631 \u06A9\u0631\u062F\u0647 \u0648 \u062A\u0648\u0627\u0646\u0633\u062A\u0647 \u0627\u0632 \u0627\u06CC\u0646 \u0637\u0631\u06CC\u0642 \u0645\u0634\u062A\u0631\u06CC\u0627\u0646 \u062B\u0627\u0628\u062A \u062E\u0648\u062F \u0631\u0627 \u062F\u0627\u0634\u062A\u0647 \u0628\u0627\u0634\u062F.", /*#__PURE__*/React.createElement("br", null), "\u06CC\u06A9\u06CC \u0627\u0632 \u0645\u0647\u0645\u200C\u062A\u0631\u06CC\u0646 \u062F\u063A\u062F\u063A\u0647\u200C\u0647\u0627\u06CC \u06A9\u0627\u0631\u0628\u0631\u0627\u0646 \u062C\u0627\u0644\u0648\u0633 \u06CC\u0627 \u0647\u0631 \u0641\u0631\u0648\u0634\u06AF\u0627\u0647\u200C \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062F\u06CC\u06AF\u0631\u06CC\u060C \u0627\u06CC\u0646 \u0627\u0633\u062A \u06A9\u0647 \u06A9\u0627\u0644\u0627\u06CC \u062E\u0631\u06CC\u062F\u0627\u0631\u06CC \u0634\u062F\u0647 \u0686\u0647 \u0632\u0645\u0627\u0646\u06CC \u0628\u0647 \u062F\u0633\u062A\u0634\u0627\u0646 \u0645\u06CC\u200C\u0631\u0633\u062F. \u062C\u0627\u0644\u0648\u0633 \u0634\u06CC\u0648\u0647\u200C\u0647\u0627\u06CC \u0645\u062E\u062A\u0644\u0641\u06CC \u0627\u0632 \u0627\u0631\u0633\u0627\u0644 \u0631\u0627 \u0645\u062A\u0646\u0627\u0633\u0628 \u0628\u0627 \u0641\u0631\u0648\u0634\u0646\u062F\u0647 \u06A9\u0627\u0644\u0627\u060C\u200C \u0645\u0642\u0635\u062F \u06A9\u0627\u0644\u0627 \u0648 \u0647\u0645\u0686\u0646\u06CC\u0646 \u0646\u0648\u0639 \u06A9\u0627\u0644\u0627 \u062F\u0631 \u0627\u062E\u062A\u06CC\u0627\u0631 \u06A9\u0627\u0631\u0628\u0631\u0627\u0646 \u062E\u0648\u062F \u0642\u0631\u0627\u0631 \u0645\u06CC\u200C\u062F\u0647\u062F. \u0647\u0631 \u06CC\u06A9\xA0\u0627\u0632 ", /*#__PURE__*/React.createElement("a", {
         href: "https://www.digikala.com/landing/delivery/"
       }, "\u0631\u0648\u0634 \u0647\u0627\u06CC \u0627\u0631\u0633\u0627\u0644 \u062C\u0627\u0644\u0648\u0633"), " \u0634\u0631\u0627\u06CC\u0637 \u0648 \u0648\u06CC\u0698\u06AF\u06CC\u200C\u0647\u0627\u06CC \u062E\u0627\u0635 \u062E\u0648\u062F \u0631\u0627 \u062F\u0627\u0631\u0646\u062F \u06A9\u0647 \u0645\u0645\u06A9\u0646 \u0627\u0633\u062A \u06AF\u0627\u0647\u06CC \u0628\u0631\u0627\u06CC \u06A9\u0627\u0631\u0628\u0631\u0627\u0646 \u062C\u062F\u06CC\u062F\u060C \u0645\u0628\u0647\u0645 \u0648 \u067E\u06CC\u0686\u06CC\u062F\u0647 \u0628\u0647 \u0646\u0638\u0631 \u0628\u0631\u0633\u0646\u062F. \u0628\u0631\u0627\u06CC \u0622\u06AF\u0627\u0647\u06CC \u0628\u06CC\u0634\u062A\u0631 \u0645\u0634\u062A\u0631\u06CC\u0627\u0646 \u0627\u0632 \u062E\u062F\u0645\u0627\u062A \u062C\u0627\u0644\u0648\u0633\u060C \u0627\u06CC\u0646 \u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0627\u06CC\u0646\u062A\u0631\u0646\u062A\u06CC \u062F\u0631 \u0628\u062E\u0634\u06CC \u0627\u0632 \u0648\u0628\u200C\u0633\u0627\u06CC\u062A \u062E\u0648\u062F \u0631\u0627\u0647\u0646\u0645\u0627\u06CC \u06A9\u0627\u0645\u0644\u06CC \u0627\u0632 \u0634\u06CC\u0648\u0647\u200C\u200C\u0647\u0627\u06CC \u0627\u0631\u0633\u0627\u0644 \u0631\u0627 \u0628\u0647 \u0635\u0648\u0631\u062A \u0633\u0627\u062F\u0647 \u0648 \u0628\u0647 \u062F\u0648\u0631 \u0627\u0632 \u067E\u06CC\u0686\u06CC\u062F\u06AF\u06CC\u060C \u0642\u0631\u0627\u0631 \u062F\u0627\u062F\u0647 \u0627\u0633\u062A \u06A9\u0647 \u0634\u0627\u0645\u0644 8 \u0646\u0648\u0639 \u0627\u0631\u0633\u0627\u0644 \u06A9\u0627\u0644\u0627 \u0628\u0647 \u0631\u0648\u0634\u200C\u0647\u0627\u06CC \u0632\u06CC\u0631 \u0627\u0633\u062A: \u0627\u0631\u0633\u0627\u0644 \u0627\u0645\u0631\u0648\u0632\u060C \u062F\u0631\u06CC\u0627\u0641\u062A \u062D\u0636\u0648\u0631\u06CC\u060C \u062F\u0631\u06CC\u0627\u0641\u062A \u0627\u0632 \u06AF\u0646\u062C\u0647\u060C \u0627\u0631\u0633\u0627\u0644 \u062A\u0648\u0633\u0637 \u0641\u0631\u0648\u0634\u0646\u062F\u0647\u060C \u0627\u0631\u0633\u0627\u0644 \u0639\u0627\u062F\u06CC\u060C \u0627\u0631\u0633\u0627\u0644 \u06A9\u0627\u0644\u0627\u0647\u0627\u06CC \u0628\u0632\u0631\u06AF\u060C \u0633\u0646\u06AF\u06CC\u0646 \u0648 \u0641\u0648\u0642 \u0633\u0646\u06AF\u06CC\u0646\u060C \u0627\u0631\u0633\u0627\u0644 \u0633\u0631\u06CC\u0639 \u0633\u0648\u067E\u0631\u0645\u0627\u0631\u06A9\u062A\u06CC\u060C \u0627\u0631\u0633\u0627\u0644 \u0628\u0627 \u067E\u0633\u062A"), /*#__PURE__*/React.createElement("p", null, "\u06A9\u062F\u0627\u0645 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u062F\u0631 \u062C\u0627\u0644\u0648\u0633 \u0642\u0627\u0628\u0644 \u0633\u0641\u0627\u0631\u0634 \u0647\u0633\u062A\u0646\u062F\u061F"), /*#__PURE__*/React.createElement("p", null, "\u062A\u0642\u0631\u06CC\u0628\u0627 \u0645\u06CC\u200C\u062A\u0648\u0627\u0646 \u06AF\u0641\u062A \u0645\u062D\u0635\u0648\u0644\u06CC \u0648\u062C\u0648\u062F \u0646\u062F\u0627\u0631\u062F \u06A9\u0647 \u062C\u0627\u0644\u0648\u0633 \u0628\u0631\u0627\u06CC \u0645\u0634\u062A\u0631\u06CC\u0627\u0646 \u062E\u0648\u062F \u062F\u0631 \u0633\u0631\u0627\u0633\u0631 \u06A9\u0634\u0648\u0631 \u0641\u0631\u0627\u0647\u0645 \u0646\u06A9\u0631\u062F\u0647 \u0628\u0627\u0634\u062F. \u0634\u0645\u0627 \u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u06CC\u062F \u062F\u0631 \u062A\u0645\u0627\u0645\u06CC \u0631\u0648\u0632\u0647\u0627\u06CC \u0647\u0641\u062A\u0647 \u0648 \u062A\u0645\u0627\u0645\u06CC \u0634\u0628\u0627\u0646\u0647 \u0631\u0648\u0632\xA0\u062C\u0627\u0644\u0648\u0633 \u06A9\u0647 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u062F\u0627\u0631\u0627\u06CC \u062A\u062E\u0641\u06CC\u0641 \u0639\u0627\u0644\u06CC \u0645\u06CC\u200C\u0634\u0648\u0646\u062F\u060C \u0633\u0641\u0627\u0631\u0634 \u062E\u0648\u062F \u0631\u0627 \u0628\u0647 \u0633\u0627\u062F\u06AF\u06CC \u062B\u0628\u062A \u06A9\u0631\u062F\u0647 \u0648 \u062F\u0631 \u0631\u0648\u0632 \u0648 \u0645\u062D\u062F\u0648\u062F\u0647 \u0632\u0645\u0627\u0646\u06CC \u0645\u0646\u0627\u0633\u0628 \u062E\u0648\u062F\u060C \u062F\u0631\u0628 \u0645\u0646\u0632\u0644 \u062A\u062D\u0648\u06CC\u0644 \u0628\u06AF\u06CC\u0631\u06CC\u062F. \u0628\u0639\u0636\u06CC \u0627\u0632 \u06AF\u0631\u0648\u0647\u200C\u0647\u0627\u06CC \u0627\u0635\u0644\u06CC \u0648 \u0632\u06CC\u0631 \u0645\u062C\u0645\u0648\u0639\u0647\u200C\u0647\u0627\u06CC \u067E\u0631\u0637\u0631\u0641\u062F\u0627\u0631 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u062C\u0627\u0644\u0648\u0633 \u0634\u0627\u0645\u0644 \u0645\u0648\u0627\u0631\u062F\u06CC \u0645\u06CC\u200C\u0634\u0648\u062F \u06A9\u0647 \u062F\u0631 \u0627\u062F\u0627\u0645\u0647 \u0628\u0647 \u0645\u0639\u0631\u0641\u06CC \u0622\u0646\u200C\u0647\u0627 \u0645\u06CC\u200C\u067E\u0631\u062F\u0627\u0632\u06CC\u0645 \u06A9\u0647\xA0\u0627\u0645\u06A9\u0627\u0646 ", /*#__PURE__*/React.createElement("a", {
         href: "https://www.digikala.com/landing/sameday-delivery/"
@@ -3763,7 +4081,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         target: "_blank"
       }, "\u0647\u0646\u06AF \u062F\u0631\u0627\u0645"), "\xA0 \u0648... \u0628\u0627 \u0628\u0647\u062A\u0631\u06CC\u0646 \u0642\u06CC\u0645\u062A\u200C\u0647\u0627 \u0648 \u0627\u0632 \u0628\u0647\u062A\u0631\u06CC\u0646 \u0628\u0631\u0646\u062F\u0647\u0627 \u062F\u0631 \u062F\u0633\u062A\u0631\u0633 \u0634\u0645\u0627 \u0642\u0631\u0627\u0631 \u062F\u0627\u0631\u0646\u062F."), /*#__PURE__*/React.createElement("p", null, "\u0648\u0631\u0632\u0634 \u0648 \u0633\u0641\u0631"), /*#__PURE__*/React.createElement("p", null, "\u0647\u0631 \u0646\u0648\u0639 \u0648\u0633\u06CC\u0644\u0647 \u0648 \u0644\u0628\u0627\u0633 \u0648\u0631\u0632\u0634\u06CC \u06A9\u0647 \u0641\u06A9\u0631\u0634 \u0631\u0627 \u06A9\u0646\u06CC\u062F\u060C \u0627\u0646\u0648\u0627\u0639 \u0648\u0633\u0627\u06CC\u0644 \u06A9\u0645\u067E\u06CC\u0646\u06AF \u0648 \u06A9\u0648\u0647\u0646\u0648\u0631\u062F\u06CC\u060C \u0633\u0627\u06A9 \u0648 \u0642\u0645\u0642\u0645\u0647 \u0648\u0631\u0632\u0634\u06CC \u0648... \u062F\u0631 \u0627\u06CC\u0646 \u0628\u062E\u0634 \u0642\u0631\u0627\u0631 \u0645\u06CC\u200C\u06AF\u06CC\u0631\u0646\u062F. \u0647\u0645\u0686\u0646\u06CC\u0646 \u0634\u0645\u0627 \u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u06CC\u062F \u0648\u0633\u0627\u06CC\u0644 \u0645\u062F \u0646\u0638\u0631 \u062E\u0648\u062F \u0631\u0627 \u0628\u0631 \u0627\u0633\u0627\u0633 \u0646\u0648\u0639 \u0648\u0631\u0632\u0634 (\u0622\u0628\u06CC\u060C \u0647\u0648\u0627\u0632\u06CC\u060C \u0628\u062F\u0646\u0633\u0627\u0632\u06CC \u0648...) \u062F\u0631 \u062F\u0633\u062A\u0647\u200C\u0628\u0646\u062F\u06CC\u200C\u0647\u0627\u06CC \u062C\u0627\u0644\u0648\u0633 \u067E\u06CC\u062F\u0627 \u06A9\u0646\u06CC\u062F."), /*#__PURE__*/React.createElement("p", null, "\u0645\u062D\u0635\u0648\u0644\u0627\u062A \u0628\u0648\u0645\u06CC \u0648 \u0645\u062D\u0644\u06CC"), /*#__PURE__*/React.createElement("p", null, "\u0648 \u062F\u0631 \u0622\u062E\u0631 \u062C\u0627\u0644\u0648\u0633 \u0627\u0632 \u0637\u0631\u06CC\u0642 \u0628\u0647 \u0641\u0631\u0648\u0634 \u0631\u0633\u0627\u0646\u062F\u0646 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u0628\u0648\u0645\u06CC \u0648 \u0633\u0646\u062A\u06CC \u0645\u062A\u0641\u0627\u0648\u062A\u06CC \u0645\u062B\u0644 \u0627\u0646\u0648\u0627\u0639 \u062E\u0648\u0631\u0627\u06A9\u06CC\u060C \u06AF\u0644\u06CC\u0645 \u0648 \u06AF\u0628\u0647\u060C \u0627\u0628\u0632\u0627\u0631 \u0648 ... \u062A\u0644\u0627\u0634 \u06A9\u0631\u062F\u0647 \u062A\u0627 \u0628\u06CC\u0646 \u0647\u0646\u0631 \u0627\u06CC\u0631\u0627\u0646\u06CC \u0648 \u0645\u062A\u0642\u0627\u0636\u06CC\u0627\u0646 \u0622\u0646 \u06A9\u0648\u062A\u0627\u0647\u200C\u062A\u0631\u06CC\u0646 \u0631\u0627\u0647 \u0631\u0627 \u067E\u06CC\u062F\u0627 \u06A9\u0646\u062F. \u062F\u0631 \u0627\u06CC\u0646 \u0628\u062E\u0634 \u0634\u0645\u0627 \u0645\u06CC\u200C\u062A\u0648\u0627\u0646\u06CC\u062F \u0627\u0646\u0648\u0627\u0639 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u0627\u0632 \u062C\u0645\u0644\u0647 \u0638\u0631\u0648\u0641 \u0632\u06CC\u0628\u0627\u06CC \u0645\u062E\u0635\u0648\u0635 \u0628\u0647\xA0\u0633\u0641\u0631\u0647 \u0647\u0641\u062A\u200C\u0633\u06CC\u0646\xA0 \u0648 \u067E\u0630\u06CC\u0631\u0627\u06CC\u06CC \u0627\u0632 \u0645\u0647\u0645\u0627\u0646\u0627\u0646 \u062F\u0631 \u0631\u0648\u0632\u0647\u0627\u06CC\xA0\u0646\u0648\u0631\u0648\u0632\u060C \u0627\u0646\u0648\u0627\u0639 \u0622\u06CC\u06CC\u0646\u0647 \u0648 \u0634\u0645\u0639\u062F\u0627\u0646 \u0648 \u0647\u0631 \u0622\u0646 \u0686\u06CC\u0632\u06CC \u0631\u0627 \u06A9\u0647 \u0628\u0631\u0627\u06CC \u062E\u0644\u0642 \u0632\u06CC\u0628\u0627\u06CC\u06CC \u062F\u0631 \u0631\u0648\u0632\u0647\u0627\u06CC \u0628\u0647\u0627\u0631\u06CC \u0628\u0647 \u0622\u0646 \u0646\u06CC\u0627\u0632 \u062F\u0627\u0631\u06CC\u062F\u060C \u0628\u0627 \u0642\u06CC\u0645\u062A \u0645\u0646\u0627\u0633\u0628 \u0648 \u062A\u0646\u0648\u0639 \u0628\u0633\u06CC\u0627\u0631 \u0628\u0627\u0644\u0627 \u0627\u0646\u062A\u062E\u0627\u0628 \u06A9\u0646\u06CC\u062F. \u0647\u0645\u0686\u0646\u06CC\u0646 \u062F\u0631 \u0635\u0641\u062D\u0647 ", /*#__PURE__*/React.createElement("strong", null, /*#__PURE__*/React.createElement("a", {
         href: "https://www.digikala.com/tags/"
-      }, "\u0628\u0631\u0686\u0633\u0628 \u0647\u0627")), "\u060C \u0627\u0645\u06A9\u0627\u0646 \u0645\u0634\u0627\u0647\u062F\u0647 \u0648 \u062E\u0631\u06CC\u062F \u0627\u0646\u0648\u0627\u0639 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u0628\u0627 \u0637\u0631\u062D \u0647\u0627\u06CC \u0628\u0648\u0645\u06CC \u0648\u062C\u0648\u062F \u062F\u0627\u0631\u062F.\xA0\xA0\u062C\u0627\u0644\u0648\u0633 \u0647\u0645\u0686\u0646\u06CC\u0646 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646\u06A9\u0647 \u062D\u0627\u0644 \u0648 \u0647\u0648\u0627\u06CC \u0639\u06CC\u062F \u0631\u0627 \u0628\u0647 \u0627\u0639\u0636\u0627\u06CC \u062E\u0648\u062F \u0647\u062F\u06CC\u0647 \u06A9\u0646\u062F\u060C\xA0\u062A\u0642\u0648\u06CC\u0645 \u06F1\u06F4\u06F0\u06F1\u060C \u0627\u0646\u0648\u0627\u0639 \u0627\u06CC\u062F\u0647\xA0\u0639\u06A9\u0633 \u067E\u0631\u0648\u0641\u0627\u06CC\u0644 \u0639\u06CC\u062F \u0646\u0648\u0631\u0648\u0632\u060C\xA0\u0622\u0647\u0646\u06AF\u200C\u0647\u0627\u06CC \u0639\u06CC\u062F \u0646\u0648\u0631\u0648\u0632\xA0\u0648 \u0645\u0648\u0632\u06CC\u06A9\u200C\u0647\u0627\u06CC \u0634\u0627\u062F \u0628\u0647\u0627\u0631\u06CC\u060C \u0648\u0633\u0627\u06CC\u0644 \u0645\u0631\u0628\u0648\u0637 \u0628\u0647\xA0\u062E\u0627\u0646\u0647\u200C\u062A\u06A9\u0627\u0646\u06CC\xA0\u0648\xA0\u0627\u0646\u0648\u0627\u0639 \u0644\u0628\u0627\u0633 \u0647\u0627\u06CC \u0639\u06CC\u062F\xA0 \u0631\u0627 \u0628\u0631\u0627\u06CC \u0634\u0645\u0627 \u0641\u0631\u0627\u0647\u0645 \u06A9\u0631\u062F\u0647 \u0627\u0633\u062A \u062A\u0627 \u0628\u062A\u0648\u0627\u0646\u06CC\u062F \u062F\u0631 \u06A9\u0646\u0627\u0631 \u062E\u0631\u06CC\u062F \u062E\u0648\u062F\u060C \u0627\u0632 \u0627\u06CC\u0646 \u062D\u0627\u0644 \u0648 \u0647\u0648\u0627\u06CC \u062A\u0627\u0632\u0647 \u0646\u0647\u0627\u06CC\u062A \u0644\u0630\u062A \u0631\u0627 \u0628\u0628\u0631\u06CC\u062F."), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0")), /*#__PURE__*/React.createElement("span", {
+      }, "\u0628\u0631\u0686\u0633\u0628 \u0647\u0627")), "\u060C \u0627\u0645\u06A9\u0627\u0646 \u0645\u0634\u0627\u0647\u062F\u0647 \u0648 \u062E\u0631\u06CC\u062F \u0627\u0646\u0648\u0627\u0639 \u0645\u062D\u0635\u0648\u0644\u0627\u062A \u0628\u0627 \u0637\u0631\u062D \u0647\u0627\u06CC \u0628\u0648\u0645\u06CC \u0648\u062C\u0648\u062F \u062F\u0627\u0631\u062F.\xA0\xA0\u062C\u0627\u0644\u0648\u0633 \u0647\u0645\u0686\u0646\u06CC\u0646 \u0628\u0631\u0627\u06CC \u0627\u06CC\u0646\u06A9\u0647 \u062D\u0627\u0644 \u0648 \u0647\u0648\u0627\u06CC \u0639\u06CC\u062F \u0631\u0627 \u0628\u0647 \u0627\u0639\u0636\u0627\u06CC \u062E\u0648\u062F \u0647\u062F\u06CC\u0647 \u06A9\u0646\u062F\u060C\xA0\u062A\u0642\u0648\u06CC\u0645 \u06F1\u06F4\u06F0\u06F1\u060C \u0627\u0646\u0648\u0627\u0639 \u0627\u06CC\u062F\u0647\xA0\u0639\u06A9\u0633 \u067E\u0631\u0648\u0641\u0627\u06CC\u0644 \u0639\u06CC\u062F \u0646\u0648\u0631\u0648\u0632\u060C\xA0\u0622\u0647\u0646\u06AF\u200C\u0647\u0627\u06CC \u0639\u06CC\u062F \u0646\u0648\u0631\u0648\u0632\xA0\u0648 \u0645\u0648\u0632\u06CC\u06A9\u200C\u0647\u0627\u06CC \u0634\u0627\u062F \u0628\u0647\u0627\u0631\u06CC\u060C \u0648\u0633\u0627\u06CC\u0644 \u0645\u0631\u0628\u0648\u0637 \u0628\u0647\xA0\u062E\u0627\u0646\u0647\u200C\u062A\u06A9\u0627\u0646\u06CC\xA0\u0648\xA0\u0627\u0646\u0648\u0627\u0639 \u0644\u0628\u0627\u0633 \u0647\u0627\u06CC \u0639\u06CC\u062F\xA0 \u0631\u0627 \u0628\u0631\u0627\u06CC \u0634\u0645\u0627 \u0641\u0631\u0627\u0647\u0645 \u06A9\u0631\u062F\u0647 \u0627\u0633\u062A \u062A\u0627 \u0628\u062A\u0648\u0627\u0646\u06CC\u062F \u062F\u0631 \u06A9\u0646\u0627\u0631 \u062E\u0631\u06CC\u062F \u062E\u0648\u062F\u060C \u0627\u0632 \u0627\u06CC\u0646 \u062D\u0627\u0644 \u0648 \u0647\u0648\u0627\u06CC \u062A\u0627\u0632\u0647 \u0646\u0647\u0627\u06CC\u062A \u0644\u0630\u062A \u0631\u0627 \u0628\u0628\u0631\u06CC\u062F."), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"), /*#__PURE__*/React.createElement("p", null, "\xA0"))), /*#__PURE__*/React.createElement("span", {
         onClick: function onClick() {
           _this3.setState({
             footExpand: !_this3.state.footExpand
@@ -3855,7 +4173,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         title: ""
       }))))), /*#__PURE__*/React.createElement("div", {
         "class": "flex text-caption text-neutral-500 text-center items-center flex-col justify-between border-complete-t py-8"
-      }, "\u0628\u0631\u0627\u06CC \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u0627\u0632 \u0645\u0637\u0627\u0644\u0628 \u062C\u0627\u0644\u0648\u0633\u060C \u062F\u0627\u0634\u062A\u0646 \xAB\u0647\u062F\u0641 \u063A\u06CC\u0631\u062A\u062C\u0627\u0631\u06CC\xBB \u0648 \u0630\u06A9\u0631 \xAB\u0645\u0646\u0628\u0639\xBB \u06A9\u0627\u0641\u06CC\u0633\u062A. \u062A\u0645\u0627\u0645 \u062D\u0642\u0648\u0642 \u0627\u064A\u0646 \u0648\u0628\u200C\u0633\u0627\u064A\u062A \u0646\u06CC\u0632 \u0628\u0631\u0627\u06CC \u0634\u0631\u06A9\u062A \u0646\u0648\u0622\u0648\u0631\u0627\u0646 \u0634\u0631\u06CC\u0641 \u0633\u0627\u0632\u0647 (\u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0622\u0646\u0644\u0627\u06CC\u0646 \u062C\u0627\u0644\u0648\u0633) \u0627\u0633\u062A."))), /*#__PURE__*/React.createElement("div", {
+      }, "\u0628\u0631\u0627\u06CC \u0627\u0633\u062A\u0641\u0627\u062F\u0647 \u0627\u0632 \u0645\u0637\u0627\u0644\u0628 ", this.state.fr_page || 'جالوس', "\u060C \u062F\u0627\u0634\u062A\u0646 \xAB\u0647\u062F\u0641 \u063A\u06CC\u0631\u062A\u062C\u0627\u0631\u06CC\xBB \u0648 \u0630\u06A9\u0631 \xAB\u0645\u0646\u0628\u0639\xBB \u06A9\u0627\u0641\u06CC\u0633\u062A. \u062A\u0645\u0627\u0645 \u062D\u0642\u0648\u0642 \u0627\u064A\u0646 \u0648\u0628\u200C\u0633\u0627\u064A\u062A \u0646\u06CC\u0632 \u0628\u0631\u0627\u06CC \u0634\u0631\u06A9\u062A \u0646\u0648\u0622\u0648\u0631\u0627\u0646 \u0634\u0631\u06CC\u0641 \u0633\u0627\u0632\u0647 (\u0641\u0631\u0648\u0634\u06AF\u0627\u0647 \u0622\u0646\u0644\u0627\u06CC\u0646 ", this.state.fr_page || 'جالوس', ") \u0627\u0633\u062A."))), /*#__PURE__*/React.createElement("div", {
         "class": "w-full bg-neutral-100"
       }, /*#__PURE__*/React.createElement("div", {
         "class": "container-4xl-w mx-auto flex items-start justify-end flex-wrap"
