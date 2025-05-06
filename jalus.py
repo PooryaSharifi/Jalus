@@ -233,7 +233,9 @@ async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')
 async def _app_page(r, page=None, app=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 @app.post('strategist/predict')
 async def _strategist_predict(r, ):
-    response.json({'OK': True, 'c': r.deleted_count})
+    print(r.json)
+    await asyncio.sleep(1.5)
+    return response.json({'OK': True, 'quota': 993, 'total': 1896})
 @app.get('/<collection:(users|ads)>/<ids>')
 async def get_documents(r, collection, ids):
     ids = ids.split(','); ids = [d.strip() for d in ids]

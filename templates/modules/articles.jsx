@@ -11,7 +11,7 @@
           </svg></div>
       </a></span>}
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-stretch lg:justify-around px-5 lg:px-0">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-3 items-stretch lg:justify-around px-5 lg:px-0" style={{marginBottom: 5}}>
       {this.state.articles.map((article, ai) => (<div onClick={async () => {this.setState({article: ai}, () => {document.getElementById("article").scrollIntoView({ behavior: 'smooth', block: 'center' })})}}
         class="touchable bg-neutral-000 mb-1 border-complete-200 user-select-none rounded-medium flex flex-col h-full overflow-hidden article-card_ArticleCard__container__6Ks7Q"
         data-cro-id="hp-blogs" target="_blank">

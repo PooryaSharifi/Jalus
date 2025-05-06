@@ -5,9 +5,9 @@
 class App extends React.Component {
   constructor(props) {super(props); let app = this; window.app = this; window.mode_11 = ['معدل کل', 'تراز کل', 'ریز نمره']; window.mode_12 = ['معدل کل', 'تراز کل', 'ریز نمره']; window.mode_13 = ['درصد کلی', 'تراز کنکور', 'درصد دروس']; window.field = [['empirical', 'تجربی'], ['technical', 'ریاضی'], ['humanity', 'انسانی']]; window.quota = [[1, 'منطقه یک'], [2, 'منطقه دو'], [3, 'منطقه سه'], [5, 'سهمیه ۵ درصد'], [15, 'سهمیه ۱۵ درصد']]
     this.state = {page: 'strategist', fr_page: 'استراتژیست', menuHeight: 108, ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, leftMenu: 'مسیر قهرمانی', firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
-      {title: 'پیام‌های مشاور', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین مطلب', action: async () => {this.state.order = '!pan_date'; await this.search()}}, {title: 'تازه‌ترین پادکست', action: async () => {this.state.order = '!last_match_date'; await this.search()}}, 
+      {title: 'پیام‌های مشاور', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین مطلب', href: '/strategist/articles'}, {title: 'تازه‌ترین پادکست', href: '/strategist/podcasts'}, 
     ], secondMenuList: [
-      {title: 'سوالات درک مطلب'}, {title: 'تست هفتگی'}, {title: 'رفع اشکال'},
+      {title: 'سوالات درک مطلب', href: '/strategist/exam?category=dark'}, {title: 'تست هفتگی', href: '/strategist/exam'}, {title: 'رفع اشکال', href: '/strategist/exam?category=reminder'},
     ], sessions: [], slide: 2, slides: [
       {webp: '/static/slides/Strategist_thoughts.webp', 
       jpeg: '/static/slides/Strategist_thoughts-80.jpg',
@@ -22,26 +22,16 @@ class App extends React.Component {
       jpeg: '/static/slides/Strategist_allin-80.jpg',
       title: 'خدمات هوشمند و رفاهی رایگان', href: '#', state: {potent: true, potentInterest: 'host'}},
     ], category: -1, categoryTitle: 'مطالعه اختصاصی هر درس', categoryShow: false, categories: [
-      {href: '/properties?lyr=1&category=mountain', title: 'زیست',
-      png: '/static/categories/biology_2.webp'},
-      {href: '/properties?lyr=1&category=accessible', title: 'ریاضی',
-      png: '/static/categories/mathematics_0.webp'},
-      {href: '/users?category=beach', title: 'شیمی',
-      png: '/static/categories/chemistry_1.webp'},
-      {href: '/properties?lyr=2&category=yeylaghi', title: 'فیزیک',
-      png: '/static/categories/physics_3.webp'},
-      {href: '/properties?lyr=2&category=gheshlaghi', title: 'ادبیات',
-      png: '/static/categories/litrature_0.webp'},
-      {href: '/properties?lyr=1&category=whole', title: 'دین‌وزندگی',
-      png: '/static/categories/relagion_2.webp'},
-      {href: '/users?category=infinity', title: 'عربی',
-      png: '/static/categories/arabic_1.webp'},
-      {href: '/properties?lyr=1&category=tent', title: 'انگلیسی',
-      png: '/static/categories/english_0.webp'},
-      {href: '/properties?lyr=2&category=pool', title: 'زمین‌شناسی',
-      png: '/static/categories/geology_0.webp'},
-      {href: '/properties?lyr=1&category=jungle', title: 'گسسته',
-      png: '/static/categories/discrete_0.webp'},
+      {href: '/strategist/zist', title: 'زیست', png: '/static/categories/biology_2.webp'},
+      {href: '/strategist/riazi', title: 'ریاضی', png: '/static/categories/mathematics_0.webp'},
+      {href: '/strategist/shimi', title: 'شیمی', png: '/static/categories/chemistry_1.webp'},
+      {href: '/strategist/fizik', title: 'فیزیک', png: '/static/categories/physics_3.webp'},
+      {href: '/strategist/farsi', title: 'ادبیات', png: '/static/categories/litrature_0.webp'},
+      {href: '/strategist/dini', title: 'دین‌وزندگی', png: '/static/categories/relagion_2.webp'},
+      {href: '/strategist/arabi', title: 'عربی', png: '/static/categories/arabic_1.webp'},
+      {href: '/strategist/englisi', title: 'انگلیسی', png: '/static/categories/english_0.webp'},
+      {href: '/strategist/zamin', title: 'زمین‌شناسی', png: '/static/categories/geology_0.webp'},
+      {href: '/strategist/gosaste', title: 'گسسته', png: '/static/categories/discrete_0.webp'},
     ], products: [
       {title: "تخمین‌رتبه هوش‌مصنوعی", href: '/strategist/takhmin',
       png: '/static/icon/Strategist_app_predict-8.png'},
@@ -61,13 +51,19 @@ class App extends React.Component {
       ]}, {title: "کمپ مطالعه در حضور دکتر پوریا شریفی", jpeg: '/static/articles/Strategist_camp.jpg', body: [
         ['img', '/static/articles/Strategist_camp.jpg']
       ]},
-    ], stories: [], offers: [], foot_logos: [
+    ], stories: [], offers: [
+      {name: 'مریلا زارعی', achievement: 'برق شریف', quota: 121},
+      {name: 'مصطفی اجاقی', achievement: 'کامپیوتر شریف', quota: 57},
+      {name: 'محمد امیدی', achievement: 'دندانپزشکی آزاد اصفهان', quota: 760},
+      {name: 'نیوشا آقایی', achievement: 'پزشکی اصفهان', quota: 840},
+    ], foot_logos: [
       {svg: '/static/icon/jalus_host.svg', href: '/host'}, {svg: '/static/icon/jalus_rebuild.svg', href: '/rebuild'},
       {svg: '/static/icon/jalus_dual.svg', href: '/greenhome'}, {svg: '/static/icon/jalus_key.svg', href: '/host#smartkey'},
       {svg: '/static/icon/jalus_pay.svg', href: '/host#payment'}, {svg: '/static/icon/jalus_service.svg', href: '/'},
       {svg: '/static/icon/jalus_club.svg', href: '/'}, {svg: '/static/icon/jalus_smart.svg', href: '/host#all'}
     ], app: window.location.pathname.split('/').filter((keyword) => keyword)[1] || '', potent: false, potentOtp: '', otp: false, potentPhone: '', potentInterest: '', plyr: true, searchInput: '', searchExpand: false, footExpand: false, rows: 5, trans: true, background: 0, microwave: 0, 
-    foot: 'استراتژیست زندگی قهرمانان رو ترویج میکنه. دیوسالارانی که به خاطر هدفشون حتی سیم‌کشی مغذشونو تغییر میدن و با جنگاوری قبولی تو رشته مورد علاقشونو زندگی می‌کنن. با یه آمارگیری ساده میشه دید موفقیت نه به بهره هوشی یا ژن خوب بستگی داره بلکه ممارست و آوردن چنتا عادتای تست شده به زندگیت و رعایت چنتا فوت و فن دقیقه که سبب میشه تو مسیرت قهرمان بشی درسته که تو هر راهی قهرمان یدونست و طبق آمار و احتمال، امکانش کمه که تو اون یه نفر باشی. اما بدون با زندگی کردن زندگی یه قهرمان، قطعا اون یه نفر تویی همین الان که داری این متنو میخونی داری از پنچ درصد گنجایش مغزت استفاده می‌کنی. پس اگه تا ته مسیر رو همرای کنی خبرای خوبی در انتظارته. اگه مسیرو بدونی و بلد باشی تخته گاز برونی قطعا سریع تر از رقبا به جایی که میخوای میرسی. کافی این دوی ماراتون کنکور رو پیوسته و دقیق پیش بری و به تیم من اعتماد کنی. چرا که هم خودم هم تیمم با همین چیزا به هدف رسیدن', foot_title: 'منشور دیوسالاران کنکور', predict: {
+    foot: 'استراتژیست زندگی قهرمانان رو ترویج میکنه. دیوسالارانی که به خاطر هدفشون حتی سیم‌کشی مغذشونو تغییر میدن و با جنگاوری قبولی تو رشته مورد علاقشونو زندگی می‌کنن. با یه آمارگیری ساده میشه دید موفقیت نه به بهره هوشی یا ژن خوب بستگی داره بلکه ممارست و آوردن چنتا عادتای تست شده به زندگیت و رعایت چنتا فوت و فن دقیقه که سبب میشه تو مسیرت قهرمان بشی درسته که تو هر راهی قهرمان یدونست و طبق آمار و احتمال، امکانش کمه که تو اون یه نفر باشی. اما بدون با زندگی کردن زندگی یه قهرمان، قطعا اون یه نفر تویی همین الان که داری این متنو میخونی داری از پنچ درصد گنجایش مغزت استفاده می‌کنی. پس اگه تا ته مسیر رو همرای کنی خبرای خوبی در انتظارته. اگه مسیرو بدونی و بلد باشی تخته گاز برونی قطعا سریع تر از رقبا به جایی که میخوای میرسی. کافی این دوی ماراتون کنکور رو پیوسته و دقیق پیش بری و به تیم من اعتماد کنی. چرا که هم خودم هم تیمم با همین چیزا به هدف رسیدن', foot_title: 'منشور دیوسالاران کنکور', 
+    predict_result: {}, predict: {
       religion_all_11: '', english_all_11: '', litrature_all_11: '', arabic_all_11: '', geometry_technical_11: '', physics_technical_11: '', chemistry_empirical_11: '', biology_empirical_11: '', history_humanity_11: '', sociology_humanity_11: '',
       physics_technical_12: '', physics_empirical_12: '', mathematics_all_12: '', chemistry_technical_12: '', chemistry_empirical_12: '', arabic_all_12: '', religion_all_12: '', english_all_12: '', litrature_all_12: '', sociology_all_12: '', health_all_12: '', discrete_technical_12: '', philosophy_humanity_12: '', language_humanity_12: '', biology_empirical_12: '',
       mathematics_all_13: '', physics_empirical_13: '', chemistry_empirical_13: '', biology_empirical_13: '', geology_empirical_13: '', chemistry_technical_13: '', physics_technical_13: '', finance_humanity_13: '', litrature_humanity_13: '', arabic_humanity_13: '', history_humanity_13: '', geograpy_humanity_13: '', sociology_humanity_13: '', psychology_humanity_13: '', philosophy_humanity_13: '', logic_humanity_13: '',
@@ -76,10 +72,6 @@ class App extends React.Component {
   } async componentDidMount() { let app = this;
     let stories = await fetch('http://localhost:5000/stories/strategist'); if (stories.status < 300) {
       stories = await stories.json(); app.setState({stories: Object.keys(stories).map((story) => ({title: story.split('_')[1], jpeg: '/stories/' + story + '.jpg', href: story, resolutions: stories[story][0], ccs: stories[story][1], markers: stories[story][2]}))})
-    } let offers = await fetch('/properties/', {body: JSON.stringify({offer: {$gte: 5}}), method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); if (offers.status < 300) {
-      let offer_nt = 7, offer_avg = 0; offers = await offers.json(); offers = offers.sort(() => Math.random() - 0.5);
-      for (var i = 0; i < offers.length; i ++) offer_avg += offers[i].offer;
-      offer_avg /= offers.length; offers = offers.filter((offer => offer.offer >= offer_avg && offer_nt -- > 0)); this.setState({offers: offers})
     }
     // setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
     window.Y = window.pageYOffset || document.documentElement.scrollTop;
@@ -117,11 +109,22 @@ class App extends React.Component {
               </div>)}</div>
             </>)}
             <button class="touchable relative flex items-center user-select-none styles_btn__Q4MvL text-button-1 styles_btn--large__1Muai styles_btn--primary__y0GEv rounded-medium w-full mt-6 lg:mt-8 text-button-1" onClick={async () => {
-              setCookie('field', this.state.field); setCookie('mode_11', this.state.mode_11); setCookie('mode_12', this.state.mode_12); setCookie('mode_13', this.state.mode_13); setCookie('quota', this.state.quota);
-            }} type="submit" data-cro-id="login-register"><div class="flex items-center justify-center relative grow">محاسبه رتبه</div></button>
+              this.setState({predict_result: {loading: true}}); setCookie('field', this.state.field); setCookie('mode_11', this.state.mode_11); setCookie('mode_12', this.state.mode_12); setCookie('mode_13', this.state.mode_13); setCookie('quota', this.state.quota)
+              let r = await fetch('/strategist/predict', {method: 'POST', body: JSON.stringify({predict: this.state.predict, mode_11: this.state.mode_11, mode_12: this.state.mode_12, mode_13: this.state.mode_13, field: this.state.field, quota: this.state.quota}), headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}});
+              if (r.status == 200) {r = await r.json(); this.setState({predict_result: r})}
+            }} data-cro-id="login-register"><div class="flex items-center justify-center relative grow">محاسبه رتبه</div></button>
           </div>
-        </div>}
-        {this.state.article == -1 && !this.state.app && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        </div>} {!this.state.predict_result.isEmpty() && <div onClick={() => this.setState({predict_result: {}})} style={{backgroundColor: '#000a', position: 'fixed', width: '100%', height: '100%', left: 0, top: 0, bottom: 0, zIndex: 5, display: 'table'}}>
+          <div style={{display: 'table-cell', verticalAlign: 'middle'}}>
+            <div style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#ef4056', padding: 20, width: 360, borderRadius: 8, fontSize: '1.6em', fontWeight: 500, color: 'white'}}>
+              {this.state.predict_result.quota && <><span style={{marginLeft: 3}}>رتبه در سهمیه:</span>
+              <span style={{fontWeight: 700}}>{this.state.predict_result.quota.farsify()}</span></>}
+              {this.state.predict_result.total && <><span style={{float: 'left', fontWeight: 700}}>{this.state.predict_result.total.farsify()}</span>
+              <span style={{float: 'left', marginLeft: 3}}>رتبه کل:</span></>}
+              {this.state.predict_result.loading && <span class="loader"></span>}
+            </div>
+          </div>
+        </div>} {this.state.article == -1 && !this.state.app && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>استراتژیست</h1>
           <div class="w-full">
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
