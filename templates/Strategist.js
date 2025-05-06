@@ -53,7 +53,7 @@ class App extends React.Component {
       ]},
     ], stories: [], offers: [
       {name: 'مریلا زارعی', achievement: 'برق شریف', quota: 121},
-      {name: 'مصطفی اجاقی', achievement: 'کامپیوتر شریف', quota: 57},
+      {name: 'مصطفی اجاقی', achievement: 'کامپیوتر شریف', quota: 58},
       {name: 'محمد امیدی', achievement: 'دندانپزشکی آزاد اصفهان', quota: 760},
       {name: 'نیوشا آقایی', achievement: 'پزشکی اصفهان', quota: 840},
     ], foot_logos: [

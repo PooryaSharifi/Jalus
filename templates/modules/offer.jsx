@@ -23,7 +23,7 @@
           style={{color: 'var(--color-undefined)'}}>
           <p class="inline-block  text-body1-strong text-white">
             {this.state.page == 'strategist' ? 
-            <>تا رتبه {(57).farsify()} منطقه</> :
+            <>تا رتبه {Math.min(...this.state.offers.map((offer) => (offer.quota))).farsify()} منطقه</> :
             <>تا {Math.max(...this.state.offers.map((offer) => (offer.offer))).farsify()}٪ تخفیف</>}
           </p>
         </div>
