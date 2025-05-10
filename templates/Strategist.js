@@ -70,7 +70,7 @@ class App extends React.Component {
       total_all_11: '', total_all_12: '', total_all_13: '', 
     }, mode_11: parseInt(cookie('mode_11') || '0'), prev_mode_11: parseInt(cookie('mode_11') || '0'), mode_12: parseInt(cookie('mode_12') || '0'), prev_mode_12: parseInt(cookie('mode_12') || '0'), mode_13: parseInt(cookie('mode_13') || '0'), prev_mode_13: parseInt(cookie('mode_13') || '0'), field: parseInt(cookie('field') || '0'), field_show: false, quota: parseInt(cookie('quota') || '0'), prev_quota: parseInt(cookie('quota') || '0')};
   } async componentDidMount() { let app = this;
-    let stories = await fetch('http://localhost:5000/stories/strategist'); if (stories.status < 300) {
+    let stories = await fetch('/stories/strategist'); if (stories.status < 300) {
       stories = await stories.json(); app.setState({stories: Object.keys(stories).map((story) => ({title: story.split('_')[1], jpeg: '/stories/' + story + '.jpg', href: story, resolutions: stories[story][0], ccs: stories[story][1], markers: stories[story][2]}))})
     }
     // setInterval(function() {app.setState({slide: (app.state.slide + 1) % app.state.slides.length});}, 7000);
