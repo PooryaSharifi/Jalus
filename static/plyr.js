@@ -7351,7 +7351,7 @@
           return void this.debug.error("Setup failed: unsupported type")
       }
       this.supported = dr.check(this.type, this.provider), this.supported.api ? (this.eventListeners = [], this.listeners = new as(this), this.storage = new $r(this), this.media.plyr = this, Vi.element(this.elements.container) || (this.elements.container = Qi("div"), Xi(this.media, this.elements.container)), os.migrateStyles.call(this), os.addStyleHook.call(this), fs.setup.call(this), this.config.debug && fr.call(this, this.elements.container, this.config.events.join(" "), (e => {
-        this.debug.log(`event: ${e.type}`)
+        //
       })), this.fullscreen = new rs(this), (this.isHTML5 || this.isEmbed && !this.supported.ui) && os.build.call(this), this.listeners.container(), this.listeners.global(), this.config.ads.enabled && (this.ads = new gs(this)), this.isHTML5 && this.config.autoplay && this.once("canplay", (() => _r(this.play()))), this.lastSeekTime = 0, this.config.previewThumbnails.enabled && (this.previewThumbnails = new ws(this))) : this.debug.error("Setup failed: no support")
     }
     get isHTML5() {

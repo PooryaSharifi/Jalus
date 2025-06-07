@@ -117,13 +117,14 @@ class App extends React.Component {
           <div style={{paddingLeft: '10%', paddingRight: '10%'}}>
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
               <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden">
-                <source media="(min-width: 768px)" srcset="/stories/hosting_منظره ای از سیاره آبی.jpg"/>
-                <source media="(min-width: 767px)" srcset="/stories/hosting_منظره ای از سیاره آبی.jpg"/>
-                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="/stories/hosting_منظره ای از سیاره آبی.jpg" class="w-full h-auto xl:object-cover"/>
+                <source media="(min-width: 768px)" srcset="/stories/host_منظره ای از سیاره آبی.jpg"/>
+                <source media="(min-width: 767px)" srcset="/stories/host_منظره ای از سیاره آبی.jpg"/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="/stories/host_منظره ای از سیاره آبی.jpg" class="w-full h-auto xl:object-cover"/>
               </picture>
-              <button onClick={() => {loadStory('')}} style={{display: 'block'}} type="button" class="plyr__control plyr__control--overlaid" data-plyr="play" aria-pressed="false" aria-label="Play">
+              <button onClick={() => {window.history.pushState({}, ''); loadStory('بنای سه منظوره', (['480', '576']).map((res) => ('/static/stories/' + 'host_منظره ای از سیاره آبی' + '.' + res + '.mp4')), ([]).map((cc) => ('/static/stories/' + 'host_منظره ای از سیاره آبی' + '.' + cc + '.vtt')), [])}} style={{display: 'block'}} 
+                  type="button" class="plyr__control plyr__control--overlaid" data-plyr="play" aria-pressed="false" aria-label="Play">
                 <svg aria-hidden="true" focusable="false">
-                  <use xlinkHref="/static/plyr.svg#plyr-play">
+                  <use xlinkHref="/static/icon/plyr.svg#plyr-play">
                     <symbol id="plyr-play" viewBox="0 0 18 18"><path d="M15.562 8.1L3.87.225c-.818-.562-1.87 0-1.87.9v15.75c0 .9 1.052 1.462 1.87.9L15.563 9.9c.584-.45.584-1.35 0-1.8z"></path></symbol>
                   </use>
                 </svg>
