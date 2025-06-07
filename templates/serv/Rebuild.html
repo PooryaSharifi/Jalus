@@ -2525,10 +2525,10 @@ var App = /*#__PURE__*/function (_React$Component) {
         "class": "w-full h-auto rounded-none sm:rounded-3xl overflow-hidden"
       }, /*#__PURE__*/React.createElement("source", {
         media: "(min-width: 768px)",
-        srcset: "/stories/hosting_\u0645\u0646\u0638\u0631\u0647 \u0627\u06CC \u0627\u0632 \u0633\u06CC\u0627\u0631\u0647 \u0622\u0628\u06CC.jpg"
+        srcset: "/stories/host_\u0645\u0646\u0638\u0631\u0647 \u0627\u06CC \u0627\u0632 \u0633\u06CC\u0627\u0631\u0647 \u0622\u0628\u06CC.jpg"
       }), /*#__PURE__*/React.createElement("source", {
         media: "(min-width: 767px)",
-        srcset: "/stories/hosting_\u0645\u0646\u0638\u0631\u0647 \u0627\u06CC \u0627\u0632 \u0633\u06CC\u0627\u0631\u0647 \u0622\u0628\u06CC.jpg"
+        srcset: "/stories/host_\u0645\u0646\u0638\u0631\u0647 \u0627\u06CC \u0627\u0632 \u0633\u06CC\u0627\u0631\u0647 \u0622\u0628\u06CC.jpg"
       }), /*#__PURE__*/React.createElement("img", {
         alt: "",
         fetchpriority: "high",
@@ -2539,11 +2539,16 @@ var App = /*#__PURE__*/function (_React$Component) {
           color: 'transparent'
         },
         sizes: "100vw",
-        src: "/stories/hosting_\u0645\u0646\u0638\u0631\u0647 \u0627\u06CC \u0627\u0632 \u0633\u06CC\u0627\u0631\u0647 \u0622\u0628\u06CC.jpg",
+        src: "/stories/host_\u0645\u0646\u0638\u0631\u0647 \u0627\u06CC \u0627\u0632 \u0633\u06CC\u0627\u0631\u0647 \u0622\u0628\u06CC.jpg",
         "class": "w-full h-auto xl:object-cover"
       })), /*#__PURE__*/React.createElement("button", {
         onClick: function onClick() {
-          loadStory('');
+          window.history.pushState({}, '');
+          loadStory('بنای سه منظوره', ['480', '576'].map(function (res) {
+            return '/static/stories/' + 'host_منظره ای از سیاره آبی' + '.' + res + '.mp4';
+          }), [].map(function (cc) {
+            return '/static/stories/' + 'host_منظره ای از سیاره آبی' + '.' + cc + '.vtt';
+          }), []);
         },
         style: {
           display: 'block'
@@ -2557,7 +2562,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         "aria-hidden": "true",
         focusable: "false"
       }, /*#__PURE__*/React.createElement("use", {
-        xlinkHref: "/static/plyr.svg#plyr-play"
+        xlinkHref: "/static/icon/plyr.svg#plyr-play"
       }, /*#__PURE__*/React.createElement("symbol", {
         id: "plyr-play",
         viewBox: "0 0 18 18"
