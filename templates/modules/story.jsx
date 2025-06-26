@@ -1,7 +1,7 @@
 <div class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
   <div class="container-2xl-w mx-auto">
     <div class="pt-4">
-      <div style={{overflowX: 'scroll'}} class="swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events swiper-container-rtl">
+      <div style={{overflowX: 'scroll', scrollbarWidth: 'none'}} class="swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events swiper-container-rtl">
         <div class="swiper-wrapper">
           {this.state.stories.map((story) => (<div class="swiper-slide" style={{width: 'auto', height: 'auto', marginLeft: 24}}>
             <div class="ml-3 lg:ml-0 w-[84px] shrink-0 cursor-pointer" onClick={() => {window.history.pushState({}, ''); loadStory(story.title, story.resolutions.map((res) => ('/static/stories/' + story.href + '.' + res + '.mp4')), story.ccs.map((cc) => ('/static/stories/' + story.href + '.' + cc + '.vtt')), story.markers)}}>

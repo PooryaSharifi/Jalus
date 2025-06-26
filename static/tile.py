@@ -280,6 +280,7 @@ def stat():
     print(sum(w_sizes) / len(w_sizes))
 def remove_undetailed_childs(layer):
     format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; jpgs = glob.glob(f"lyr{layer}/*.{format}")
+    zs = {'b': {13: .001, 14: .001, 15: .01, 16: .01}, 'r': {13: .001, 14: .001, 15: .01, 16: .01}, 'y': {13: 4, 14: 6, 15: 8, 16: 10}}[layer]
     stds = []
     for i_j, jpg in enumerate(jpgs):
         if i_j % 100 == 0: print(i_j // 100)
@@ -287,7 +288,6 @@ def remove_undetailed_childs(layer):
         stds.append(np.sum(np.std(im, axis=(0, 1))))
     jpgs = [(jpg, stds[i_j]) for i_j, jpg in enumerate(jpgs)]
     jpgs = sorted(jpgs, key=lambda j: j[1])
-    zs = {13: 8, 14: 20, 15: 8, 16: 10}
     for jpg, score in jpgs:
         if score < zs.get(int(jpg.split('/')[-1].split('_')[0]), 0): os.remove(jpg)
 

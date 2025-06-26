@@ -14892,6 +14892,7 @@ button.swiper-pagination-bullet {
 nav.BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0 {
   overflow-y: hidden;
   overflow-x: scroll;
+  scrollbar-width: none;
 }
 
 nav.BaseLayoutDesktopHeader_BaseLayoutDesktopHeader__navigation__5M_D0::-webkit-scrollbar {
