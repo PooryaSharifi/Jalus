@@ -182,7 +182,7 @@ def h2(layer):
     families = sorted(families, key=lambda family: family[-1])
     for family in families: family.pop()
     print(len(families))
-    for family in families[:20000]:
+    for family in families[:8500]:
         imgs, lens = [], []
         for file in family:
             with open(file, 'rb') as f:
@@ -280,16 +280,31 @@ def stat():
     print(sum(w_sizes) / len(w_sizes))
 def remove_undetailed_childs(layer):
     format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; jpgs = glob.glob(f"lyr{layer}/*.{format}")
-    zs = {'b': {13: .001, 14: .001, 15: .01, 16: .01}, 'r': {13: .001, 14: .001, 15: .01, 16: .01}, 'y': {13: 4, 14: 6, 15: 8, 16: 10}}[layer]
+    zs = {'b': {13: .009, 14: .009, 15: .01, 16: .01}, 'r': {13: .09, 14: .09, 15: .1, 16: .1}, 'y': {13: 9, 14: 9, 15: 10, 16: 10}}[layer]
     stds = []
     for i_j, jpg in enumerate(jpgs):
         if i_j % 100 == 0: print(i_j // 100)
         im = np.array(Image.open(jpg))
         stds.append(np.sum(np.std(im, axis=(0, 1))))
-    jpgs = [(jpg, stds[i_j]) for i_j, jpg in enumerate(jpgs)]
-    jpgs = sorted(jpgs, key=lambda j: j[1])
-    for jpg, score in jpgs:
+    jpgs = [(jpg, stds[i_j]) for i_j, jpg in enumerate(jpgs) if int(jpg.split('/')[-1].split('_')[0]) > 12]
+    jpgs = list(sorted(jpgs, key=lambda j: j[1]))
+    
+    for i_j, (jpg, score) in enumerate(jpgs): 
         if score < zs.get(int(jpg.split('/')[-1].split('_')[0]), 0): os.remove(jpg)
+
+    print(jpgs[0])
+    for i_j, (jpg, score) in enumerate(jpgs): 
+        if score > .07: print(i_j, jpg); break
+    for i_j, (jpg, score) in enumerate(jpgs): 
+        if score > .08: print(i_j, jpg); break
+    for i_j, (jpg, score) in enumerate(jpgs): 
+        if score > .09: print(i_j, jpg); break
+    for i_j, (jpg, score) in enumerate(jpgs): 
+        if score > .1: print(i_j, jpg); break
+    for i_j, (jpg, score) in enumerate(jpgs): 
+        if score > .11: print(i_j, jpg); break
+    for i_j, (jpg, score) in enumerate(jpgs): 
+        if score > .12: print(i_j, jpg); break
 
 if __name__ == '__main__':
     func, layer = sys.argv[1], sys.argv[2]
