@@ -233,7 +233,7 @@ def merge(layer):
         for ch in chs:
             try: os.remove(ch)
             except: pass
-def split_3():
+def split_3(layer):
     format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; jpgs = glob.glob(f"lyr{layer}/*.{format}")
     prefer_size = len(jpgs) // 3
     ss = [[], [], []]
@@ -246,12 +246,10 @@ def split_3():
     ss[1] = list(ss[1])
     while len(ss[1]) < prefer_size: ss[1].append(jpgs[-1]); jpgs.pop()
     ss[2] = jpgs
-    print(len(ss[0]), len(ss[1]), len(ss[2]), prefer_size)
-    print(ss[0][0], ss[1][0], ss[2][0])
     for i_s, s in enumerate(ss):
         for i_j, j in enumerate(s):
             if i_j % 1000 == 0: print(i_j)
-            os.rename(j, f'lyry_{i_s + 1}/{j.split('/')[-1]}')
+            os.rename(j, f'lyr{layer}_{i_s + 1}/{j.split('/')[-1]}')
 def remove_lesser_areas(layer):
     format = {'b': 'png', 'r': 'png', 'y': 'webp'}[layer]; jpgs = glob.glob(f"lyr{layer}/*.{format}")
     for i_j, jpg in enumerate(jpgs):
