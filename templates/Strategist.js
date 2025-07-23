@@ -7,7 +7,7 @@ class App extends React.Component {
     this.state = {page: 'strategist', fr_page: 'استراتژیست', menuHeight: 108, ordered: false, phone: cookie('phone'), session: cookie('session'), keys: {}, leftMenu: 'مسیر قهرمانی', firstMenuShow: false, firstMenuIndex: 0, secondMenuShow: false, secondMenuIndex: 0, firstMenuList: [
       {title: 'پیام‌های مشاور', action: async () => {this.state.order = '!last_note_date'; await this.search()}}, {title: 'تازه‌ترین مطلب', href: '/strategist/articles'}, {title: 'تازه‌ترین پادکست', href: '/strategist/podcasts'}, 
     ], secondMenuList: [
-      {title: 'سوالات درک مطلب', href: '/strategist/exam?category=dark'}, {title: 'تست هفتگی', href: '/strategist/exam'}, {title: 'رفع اشکال', href: '/strategist/exam?category=reminder'},
+      {title: 'کمپین‌ها (همایش‌ها)', href: '/strategist/exam?category=dark'}, {title: 'تست هفتگی', href: '/strategist/exam'}, {title: 'رفع اشکال', href: '/strategist/exam?category=reminder'},
     ], sessions: [], slide: 2, slides: [
       {webp: '/static/slides/Strategist_thoughts.webp', 
       jpeg: '/static/slides/Strategist_thoughts-80.jpg',
@@ -41,6 +41,20 @@ class App extends React.Component {
       png: '/static/icon/Strategist_app_deev-8.png'},
       {title: "استراتژی پلاس", href: '/strategist/plus',
         png: '/static/icon/jalus_app_plus.png'},
+    ], campaign: -1, campaigns: [
+      {title: "همایش استدلال منطقی و درک مطلب در تست زنی (زیست‌شناسی و شیمی)", jpeg: '/static/articles/Strategist_biology-reasoning.jpg', body: [
+        ['img', '/static/articles/Strategist_biology-reasoning.jpg']
+      ]}, {title: "همایش حل مساله ریاضی بدون دخالت دست (به روش رد گزینه و تجسم نمودار)", jpeg: '/static/articles/Strategist_Math.jpg', body: [
+        ['img', '/static/articles/Strategist_Math.jpg']
+      ]}, {title: "همایش فیزیک بالای نود درصد (ابتکار و سناریو سازی)", jpeg: '/static/articles/Strategist_physics-900.jpg', body: [
+        ['img', '/static/articles/Strategist_physics-900.jpg']
+      ]}, {title: "همایش نمره بیست در امتحان نهایی (باور پذیری و دقت)", jpeg: '/static/articles/Strategist_exam-20.jpg', body: [
+        ['img', '/static/articles/Strategist_exam-20.jpg']
+      ]}, {title: "همایش فوت و فنون نتیجه‌گرایی (نتیجه بهتر با همان میزان مطالعه)", jpeg: '/static/articles/Strategist_mindfulness.jpg', body: [
+        ['img', '/static/articles/Strategist_mindfulness.jpg']
+      ]}, {title: "همایش Better Mode (فاز و مود مناسب در سال کنکور)", jpeg: '/static/articles/Strategist_exam-mode.jpg', body: [
+        ['img', '/static/articles/Strategist_exam-mode.jpg']
+      ]},
     ], article: -1, articles: [
       {title: "هفت عادت استراتژیست کنکوری", jpeg: '/static/articles/Strategist_7.jpg', body: [
         ['img', '/static/articles/Strategist_7.jpg']
@@ -48,7 +62,7 @@ class App extends React.Component {
         ['img', '/static/articles/Strategist_4books.png']
       ]}, {title: "مدیریت سه چیز احساسات زمان تمرکز", jpeg: '/static/articles/Strategist_war.jpg', body: [
         ['img', '/static/articles/Strategist_war.jpg']
-      ]}, {title: "کمپ مطالعه در حضور دکتر پوریا شریفی", jpeg: '/static/articles/Strategist_camp.jpg', body: [
+      ]}, {title: "کمپ مطالعه با حضور دکتر پوریا شریفی", jpeg: '/static/articles/Strategist_camp.jpg', body: [
         ['img', '/static/articles/Strategist_camp.jpg']
       ]},
     ], stories: [], offers: [
@@ -82,6 +96,8 @@ class App extends React.Component {
       window.Y = window.NY;
     })
     window.onpopstate = e => { let plyr = document.getElementById('plyr'); if (plyr) {plyr.style.display = 'none'; plyr.innerHTML = ''} }
+    if (this.state.app) document.title = {'exam': 'آزمون هفتگی', 'takhmin': 'تخمین رتبه', 'deev': 'دیوسالاران', 'plus': 'استراتژی پلاس', 'englisi': 'انگلیسی', 'arabi': 'عربی', 
+      'zist': 'زیست', 'riazi': 'ریاضی', 'shimi': 'شیمی', 'fizik': 'فیزیک', 'farsi': 'فارسی', 'dini': 'دینی', 'zamin': 'زمین‌شناسی', 'gosaste': 'گسسته'}[this.state.app]
   } render() { let app = this;
     return <div>
       {this.state.potent ? ({/* #macro modules/potent */}) : (<>
@@ -398,7 +414,7 @@ class App extends React.Component {
               {this.state.predict_result.loading && <span class="loader"></span>}
             </div>
           </div>
-        </div>} {this.state.article == -1 && !this.state.app && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+        </div>} {this.state.article == -1 && this.state.campaign == -1 && !this.state.app && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>استراتژیست</h1>
           <div class="w-full">
             <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
@@ -438,6 +454,8 @@ class App extends React.Component {
           </p>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>دانلود مشاهده جزوه</p>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>دانلود مشاهده آزمون</p>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>کمپین‌ها (همایش‌ها)</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>در این قسمت می‌توان تمام همایش‌ها را با ذکر یک یا دوکلمه از موضوع آن نمایش و لینک داد</p>
         </div>} {this.state.article != -1 && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 id="article" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.articles[this.state.article].title}</h1>
           {this.state.articles[this.state.article].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
@@ -449,12 +467,24 @@ class App extends React.Component {
               </picture>
             </div>
           </div> : 'VIDEO')))}
+        </div>} {this.state.campaign != -1 && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
+          <h1 id="campaign" style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>{this.state.campaigns[this.state.campaign].title}</h1>
+          {this.state.campaigns[this.state.campaign].body.map(e => e[0] == 'h2' ? <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>{e[1]}</h2> : (e[0] == 'p' ? <p style={{fontSize: '1.85em', textAlign: 'justify'}}>{e[1]}</p> : (e[0] == 'img' ? 
+          <div class="w-full" style={{marginBottom: 8}}>
+            <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+              <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+                <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
+                <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src={e[1]} class="w-full h-auto xl:object-cover"/>
+              </picture>
+            </div>
+          </div> : 'VIDEO')))}
         </div>}
-        {/* #macro modules/articles */}
+        {/* #macro modules/campaign */}
         {/* #macro modules/pr_list */}
         {/* #macro modules/club_banner */}
         {/* #macro modules/category */}
         {/* #macro modules/offer */}
+        {/* #macro modules/articles */}
         {/* #macro modules/foot */}
       </>)}
     </div>
