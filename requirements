@@ -5,4 +5,7 @@ ujson
 sanic
 qrcode
 PyYAML
-demjson
+PyJWT
+sanic_cors
+werkzeug
+Pillow

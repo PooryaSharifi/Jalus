@@ -10,6 +10,7 @@ from static import load_template, template, wild_origins, wild_filters, decode, 
 from io import BytesIO, StringIO
 from PIL import Image
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
+from naqareh import blu as naqareh
 
 warnings.filterwarnings('ignore')
 WorkerManager.THRESHOLD = 1200
@@ -25,6 +26,7 @@ app.blueprint(laziz_user, url_prefix='/laziz/user')
 app.blueprint(laziz_delicious, url_prefix='/laziz/delicious')
 app.blueprint(laziz_order, url_prefix='/laziz/order')
 app.blueprint(laziz, url_prefix='/laziz')
+app.blueprint(naqareh, url_prefix='/barnameh')
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
 app.add_route(lambda _: response.redirect('/dome'), '/zome', name='zome_dome')
 min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
@@ -78,6 +80,8 @@ async def init_ones(sanic, loop):
     await sanic.config['db']['ads'].create_index([('title', 'text'), ('description', 'text')], weights={'title': 2, 'description': 1})
     await sanic.config['db']['users'].create_index([('location', GEOSPHERE)])
     await sanic.config['db']['ads'].create_index([('location', GEOSPHERE)])
+    await sanic.config['db']['days'].create_index([('key', 1)])
+    # await sanic.config['db']['days'].delete_many({})
 
 @app.listener('after_server_stop')
 async def close_connection(app, loop): app.config['db'].close()

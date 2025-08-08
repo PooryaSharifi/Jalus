@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#e66053" />
+    <meta name="description" content="اپلیکیشن برنامه"/>
+    <title>برنامه</title>
+    <meta name="description" content="">
+    <link rel="icon" href="/static/icon/barnameh.ico" />
+    <link rel="apple-touch-icon" href="/static/icon/barnameh.ico" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, interactive-widget=resizes-content, user-scalable=no, target-densityDpi=device-dpi">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
+    <!-- <meta name="viewport" content="width=device-width"> -->
+    <link rel="stylesheet" href="/static/naqareh.css">
+    <script src="/static/ractive.js"></script>
+</head>
+<body>
+
+<div id="target"></div>
+
+<script id="login-template" type="text/ractive">
+    <form class="login">
+        <div style="color: #eaa">username :</div>
+        <div class="input" name="username" id="username" contenteditable="true" value="{{ username }}">{{ username }}</div>
+        <div style="color: #eaa">password :</div>
+        <div class="input" name="password" id="password" contenteditable="true" value="{{ password }}">{{ password }}</div>
+        <div class="button" type="submit" on-click='login'>Enter</div>
+    </form>
+</script>
+
+<script id="calendar-template" type="text/ractive">
+    <main>
+        <table class="calendar">
+            <caption class="calendar__banner--month">
+                <h1>{{format(date.month)}} {{date.day}}</h1>
+            </caption>
+            <thead>
+            <tr>
+                <th class="calendar__day__header"></th>
+                <th class="calendar__day__header">{{ format_label(label + 0) }}:00</th>
+                <th class="calendar__day__header">{{ format_label(label + 1) }}:00</th>
+                <th class="calendar__day__header">{{ format_label(label + 2) }}:00</th>
+                <th class="calendar__day__header">{{ format_label(label + 3) }}:00</th>
+                <th class="calendar__day__header">{{ format_label(label + 4) }}:00</th>
+                <th class="calendar__day__header">{{ format_label(label + 5) }}:00</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each [0, 1, 2, 3]: i}}
+                <tr>
+                    <td class="calendar__day__cell"><img src="{{ '/static/icon/naqareh-' + i + '.svg' }}" width="150" height="60"></td>
+                    {{#each hours: num}}
+                        {{#if (num >= i * 6 && num < (i + 1) * 6) }}
+                            <td class="calendar__day__cell click" on-hover="hour" data-index="{{num}}">
+                                {{#if this == 0}}
+                                    <div style="width: 150px; height: 72px" on-click="inc" data-index="{{num}}"></div>
+                                {{/if}} {{#if this == 1}}
+                                    <img src="/static/icon/naqareh-depressed.svg" width="150" height="60" on-click="inc" data-index="{{num}}"/>
+                                {{/if}} {{#if this == 2}}
+                                    <img src="/static/icon/naqareh-satisfied.svg" width="150" height="60" on-click="inc" data-index="{{num}}"/>
+                                {{/if}}
+                                <input class="title" on-blur="title" value="{{titles[num]}}" data-index="{{num}}"/>
+                            </td>
+                        {{/if}}
+                    {{/each}}
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </main>
+</script>
+<script>
+(async function() {
+    function setCookie(name, value) { var expires = ""; var date = new Date(); date.setTime(date.getTime() + (365*24*60*60*1000)); expires = "; expires=" + date.toUTCString(); document.cookie = name + "=" + (value || "")  + expires + "; path=/";}
+    function cookie(name) {var nameEQ = name + "=", ca = document.cookie.split(';'); for(var i=0;i < ca.length;i++) {var c = ca[i]; while (c.charAt(0)==' ') c = c.substring(1,c.length); if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);}}
+    function delCookie(name) { document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';}
+    var template = '#login-template';
+    // var template = '#calendar-template';
+    var base_uri = '/barnameh';
+    let keywords = window.location.pathname.split('barnameh')[1].split('/').filter(function(key) {return key});
+    if (keywords.includes('admin')) {
+        var apikey = keywords[keywords.indexOf('admin') + 1];
+        template = '#calendar-template';
+    } else if (value = cookie('key')) {
+        var apikey = value;
+        template = '#calendar-template';
+    }
+    var ractive = Ractive({
+        target: '#target',
+        template: template,
+        data: {
+            username: '',
+            password: '',
+            key: apikey ? apikey : '',
+            hours: [
+                0, 1, 0, 2, 1, 0,
+                1, 0, 2, 1, 0, 1,
+                0, 2, 1, 0, 1, 0,
+                2, 1, 0, 1, 0, 2,
+            ], delays: [
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0,
+            ], titles: [
+                '--', '--', '--', '--', '--', '--', 
+                '--', '--', '--', '--', '--', '--', 
+                '--', '--', '--', '--', '--', '--', 
+                '--', '--', '--', '--', '--', '--', 
+            ], date: {
+                year: 1396,
+                month: 'esfand', // need to pretify() -> ractive
+                day: 4,
+            },
+            format: function(i) {
+                return {
+                    1: 'farvardin',
+                    2: 'ordibehesht',
+                    3: 'khordad',
+                    4: 'tir',
+                    5: 'mordad',
+                    6: 'shahrivar',
+                    7: 'mehr',
+                    8: 'aban',
+                    9: 'azar',
+                    10: 'dei',
+                    11: 'bahman',
+                    12: 'esfand',
+                }[i];
+            },
+            format_label: function(h) {
+                if (h < 10) return '0' + h;
+                return h;
+            },
+            label: 1
+        }
+    });
+
+    if(ractive.get('key') != '') {
+        if (keywords.length > 2) var uri = `${base_uri}/${ractive.get('key')}/${keywords[keywords.length - 3]}/${keywords[keywords.length - 2]}/${keywords[keywords.length - 1]}`;
+        else var uri = base_uri + '/' + ractive.get('key');
+        let r = await fetch(uri);
+        r = await r.json();
+        ractive.set('hours', r.day.hours);
+        ractive.set('date', r.day.date);
+        ractive.set('delays', r.day.delays);
+        ractive.set('titles', r.day.titles);
+    }
+
+    ractive.on( 'login', async function () {
+        username = this.get('username');
+        password = this.get('password');
+        if (username == '' || password == '') return; 
+        let r = await fetch(base_uri + '/' + username + '/' + password);
+        r = await r.json();
+        ractive.set('key', r['key']);
+        setCookie('key', r['key']);
+        ractive.resetTemplate('#calendar-template');
+    });
+
+    ractive.on( 'inc', async function(event) {
+        var index = event.node.getAttribute('data-index');
+        index = parseInt(index);
+        var value = ractive.get('hours.' + index);
+        value ++;
+        value %= 3;
+        var date = ractive.get('date');
+        var uri = base_uri + '/' +
+            ractive.get('key') + '/' +
+            date.year + '/' + ({'farvardin': 1, 'ordibehesht': 2, 'khordad': 3,
+                'tir': 4, 'mordad': 5, 'shahrivar': 6,
+                'mehr': 7, 'aban': 8, 'azar': 9,
+                'dei': 10, 'bahman': 11, 'esfand': 12}[date.month] | date.month) + '/' +
+            date.day + '/' +
+            index + '/' + value;
+        let r = await fetch(uri, {method: 'POST'});
+        if (r.status == 200) ractive.set('hours.' + index, value);
+    });
+
+    ractive.on( 'hour', function(event) {
+        var index = event.node.getAttribute('data-index');
+        index = parseInt(index);
+        hour = (index + 6) % 24;
+        hour -= hour % 6;
+        this.set('label', hour);
+    });
+
+    ractive.on( 'title', async function(e) {
+        var index = e.node.getAttribute('data-index');
+        index = parseInt(index);
+        var value = ractive.get('titles.' + index);
+        var date = ractive.get('date');
+        var uri = `${base_uri}/title/${ractive.get('key')}/${date.year}/` +
+            ({'farvardin': 1, 'ordibehesht': 2, 'khordad': 3,
+            'tir': 4, 'mordad': 5, 'shahrivar': 6,
+            'mehr': 7, 'aban': 8, 'azar': 9,
+            'dei': 10, 'bahman': 11, 'esfand': 12}[date.month] | date.month) + `/${date.day}/${index}/${value}`;
+
+        await fetch(uri, {method: 'POST'});
+    });
+})();
+</script>
+</body>
+</html>
+

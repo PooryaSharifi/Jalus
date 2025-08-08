@@ -106,14 +106,27 @@ class App extends React.Component {
         {/* #macro modules/story */}
         {!this.state.app && ({/* #macro modules/slider */})}
         {this.state.app == 'exam' && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
-          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>آزمون</h1>
-          <p>اپ اگزم پرینت پی دی اف</p>
+          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>آزمون‌های شبانه و هفتگی</h1>
+          <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+            <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+              <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
+              <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="/static/slides/Strategist_elon-quote-80.jpg" class="w-full h-auto xl:object-cover"/>
+            </picture>
+          </div>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>برنامه‌ریز استراتژیست پلاس</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>ممارست، نظم، رهایی از هرچیز غیر از هدف، صبوری برای حصول نتیجه رمز تمام موفقیت های تاریخ بوده‌اند.
+            یک برنامه خوب برنامه ایست که با جان و دل دنبال شود و دستورات آن با تمام وجود اجرا گردند.
+            در پنل برنامه‌ریز طبق نتایج آزمون‌های آزمایشی و عملکرد هفته‌های قبل و با کمک ابزار هوش‌مصنوعی ساخته شده در دفتر استراتژیست برنامه قابل انطباق با دانش‌آموز طراحی می‌شود.
+            دانش‌آموز یا والدین او با کمک پنل برنامه‌ریز قادر خواهند بود تا برنامه هفتگی را دنبال کرده و نتیجه بگیرند.</p>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>آزمون سنجش توانمندی</p>
+          <a class="touchable relative flex items-center user-select-none styles_btn__Q4MvL text-button-1 styles_btn--large__1Muai styles_btn--primary__y0GEv rounded-medium w-full mt-6 lg:mt-8 text-button-1" href="/barnameh">
+            <div class="flex items-center justify-center relative grow">ورود به پنل آزمون</div>
+          </a>
         </div>} {this.state.app == 'deev' && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>دیوسالاران</h1>
-          <p>صفحه دیو لیستی از دیوسالاران رو اولش داره</p>
-          <p>هر چیز کلی رو اینجا بنویس</p>
-          <p>اپ مسیر بندی مسیر اصلی (دیوسالاران) مسیر هر درس برای هر درس بودجه بندی، استوری مخصوص، فوت و فنون، یه توضیح کللی ( اگه امتیاز داشتی عوض شه بشه پیام ).</p>
-          <p>تعادل توی همه چیزای خوب ترید آف state of the art خودت برسی</p>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 2}}>دیوسالاران سال‌های قبل</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>برای هر درس باید طبق اصول همان درس مطالعه شود. این اصول و فنون در آخر صفحه به صورت درس به درس قرار گرفته است با کلیک روی آیکون هر درس وارد صفحه آن شوید</p>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 2}}>رسیدن به بهترین مود یا state of the art خود</h2>
           <p style={{fontSize: '1.85em', textAlign: 'justify'}}>
             در بخش دیوسالاران بخش باور های درست بخش کتاب های خواندنی بخش ( حتی میشه پادکست های خودمو از روی پادکست های خارجی و ایرانی همین کتاب ها مخصوص کنکور همین جا بگذارم ) به معرفی کتاب ها بپردازم عادت های اتمی بنویس تا اتفاق بیوفتد. هیچی نگو و انجامش بده پیج باور رو هم درست کردم که بشه بهش اضافه کردم مفصل توضیح بدم باور غلط و صحیص رو یه تست هم توش گذاشتم هر کسی بدونه چنتا باور هاش درسته چنتا غلط
           </p>
@@ -153,8 +166,22 @@ class App extends React.Component {
             افرادی که در این زمان دور و اطراف شما هستند معمولا پر از استرس و ترس و افکار منفی هستند. و می‌توانند به راحتی به شما که تمام حواستان به آزمون است رخنه کرده و شما را ترسان و لرزان کنند. و از روند اصلی آزمون شمارا دور کنند. همچنین از کسانی که در حال امتحان اند. از هر صد نفری یک نفر موفق به کسب رتبه مورد قبول هستند. پس شما به احتمال زیاد در حال صحبت کردن و خوش و بش با یک فرد بازنده هستید پس قبل از امتحان سر زیر و مثل یک آزمون دهنده آگاه و پخته با خودتان سر و کار داشته باشید و به نمره کامل آزمون نهایی یا عملکرد فراتر از انتظارتان بیاندیشید.
           </p>
         </div>} {this.state.app == 'plus' && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
-          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>برنامه‌ریز هوش‌مصنونی</h1>
-          <p>برنامه ریزی هوش مصنوعی استراتژیست پلاس</p>
+          <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>برنامه‌ریز هوش‌مصنوعی</h1>
+          <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
+            <picture class="w-full h-auto rounded-none sm:rounded-3xl overflow-hidden ">
+              <source media="(min-width: 768px)" srcset=""/><source media="(min-width: 767px)" srcset=""/>
+              <img alt="" fetchpriority="high" width="1350" height="270" decoding="async" style={{color: 'transparent'}} sizes="100vw" src="/static/slides/Strategist_elon-quote-80.jpg" class="w-full h-auto xl:object-cover"/>
+            </picture>
+          </div>
+          <h2 style={{fontSize: '3em', fontWeight: 600, paddingTop: 5, paddingBottom: 3}}>برنامه‌ریز استراتژیست پلاس</h2>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>ممارست، نظم، رهایی از هرچیز غیر از هدف، صبوری برای حصول نتیجه رمز تمام موفقیت های تاریخ بوده‌اند.
+            یک برنامه خوب برنامه ایست که با جان و دل دنبال شود و دستورات آن با تمام وجود اجرا گردند.
+            در پنل برنامه‌ریز طبق نتایج آزمون‌های آزمایشی و عملکرد هفته‌های قبل و با کمک ابزار هوش‌مصنوعی ساخته شده در دفتر استراتژیست برنامه قابل انطباق با دانش‌آموز طراحی می‌شود.
+            دانش‌آموز یا والدین او با کمک پنل برنامه‌ریز قادر خواهند بود تا برنامه هفتگی را دنبال کرده و نتیجه بگیرند.</p>
+          <p style={{fontSize: '1.85em', textAlign: 'justify'}}>برنامه ریزی هوش مصنوعی استراتژیست پلاس</p>
+          <a class="touchable relative flex items-center user-select-none styles_btn__Q4MvL text-button-1 styles_btn--large__1Muai styles_btn--primary__y0GEv rounded-medium w-full mt-6 lg:mt-8 text-button-1" href="/barnameh">
+            <div class="flex items-center justify-center relative grow">ورود به پنل برنامه‌ریز</div>
+          </a>
         </div>} {this.state.app == 'zist' && <div style={{maxWidth: 768, paddingBottom: 20, paddingLeft: 14, paddingRight: 14}} class="container-2xl-w mx-auto lg:px-4 2xl:px-0">
           <h1 style={{textAlign: 'center', fontSize: '4em', fontWeight: 700, paddingTop: 20, paddingBottom: 15}}>زیست، روش مطالعاتی و تست‌زنی و آزمون نهایی</h1>
           <div class="relative flex justify-center items-center w-full h-full max-w-[1336px] mx-auto rounded-none sm:rounded-3xl overflow-hidden xs:mt-0">
