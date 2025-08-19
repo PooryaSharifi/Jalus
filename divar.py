@@ -470,6 +470,37 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (1 - len(_users)) * 60))
         # time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0) + randint(-270, 270), 0))
 
+consultants = pd.read_csv('static/consultant.csv').to_dict('records')
+for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
+def push_ads():  # http://192.168.0.55:5000, https://jalus.ir
+    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
+    collections = [('users', {'category': 'rent-temporary', 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}}), ('ads', {'category': {'$ne': 'rent-temporary'}, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}})]
+    while True:
+        new_ads = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12))
+        if not new_ads: time.sleep(60); continue
+        for i_ad, ad in enumerate(new_ads):
+            ad['images'] = [im for im in ad['images'] if os.path.exists(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}') and os.path.getsize(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}') > 3000][:(8 if collection == 0 else 3)]
+            for im in ad['images']:
+                files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}', 'rb')}
+                r = requests.post(f'https://jalus.ir/static/properties/{im}', files=files, verify=False)
+                if r.status_code != 200 or not r.json()['OK']: raise
+            if 'consultant' not in ad: ad['consultant'] = random.choice(consultants)
+            ad['title'] = ad['title'].replace('&nbsp;', ' ').split(); ad['title'] = ' '.join([w for w in ad['title'] if w])
+            ad['description'] = ad['description'].replace('&nbsp;', ' ').split(); ad['description'] = ' '.join([w for w in ad['description'] if w])
+            if '_images' in ad: del ad['_images']
+            ad['served'] = True; ad['served_date'] = str(datetime.now()).split('.')[0]; ad['notes'] = []
+            del ad['_id']; ad['pan_date'] = str(ad['pan_date']).split('.')[0]; ad['detailed_date'] = str(ad['detailed_date']).split('.')[0]
+            ad['phoned_date'] = str(ad['phoned_date']).split('.')[0]; ad['imaged_date'] = str(ad['imaged_date']).split('.')[0]
+            if 'swap' in ad and ad['swap'] and 'date' in ad['swap']: ad['swap']['date'] = str(ad['swap']['date']).split('.')[0]
+            r = requests.post(f'https://jalus.ir/{collections[collection][0]}/{ad["id"]}/~', data=json.dumps(ad), verify=False)
+            if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'served_date': datetime.now()}}); r = r.matched_count
+        collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
+        time.sleep(10 if len(new_ads) % 4 == 0 else 60)
+def auto_del():
+    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
+    users.delete_many({'pan_date': {'$lte': datetime.now() - timedelta(days=28)}, 'phoned': False})
+
+
 def swap():
     # TODO algorithm of matching between swappables and requestes
     pass
