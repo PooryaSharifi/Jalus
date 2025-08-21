@@ -1,7 +1,6 @@
 import subprocess, random, time, sys, urllib.parse, re, pymongo
 from datetime import datetime, timedelta, timezone
 
-
 # bebin har tabe otp, last_sms, 
 # unknown, received, receiving, sent
 
@@ -80,6 +79,3 @@ def otp_loop():
             otp_list = otp(otp_list)
 
 if __name__ == '__main__': globals()[sys.argv[1]]()
-# import subprocess, requests, time, re, random, sys, pymongo, os.path, warnings, json, pandas as pd
-
-if __name__ == '__main__': pass  # globals()[sys.argv[1]]()

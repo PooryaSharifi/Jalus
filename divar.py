@@ -1,25 +1,52 @@
-import os, os.path, random, time, glob, re, pymongo, json, subprocess, math, yaml, requests, traceback, sys, warnings, pandas as pd
-from urllib.parse import urlparse
-from multiprocessing import Process, Value, Lock, Manager
-from datetime import datetime, timedelta
-from functools import cmp_to_key
-from selenium import webdriver
+import glob, random, subprocess, os.path, time, glob, re, pymongo, json, traceback, math
+from datetime import datetime, timedelta, timezone
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
-from webdriver_manager.firefox import GeckoDriverManager as FirefoxDriverManager
-from random import choices, randint, random
-from mimetypes import guess_extension
 from copy import deepcopy
-from bson import ObjectId
-from ctypes import c_wchar_p
-from bson.json_util import dumps
+from ad import categories, consultants
 from static import wild_origins
-warnings.filterwarnings('ignore')
-# TODO yeki halati ke ban mishe, yeki halati ke azash ye hafte migzare
+# open profiles ad block
+# TODO age har 5 ta poshte ham natunest phone dar are file ban too folder profile ijad mikone, age hadaghal yekisho phone dar ovord age file ban bud baresh midare
+
+cm = {
+    'browse-post-list': ['post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858'], 
+    'post-card-item': ['widget-col-d2306', 'post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972'],
+    'kt-post-card__title': ['unsafe-kt-post-card__title', 'kt-post-card__title'],
+    'kt-post-card__bottom-description': ['unsafe-kt-post-card__description', 'kt-post-card__description', 'kt-post-card__bottom-description'],
+}
+
+# profile_lock = multiprocessing.Lock()
+def browser(phone=None, headless=False, imaged=False, banned=None, agent='ubuntu'):
+    # profile_lock.acquire()
+    profiles = glob.glob(f'/home/purish/snap/firefox/common/.mozilla/firefox/*.Divar_{phone if phone else "*"}')
+    profiles = [p for p in profiles if banned == None or (banned == True and os.path.exists(os.path.join(p, 'ban'))) or (banned == False and not os.path.exists(os.path.join(p, 'ban')))]
+    profiles = [p for p in profiles if not phone or p.split('/')[-1].split('_')[-1] == phone]; random.shuffle(profiles)
+    ps = subprocess.run(['ps', '-fC', 'firefox'], capture_output=True, text=True, check=False).stdout.strip().split('\n')[1:]; ps = [p for p in ps if profiles[0].split('/')[-1].split('.')[-1] in p]
+    if ps: subprocess.call(f'kill {ps[0].split()[1]}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  #MAYBE add -9
+    with open(f'{profiles[0]}/prefs.js', 'r') as prefs:
+        prefs = list(prefs.readlines())
+        permission = [(ipref, pref) for ipref, pref in enumerate(prefs) if 'permissions.default.image' in pref]
+        if not permission or f'{1 if imaged else 2}' not in permission[0][1]:
+            if permission: prefs = [pref for ipref, pref in enumerate(prefs) if ipref != permission[0]]
+            prefs.append(f'user_pref("permissions.default.image", {1 if imaged else 2});\n')
+            with open(f'{profiles[0]}/prefs.js', 'w') as w_prefs:
+                w_prefs.write(''.join(prefs))
+    o = FirefoxOptions()
+    if headless: o.headless = True; o.add_argument('-headless');  # o.add_argument("--headless=new")
+    [o.add_argument(arg) for arg in ['--profile', profiles[0], '--user-data-dir', 'selenium']]
+    if agent == 'android': o.set_preference("general.useragent.override", "Mozilla/5.0 (Android 16; Mobile; rv:141.0) Gecko/141.0 Firefox/141.0")
+    # profile_lock.release()
+    br = Firefox(options=o, service=FirefoxService(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'geckodriver')))
+    br.__profile__= profiles[0]
+    return br
+
 class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
     '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
 def get_users(stat=True):
@@ -35,82 +62,13 @@ def get_users(stat=True):
         print(f"{cs.FAIL}{cs.BOLD}Serve       : {users.count_documents({'served': True})}{cs.ENDC}")
     return users
 
-def rnd_necessities():
-    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
-    for user in users.find({'detailed': True, 'location': {'$exists': True}}):
-        users.update_one({'_id': user['_id']}, {'$set': {'cart': 6037123412341234, 'stat': [random.random() for _ in range(5)], 'offer': random.choice([0, 0, 0, 5, 5, random.randint(6, 39)]), 
-        'family': random.choice(['قادری', 'محمدی', 'زارعی', 'نخجیری', 'حسینی']), 'gender': True if random.random() < .7 else False, 'sms': 9300345496, 'price': random.randint(4, 40) * 100000}})
-
-categories = [f'{ft}-{et}' for ft in ['buy', 'rent'] for et in ['apartment', 'villa', 'old-house'] + ['office', 'store', 'industrial-agricultural-property']]
-categories.remove('rent-old-house')
-categories.extend([f'rent-{et}' for et in ['temporary-suite-apartment', 'temporary-villa', 'temporary-workspace']])
-categories.extend(['contribution-construction', 'pre-sell-home'])
-categories = [(cat, 1 / 666 / ((2 + ic) ** (1 / 666) - 1)) for ic, cat in enumerate(categories)]
-cm = {
-    'browse-post-list': ['post-list-eb562', 'post-list-eb562', 'browse-post-list', 'wf3858', 'browse-post-list-_-f3858'], 
-    'post-card-item': ['widget-col-d2306', 'widget-col-d2306', 'post-list__widget-col-c1444', 'post-card-item', 'waf972', 'post-card-item-_-af972'],
-    'kt-post-card__title': ['unsafe-kt-post-card__title', 'kt-post-card__title'],
-    'kt-post-card__bottom-description': ['unsafe-kt-post-card__description', 'kt-post-card__description', 'kt-post-card__bottom-description'],
-}
-used_profiles, profile_lock, browser_index = [Value(c_wchar_p, '**********') for _ in range(3)], Lock(), randint(0, 73)
-consultants = pd.read_csv('static/consultant.csv').to_dict('records')
-for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
-
-def random_browser(phone=None, otp=False, headless=False, imaged=False):
-    global browser_index
-    profile_lock.acquire()
-    os.environ['GH_TOKEN'] = "<github token>"
-    if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
-    profiles = glob.glob(f'/home/arsha/snap/firefox/common/.mozilla/firefox/*.Divar_{phone if phone else "*"}')
-    if otp:
-        freshes = []
-        for pr in profiles:
-            bfs = sorted(glob.glob(f'{pr}/ban_*'))
-            if not bfs: continue
-            # if datetime.now() - datetime.fromisoformat(bfs[-1].split('ban_')[-1]) > timedelta(days=60): continue
-            with open(bfs[-1]) as f:
-                if datetime.now() - datetime.fromisoformat(f.read()) < timedelta(days=1): continue
-            freshes.append(pr)
-        if freshes: profiles = freshes
-        else: otp = False
-    if len(profiles) == 0: raise
-    profiles = {p.split('/')[-1].split('_')[-1]: p for p in profiles}
-    profiles = {k: v for k, v in profiles.items() if not any([k.encode() == p.value for p in used_profiles])}
-    if otp: profile = list(profiles.items())[browser_index := (browser_index + 1) % len(profiles)][1]; print(profile)
-    else: profile = choices(list(profiles.items()))[0][1]
-    for p in used_profiles:
-        if p.value == b'**********':  p.value = profile.split('/')[-1].split('_')[-1].encode(); break
-    try: ps = subprocess.check_output(f'ps -fC firefox', shell=True, stderr=subprocess.STDOUT).decode().split('\n')
-    except Exception as e: ps = e.output.decode().split('\n')
-    ps = [p for p in ps if 'firefox' in p and profile.split('/')[-1] in p]
-    for p in ps: p = [arg for arg in p.split() if arg]; subprocess.call(f'kill -9 {p[1]}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    try:
-        with open(f'{profile}/prefs.js', 'r') as prefs:
-            prefs = list(prefs.readlines())
-            permission = [(ipref, pref) for ipref, pref in enumerate(prefs) if 'permissions.default.image' in pref]
-            if not permission or f'{1 if imaged else 2}' not in permission[0][1]:
-                if permission: prefs = [pref for ipref, pref in enumerate(prefs) if ipref != permission[0]]
-                prefs.append(f'user_pref("permissions.default.image", {1 if imaged else 2});\n')
-                with open(f'{profile}/prefs.js', 'w') as w_prefs:
-                    w_prefs.write(''.join(prefs))
-    except FileNotFoundError: print('profile is fresh reopen to add no image')
-    o = webdriver.FirefoxOptions()
-    if headless: o.headless = True; o.add_argument('-headless');  # o.add_argument("--headless=new")
-    [o.add_argument(arg) for arg in ['--profile', profile, '--user-data-dir', 'selenium']]
-    profile_lock.release()
-    try:
-        # br = webdriver.Firefox(options=o, service=FirefoxService(FirefoxDriverManager().install()))
-        br = webdriver.Firefox(options=o, service=FirefoxService('/home/arsha/.wdm/drivers/geckodriver/linux64/v0.35.0/geckodriver'))
-        br.__profile__, br.__otp__ = profile, otp
-        return br
-    except WebDriverException: return random_browser(phone=phone, otp=otp, headless=headless)
-
-def otp(phone):
-    browser = random_browser(phone, imaged=True)
-    user = get_users().find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
-    # user = [{'link': 'https://divar.ir/v/_/wZSwa-DW'}]
-    if not user: return
-    browser.get(user[0]['link'])
+def potp(phone, ad_id='Aadq6k1a', headless=False, rpm=0, debug=False):
+    br = browser(phone, imaged=True)
+    if ad_id: user = [{'link': f'https://divar.ir/v/_/{ad_id}'}]
+    else:
+        user = get_users().find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
+        if not user: return
+    br.get(user[0]['link'])
     try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__get-contact ')]"))).click()
     except: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__non-experimental ')]"))).click()
     try:
@@ -139,11 +97,11 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
         cats = [(cat, w, list(users.find({'source': 'divar', 'category': cat}).sort([('pan_date', -1), ('pan_cnt', 1)]).limit(3))[::-1]) for cat, w in deepcopy(categories)]
         cats = [(cat, w * (min((datetime.now() - lasts[-1]['pan_date']).total_seconds() / 60 / 60, 3) if lasts else 5), set([ad['link'] for ad in lasts])) for cat, w, lasts in cats]  # ln 17 / ln 2]
         w_cat_s = sum([w for _, w, _ in cats])
-        cat = choices(cats, [w / w_cat_s for _, w, _ in cats])[0][0]
-    try:
-        if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}&business-type=personal")
-        else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&business-type=personal")
-    except: return 0
+        cat = random.choices(cats, [w / w_cat_s for _, w, _ in cats])[0][0]
+    # try:
+    if q: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&q={q}&business-type=personal")
+    else: browser.get(f"https://divar.ir/s/{city}/{cat}{'?has-photo=true' if photo else ''}&business-type=personal")
+    # except: return 0
     seen, pan_date, pan_cnt = set(), datetime.now(), 0
     while True:
         t0 = time.time()
@@ -173,7 +131,7 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
                 for sub in bottoms: subtitles.append(sub.get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا')); 
                 break
             # if not subtitles: print(traceback.format_exc()); assert 1 == 0
-            loc = list(reversed(wild_origins[city][0]['loc'])); loc[0] += .024 * (random() - .5); loc[1] += .016 * (random() - .5)
+            loc = list(reversed(wild_origins[city][0]['loc'])); loc[0] += .024 * (random.random() - .5); loc[1] += .016 * (random.random() - .5)
             print(f"{cs.WARNING}{cs.BOLD}Pan {pan_cnt}:{cs.ENDC} {cs.OKCYAN}{refs[0].split('/')[-1]}{cs.ENDC} {title} {cs.CGREY}{subtitles[0]}{cs.ENDC}")
             # with open('../divar_pan.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump({'title': title, 'category': cat, 'subtitles': subtitles, 'link': refs[0], 'loc': loc, 'pan_date': pan_date}, default_flow_style=False, indent=2, allow_unicode=True))
             pds.append({
@@ -199,42 +157,23 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
         browser.execute_script("window.scrollTo(0, document.body.scrollHeight)"); time.sleep(10)
         load_more_class = 'post-list__load-more-btn-be092'; load_more = browser.find_elements(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {load_more_class} ')]")
         if load_more: load_more[0].click(); time.sleep(10)
-        for iattr in range(len(cm["browse-post-list"])):
-            time.sleep(3)
-            last_title = browser.find_elements(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {cm['browse-post-list'][iattr]} ')]//div[contains(concat(' ', @class, ' '), ' {cm['post-card-item'][iattr]} ')][last()]//*[contains(concat(' ', @class, ' '), ' {cm['kt-post-card__title'][iattr]} ')]")
-            if last_title: last_title = last_title[-1].get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا'); break
-        try: WebDriverWait(browser, 30).until(lambda browser: 
-            browser.find_elements(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {cm['browse-post-list'][iattr]} ')]//div[contains(concat(' ', @class, ' '), ' {cm['post-card-item'][iattr]} ')][last()]//*[contains(concat(' ', @class, ' '), ' {cm['kt-post-card__title'][iattr]} ')]")[0] \
-            .get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا') != ads[-1]['title']
-        )
+        halt = False
+        for attr in cm["browse-post-list"]:
+            try: post_list = browser.find_elements(by=By.CLASS_NAME, value=f'{attr}')[0]; halt = True; break
+            except: pass
+        if not halt: return pan_cnt
+        for attr in cm["post-card-item"]:
+            try: last_post = post_list.find_elements(by=By.XPATH, value=f".//div[contains(concat(' ', @class, ' '), ' {attr} ')]")[-1]; halt = True; break
+            except: pass
+        if not halt: return pan_cnt
+        for attr in cm["kt-post-card__title"]:
+            try: last_title = last_post.find_elements(by=By.XPATH, value=f".//*[contains(concat(' ', @class, ' '), ' {attr} ')]")[0].get_attribute("innerHTML").strip().replace('\u200c', ' ').replace('ئ', 'ی').replace('آ', 'ا'); halt = True; break
+            except: pass
+        if not halt: return pan_cnt
+        try: WebDriverWait(browser, 30).until(lambda browser: last_title != ads[-1]['title'] )
         except: break
         time.sleep(max(min(pan_cnt, 10) / rpm * 60 - (time.time() - t0), 0))
     return pan_cnt
-
-def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'properties')):
-    if not asset_dir: asset_dir = os.path.dirname(os.path.abspath(__file__)) + '/images'
-    _asset_dir, _id = asset_dir + '/' + ad['category'], urlparse(ad['link']).path.split('/')[-1]
-    os.makedirs(_asset_dir, exist_ok=True)
-    images = [urlparse(im) for im in ad['_images']]
-    images = list(set([f'{pr.scheme}://{pr.netloc}{pr.path}' for pr in images]))
-    images = list(sorted(images, key=cmp_to_key(lambda a, b: -1 if len(a) < len(b) or len(a) == len(b) and a < b else (1 if len(a) > len(b) or len(a) == len(b) and a > b else 0))))
-    ad['imaged'], ad['imaged_date'] = True, datetime.now()
-    if images:
-        _asset_dir = _asset_dir + '/' + _id
-        os.makedirs(_asset_dir, exist_ok=True)
-        remain = min(8, len(images))
-        for iim, im in enumerate(images):
-            if os.path.exists(f'{_asset_dir}/{iim}.webp'):
-                if os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000: remain -= 1; continue
-                else: os.remove(f'{_asset_dir}/{iim}.webp')
-            try: r = subprocess.check_output(f"aria2c {im} --auto-file-renaming=false --dir {_asset_dir} -o {iim}.webp", shell=True, stderr=subprocess.DEVNULL); remain -= 1
-            except:
-                if os.path.exists(f'{_asset_dir}/{iim}.webp'): os.remove(f'{_asset_dir}/{iim}.webp')
-            if remain == 0: break
-        if remain > 2: ad['imaged'] = False if random() < .75 else True
-        ad['images'] = [f'{"/".join(_asset_dir.split("/")[-2:])}/{iim}.webp' for iim, _ in enumerate(images) if os.path.exists(f'{_asset_dir}/{iim}.webp') and os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000]
-    print(f"{cs.FAIL}{cs.BOLD}Image:{cs.ENDC} {cs.OKCYAN}{ad['link'].split('/')[-1]}{cs.ENDC} {ad['title']}")
-    return {'imaged': ad['imaged'], 'imaged_date': ad['imaged_date'], 'images': ad['images']}
     
 # age halate lesser bashe -> center of polygon mishe khode amlaki pas
 def dad(browser, user):  # TODO choose consultant for dad after location <- voronoi, sort average distance of poligon points or center of polygon for lesser cpu
@@ -288,13 +227,14 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         # WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @src, ' '), 'mapimage')]"))).click()
         WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.XPATH, f".//img[contains(concat(' ', @alt, ' '), 'موقعیت مکانی')]"))).click()
         # lat_lng = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]")
-        lat_lng = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, "//div[contains(concat(' ', @class, ' '), ' map-cm ')]//a[contains(concat(' ', @class, ' '), ' map-cm__button ') and @href]")))
-        lat_lng = urlparse(lat_lng.get_attribute('href'))
-        lat, lng = lat_lng.query.split('&')
-        lat, lng = float(lat.split('=')[1]), float(lng.split('=')[1])
+        lat_lng = WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.XPATH, "//*[contains(concat(' ', @class, ' '), ' kt-new-modal ')]//a[contains(concat(' ', @class, ' '), ' kt-button--primary ') and @href]"))).get_attribute('href')
+        # lat, lng = urlparse(lat_lng).query.split('&')
+        lat, lng = lat_lng[4:].split(',')
+        # lat, lng = float(lat.split('=')[1]), float(lng.split('=')[1])
+        lat, lng = float(lat), float(lng)
         user['location'] = {'type': 'Point', 'coordinates': [lng, lat]}
         user['precise_location'] = True
-    except: pass
+    except: print(traceback.format_exc())
         # if 'location' not in user or not user['location']:
         #     for loc in user['subtitle'].split('،'):
         #         if (loc := loc.strip()) in wild_origins:
@@ -303,7 +243,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
     d_consultants = [(abs(c['location']['coordinates'][0] - user['location']['coordinates'][0]) ** 1.3 + abs(c['location']['coordinates'][1] - user['location']['coordinates'][1]) ** 1.3, c) for c in consultants]
     d_consultants = list(sorted(d_consultants, key=lambda c: c[0]))
     if d_consultants[1][0] / d_consultants[0][0] > 1.3: user['consultant'] = d_consultants[0][1]
-    else: user['consultant'] = d_consultants[0][1] if random() < .6 else d_consultants[1][1]
+    else: user['consultant'] = d_consultants[0][1] if random.random() < .6 else d_consultants[1][1]
     user['score'] = math.log(len(user['_images']) + 1) + math.log(len(user['description']) + 1) + math.log(len(user['title']) + 1) + math.log(len(user['options']) + 1) + math.log(len(user['features']) + 1) + math.log(len(user['rows']) + 1)
     p_values = [*user['options'].values(), *user['rows'].values(), *user['subtitles']]
     fa_nums = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '٥': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',}
@@ -382,7 +322,7 @@ def dphone(browser, user):
 def ppan(headless=False, rpm=45, debug=False, **kwargs):
     while True:
         if len([arg for arg in sys.argv if len(arg) and arg[0] != '-' and not arg.isnumeric()]) > 3:
-            browser, t0 = random_browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
+            browser, t0 = browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
             cat = sys.argv[-1]
             k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat)
         else:
@@ -390,35 +330,23 @@ def ppan(headless=False, rpm=45, debug=False, **kwargs):
                 csv = csv.readlines(); csv = [[v.strip() for v in l.strip().split(',')] for l in csv]; csv = [l for l in csv if len(l) == 4]
                 city, cat, _, q = choices(csv, [float(l[2]) for l in csv], k=1)[0]
             print(city, cat, q)
-            browser, t0 = random_browser(headless=headless, phone=city + '-' + cat), time.time()
+            browser, t0 = browser(headless=headless, phone=city + '-' + cat), time.time()
             k = pan(browser, city=city, photo=True, log=True, rpm=rpm, cat=cat, q=q)
         browser.quit()
         for p in used_profiles:
             if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
         time.sleep(max(k / rpm * 60 - (time.time() - t0), 45 if k else 90))
 
-def pdim(rpm=10, debug=False, **kwargs):
-    while True:
-        users, t0 = get_users(stat=False), time.time()
-        _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
-        ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
-        # ads = list(users.find({'id': 'QZ8fmObt'}))
-        for ad in ads:
-            t1 = time.time(); r = dim(ad)
-            users.update_one({'_id': ad['_id']}, {'$set': r})
-            time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
-
 def pdad(headless=False, rpm=10, debug=False, **kwargs):
     while True:
         users, t0 = get_users(), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 4)}}]))
-        browser = random_browser(headless=headless, otp=False)
+        br = browser(headless=headless, otp=False)
         for user in _users:
             t1 = time.time()
-            try: browser.get(f"{user['link']}")
+            try: br.get(f"{user['link']}")
             except: continue
-            succeed = dad(browser, user)
+            succeed = dad(br, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
             # if user['score'] > 12.8 and browser.__otp__:
@@ -445,7 +373,7 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
         # _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False}}, {'$sample': {'size': 1}}]))
         # _users = list(users.find({'source': 'divar', 'detailed': True, 'phoned': False}).sort([('score', -1)]).limit(max(5, rpm // 10)))  # 5 * 12 = 60
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False, 'score': {'$gt': 12.8}}}, {'$sample': {'size': max(1, min(rpm // 10, 1))}}]))
-        browser = random_browser(headless=headless, otp=True, phone=phone)
+        browser = browser(headless=headless, otp=True, phone=phone)
         if not browser.__otp__: print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} no otp browser"); time.sleep(60); continue
         for user in _users:
             t1 = time.time()
@@ -468,64 +396,12 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
                 p.value = b'**********'
                 break
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (1 - len(_users)) * 60))
-        # time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0) + randint(-270, 270), 0))
-
-consultants = pd.read_csv('static/consultant.csv').to_dict('records')
-for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
-def push_ads():  # http://192.168.0.55:5000, https://jalus.ir
-    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
-    collections = [('users', {'category': 'rent-temporary', 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}}), ('ads', {'category': {'$ne': 'rent-temporary'}, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}})]
-    while True:
-        new_ads = list(users.find(collections[collection][1]).limit(4 if collection == 0 else 12))
-        if not new_ads: time.sleep(60); continue
-        for i_ad, ad in enumerate(new_ads):
-            ad['images'] = [im for im in ad['images'] if os.path.exists(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}') and os.path.getsize(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}') > 3000][:(8 if collection == 0 else 3)]
-            for im in ad['images']:
-                files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}', 'rb')}
-                r = requests.post(f'https://jalus.ir/static/properties/{im}', files=files, verify=False)
-                if r.status_code != 200 or not r.json()['OK']: raise
-            if 'consultant' not in ad: ad['consultant'] = random.choice(consultants)
-            ad['title'] = ad['title'].replace('&nbsp;', ' ').split(); ad['title'] = ' '.join([w for w in ad['title'] if w])
-            ad['description'] = ad['description'].replace('&nbsp;', ' ').split(); ad['description'] = ' '.join([w for w in ad['description'] if w])
-            if '_images' in ad: del ad['_images']
-            ad['served'] = True; ad['served_date'] = str(datetime.now()).split('.')[0]; ad['notes'] = []
-            del ad['_id']; ad['pan_date'] = str(ad['pan_date']).split('.')[0]; ad['detailed_date'] = str(ad['detailed_date']).split('.')[0]
-            ad['phoned_date'] = str(ad['phoned_date']).split('.')[0]; ad['imaged_date'] = str(ad['imaged_date']).split('.')[0]
-            if 'swap' in ad and ad['swap'] and 'date' in ad['swap']: ad['swap']['date'] = str(ad['swap']['date']).split('.')[0]
-            r = requests.post(f'https://jalus.ir/{collections[collection][0]}/{ad["id"]}/~', data=json.dumps(ad), verify=False)
-            if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'served_date': datetime.now()}}); r = r.matched_count
-        collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
-        time.sleep(10 if len(new_ads) % 4 == 0 else 60)
-def auto_del():
-    users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
-    users.delete_many({'pan_date': {'$lte': datetime.now() - timedelta(days=28)}, 'phoned': False})
-
-
-def swap():
-    # TODO algorithm of matching between swappables and requestes
-    pass
 
 if __name__ == '__main__':
-    routines = {'image': pdim, 'phone': pphone, 'detail': pdad, 'pan': ppan}  # , 'upload': pup, }
-    if len(sys.argv) > 1 and sys.argv[1] in routines:
-        debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
-        headless = True if ('-h' in sys.argv or '--headless' in sys.argv) else False
-        phone = [p for p in sys.argv if len(p) == 10 and p.isnumeric()]; phone = phone[0] if phone else None
-        if '-r' in sys.argv or '--rpm' in sys.argv:
-            routines[sys.argv[1]](headless=headless, debug=debug, phone=phone, rpm=float(sys.argv[(sys.argv.index('-r') + 1) if '-r' in sys.argv else (sys.argv.index('--rpm') + 1)]))
-        else: routines[sys.argv[1]](headless=headless, debug=debug)
-    elif len(sys.argv) > 1: otp(sys.argv[2]) if sys.argv[1] == 'otp' else random_browser(phone=sys.argv[2], headless=False) if sys.argv[1] == 'browser' else ()
-    else:
-        users = ['wYCHa2QQ', 'wYJjQnAg', 'gYhK77DW'] # print(r.modified_count, r.matched_count) # users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': False, 'detailed': True, '_images': {'$exists': True, '$ne': []}}}, {'$sample': {'size': 1000}}])); users = sorted(users, key=lambda u: -u['score']); print(users[len(users) // 2]['score'])
-        for u in users:
-            u = {'_id': ObjectId(), 'link': f'https://divar.ir/v/_/{u}', 'title': None, 'category': 'rent-temporary', 'pan_date': None, 'pan_cnt': 0, 'divar_date': None, 'subtitle': None, 'location': None, 'source': 'divar', 'maker': True, 'detailed': False, 'imaged': False, 'phoned': False, 'score': 0.0, 'synced': False}
-            browser = random_browser(headless=False, otp=True)
-            browser.get(f"{u['link']}")
-            dad(browser, u)
-            u['_id'] = str(u['_id']); u['gender'] = True; u['family'] = ''; u['category'] = 'استخردار'; u['phone'] = ''
-            del u['detailed']; del u['detailed_date']; del u['synced']; del u['subtitle']; del u['source']; del u['score']
-            del u['pan_cnt']; del u['pan_date']; del u['phoned']; del u['maker']; del u['imaged']
-            # dphone(browser, u)
-            print(yaml.dump(u, default_flow_style=False, allow_unicode=True))
-            dim(u, asset_dir='static/properties')
-            browser.quit()
+    debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
+    headless = True if ('-h' in sys.argv or '--headless' in sys.argv) else False
+    phone = [p for p in sys.argv if len(p) == 10 and p.isnumeric()]; phone = phone[0] if phone else None
+    if phone: phone = re.sub(r'^09', '9', re.sub(r'^\+989', '9', str(phone)))
+    if '-r' in sys.argv or '--rpm' in sys.argv:
+        globals()['p' + sys.argv[1]](headless=headless, debug=debug, phone=phone, rpm=float(sys.argv[(sys.argv.index('-r') + 1) if '-r' in sys.argv else (sys.argv.index('--rpm') + 1)]))
+    else: globals()['p' + sys.argv[1]](headless=headless, debug=debug, phone=phone)
