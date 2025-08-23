@@ -1,4 +1,4 @@
-import aiofiles, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings, math
+import aiofiles, aiohttp, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings, math
 from sanic import Sanic, Blueprint, response, exceptions
 from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
@@ -235,11 +235,37 @@ pages = glob.glob(f'{os.path.dirname(os.path.abspath(__file__))}/templates/*.[hj
 async def _page(r, page=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
 @app.get(f"/<page:({'|'.join([p for p in pages if p not in ['index', 'laziz', '$$']])}|)>/<app>")
 async def _app_page(r, page=None, app=None): page = 'jalus' if page == '' else page.split('/')[0]; return response.html(await template(page.capitalize()) if '-d' in sys.argv else await load_template(f'serv/{page.capitalize()}.html'))
+
 @app.post('strategist/predict')
 async def _strategist_predict(r, ):
-    print(r.json)
-    await asyncio.sleep(1.5)
-    return response.json({'OK': True, 'quota': 993, 'total': 1896})
+    if r.json['field'] == 0 and r.json['mode_13'] == 2: pr['total_all_13'] = (float(pr['biology_empirical_13']) * 12 + float(pr['physics_empirical_13']) * 7 + float(pr['chemistry_empirical_13']) * 9 + float(pr['mathematics_all_13']) * 7 + float(pr['geology_empirical_13']) * 1) / 36
+    if r.json['field'] == 1 and r.json['mode_13'] == 2: pr['total_all_13'] = (float(pr['mathematics_all_13']) * 12 + float(pr['physics_technical_13']) * 9 + float(pr['chemistry_technical_13']) * 7) / 28
+    if r.json['field'] == 2 and r.json['mode_13'] == 2: pr['total_all_13'] = (float(pr['finance_humanity_13']) * 2 + float(pr['litrature_humanity_13']) * 8 + float(pr['arabic_humanity_13']) * 5 + float(pr['mathematics_all_13']) * 6 + float(pr['history_humanity_13']) * 5 + float(pr['social_humanity_13']) * 5 + float(pr['logic_humanity_13']) * 5 + float(pr['psychology_humanity_13']) * 2) / 38
+    if r.json['field'] == 0 and r.json['mode_12'] == 2: pr['total_all_12'] = (float(pr['litrature_all_12']) * 11.09 + float(pr['religion_all_12']) * 8.47 + float(pr['arabic_all_12']) * 4.64 + float(pr['english_all_12']) * 6.05 + float(pr['mathematics_all_12']) * 6.55 + float(pr['physics_empirical_12']) * 5.90 + float(pr['chemistry_empirical_12']) * 9.44 + float(pr['biology_empirical_12']) * 11.45 + float(pr['social_all_12']) * 1.31 + float(pr['health_all_12']) * 1.76) / 66.65
+    if r.json['field'] == 1 and r.json['mode_12'] == 2: pr['total_all_12'] = (float(pr['litrature_all_12']) * 11.09 + float(pr['religion_all_12']) * 8.47 + float(pr['arabic_all_12']) * 4.64 + float(pr['english_all_12']) * 6.05 + float(pr['mathematics_all_12']) * 7.47 + float(pr['physics_technical_12']) * 10.59 + float(pr['chemistry_technical_12']) * 7.13 + float(pr['health_all_12']) * 1.76 + float(pr['discrete_technical_12']) * 3.73 + float(pr['geometry_technical_12']) * 4.41 + float(pr['social_all_12']) * 1.31) / 66.65
+    if r.json['field'] == 2 and r.json['mode_12'] == 2: pr['total_all_12'] = (float(pr['litrature_all_12']) * 11.09 + float(pr['religion_all_12']) * 8.47 + float(pr['arabic_all_12']) * 4.55 + float(pr['english_all_12']) * 6.05 + float(pr['mathematics_all_12']) * 5.36 + float(pr['philosophy_humanity_12']) * 4.55 + float(pr['history_humanity_12']) * 6.25 + float(pr['health_all_12']) * 1.76 + float(pr['geography_humanity_12']) * 5.36 + float(pr['technology_humanity_12']) * 6.96 + float(pr['social_all_12']) * 6.25) / 66.65
+    if r.json['field'] == 0 and r.json['mode_11'] == 2: pr['total_all_11'] = (float(pr['litrature_all_11']) * 5.27 + float(pr['religion_all_11']) * 4.24 + float(pr['arabic_all_11']) * 2.32 + float(pr['english_all_11']) * 2.94 + float(pr['chemistry_empirical_11']) * 4.72 + float(pr['biology_empirical_11']) * 5.72) / 33.34
+    if r.json['field'] == 1 and r.json['mode_11'] == 2: pr['total_all_11'] = (float(pr['litrature_all_11']) * 5.27 + float(pr['religion_all_11']) * 4.24 + float(pr['arabic_all_11']) * 2.32 + float(pr['english_all_11']) * 2.94 + float(pr['physics_technical_11']) * 4.77 + float(pr['geometry_technical_11']) * 1.98) / 33.34
+    if r.json['field'] == 2 and r.json['mode_11'] == 2: pr['total_all_11'] = (float(pr['litrature_all_11']) * 5.27 + float(pr['religion_all_11']) * 4.24 + float(pr['arabic_all_11']) * 2.09 + float(pr['english_all_11']) * 2.94 + float(pr['history_humanity_11']) * 2.86 + float(pr['sociology_humanity_11']) * 2.86) / 33.34
+    async with aiohttp.ClientSession() as session:
+        ms = await asyncio.wait_for(session.post('https://msbook.info/entekhab/just_takhmin_rotbe_function.php', json={
+            "code": "gettakhmin", "phone": None,
+            "moadel_eleventh": '0.00' if r.json['mode_11'] == 1 else str(pr['total_all_11']), "moadel_twelfth": '0.00' if r.json['mode_12'] == 1 else str(pr['total_all_12']), "miangin": '0.00' if r.json['mode_13'] == 1 else str(pr['total_all_13']),
+            "taraz_eleventh": str(pr['total_all_11']) if r.json['mode_11'] == 1 else '0.00', "taraz_twelfth": str(pr['total_all_12']) if r.json['mode_11'] == 1 else '0.00', "taraz_konkoor": int(pr['total_all_13']) if r.json['mode_13'] == 1 else 0,
+            "reshte": ["تجربی", "ریاضی", "انسانی"][r.json['field']], "sahmie": ['1', '2', '3', '5', '25'][r.json['quota']], 
+            "year_eleventh": "1403 یازدهم", "year_twelfth": "نهایی های 1403", "year_percent": "404", "year": "1403"
+        }), 5); ms = await ms.json()
+        # {'closest_rotbe': [
+        #     {'id': '45', 'status': '2', 'taraz': '7800', 'keshvar': '55159', 'area1': '14630', 'area2': '23881', 'area3': '16608', 'percent5': '4523', 'percent25': '298', 'reshte': 'تجربی', 'konkoor_year': '1403', 'year_order': '1', 'created_at': None, 'updated_at': None}, 
+        #     {'id': '46', 'status': '2', 'taraz': '7900', 'keshvar': '50741', 'area1': '13548', 'area2': '22050', 'area3': '15131', 'percent5': '4160', 'percent25': '275', 'reshte': 'تجربی', 'konkoor_year': '1403', 'year_order': '1', 'created_at': None, 'updated_at': None}, 
+        #     {'id': '47', 'status': '2', 'taraz': '8000', 'keshvar': '46753', 'area1': '12670', 'area2': '20342', 'area3': '13822', 'percent5': '3805', 'percent25': '229', 'reshte': 'تجربی', 'konkoor_year': '1403', 'year_order': '1', 'created_at': None, 'updated_at': None}
+        #     ], 'closest_taraz_11': 5966.028044391121, 'closest_taraz_12': '8555', 'taraz_konkoor': 6914.027777777777}
+        quota = [sample[['area1', 'area2', 'area3', 'percent5', 'percent25'][r.json['quota']]] for sample in ms['closest_rotbe']]
+        total = [sample['keshvar'] for sample in ms['closest_rotbe']]
+        _11 = float(ms['closest_taraz_11'] if ms['closest_taraz_11'] else pr['total_all_11'])
+        _12 = float(ms['closest_taraz_12'] if ms['closest_taraz_12'] else pr['total_all_12'])
+        return response.json({'OK': True, 'quota': f'از {min(quota)} تا {max(quota)}', 'total': f'از {min(total)} تا {max(total)}', 'final': int((_11 + _12 * 2) / 3), 'entrance': int(ms['taraz_konkoor'] if ms['taraz_konkoor'] else pr['total_all_13'])})
+
 @app.get('/<collection:(users|ads)>/<ids>')
 async def get_documents(r, collection, ids):
     ids = ids.split(','); ids = [d.strip() for d in ids]

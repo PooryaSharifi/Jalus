@@ -248,10 +248,13 @@ window.tr_table = {
   'chemistry': 'شیمی',
   'biology': 'زیست',
   'history': 'تاریخ',
-  'sociology': 'اجتماعی',
+  'social': 'اجتماعی',
+  'sociology': 'جامعه‌شناسی',
+  'geography': 'جغرافیا',
+  'technology': 'علوم‌وفنون',
   'mathematics': 'ریاضی',
   'psychology': 'روانشناسی',
-  'logic': 'منطق'
+  'logic': 'منطق‌وفلسفه'
 };
 var App = /*#__PURE__*/function (_React$Component) {
   function App(props) {
@@ -519,17 +522,20 @@ var App = /*#__PURE__*/function (_React$Component) {
         physics_technical_12: '',
         physics_empirical_12: '',
         mathematics_all_12: '',
+        geometry_technical_12: '',
         chemistry_technical_12: '',
         chemistry_empirical_12: '',
         arabic_all_12: '',
         religion_all_12: '',
         english_all_12: '',
         litrature_all_12: '',
-        sociology_all_12: '',
+        social_all_12: '',
         health_all_12: '',
         discrete_technical_12: '',
         philosophy_humanity_12: '',
-        language_humanity_12: '',
+        history_humanity_12: '',
+        geography_humanity_12: '',
+        technology_humanity_12: '',
         biology_empirical_12: '',
         mathematics_all_13: '',
         physics_empirical_13: '',
@@ -542,10 +548,8 @@ var App = /*#__PURE__*/function (_React$Component) {
         litrature_humanity_13: '',
         arabic_humanity_13: '',
         history_humanity_13: '',
-        geograpy_humanity_13: '',
-        sociology_humanity_13: '',
+        social_humanity_13: '',
         psychology_humanity_13: '',
-        philosophy_humanity_13: '',
         logic_humanity_13: '',
         total_all_11: '',
         total_all_12: '',
@@ -3730,12 +3734,20 @@ var App = /*#__PURE__*/function (_React$Component) {
               marginBottom: 20
             }
           }, /*#__PURE__*/React.createElement("input", {
+            value: _this3.state.predict[key],
+            onChange: function onChange(e) {
+              _this3.state.predict[key] = e.target.value.deFarsify();
+              _this3.setState({
+                predict: _this3.state.predict
+              });
+            },
             style: {
               border: gi % 2 == 0 ? '1px solid #896fb1' : '1px solid #24c386',
               width: window["mode_".concat(grade[0])].length - 1 == _this3.state["mode_".concat(grade[0])] ? 70 : 140,
               backgroundColor: '#fffb',
               paddingTop: 8,
-              paddingBottom: 8
+              paddingBottom: 8,
+              textAlign: 'center'
             },
             "class": "px-2 TextField_TextField__input__hFMFl text-subtitle w-full TextField_TextField__bwN9_ TextField_TextField--secondary__w_vGF text-subtitle w-full py-5 lg:py-2 rounded-medium",
             type: "text"
@@ -3794,7 +3806,17 @@ var App = /*#__PURE__*/function (_React$Component) {
                 _this3.setState({
                   predict_result: r
                 });
+                console.log(r);
+                _context14.n = 4;
+                break;
               case 3:
+                _this3.setState({
+                  predict_result: {
+                    'quota': 'خطای مقادیر',
+                    'total': 'خطای مقادیر'
+                  }
+                });
+              case 4:
                 return _context14.a(2);
             }
           }, _callee14);
@@ -3830,7 +3852,7 @@ var App = /*#__PURE__*/function (_React$Component) {
           marginRight: 'auto',
           backgroundColor: '#ef4056',
           padding: 20,
-          width: 360,
+          width: 480,
           borderRadius: 8,
           fontSize: '1.6em',
           fontWeight: 500,
@@ -3854,7 +3876,29 @@ var App = /*#__PURE__*/function (_React$Component) {
           "float": 'left',
           marginLeft: 3
         }
-      }, "\u0631\u062A\u0628\u0647 \u06A9\u0644:")), this.state.predict_result.loading && /*#__PURE__*/React.createElement("span", {
+      }, "\u0631\u062A\u0628\u0647 \u06A9\u0644:")), this.state.predict_result["final"] ? /*#__PURE__*/React.createElement("div", {
+        style: {
+          height: 10
+        }
+      }) : null, this.state.predict_result.quota && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+        style: {
+          marginLeft: 3
+        }
+      }, "\u062A\u0631\u0627\u0632 \u0633\u0648\u0627\u0628\u0642:"), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontWeight: 700
+        }
+      }, this.state.predict_result["final"].farsify())), this.state.predict_result.total && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+        style: {
+          "float": 'left',
+          fontWeight: 700
+        }
+      }, this.state.predict_result.entrance.farsify()), /*#__PURE__*/React.createElement("span", {
+        style: {
+          "float": 'left',
+          marginLeft: 3
+        }
+      }, "\u062A\u0631\u0627\u0632 \u06A9\u0646\u06A9\u0648\u0631:")), this.state.predict_result.loading && /*#__PURE__*/React.createElement("span", {
         "class": "loader"
       })))), " ", this.state.article == -1 && this.state.campaign == -1 && !this.state.app && /*#__PURE__*/React.createElement("div", {
         style: {

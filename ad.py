@@ -52,7 +52,7 @@ def pdim(rpm=10, debug=False, **kwargs):
 
 consultants = pd.read_csv('static/consultant.csv').to_dict('records')
 for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
-def push_ads():  # http://192.168.0.55:5000, https://jalus.ir
+def push_ads():  # TODO bayad az native khode mongo ya pymongo estefade koni to maye haye dump
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
     collections = [('users', {'category': 'rent-temporary', 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}}), ('ads', {'category': {'$ne': 'rent-temporary'}, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}})]
     while True:

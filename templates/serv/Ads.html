@@ -248,10 +248,13 @@ window.tr_table = {
   'chemistry': 'شیمی',
   'biology': 'زیست',
   'history': 'تاریخ',
-  'sociology': 'اجتماعی',
+  'social': 'اجتماعی',
+  'sociology': 'جامعه‌شناسی',
+  'geography': 'جغرافیا',
+  'technology': 'علوم‌وفنون',
   'mathematics': 'ریاضی',
   'psychology': 'روانشناسی',
-  'logic': 'منطق'
+  'logic': 'منطق‌وفلسفه'
 };
 var App = /*#__PURE__*/function (_React$Component) {
   function App(props) {
@@ -566,7 +569,7 @@ var App = /*#__PURE__*/function (_React$Component) {
     value: function () {
       var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
         var _this3 = this;
-        var app, params, _r2, r, _t, _t2, _t3;
+        var app, params, _r2, r, _t, _t2;
         return _regenerator().w(function (_context8) {
           while (1) switch (_context8.n) {
             case 0:
@@ -616,10 +619,9 @@ var App = /*#__PURE__*/function (_React$Component) {
               return r.text();
             case 7:
               _t2 = _context8.v;
-              _t3 = {
+              _t.setState.call(_t, {
                 urlList: _t2
-              };
-              _t.setState.call(_t, _t3);
+              });
             case 8:
               if (!('ids' in params)) setInterval(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
                 var r, flags, ad, j, i;
@@ -2705,7 +2707,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         autocomplete: "off",
         onChange: (/*#__PURE__*/function () {
           var _ref22 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(e) {
-            var loc, r, _t4, _t5, _t6;
+            var loc, r, _t3, _t4;
             return _regenerator().w(function (_context27) {
               while (1) switch (_context27.n) {
                 case 0:
@@ -2723,15 +2725,14 @@ var App = /*#__PURE__*/function (_React$Component) {
                   return fetch("/fill/".concat(loc));
                 case 2:
                   r = _context27.v;
-                  _t4 = _this4;
+                  _t3 = _this4;
                   _context27.n = 3;
                   return r.json();
                 case 3:
-                  _t5 = _context27.v.polygons;
-                  _t6 = {
-                    swapFill: _t5
-                  };
-                  _t4.setState.call(_t4, _t6);
+                  _t4 = _context27.v.polygons;
+                  _t3.setState.call(_t3, {
+                    swapFill: _t4
+                  });
                 case 4:
                   return _context27.a(2);
               }
