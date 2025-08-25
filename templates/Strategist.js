@@ -428,22 +428,21 @@ class App extends React.Component {
             <button class="touchable relative flex items-center user-select-none styles_btn__Q4MvL text-button-1 styles_btn--large__1Muai styles_btn--primary__y0GEv rounded-medium w-full mt-6 lg:mt-8 text-button-1" onClick={async () => {
               this.setState({predict_result: {loading: true}}); setCookie('field', this.state.field); setCookie('mode_11', this.state.mode_11); setCookie('mode_12', this.state.mode_12); setCookie('mode_13', this.state.mode_13); setCookie('quota', this.state.quota)
               let r = await fetch('/strategist/predict', {method: 'POST', body: JSON.stringify({predict: this.state.predict, mode_11: this.state.mode_11, mode_12: this.state.mode_12, mode_13: this.state.mode_13, field: this.state.field, quota: this.state.quota}), headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}});
-              if (r.status == 200) {r = await r.json(); this.setState({predict_result: r}); console.log(r)} else this.setState({predict_result: {'quota': 'خطای مقادیر', 'total': 'خطای مقادیر'}})
+              if (r.status == 200) {r = await r.json(); this.setState({predict_result: r}); console.log(r)} else this.setState({predict_result: {'minQuota': 'خطا', 'maxQuota': 'خطا', 'maxTotal': 'خطا', 'max_total': 'خطا', 'history': 'خطای مقادیر', 'score': 'خطای مقادیر'}})
             }} data-cro-id="login-register"><div class="flex items-center justify-center relative grow">محاسبه رتبه</div></button>
           </div>
         </div>} {!this.state.predict_result.isEmpty() && <div onClick={() => this.setState({predict_result: {}})} style={{backgroundColor: '#000a', position: 'fixed', width: '100%', height: '100%', left: 0, top: 0, bottom: 0, zIndex: 5, display: 'table'}}>
           <div style={{display: 'table-cell', verticalAlign: 'middle'}}>
             <div style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#ef4056', padding: 20, width: 480, borderRadius: 8, fontSize: '1.6em', fontWeight: 500, color: 'white'}}>
-              {this.state.predict_result.quota && <><span style={{marginLeft: 3}}>رتبه در سهمیه:</span>
-              <span style={{fontWeight: 700}}>{this.state.predict_result.quota.farsify()}</span></>}
-              {this.state.predict_result.total && <><span style={{float: 'left', fontWeight: 700}}>{this.state.predict_result.total.farsify()}</span>
+              {this.state.predict_result.minQuota && this.state.predict_result.maxQuota && <><span style={{marginLeft: 3}}>رتبه در سهمیه:</span>
+              <span style={{fontWeight: 700}}>از {this.state.predict_result.minQuota.farsify()} تا {this.state.predict_result.maxQuota.farsify()}</span></>}
+              {this.state.predict_result.minTotal && this.state.predict_result.maxTotal && <><span style={{float: 'left', fontWeight: 700}}>از {this.state.predict_result.minTotal.farsify()} تا {this.state.predict_result.maxTotal.farsify()}</span>
               <span style={{float: 'left', marginLeft: 3}}>رتبه کل:</span></>}
-              {this.state.predict_result.final ? <div style={{height: 10}}/> : null}
-              {this.state.predict_result.quota && <><span style={{marginLeft: 3}}>تراز سوابق:</span>
-              <span style={{fontWeight: 700}}>{this.state.predict_result.final.farsify()}</span></>}
-              {this.state.predict_result.total && <><span style={{float: 'left', fontWeight: 700}}>{this.state.predict_result.entrance.farsify()}</span>
+              {this.state.predict_result.score ? <div style={{height: 10}}/> : null}
+              {this.state.predict_result.history && <><span style={{marginLeft: 3}}>تراز سوابق:</span>
+              <span style={{fontWeight: 700}}>{this.state.predict_result.history.farsify()}</span></>}
+              {this.state.predict_result.score && <><span style={{float: 'left', fontWeight: 700}}>{this.state.predict_result.score.farsify()}</span>
               <span style={{float: 'left', marginLeft: 3}}>تراز کنکور:</span></>}
-              
               {this.state.predict_result.loading && <span class="loader"></span>}
             </div>
           </div>

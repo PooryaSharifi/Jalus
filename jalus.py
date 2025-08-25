@@ -238,6 +238,7 @@ async def _app_page(r, page=None, app=None): page = 'jalus' if page == '' else p
 
 @app.post('strategist/predict')
 async def _strategist_predict(r, ):
+    pr = r.json['predict']
     if r.json['field'] == 0 and r.json['mode_13'] == 2: pr['total_all_13'] = (float(pr['biology_empirical_13']) * 12 + float(pr['physics_empirical_13']) * 7 + float(pr['chemistry_empirical_13']) * 9 + float(pr['mathematics_all_13']) * 7 + float(pr['geology_empirical_13']) * 1) / 36
     if r.json['field'] == 1 and r.json['mode_13'] == 2: pr['total_all_13'] = (float(pr['mathematics_all_13']) * 12 + float(pr['physics_technical_13']) * 9 + float(pr['chemistry_technical_13']) * 7) / 28
     if r.json['field'] == 2 and r.json['mode_13'] == 2: pr['total_all_13'] = (float(pr['finance_humanity_13']) * 2 + float(pr['litrature_humanity_13']) * 8 + float(pr['arabic_humanity_13']) * 5 + float(pr['mathematics_all_13']) * 6 + float(pr['history_humanity_13']) * 5 + float(pr['social_humanity_13']) * 5 + float(pr['logic_humanity_13']) * 5 + float(pr['psychology_humanity_13']) * 2) / 38
@@ -264,7 +265,7 @@ async def _strategist_predict(r, ):
         total = [sample['keshvar'] for sample in ms['closest_rotbe']]
         _11 = float(ms['closest_taraz_11'] if ms['closest_taraz_11'] else pr['total_all_11'])
         _12 = float(ms['closest_taraz_12'] if ms['closest_taraz_12'] else pr['total_all_12'])
-        return response.json({'OK': True, 'quota': f'از {min(quota)} تا {max(quota)}', 'total': f'از {min(total)} تا {max(total)}', 'final': int((_11 + _12 * 2) / 3), 'entrance': int(ms['taraz_konkoor'] if ms['taraz_konkoor'] else pr['total_all_13'])})
+        return response.json({'OK': True, 'minQuota': min(quota), 'maxQuota': max(quota), 'minTotal': min(total), 'maxTotal': max(total), 'history': int((_11 + _12 * 2) / 3), 'score': int(ms['taraz_konkoor'] if ms['taraz_konkoor'] else pr['total_all_13'])})
 
 @app.get('/<collection:(users|ads)>/<ids>')
 async def get_documents(r, collection, ids):
