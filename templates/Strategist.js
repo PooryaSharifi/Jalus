@@ -433,8 +433,8 @@ class App extends React.Component {
           </div>
         </div>} {!this.state.predict_result.isEmpty() && <div onClick={() => this.setState({predict_result: {}})} style={{backgroundColor: '#000a', position: 'fixed', width: '100%', height: '100%', left: 0, top: 0, bottom: 0, zIndex: 5, display: 'table'}}>
           <div style={{display: 'table-cell', verticalAlign: 'middle'}}>
-            <div style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#ef4056', padding: 20, width: 480, borderRadius: 8, fontSize: '1.6em', fontWeight: 500, color: 'white'}}>
-              {this.state.predict_result.minQuota && this.state.predict_result.maxQuota && <><span style={{marginLeft: 3}}>رتبه در سهمیه:</span>
+            <div style={{marginLeft: 'auto', marginRight: 'auto', backgroundColor: '#ef4056', padding: 20, width: '100%', maxWidth: 410, borderRadius: 8, fontSize: '1.6em', fontWeight: 500, color: 'white'}}>
+              {this.state.predict_result.minQuota && this.state.predict_result.maxQuota && <><span style={{marginLeft: 3}}>رتبه سهمیه:</span>
               <span style={{fontWeight: 700}}>از {this.state.predict_result.minQuota.farsify()} تا {this.state.predict_result.maxQuota.farsify()}</span></>}
               {this.state.predict_result.minTotal && this.state.predict_result.maxTotal && <><span style={{float: 'left', fontWeight: 700}}>از {this.state.predict_result.minTotal.farsify()} تا {this.state.predict_result.maxTotal.farsify()}</span>
               <span style={{float: 'left', marginLeft: 3}}>رتبه کل:</span></>}
