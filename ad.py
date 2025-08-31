@@ -1,4 +1,10 @@
-import pandas as pd, os.path
+import pandas as pd, os.path, random
+from urllib.parse import urlparse
+from functools import cmp_to_key
+from datetime import datetime, timedelta, timezone
+
+class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
+    '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
 
 def rnd_necessities():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
@@ -33,22 +39,10 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
             except:
                 if os.path.exists(f'{_asset_dir}/{iim}.webp'): os.remove(f'{_asset_dir}/{iim}.webp')
             if remain == 0: break
-        if remain > 2: ad['imaged'] = False if random() < .75 else True
+        if remain > 2: ad['imaged'] = False if random.random() < .75 else True
         ad['images'] = [f'{"/".join(_asset_dir.split("/")[-2:])}/{iim}.webp' for iim, _ in enumerate(images) if os.path.exists(f'{_asset_dir}/{iim}.webp') and os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000]
     print(f"{cs.FAIL}{cs.BOLD}Image:{cs.ENDC} {cs.OKCYAN}{ad['link'].split('/')[-1]}{cs.ENDC} {ad['title']}")
     return {'imaged': ad['imaged'], 'imaged_date': ad['imaged_date'], 'images': ad['images']}
-
-def pdim(rpm=10, debug=False, **kwargs):
-    while True:
-        users, t0 = get_users(stat=False), time.time()
-        _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
-        ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
-        # ads = list(users.find({'id': 'QZ8fmObt'}))
-        for ad in ads:
-            t1 = time.time(); r = dim(ad)
-            users.update_one({'_id': ad['_id']}, {'$set': r})
-            time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
 
 consultants = pd.read_csv('static/consultant.csv').to_dict('records')
 for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']

@@ -1,4 +1,4 @@
-import glob, random, subprocess, os.path, time, glob, re, pymongo, json, traceback, math
+import glob, random, subprocess, os.path, time, glob, re, pymongo, json, traceback, math, sys
 from datetime import datetime, timedelta, timezone
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -10,7 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
 from copy import deepcopy
-from ad import categories, consultants
+from ad import categories, consultants, dim
 from static import wild_origins
 # open profiles ad block
 # TODO age har 5 ta poshte ham natunest phone dar are file ban too folder profile ijad mikone, age hadaghal yekisho phone dar ovord age file ban bud baresh midare
@@ -23,7 +23,7 @@ cm = {
 }
 
 # profile_lock = multiprocessing.Lock()
-def browser(phone=None, headless=False, imaged=False, banned=None, agent='ubuntu'):
+def browser(phone=None, headless=False, imaged=False, banned=None, agent='ubuntu', loading_strategy='normal'):
     # profile_lock.acquire()
     profiles = glob.glob(f'/home/purish/snap/firefox/common/.mozilla/firefox/*.Divar_{phone if phone else "*"}')
     profiles = [p for p in profiles if banned == None or (banned == True and os.path.exists(os.path.join(p, 'ban'))) or (banned == False and not os.path.exists(os.path.join(p, 'ban')))]
@@ -39,9 +39,11 @@ def browser(phone=None, headless=False, imaged=False, banned=None, agent='ubuntu
             with open(f'{profiles[0]}/prefs.js', 'w') as w_prefs:
                 w_prefs.write(''.join(prefs))
     o = FirefoxOptions()
+    if loading_strategy != 'normal': o.page_load_strategy = loading_strategy
     if headless: o.headless = True; o.add_argument('-headless');  # o.add_argument("--headless=new")
     [o.add_argument(arg) for arg in ['--profile', profiles[0], '--user-data-dir', 'selenium']]
     if agent == 'android': o.set_preference("general.useragent.override", "Mozilla/5.0 (Android 16; Mobile; rv:141.0) Gecko/141.0 Firefox/141.0")
+    if agent == 'ubuntu': o.set_preference("general.useragent.override", "Mozilla/5.0 (X11; Linux i686; rv:142.0) Gecko/20100101 Firefox/142.0")
     # profile_lock.release()
     br = Firefox(options=o, service=FirefoxService(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'geckodriver')))
     br.__profile__= profiles[0]
@@ -58,38 +60,36 @@ def get_users(stat=True):
     # users.delete_many({})
     if stat:
         print(f"{cs.FAIL}{cs.BOLD}All, Detail : {users.count_documents({})}, {users.count_documents({'detailed': True})}{cs.ENDC}")
-        print(f"{cs.FAIL}{cs.BOLD}Phone, Image: {users.count_documents({'phoned': True})}, {users.count_documents({'imaged': True})}{cs.ENDC}")
-        print(f"{cs.FAIL}{cs.BOLD}Serve       : {users.count_documents({'served': True})}{cs.ENDC}")
+        print(f"{cs.FAIL}{cs.BOLD}Phone, Serve: {users.count_documents({'phoned': True})}, {users.count_documents({'served': True})}{cs.ENDC}")
+        # print(f"{cs.FAIL}{cs.BOLD}Imaged      : {users.count_documents({'imaged': True})}{cs.ENDC}")
     return users
 
-def potp(phone, ad_id='Aadq6k1a', headless=False, rpm=0, debug=False):
-    br = browser(phone, imaged=True)
-    if ad_id: user = [{'link': f'https://divar.ir/v/_/{ad_id}'}]
-    else:
-        user = get_users().find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
-        if not user: return
+def potp(phone, headless=False, rpm=0, debug=False):
+    br = browser(phone, imaged=True, loading_strategy='none')
+    user = get_users().find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
+    if not user: return
     br.get(user[0]['link'])
-    try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__get-contact ')]"))).click()
-    except: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__non-experimental ')]"))).click()
+    WebDriverWait(br, 10).until(EC.presence_of_element_located((By.ID, 'app')))
+    try: phone_btn = WebDriverWait(br, 1).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__get-contact ')]"))); time.sleep(.5); phone_btn.click()
+    except: phone_btn = WebDriverWait(br, 1).until(EC.presence_of_element_located((By.XPATH, ".//button[contains(concat(' ', @class, ' '), ' post-actions__non-experimental ')]"))); time.sleep(.5); phone_btn.click()
     try:
-        WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//p[text()[contains(., 'شمارهٔ موبایل')]]")))  # class="kt-base-row__title kt-unexpandable-row__title"
-        phone = WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href,'tel:')]")))  # class="kt-base-row__title kt-unexpandable-row__title"
-        time.sleep(1); browser.quit(); return
+        WebDriverWait(br, 3).until(EC.presence_of_element_located((By.XPATH, "//p[text()[contains(., 'شمارهٔ موبایل')]]")))  # class="kt-base-row__title kt-unexpandable-row__title"
+        phone = WebDriverWait(br, 3).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@href,'tel:')]")))  # class="kt-base-row__title kt-unexpandable-row__title"
+        time.sleep(1); br.quit(); os.remove(f'{br.__profile__}/ban'); return
     except: pass
-    try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'با قوانین دیوار موافقم')]]]"))).click()
+    try: WebDriverWait(br, 3).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'با قوانین دیوار موافقم')]]]"))).click()
     except: pass
-    mobile = WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.XPATH, '//input[@name="mobile"]')))
+    mobile = WebDriverWait(br, 30).until(EC.presence_of_element_located((By.XPATH, '//input[@name="mobile"]')))
     mobile.send_keys(f"0{phone}")
     time.sleep(1.8)
-    try: WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'تأیید')]]]"))).click()
+    try: WebDriverWait(br, 10).until(EC.presence_of_element_located((By.XPATH, "//button[.//*[text()[contains(., 'تأیید')]]]"))).click()
     except: pass
     sms = input()
-    code = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@name="code"]')))
+    code = WebDriverWait(br, 10).until(EC.presence_of_element_located((By.XPATH, '//input[@name="code"]')))
     code.send_keys(sms)
-    WebDriverWait(browser, 150).until(EC.invisibility_of_element_located((By.XPATH, "//div[text()[contains(., 'ورود به حساب کاربری')]]")))  # class="kt-modal__title"
-    with open(browser.__profile__ + f"/ban_{str(datetime.now()).split(' ')[0]}", 'w') as f:
-        f.write(f'{datetime.now() - timedelta(days=1, seconds=1)}')
-    # browser.quit()
+    WebDriverWait(br, 150).until(EC.invisibility_of_element_located((By.XPATH, "//div[text()[contains(., 'ورود به حساب کاربری')]]")))  # class="kt-modal__title"
+    try: os.remove(f'{br.__profile__}/ban')
+    except: pass
 
 def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pan doesnt need loop and rpm
     users = get_users()
@@ -132,7 +132,7 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
                 break
             # if not subtitles: print(traceback.format_exc()); assert 1 == 0
             loc = list(reversed(wild_origins[city][0]['loc'])); loc[0] += .024 * (random.random() - .5); loc[1] += .016 * (random.random() - .5)
-            print(f"{cs.WARNING}{cs.BOLD}Pan {pan_cnt}:{cs.ENDC} {cs.OKCYAN}{refs[0].split('/')[-1]}{cs.ENDC} {title} {cs.CGREY}{subtitles[0]}{cs.ENDC}")
+            print(f"{cs.WARNING}{cs.BOLD}{pan_cnt}:{cs.ENDC} {cs.OKCYAN}{refs[0].split('/')[-1]}{cs.ENDC} {title[:15]} {cs.CGREY}{subtitles[0][:9]}{cs.ENDC}")
             # with open('../divar_pan.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump({'title': title, 'category': cat, 'subtitles': subtitles, 'link': refs[0], 'loc': loc, 'pan_date': pan_date}, default_flow_style=False, indent=2, allow_unicode=True))
             pds.append({
                 'title': title, 'category': cat, 'subtitles': subtitles, 'id': refs[0].split('/')[-1], 'link': refs[0], 'location': {'type': 'Point', 'coordinates': loc}, 'pan_date': pan_date,
@@ -176,7 +176,7 @@ def pan(browser, city, photo=True, log=True, rpm=10, cat=None, q=''):  # todo pa
     return pan_cnt
     
 # age halate lesser bashe -> center of polygon mishe khode amlaki pas
-def dad(browser, user):  # TODO choose consultant for dad after location <- voronoi, sort average distance of poligon points or center of polygon for lesser cpu
+def detail(browser, user):  # TODO choose consultant for detail after location <- voronoi, sort average distance of poligon points or center of polygon for lesser cpu
     user['detailed'], user['detailed_date'] = True, datetime.now()
     # try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این راه به جایی نمی‌رسد!')]]"); return
     try: _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'این صفحه حذف شده یا وجود ندارد.')]]"); return
@@ -234,7 +234,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         lat, lng = float(lat), float(lng)
         user['location'] = {'type': 'Point', 'coordinates': [lng, lat]}
         user['precise_location'] = True
-    except: print(traceback.format_exc())
+    except: pass  # print(traceback.format_exc())
         # if 'location' not in user or not user['location']:
         #     for loc in user['subtitle'].split('،'):
         #         if (loc := loc.strip()) in wild_origins:
@@ -284,7 +284,7 @@ def dad(browser, user):  # TODO choose consultant for dad after location <- voro
         swap_index = title_description.index('معاوضه')
         user['swap'] = {'swapArea': 0, 'swapCapacity': 0, 'swapBudget': 0, 'swapLiquidity': 0, 'swapDebt': 0, 'swapQ': '', 'swapLocation': {'type': 'Point', 'coordinates': [0, 0]}, 'swapCategory': [kt_chip, user['category']], 'date': datetime.now()}
         if swap_index + 2 < len(title_description) and title_description[swap_index + 1] == 'با': user['swap']['q'] = title_description[swap_index + 2]
-    print(f"{cs.OKGREEN}{cs.BOLD}Ad{'@' if user['precise_location'] else '?'}{cs.ENDC} {cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC} {user['title']} {cs.CWHITE if user['score'] > 12.8 else cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+    print(f"{cs.OKGREEN}{cs.BOLD}{'@' if user['precise_location'] else '?'}{cs.ENDC}{cs.OKCYAN}{user['link'].split('/')[-1]}{cs.ENDC}{user['title'][:15]}{cs.CWHITE if user['score'] > 14.8 else cs.CGREY}{user['score']:.1f}{cs.ENDC}{cs.OKGREEN}{user['location']['coordinates'][1]:.2f},{user['location']['coordinates'][0]:.2f}{cs.ENDC}")
     # with open('../divar_detail.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
     return True
 
@@ -301,101 +301,94 @@ def dphone(browser, user):
         user['phone'] = eng_phone if eng_phone else phone.text.strip()
         user['phoned'] = True
         user['phoned_date'] = datetime.now()
-        print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} {cs.OKCYAN}{eng_phone},{user['phone']}{cs.ENDC} {user['title']} {cs.CGREY}{user['score']:.2f}{cs.ENDC}")
+        print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC}{cs.OKCYAN}{user['phone']}{cs.ENDC} {user['title'][:15]} {cs.CGREY}{user['score']:.1f}{cs.ENDC}")
         # with open('../divar_phone.yml', 'a', encoding='utf-8') as f: f.write(yaml.dump(user, default_flow_style=False, indent=2, allow_unicode=True))
         return {'phone': user['phone'], 'phoned': user['phoned'], 'phoned_date': user['phoned_date']}
     except:
         try:
             _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' kt-modal__title ') and text()[contains(., 'محدودیت نمایش اطلاعات تماس')]]")
-            bf = max(glob.glob(f'{browser.__profile__}/ban_*'))
-            with open(bf, 'r') as limit:
-                old_ban = datetime.fromisoformat(limit.read())
-                if datetime.now - old_ban > timedelta(days=1, seconds=1):
-                    print('you got banned just Now')
-                    with open(bf, 'w') as limit:
-                        limit.write(f'{datetime.now()}')
-                else: print('you got banned just again')
-            browser.__otp__ = False
+            with open(f'{browser.__profile__}/ban', 'w') as b: pass
         except: pass
         return {}
 
 def ppan(headless=False, rpm=45, debug=False, **kwargs):
     while True:
         if len([arg for arg in sys.argv if len(arg) and arg[0] != '-' and not arg.isnumeric()]) > 3:
-            browser, t0 = browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1]), time.time()
+            br, t0 = browser(headless=headless, phone=sys.argv[-2] + '-' + sys.argv[-1], loading_strategy='normal'), time.time()
             cat = sys.argv[-1]
-            k = pan(browser, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat)
+            k = pan(br, city=sys.argv[-2], photo=True, log=True, rpm=rpm, cat=cat)
         else:
             with open(os.path.join(os.path.join(os.path.dirname(__file__), 'static'), 'divar.csv'), encoding='utf-8') as csv:
                 csv = csv.readlines(); csv = [[v.strip() for v in l.strip().split(',')] for l in csv]; csv = [l for l in csv if len(l) == 4]
-                city, cat, _, q = choices(csv, [float(l[2]) for l in csv], k=1)[0]
+                city, cat, _, q = random.choices(csv, [float(l[2]) for l in csv], k=1)[0]
             print(city, cat, q)
-            browser, t0 = browser(headless=headless, phone=city + '-' + cat), time.time()
-            k = pan(browser, city=city, photo=True, log=True, rpm=rpm, cat=cat, q=q)
-        browser.quit()
-        for p in used_profiles:
-            if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode(): p.value = b'**********'; break
+            br, t0 = browser(headless=headless, phone=city + '-' + cat), time.time()
+            k = pan(br, city=city, photo=True, log=True, rpm=rpm, cat=cat, q=q)
+        br.quit()
         time.sleep(max(k / rpm * 60 - (time.time() - t0), 45 if k else 90))
 
-def pdad(headless=False, rpm=10, debug=False, **kwargs):
+def pdetail(headless=False, rpm=10, debug=False, **kwargs):
     while True:
         users, t0 = get_users(), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 4)}}]))
-        br = browser(headless=headless, otp=False)
+        br = browser(headless=headless, agent='android', banned=False, loading_strategy='eager')
         for user in _users:
             t1 = time.time()
-            try: br.get(f"{user['link']}")
-            except: continue
-            succeed = dad(br, user)
+            try: 
+                br.get(f"{user['link']}"); WebDriverWait(br, 10).until(EC.presence_of_element_located((By.ID, 'app')))
+                br.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+                WebDriverWait(br, 3).until(EC.presence_of_element_located((By.XPATH, ".//*[contains(concat(' ', @class, ' '), ' kt-description-row__text ')]")))
+            except: print(traceback.format_exc())
+            succeed = detail(br, user)
             if not succeed: continue
             users.replace_one({'_id': user['_id']}, user)
-            # if user['score'] > 12.8 and browser.__otp__:
-            #     uq = dphone(browser, user)
+            # if user['score'] > 12.8 and br.__otp__:
+            #     uq = dphone(br, user)
             #     if 'phoned' in uq and uq['phoned'] and uq['phone']:
             #         users.replace_one({'_id': user['_id']}, user)
             #     else:
             #         try: 
-            #             _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
+            #             _404 = br.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
             #             user['phoned'] = True; user['phone'] = '_'; user['phoned_date'] = datetime.now()
             #             users.replace_one({'_id': user['_id']}, user)
             #         except: pass
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        browser.quit()
-        for p in used_profiles:
-            if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode():
-                p.value = b'**********'
-                break
+        br.quit()
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 4) - len(_users)) * 7))
 
 def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
     while True:
         users, t0 = get_users(), time.time()
-        # _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False}}, {'$sample': {'size': 1}}]))
-        # _users = list(users.find({'source': 'divar', 'detailed': True, 'phoned': False}).sort([('score', -1)]).limit(max(5, rpm // 10)))  # 5 * 12 = 60
-        _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False, 'score': {'$gt': 12.8}}}, {'$sample': {'size': max(1, min(rpm // 10, 1))}}]))
-        browser = browser(headless=headless, otp=True, phone=phone)
-        if not browser.__otp__: print(f"{cs.OKBLUE}{cs.BOLD}Phone:{cs.ENDC} no otp browser"); time.sleep(60); continue
+        _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False, 'score': {'$gt': 12.8}, 'pan_date': {'$gt': datetime.now() - timedelta(days=28)}}}, {'$sample': {'size': max(1, min(rpm // 10, 1))}}]))
+        br = browser(headless=headless, banned=False, loading_strategy='eager')
         for user in _users:
             t1 = time.time()
             if user['score'] < 12.8: break
-            try: browser.get(f"{user['link']}")
+            try: br.get(f"{user['link']}"); WebDriverWait(br, 10).until(EC.presence_of_element_located((By.ID, 'app')))
             except: _users = []; break
-            uq = dphone(browser, user)
+            uq = dphone(br, user)
             if 'phoned' in uq and uq['phoned'] and uq['phone']:
                 users.replace_one({'_id': user['_id']}, user)
             else:
                 try: 
-                    _404 = browser.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
+                    _404 = br.find_element(by=By.XPATH, value="//div[contains(concat(' ', @class, ' '), ' title ') and text()[contains(., 'شماره مخفی شده است')]]")
                     user['phoned'] = True; user['phone'] = '_'; user['phoned_date'] = datetime.now()
                     users.replace_one({'_id': user['_id']}, user)
                 except: pass
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        browser.quit()
-        for p in used_profiles:
-            if p.value == browser.__profile__.split('/')[-1].split('_')[-1].encode():
-                p.value = b'**********'
-                break
+        br.quit()
         time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (1 - len(_users)) * 60))
+
+def pimage(rpm=10, debug=False, **kwargs):
+    while True:
+        users, t0 = get_users(stat=False), time.time()
+        _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        for ad in ads:
+            t1 = time.time(); r = dim(ad)
+            users.update_one({'_id': ad['_id']}, {'$set': r})
+            time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
+        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
 
 if __name__ == '__main__':
     debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
