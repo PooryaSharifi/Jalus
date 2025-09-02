@@ -43,11 +43,11 @@ def sms():
             print(receiver, sms_sender, numbers, sms_datetime, sms)
             # insert to db
             
-def sms_loop():
+def sms_loop(host='https://jalus.ir'):
     sms()
     # get all sms with number not awared yet
     for m in messages:
-        r = requests.get(f"https://jalus.ir/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/{phone}/9300345496/{numbers[0][1:]}")
+        r = requests.get(f"{host}/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/{phone}/9300345496/{numbers[0][1:]}")
         if r.status_code != 200 or not r.json()['OK']: all_done = False
         # update
 
@@ -69,13 +69,13 @@ def otp(otp_list):
         subprocess.call(f'mmcli -m {m} --messaging-delete-sms={sms_id}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return retries
 
-def otp_loop():
+def otp_loop(host='https://jalus.ir'):
     otp_list = []
     while True:
         if otp_list: otp_list = otp(otp_list)
         else:
-            otp_list = requests.get(f'https://jalus.ir/otp').text.strip('\n').split('\n')
+            otp_list = requests.get(f'{host}/otp').text.strip('\n').split('\n')
             otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
             otp_list = otp(otp_list)
 
-if __name__ == '__main__': globals()[sys.argv[1]]()
+if __name__ == '__main__': globals()[sys.argv[1]](sys.argv[2])

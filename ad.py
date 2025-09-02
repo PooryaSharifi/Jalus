@@ -32,6 +32,7 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
         os.makedirs(_asset_dir, exist_ok=True)
         remain = min(8, len(images))
         for iim, im in enumerate(images):
+            print(im)
             if os.path.exists(f'{_asset_dir}/{iim}.webp'):
                 if os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000: remain -= 1; continue
                 else: os.remove(f'{_asset_dir}/{iim}.webp')
