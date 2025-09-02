@@ -382,13 +382,13 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
 def pimage(rpm=10, debug=False, **kwargs):
     while True:
         users, t0 = get_users(stat=False), time.time()
-        _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
+        # _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         for ad in ads:
             t1 = time.time(); r = dim(ad)
-            users.update_one({'_id': ad['_id']}, {'$set': r})
+            if r['imaged']: users.update_one({'_id': ad['_id']}, {'$set': r})
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        time.sleep(max(len(_users) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
+        time.sleep(max(len(ads) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
 
 if __name__ == '__main__':
     debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
