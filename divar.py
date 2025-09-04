@@ -388,7 +388,7 @@ def pimage(rpm=10, debug=False, **kwargs):
             t1 = time.time(); r = dim(ad)
             if r['imaged']: users.update_one({'_id': ad['_id']}, {'$set': r})
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        time.sleep(max(len(ads) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
+        time.sleep(max(len(max(5, rpm // 10)) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
 
 if __name__ == '__main__':
     debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
