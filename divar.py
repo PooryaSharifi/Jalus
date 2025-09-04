@@ -51,22 +51,20 @@ def browser(phone=None, headless=False, imaged=False, banned=None, agent='ubuntu
 
 class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
     '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
-def get_users(stat=True):
+def get_users(stat=0):
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
     users.create_index([('location', '2dsphere')])
     users.create_index([('source', 1), ('category', 1), ('date', 1)])
     users.create_index([('source', 1), ('detailed', 1), ('imaged', 1), ('phoned', 1)])
     users.create_index([('link', 1)], unique=True); users.create_index([('id', 1)], unique=True)
     # users.delete_many({})
-    if stat:
-        print(f"{cs.FAIL}{cs.BOLD}All, Detail : {users.count_documents({})}, {users.count_documents({'detailed': True})}{cs.ENDC}")
-        print(f"{cs.FAIL}{cs.BOLD}Phone, Serve: {users.count_documents({'phoned': True})}, {users.count_documents({'served': True})}{cs.ENDC}")
-        # print(f"{cs.FAIL}{cs.BOLD}Imaged      : {users.count_documents({'imaged': True})}{cs.ENDC}")
+    if stat == 1: print(f"{cs.FAIL}{cs.BOLD}Detail, Phone: {users.count_documents({'detailed': True})}, {users.count_documents({'phoned': True})}{cs.ENDC}")
+    if stat == 2: print(f"{cs.FAIL}{cs.BOLD}Imaged, Serve: {users.count_documents({'imaged': True})}, {users.count_documents({'served': True})}{cs.ENDC}")
     return users
 
 def potp(phone, headless=False, rpm=0, debug=False):
     br = browser(phone, imaged=True, loading_strategy='none')
-    user = get_users().find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
+    user = get_users(stat=1).find().sort([('pan_date', -1), ('pan_cnt', 1)]).limit(1)
     if not user: return
     br.get(user[0]['link'])
     WebDriverWait(br, 10).until(EC.presence_of_element_located((By.ID, 'app')))
@@ -329,7 +327,7 @@ def ppan(headless=False, rpm=45, debug=False, **kwargs):
 
 def pdetail(headless=False, rpm=10, debug=False, **kwargs):
     while True:
-        users, t0 = get_users(), time.time()
+        users, t0 = get_users(stat=1), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': False}}, {'$sample': {'size': max(5, rpm // 4)}}]))
         br = browser(headless=headless, agent='android', banned=False, loading_strategy='eager')
         for user in _users:
@@ -358,7 +356,7 @@ def pdetail(headless=False, rpm=10, debug=False, **kwargs):
 
 def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
     while True:
-        users, t0 = get_users(), time.time()
+        users, t0 = get_users(stat=2), time.time()
         _users = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, 'phoned': False, 'score': {'$gt': 12.8}, 'pan_date': {'$gt': datetime.now() - timedelta(days=28)}}}, {'$sample': {'size': max(1, min(rpm // 10, 1))}}]))
         br = browser(headless=headless, banned=False, loading_strategy='eager')
         for user in _users:
@@ -381,14 +379,14 @@ def pphone(headless=False, rpm=10, debug=False, phone=None, **kwargs):  # rpm
 
 def pimage(rpm=10, debug=False, **kwargs):
     while True:
-        users, t0 = get_users(stat=False), time.time()
+        users, t0 = get_users(), time.time()
         # _users = list(users.aggregate([{'$match': {'source': 'divar', 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         ads = list(users.aggregate([{'$match': {'source': 'divar', 'detailed': True, '_images': {'$exists': True}, 'phoned': True, 'phone': {'$exists': True, '$ne': ''}, 'imaged': {'$ne': True}}}, {'$sample': {'size': max(5, rpm // 10)}}]))
         for ad in ads:
             t1 = time.time(); r = dim(ad)
             if r['imaged']: users.update_one({'_id': ad['_id']}, {'$set': r})
             time.sleep(max(1 / rpm * 60 - (time.time() - t1), 0))
-        time.sleep(max(len(max(5, rpm // 10)) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
+        time.sleep(max(max(5, rpm // 10) / rpm * 60 - (time.time() - t0), (max(5, rpm // 10) - len(ads)) * 7))
 
 if __name__ == '__main__':
     debug = True if ('-d' in sys.argv or '--debug' in sys.argv) else False
