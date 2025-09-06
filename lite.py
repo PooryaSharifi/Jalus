@@ -1,11 +1,12 @@
-import subprocess, random, time, sys, urllib.parse, re, pymongo
+import subprocess, random, time, sys, urllib.parse, re, pymongo, requests, os.path
 from datetime import datetime, timedelta, timezone
+from static import cs
 
-# bebin har tabe otp, last_sms, 
-# unknown, received, receiving, sent
-
+messages = pymongo.MongoClient("mongodb://localhost:27017", tz_aware=True)[os.path.basename(os.path.dirname(__file__)).capitalize()]['sms']
+messages.create_index([("s", pymongo.ASCENDING), ("r", pymongo.ASCENDING), ("date", pymongo.ASCENDING)], unique=True)
+messages.create_index([("numbers", pymongo.ASCENDING), ("p", pymongo.ASCENDING)])
 iccids = {
-    '89982057262400759404': '9224657623',
+    '89982057262400759404': 9224657623,
 }
 def sms():
     modems = subprocess.check_output(f'mmcli --list-modems', shell=True).decode().strip().split('\n')
@@ -22,7 +23,6 @@ def sms():
         sms_list = [sms.split('/')[-1].split() for sms in sms_list]; sms_list = [(sms[0], sms[1]) for sms in sms_list if 'received' in sms[1].lower() or 'receiving' in sms[1].lower()]
         if not sms_list: continue
         receiver = iccids[subprocess.check_output(f'mmcli --sim {m} --output-keyvalue | grep "iccid"', shell=True).decode().strip().split('iccid')[-1].lstrip()[1:].lstrip()]
-        print(receiver)
         for sms_id, status in sms_list:
             # sms = subprocess.check_output(f'mmcli -m {m} --sms={sms_id} --output-keyvalue', shell=True).decode().strip().split('\n')
             sms = subprocess.check_output(f'mmcli -m {m} --sms={sms_id}', shell=True).decode().strip()
@@ -36,20 +36,24 @@ def sms():
             # sms = [data[len('sms.content.text'):].lstrip()[1:].lstrip() for data in sms if data[:len('sms.content.text')] == 'sms.content.text']
             if '             |      text: ' not in sms: subprocess.call(f'mmcli -m {m} --messaging-delete-sms={sms_id}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); continue
             sms = sms.split('             |      text: ')[-1].split('-----------------------')[0].replace('             |            ', '').strip()
-            sms_sender = [line.split('|      smsc:')[-1].strip() for line in sms_lines if '|      smsc:' in line][0]
-            sms_sender = sms_sender[3:] if sms_sender[:3] == '+98' else sms_sender[1:] if sms_sender[0] == '0' else sms_sender
-            numbers = re.findall(r'\+\d+', sms.replace(',', '').replace('،', ''))
-            # numbers = re.findall(r'\d+', sms.replace(',', '').replace('،', ''))
-            print(receiver, sms_sender, numbers, sms_datetime, sms)
-            # insert to db
-            
-def sms_loop(host='https://jalus.ir'):
-    sms()
-    # get all sms with number not awared yet
-    for m in messages:
-        r = requests.get(f"{host}/pay/{'/'.join(str(datetime.now()).split('.')[0].split(' '))}/{phone}/9300345496/{numbers[0][1:]}")
-        if r.status_code != 200 or not r.json()['OK']: all_done = False
-        # update
+            sms_sender = [line.split('|    number:')[-1].strip() for line in sms_lines if '|    number:' in line][0]
+            sms_sender = int(sms_sender[3:] if sms_sender[:3] == '+98' else sms_sender[1:] if sms_sender[0] == '0' else sms_sender)
+            numbers = re.findall(r'\+[\d|,|،|.]+', sms.replace(',', '').replace('،', ''))
+            numbers = list(sorted(set([int(num[1:]) for num in numbers])))
+            print(f"{cs.CVIOLET}{cs.BOLD}S:{cs.ENDC}{cs.CGREEN}{sms_sender}{cs.ENDC}{cs.CYELLOW}{receiver}{cs.ENDC}{numbers[-1] if numbers else '-'}", f'{sms_datetime.hour}:{sms_datetime.minute}:{sms_datetime.second}')
+            doc = {'s': sms_sender, 'r': receiver, 'numbers': numbers, 'date': sms_datetime, 'sms': sms, 'p': False}
+            try: messages.insert_one(doc); subprocess.call(f'mmcli -m {m} --messaging-delete-sms={sms_id}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except pymongo.errors.DuplicateKeyError: subprocess.call(f'mmcli -m {m} --messaging-delete-sms={sms_id}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def pay_loop(host='https://jalus.ir'):
+    while True:
+        ms = messages.count_documents({'p': False, 'numbers': {'$ne': []}})
+        if not ms: sms(); time.sleep(7)
+        ms = messages.find({'p': False, 'numbers': {'$ne': []}})
+        for m in ms:
+            m['date'] = m['date'].astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M:%S").split(' ')
+            r = requests.get(f"{host}/pay/{m['date'][0]}/{m['date'][1]}/{m['s']}/{m['r']}/{','.join(str(num) for num in m['numbers'])}")
+            if r.status_code == 200 and r.json()['OK']: messages.update_one({'_id': m['_id']}, {'$set': {'p': True}})
 
 def otp(otp_list):
     retries = []
@@ -76,6 +80,7 @@ def otp_loop(host='https://jalus.ir'):
         else:
             otp_list = requests.get(f'{host}/otp').text.strip('\n').split('\n')
             otp_list = [op.strip().split(',') for op in otp_list if ',' in op]
+            print(f"{cs.OKGREEN}{cs.BOLD}OTP:{cs.ENDC}", otp_list)
             otp_list = otp(otp_list)
 
 if __name__ == '__main__': globals()[sys.argv[1]](sys.argv[2])

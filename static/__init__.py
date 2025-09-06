@@ -10,6 +10,9 @@ import mimetypes, os, re
 from ast import literal_eval
 from pymongo import ReturnDocument
 
+class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
+    '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
+
 async def load_template(name): return (await response.file(f"{os.path.dirname(os.path.dirname(os.path.abspath(__file__)))}/templates/{name}")).body.decode('utf-8')
 async def template(name):
     index_template = await load_template('index.html')

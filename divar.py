@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
 from copy import deepcopy
 from ad import categories, consultants, dim
-from static import wild_origins
+from static import wild_origins, cs
 # open profiles ad block
 # TODO age har 5 ta poshte ham natunest phone dar are file ban too folder profile ijad mikone, age hadaghal yekisho phone dar ovord age file ban bud baresh midare
 
@@ -49,8 +49,6 @@ def browser(phone=None, headless=False, imaged=False, banned=None, agent='ubuntu
     br.__profile__= profiles[0]
     return br
 
-class cs: HEADER, OKBLUE, OKCYAN, OKGREEN, WARNING, FAIL, ENDC, BOLD, UNDERLINE, CGREY, CRED, CGREEN, CYELLOW, CBLUE, CVIOLET, CWHITE = '\033[95m', '\033[94m', \
-    '\033[96m', '\033[92m', '\033[93m', '\033[91m', '\033[0m', '\033[1m', '\033[4m', '\33[90m', '\33[31m', '\33[32m', '\33[33m', '\33[34m', '\33[35m', '\33[37m'
 def get_users(stat=0):
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
     users.create_index([('location', '2dsphere')])

@@ -133,19 +133,22 @@ async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age
     for key in keys: del key['_id']; del key['phone']; del key['save']; del key['fix']; key['head'] = str(key['head']).split('.')[0]; key['tail'] = str(key['tail']).split('.')[0]
     return response.json(keys)
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
-@app.get("/pay/<date>/<time>/<src>/<dst>/<value:int>")  # src, dst = 9...:phone
-async def _payment_receipt(r, date, time, src, dst, value):
-    try: src = int(src[3:] if src[:3] == '+98' else src[1:] if src[0] == '0' else src)
-    except: return response.json({'OK': False, 'e': 'src phone malformed format'})
-    try: dst = int(dst[3:] if dst[:3] == '+98' else dst[1:] if dst[0] == '0' else dst)
+@app.get("/pay/<date>/<utctime>/<s>/<r>/<numbers>")  # src, dst = 9...:phone
+async def _payment_receipt(req, date, utctime, s, r, numbers):
+    numbers = [int(num) for num in numbers.split(',')]
+    date = datetime.fromisoformat(f'{date} {utctime}+00:00')
+    try: s = int(s[3:] if s[:3] == '+98' else s[1:] if s[0] == '0' else s)
+    except: return response.json({'OK': False, 'e': 'sender phone malformed format'})
+    try: r = int(r[3:] if r[:3] == '+98' else r[1:] if r[0] == '0' else r)
     except: return response.json({'OK': False, 'e': 'dst phone malformed format'})
-    if value % 10 != 0 and (value % 1000) // 100 == 0: value = int(value // 1000 * 100 + value % 100)
-    else: value = int(value / 10)
-    key = await r.app.config['db']['keys'].find_one({'sim': dst, 'value': value, 'fix': False})
-    with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as sms: sms.write(f'{date} {time},{src},{dst},{value}\n')
+    for iv, value in enumerate(numbers):
+        if value % 10 != 0 and (value % 1000) // 100 == 0: numbers[iv] = int(value // 1000 * 100 + value % 100)
+        else: numbers[iv] = int(value / 10)
+    # keys = await req.app.config['db']['keys'].find({}).to_list(None)
+    key = await req.app.config['db']['keys'].find_one({'sim': r, 'value': {'$in': numbers}, 'fix': False})
     if not key: return response.json({'OK': True, 'e': 'not existed', 'en': 1})
-    print(key)
-    update_result = r.app.config['db']['keys'].update_one({'sim': dst, 'value': value, 'fix': False}, {'$set': {'fix': datetime.now()}})
+    # with open(f'{os.path.dirname(os.path.abspath(__file__))}/static/sms.csv', 'a') as sms: sms.write(f'{date} {time},{src},{dst},{value}\n')
+    update_result = req.app.config['db']['keys'].update_one({'_id': key['_id']}, {'$set': {'fix': datetime.now()}})
     return response.json({'OK': True})
 @app.get('/otp/<phone>/<otp:path>')
 async def _otp(r, phone, otp=None):
@@ -204,6 +207,10 @@ async def _search(r, id_polygon_location=None):
     elif '/' in id_polygon_location or ';' in id_polygon_location: properties = await r.app.config['db']['users'].find({'loc': {'$geoWithin': {'$polygon': polygon}}, **(r.json if r.body else {})}).limit(24).to_list(None)
     else: properties = await r.app.config['db']['users'].find({'id': id_polygon_location}).limit(24).to_list(None)
     for pr in properties:
+        if 'notes' not in pr: pr['notes'] = []
+        if 'cart' not in pr: pr['cart'] = 6037123412341234
+        if 'sms' not in pr: pr['sms'] = 9224657623
+        if 'price' not in pr: pr['price'] = 1000000
         for note in pr['notes']: note['date'] = str(note['date'])
         if 'matches' in pr:
             for match in pr['matches']: match['date'] = str(match['date'])
