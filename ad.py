@@ -1,4 +1,4 @@
-import subprocess, pandas as pd, os.path, random, traceback
+import subprocess, pandas as pd, os.path, random, traceback, sys
 from urllib.parse import urlparse
 from functools import cmp_to_key
 from datetime import datetime, timedelta, timezone
@@ -44,7 +44,7 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
 
 consultants = pd.read_csv('static/consultant.csv').to_dict('records')
 for c in consultants: c['location'] = {'type': 'Point', 'coordinates': [c['lng'], c['lat']]}; del c['lng']; del c['lat']
-def push_ads():  # TODO bayad az native khode mongo ya pymongo estefade koni to maye haye dump
+def push_ads(host='https://jalus.ir'):  # TODO bayad az native khode mongo ya pymongo estefade koni to maye haye dump
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']; collection = 0
     collections = [('users', {'category': 'rent-temporary', 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}}), ('ads', {'category': {'$ne': 'rent-temporary'}, 'phoned': True, 'phone': {'$ne': ''}, 'imaged': True, 'served': {'$ne': True}})]
     while True:
@@ -54,7 +54,7 @@ def push_ads():  # TODO bayad az native khode mongo ya pymongo estefade koni to 
             ad['images'] = [im for im in ad['images'] if os.path.exists(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}') and os.path.getsize(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}') > 3000][:(8 if collection == 0 else 3)]
             for im in ad['images']:
                 files = {'file': open(f'{os.path.dirname(os.path.abspath(__file__))}/static/properties/{im}', 'rb')}
-                r = requests.post(f'https://jalus.ir/static/properties/{im}', files=files, verify=False)
+                r = requests.post(f'{host}/static/properties/{im}', files=files, verify=False)
                 if r.status_code != 200 or not r.json()['OK']: raise
             if 'consultant' not in ad: ad['consultant'] = random.choice(consultants)
             ad['title'] = ad['title'].replace('&nbsp;', ' ').split(); ad['title'] = ' '.join([w for w in ad['title'] if w])
@@ -64,7 +64,7 @@ def push_ads():  # TODO bayad az native khode mongo ya pymongo estefade koni to 
             del ad['_id']; ad['pan_date'] = str(ad['pan_date']).split('.')[0]; ad['detailed_date'] = str(ad['detailed_date']).split('.')[0]
             ad['phoned_date'] = str(ad['phoned_date']).split('.')[0]; ad['imaged_date'] = str(ad['imaged_date']).split('.')[0]
             if 'swap' in ad and ad['swap'] and 'date' in ad['swap']: ad['swap']['date'] = str(ad['swap']['date']).split('.')[0]
-            r = requests.post(f'https://jalus.ir/{collections[collection][0]}/{ad["id"]}/~', data=json.dumps(ad), verify=False)
+            r = requests.post(f'{host}/{collections[collection][0]}/{ad["id"]}/~', data=json.dumps(ad), verify=False)
             if r.status_code == 200: r = users.update_one({'id': ad['id']}, {'$set': {'images': ad['images'], 'served': True, 'served_date': datetime.now()}}); r = r.matched_count
         collection = 1 - collection if len(new_ads) == 0 or len(new_ads) % 4 != 0 else 0 if random.random() < .3 else 1
         time.sleep(10 if len(new_ads) % 4 == 0 else 60)
@@ -75,3 +75,5 @@ def auto_del():
 def swap():
     # TODO algorithm of matching between swappables and requestes
     pass
+
+if __name__ == '__main__': globals()[sys.argv[1]](sys.argv[2])
