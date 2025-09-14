@@ -73,7 +73,7 @@ class App extends React.Component {
         if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.head.split(' ')[0].split('-')).join('-')) calendar[calendar.length - 1][0] = i;
         if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.tail.split(' ')[0].split('-')).join('-')) calendar[calendar.length - 1][1] = i;
       } if (calendar.length > 1 && calendar[calendar.length - 1][0] - calendar[calendar.length - 2][1] === 1) {calendar[calendar.length - 2][1] = calendar[calendar.length - 1][1]; calendar.pop()}
-    } let binCalendar = []; calendar = [[4, 5], [7, 7], [9, 11], [25, 32]];
+    } let binCalendar = []; if (calendar.length == 0) calendar = [[-1, -1]];
     for (var j = 0; j < calendar.length; j ++) { binCalendar.push([calendar[j][0], false]); binCalendar.push([calendar[j][1], true]); }
     this.state.show.calendarReserved = binCalendar; this.setState({show: this.state.show, landing: false}, () => {});
   } async checkPayed() { if (!this.state.session) return;
@@ -113,22 +113,32 @@ class App extends React.Component {
       this.state.calendar.push([now[0], now[1], now[2]]);
     } this.state.calendar.pop(); 
     this.setState({calendar: this.state.calendar, calendarBias: calendarBias});
-    for (let h in this.state.keys) { let key = this.state.keys[h];
-      if ('fix' in key && key.fix === false) {
+    await this.checkPayed();
+    var reservation = false;
+    for (let h in this.state.keys) { let key = this.state.keys[h]; 
+      if ('fix' in key && key.fix === false) { reservation = true;
         this.state.ordered = true; var i = 0;
         for (i = 0; i < this.state.calendar.length; i ++) {
           if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.head.split(' ')[0].split('-')).join('-')) this.state.calendarRange[0] = i;
           if (this.state.calendar[i].join('-') == jDate.gregorianToJalali(...key.tail.split(' ')[0].split('-')).join('-')) this.state.calendarRange[1] = i;
         } for (i = 0; i < this.state.properties.length; i ++) if (this.state.properties[i].id  == key.home) break;
-        this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()});
+        this.setState({calendarRange: this.state.calendarRange, ordered: this.state.ordered, show: this.state.properties[i], landing: false}, async () => {
+          map.panTo(new L.LatLng(...this.state.properties[i].location), {animate: true, duration: .3, easeLinearity: .9}); 
+          window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); 
+          window.app.checkReserved();
+        });
       }
-    } if (window.location.pathname.split('/').length == 3) {
+    } 
+    if (window.location.pathname.split('/').length == 3 && !reservation) {
       for (let h = 0; h < this.state.properties.length; h ++)
         if (this.state.properties[h].id == window.location.pathname.split('/')[2]) {
-          this.setState({show: this.state.properties[h], landing: false}, async () => {map.panTo(new L.LatLng(...this.state.properties[h].location)); window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); }); break
+          this.setState({show: this.state.properties[h], landing: false}, async () => {
+            map.panTo(new L.LatLng(...this.state.properties[h].location)); 
+            window.history.pushState({url: window.location.href}, null, `/properties/${this.state.show.id}`); 
+            window.app.checkReserved()
+          }); break
         }
-    } await this.checkPayed();
-    console.log(this.state.ordered)
+    }
     // window.onpopstate = e => {if (this.state.show.isEmpty()) return; app.setState({show: {}}, () => {window.history.replaceState({}, null)})}
     // , async () => {window.history.replaceState({}, null, `/properties/${this.state.show.id}`); window.app.checkReserved()}
     // TODO oonja ke vasate buy mire login va; oonja ke buy mikone vo ghablesh login hast, va didMount -> checkForPendingLoop(); age peding dasht mimoone too divare oonsafe tekoonam nemikhore (khastam quit kone payam dialogue midim ke baz shode dari boro beband), key dasht mire too home, va ellaa /search
@@ -224,7 +234,7 @@ class App extends React.Component {
               <p style={{margin: 0, color: 'rgba(0,0,0,.56)', lineHeight: 2, overflow: 'hidden', textOverflow: 'ellipsis'}}>{k}</p>
             </div>
             <div style={{flex: '1 1', marginRight: '16px', minWidth: 'calc(50% - 16px)', alignItems: 'flex-end', display: 'flex', justifyContent: 'flex-end'}}>
-              <p style={{margin: 0, color: 'rgba(0,0,0,.87)', lineHeight: 2, overflow: 'hidden', textOverflow: 'ellipsis'}}>{this.state.show.rows[k].farsify()}</p>
+              <p style={{margin: 0, color: 'rgba(0,0,0,.87)', lineHeight: 2, overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'justify', textJustify: 'inter-word'}}>{this.state.show.rows[k].farsify()}</p>
             </div>
           </div><hr className="divider"/></>))}
           {'features' in this.state.show && (<div style={{display: 'flex', flexFlow: 'row wrap'}}>
@@ -233,7 +243,7 @@ class App extends React.Component {
               <span style={{fontSize: '1.125rem', fontWeight: this.state.show.features[k] ? 500 : 400, lineHeight: 1.5, }}>{k}{!this.state.show.features[k] && ' ندارد'}</span>
             </div>))}
           </div>)}
-          <div classNmae={'p'}>{this.state.show.description}</div>
+          <div classNmae="p" style={{paddingRight: '.9rem', paddingLeft: '.9rem', whiteSpace: 'pre-line', lineHeight: 2}}>{this.state.show.description}</div>
           {/*<span>{'category' in this.state.show && this.state.show.category}</span> - <span>{'id' in this.state.show && this.state.show.id}</span>*/}
           {/*<div>{'subtitle' in this.state.show && this.state.show.subtitle}</div>*/}
           {this.calendar()}
@@ -241,7 +251,7 @@ class App extends React.Component {
             <div className="touchable" style={{padding: '16px 14px 12px 14px', margin: '10px 10px', color: '#343747', backgroundColor: 'rgb(240, 233, 236)', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.03em', direction: 'ltr'}}>
               {String(this.state.show.cart).slice(0, 4)} . {String(this.state.show.cart).slice(4, 8)} . {String(this.state.show.cart).slice(8, 12)} . {String(this.state.show.cart).slice(12, 16)}</div>
             <div style={{fontSize: '1.1rem', paddingRight: '.9rem', paddingLeft: '.9rem', textAlign: 'justify',  textJustify: 'inter-word', lineHeight: 2, color: 'rgba(0,0,0,.87)', whiteSpace: 'pre-line'}}>
-              مبلغ <span style={{backgroundColor: '#e3e3e3', borderRadius: 10, padding: '2px 12px', color: '#e31025', fontWeight: 500}}>{((this.state.show.price * (Math.round((new Date(...jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[1]])) - new Date(...jDate.jalaliToGregorian(...this.state.calendar[this.state.calendarRange[0]]))) / (1000 * 60 * 60 * 24)) + 1) + parseInt(this.state.phone.substr(this.state.phone.length - 2))) + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify()}</span>
+              مبلغ <span style={{backgroundColor: '#e3e3e3', borderRadius: 10, padding: '2px 12px', color: '#e31025', fontWeight: 500}}>{((this.state.show.price * (Math.round((new Date(...jDate.jalaliToGregorian(...this.state.calendar[Math.max(0, this.state.calendarRange[1])])) - new Date(...jDate.jalaliToGregorian(...this.state.calendar[Math.max(0, this.state.calendarRange[0])]))) / (1000 * 60 * 60 * 24)) + 1) + parseInt(this.state.phone.substr(this.state.phone.length - 2))) + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,').farsify()}</span>
               تومان را به صورت دقیق به شماره حساب بالا واریز کنید. دقت کنید که رقم یکان و دهگان مبلغ برای رهگیری در فرایند سایت ایجاد شده است.  این مازاد برای کمک به بی‌سرپرستان صرف می‌گردد. به‌محض دریافت پیامک واریز، لینک کلید دیجیتالی اسکان هوشمند برای‌شما ارسال می‌گردد.</div>
           </> : <div style={{fontSize: '1.1rem', paddingRight: '.9rem', paddingLeft: '.9rem', textAlign: 'justify',  textJustify: 'inter-word', lineHeight: 2, color: 'rgba(0,0,0,.87)', whiteSpace: 'pre-line'}}> از زمان‌های موجود بازه زمانی خودرا انتخاب کنید</div>}
           <div class={this.state.calendarRange[0] === -1 && !this.state.ordered ? "" : "touchable"} style={{padding: '13px 14px 15px 14px', margin: '10px 10px', color: 'white', backgroundColor: '#e31025', textAlign: 'center', fontWeight: 700, borderRadius: 12, fontSize: '1.02em', opacity: this.state.calendarRange[0] === -1 && !this.state.ordered ? .6 : 1}} onClick={async (e) => { 

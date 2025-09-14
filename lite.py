@@ -37,7 +37,7 @@ def sms():
             if '             |      text: ' not in sms: subprocess.call(f'mmcli -m {m} --messaging-delete-sms={sms_id}', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); continue
             sms = sms.split('             |      text: ')[-1].split('-----------------------')[0].replace('             |            ', '').strip()
             sms_sender = [line.split('|    number:')[-1].strip() for line in sms_lines if '|    number:' in line][0]
-            sms_sender = int(sms_sender[3:] if sms_sender[:3] == '+98' else sms_sender[1:] if sms_sender[0] == '0' else sms_sender)
+            sms_sender = sms_sender if not sms_sender[1:].isnumeric() else int(sms_sender[3:] if sms_sender[:3] == '+98' else sms_sender[1:] if sms_sender[0] == '0' else sms_sender)
             numbers = re.findall(r'\+[\d|,|،|.]+', sms.replace(',', '').replace('،', ''))
             numbers = list(sorted(set([int(num[1:]) for num in numbers])))
             print(f"{cs.CVIOLET}{cs.BOLD}S:{cs.ENDC}{cs.CGREEN}{sms_sender}{cs.ENDC}{cs.CYELLOW}{receiver}{cs.ENDC}{numbers[-1] if numbers else '-'}", f'{sms_datetime.hour}:{sms_datetime.minute}:{sms_datetime.second}')

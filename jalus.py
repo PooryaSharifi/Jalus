@@ -96,6 +96,11 @@ async def save_key(r, home, sim, head, tail, value):
     # TODO attack in ke value joda midan 1 toman badesh hamino mirizan be hesab va kilid dorost mikonan ziad
     try: await Key.insert_one({'home': home, 'sim': sim, 'phone': session['phone'], 'head': head, 'tail': tail, 'value': value, 'save': datetime.now(), 'fix': False}); return response.json({'OK': True})
     except: return response.json({'OK': False})
+@app.get('/key/-')
+async def all_keys(r, ):
+    _keys = await r.app.config['db']['keys'].find({}).to_list(None)
+    for key in _keys: key['_id'] = str(key['_id']); key['head'] = str(key['head']); key['tail'] = str(key['tail']); key['save'] = str(key['save']); key['fix'] = str(key['fix'])
+    return response.json(_keys)
 @app.delete('/key/_/_/<head>/<tail>')
 async def free_key(r, head=None, tail=None):  # pending ro chetori delete konim
     key, session = json.loads(decode(r.args['key'][0].encode()).decode()), json.loads(decode(r.args['session'][0].encode()).decode())
@@ -129,7 +134,8 @@ async def load_phone_keys(r, ):
 @app.get('/key/<home>')
 async def load_home_keys(r, home):  #3 badana age niaz shod phone ham bebine age baze key to r.args mohit bar key bud eshkal nadare
     # session = json.loads(decode(r.headers.get('Authorization')).decode()); assert session['exp'] >= str(datetime.now()).split()[0]
-    keys = await r.app.config['db']['keys'].find({'home': home, 'fix': {'$ne': False}}).sort('head', 1).to_list(None)
+    # keys = await r.app.config['db']['keys'].find({'home': home, 'fix': {'$ne': False}}).sort('head', 1).to_list(None)
+    keys = await r.app.config['db']['keys'].find({'home': home}).sort('head', 1).to_list(None)
     for key in keys: del key['_id']; del key['phone']; del key['save']; del key['fix']; key['head'] = str(key['head']).split('.')[0]; key['tail'] = str(key['tail']).split('.')[0]
     return response.json(keys)
     # return await Key.get_collection().find({'home': home, '$or': [{'head': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=60)}}, {'tail': {'$gte': datetime.now() - timedelta(days=30), '$lte': datetime.now() + timedelta(days=90)}}]}).to_list(None)
