@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from static import load_template, template, wild_origins, wild_filters, decode, encode, distance, capacity
 from io import BytesIO, StringIO
 from PIL import Image
+from exchange import blu as exchange
 from laziz import blu as laziz, user_blu as laziz_user, delicious_blu as laziz_delicious, order_blu as laziz_order
 from naqareh import blu as naqareh
 
@@ -22,6 +23,7 @@ app, otps, wss, otp_list, signals, markets = Sanic(__name__), {}, None, [], [{'t
     ['EGLDUSDT', 28.16, 28.19, 41.13], ['ORDIUSDT', 18.23, 18.23, 40.45], ['RNDRUSDT', 5.5948, 5.7191, 10.0133], ['ARBUSDT', 0.6119, 0.6119, 0.9582], ['DASHUSDT', 32.0, 32.02, 38.13], ['JTOUSDT', 3.021, 3.024, 3.764], ['GMXUSDT', 20.58, 20.6, 31.15], ['KASUSDT', 0.12375, 0.12387, 0.15887], ['IDUSDT', 0.3455, 0.3455, 0.5761]]
 app.config.update(dict(REQUEST_TIMEOUT=120, RESPONSE_TIMEOUT=120, asset_dir='/home/poorya/Pictures/estates', WEBSOCKET_MAX_SIZE=2 ** 20,
     WEBSOCKET_MAX_QUEUE=32, WEBSOCKET_READ_LIMIT=2 ** 16, WEBSOCKET_WRITE_LIMIT=2 ** 16, WEBSOCKET_PING_INTERVAL=20, WEBSOCKET_PING_TIMEOUT=20)); CORS(app)
+app.blueprint(exchange, url_prefix='/market')
 app.blueprint(laziz_user, url_prefix='/laziz/user')
 app.blueprint(laziz_delicious, url_prefix='/laziz/delicious')
 app.blueprint(laziz_order, url_prefix='/laziz/order')
