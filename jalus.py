@@ -1,4 +1,4 @@
-import aiofiles, aiohttp, re, string, os.path, json, time, tempfile, asyncio, numpy as np, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings, math
+import aiofiles, aiohttp, re, string, os.path, json, time, tempfile, asyncio, sys, hashlib, hmac, tempfile, subprocess, glob, urllib.parse, motor.motor_asyncio as async_motor, qrcode, warnings, math
 from sanic import Sanic, Blueprint, response, exceptions
 from sanic_cors import CORS
 from sanic.worker.manager import WorkerManager
