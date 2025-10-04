@@ -75,8 +75,4 @@ def auto_del():
     users = pymongo.MongoClient("mongodb://localhost:27017")[os.path.basename(os.path.dirname(__file__)).capitalize()]['users']
     users.delete_many({'pan_date': {'$lte': datetime.now() - timedelta(days=28)}, 'phoned': False})
 
-def swap():
-    # TODO algorithm of matching between swappables and requestes
-    pass
-
 if __name__ == '__main__': globals()[sys.argv[1]](sys.argv[2])

@@ -578,6 +578,6 @@ async def get_delicious(r):
                 'del': ['raw', 'chili', 'onion', 'fried', 'smoky', 'balsamic', 'phenomenal'],
             },
         },
-        'adp': 3500,
+        'deliveryPrice': 3500,
     }
     return response.json(output)
