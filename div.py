@@ -1,4 +1,4 @@
-import subprocess, pandas as pd, os.path, random, traceback, sys, pymongo, requests, json, urllib3, time
+import subprocess, os.path, random, traceback, sys, pymongo, requests, json, urllib3, time
 from urllib.parse import urlparse
 from functools import cmp_to_key
 from datetime import datetime, timedelta, timezone
@@ -34,7 +34,7 @@ def dim(ad, asset_dir=os.path.join(os.path.join(os.path.dirname(__file__), 'stat
                 if os.path.getsize(f'{_asset_dir}/{iim}.webp') > 3000: continue
                 else: os.remove(f'{_asset_dir}/{iim}.webp')
             # print(f"aria2c '{im}' --auto-file-renaming=false --dir {_asset_dir} -o {iim}.webp")
-            try: 
+            try:
                 r = subprocess.check_output(f"aria2c '{im}' --auto-file-renaming=false --dir {_asset_dir} -o {iim}.webp", shell=True, stderr=subprocess.DEVNULL); success_download += 1
             except:
                 if os.path.exists(f'{_asset_dir}/{iim}.webp'): os.remove(f'{_asset_dir}/{iim}.webp')

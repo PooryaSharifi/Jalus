@@ -10,7 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException
 from copy import deepcopy
-from ad import categories, consultants, dim
+from div import categories, consultants, dim
 from static import wild_origins, cs
 # open profiles ad block
 # TODO age har 5 ta poshte ham natunest phone dar are file ban too folder profile ijad mikone, age hadaghal yekisho phone dar ovord age file ban bud baresh midare
