@@ -1,11 +1,9 @@
 numpy
 scipy
 motor
-ujson
 sanic
-qrcode
-PyYAML
-PyJWT
 sanic_cors
+qrcode
 werkzeug
+PyJWT
 Pillow

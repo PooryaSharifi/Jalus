@@ -184,3 +184,7 @@ static/consultant.csv
 static/consultants/
 static/dictionary.py
 static/tile.js
+static/talafi/trades/
+static/talafi/*.mp4
+static/talafi/*.yaml
+static/talafi/*.csv
