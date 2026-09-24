@@ -1,8 +1,9 @@
-import aiohttp, aiofiles, sys, os.path, urllib.parse, asyncio, lxml.html, glob, yaml
+import aiohttp, aiofiles, sys, os.path, urllib.parse, asyncio, lxml.html, glob, yaml, subprocess
 from sanic import Sanic, Blueprint, response, exceptions
 from datetime import datetime, timedelta
 from random import randint, random, choice
 from PIL import Image
+from static import jdate
 app, blu, static_path = Sanic(__name__), Blueprint('talafi_' + __name__), '/static/talafi'; app = blu
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}{static_path}/coinRise.webp'), '/favicon.ico', name='redirect_ico')
 @app.get('/static/<path:path>')
@@ -16,11 +17,11 @@ async def upload_static_file(r, path):
     f.close()
     return response.json({'OK': True})
 @app.get("/")
-async def page(r, ): return await response.file(f'{os.path.dirname(__file__)}/templates/Talafi.html')
+async def page(r, ): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Talafi.html")
 @app.get("/<page:(news|login|jewelry|asset|trade|wiki|pr|)>")
-async def specific_page(r, page): return await response.file(f'{os.path.dirname(__file__)}/templates/Talafi.html')
+async def specific_page(r, page): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Talafi.html")
 @app.get("/<page:(pr|wiki)>/<_id>")
-async def wiki_pr_page(r, page, _id): return await response.file(f'{os.path.dirname(__file__)}/templates/Talafi.html')
+async def wiki_pr_page(r, page, _id): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Talafi.html")
 @app.get("/price")
 async def last_price(r):
     proc = await asyncio.create_subprocess_exec('tail', f'-{1}', f'{os.path.dirname(__file__)}{static_path}/price.csv', stdout=asyncio.subprocess.PIPE)
@@ -40,6 +41,14 @@ async def last_price(r):
                     async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/price.csv', 'a') as f: await f.write(','.join(lp) + '\n')
             except: pass
     return response.json(lp)
+@app.get('/facts')
+async def last_news(r):
+    proc = await asyncio.create_subprocess_exec('tail', f'-{4}', f'{os.path.dirname(__file__)}{static_path}/news.csv', stdout=asyncio.subprocess.PIPE)
+    ln, stderr_data = await proc.communicate()
+    if proc.returncode != 0: raise exceptions.NotFound()
+    ln = ln.decode().split('\n'); ln = [l.strip().split(',') for l in ln if l.strip()]
+    ln = [{'date': l[0].strip(), 'flag': True if '1' in l[1] else False, 'title': l[2].strip(), 'text': l[3].strip(), 'loc': l[4].strip()} for l in ln]
+    return response.json(ln)
 @app.get('/post/<name_category>')
 async def _thumbnail(r, name_category):
     if name_category[-4:] != '.jpg': 
@@ -66,15 +75,17 @@ async def _otp(r, phone, otp=None):
         otp_list.append([str(phone), f'{otps[phone]:04d}']); return response.json({'OK': True, 'otp':  otps[phone]} if '-d' in sys.argv or '--debug' in sys.argv else {'OK': True})
 @app.get('/trades/<phone>')
 async def get_trades(r, phone):
-    async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/trade/{phone[-3:]}.csv', 'r') as f:
-        trades = await f.read().split('\n')
-        if not trades[-1]: trades.pop()
-        trades = [trade.split(',') for trade in trades]
-        trades = [trade for trade in trades if trade[1] == phone]
-        return response.json(trades)
+    try:
+        async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/trade/{phone[-3:]}.csv', 'r') as f:
+            trades = await f.readlines()
+            trades = [trade.split(',') for trade in trades if trade.strip()]
+            trades = [[trade[0].strip().split()[0].split('-'), trade[2].strip(), float(trade[3].strip())] for trade in trades if trade[1].strip() == phone]
+            for t in trades: t[0] = jdate.jd_to_persian(jdate.gregorian_to_jd(*[int(d) for d in t[0]])); t[0] = [str(int(d)) for d in t[0]]; t[0] = '-'.join([('0' if len(d) == 1 else '') + d for d in t[0]])
+            return response.json(trades)
+    except FileNotFoundError: return response.json([])
 @app.post('/trades/<phone>')
 async def append_trade(r):
-    async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/trade/{phone[-3:]}.csv', 'a') as f:
+    async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/trade/{phone[-3:]}.csv', 'a+') as f:
         await f.write(f"{str(datetime.now()).split('.')[0] if 'date' not in r.json else r.json['date']},{phone},{r.json['asset']},{r.json['quantity']},{r.json['cost']}")
         return response.json({'OK': True})
 @app.post('/trades/<phone>/<idx>')

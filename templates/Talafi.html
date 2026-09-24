@@ -13,7 +13,7 @@
     <script src="../static/react-dom.production.min.js"></script>
     <script src="../static/babel.min.js"></script>
     <script src="../static/plyr.min.js"></script>
-    <script src="../static/jDate.min.js"></script>
+    <!-- <script src="../static/jDate.min.js"></script> -->
     <link rel="stylesheet" href="../static/plyr.min.css"/>
     <script>
       function setCookie(name, value) { var expires = ""; var date = new Date(); date.setTime(date.getTime() + (365*24*60*60*1000)); expires = "; expires=" + date.toUTCString(); document.cookie = name + "=" + (value || "")  + expires + "; path=/";}
@@ -478,14 +478,13 @@
         this.player = new Plyr(this.node.current, {controls: ['play', 'progress', 'current-time', 'play-large'], markers: {enabled: true, points: this.props.markers.map(marker => ({time: marker, label: ''}))}}); 
       } componentWillUnmount() {
         this.player.destroy();
-      } render () { return <div><video ref={this.node} style={this.props.style} playsinline data-poster={`../static${window.prefix}/${this.props.vid}.jpg`}>
-          <source src={`../static${window.prefix}/${this.props.vid}.${this.props.res}.mp4`} type="video/mp4" />
+      } render () { return <div><video ref={this.node} style={this.props.style} playsinline data-poster={`${window.prefix}/post/${this.props.vid}.jpg`}>
+          <source src={`/static${window.prefix}/${this.props.vid}.${this.props.res}.mp4`} type="video/mp4" />
         </video></div> }}
     class App extends React.Component {
-      constructor(props) {super(props); window.app = this;
+      constructor(props) {super(props); window.app = this; window.phone = '9133657623'
         window.locations = {'لس‌آنجلس': ['8vw', '12vw'], 'اوکراین': ['60vw', '15vw'], 'تهران': ['73vw', '28vw'], 'پکن': ['84vw', '19vw']}
-        window.coins = {'جدید': 0, 'قدیم': 0, 'نیمی': 1, 'ربی': 2};
-        window.players = {};
+        window.coins = {'جدید': 0, 'قدیم': 0, 'نیمی': 1, 'ربی': 2}; window.weights = {'جدید': 9.76, 'قدیم': 9.76, 'نیمی': 4.88, 'ربی': 2.44}; window.players = {};
         window.nav = {
           'جواهرات': async () => {window.history.pushState({urlPath: `${window.prefix}/jewelry`}, "", `${window.prefix}/jewelry`); this.state.view.push('explore'); this.setState({view: this.state.view})}, 
           'مظنه': async () => {window.history.pushState({urlPath: `${window.prefix}/`}, "", `${window.prefix}/`); this.state.view.push('postList'); this.setState({view: this.state.view, snap: 0}, () => window.listElem.scrollTo({top: 0}))}, 
@@ -501,21 +500,18 @@
           wiki: {title: 'گوشواره طلا زنانه نخودچی', tail: ['طلافی', 'بچگانه', 'گوشواره', 'گوشواره طلا زنانه نخودچی'], detail: {'وزن': '0.97 gr', 'اجرت': '24%', 'جنس': 'طلا، سنگ', 'نوع پوشش': 'براق', 'کالکشن': 'کلکسیون قند', 'مناسب برای': 'خانم ها و کودکان', 'قیمت روز طلا ۱۸ عیار': '19,996,000 T'},
             images: ['aliceblue', 'aqua', 'azure', 'khaki', 'antiquewhite'], content: [{title: 'تاریخچه', image: 'khaki', text: 'در هوای بهاری شامل احوال فضایی می‌شود در حضور هر حالی به حال ما گریه کرد چرا که در هر شرایطی'}, {title: 'اصول', image: 'aqua', text: 'لورم ایپسوم متنی فضایی در بستر هوایی'}]}, 
           list: [{'post': this.chartPrice}], 
-          explore: [], minAsset: [['طلا', 59125998, 3.26, 1.14], ['نقره', 9124329, 13.26, 5.83]], 
+          explore: [], minAsset: {'طلا': [0, 0], 'نقره': [0, 0]}, asset: {},
           chart: [['۱۸ عیار', 19125998, -3.26, +0.68], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68], ['قدیم', 25558600, +2.734, -.35], ['نیمی', 19125998, -3.26, +0.68], ['ربی', 25558600, +2.734, -.35], ['نقره 925', 19125998, -3.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]], 
-          asset: [['1398-10-3', '۱۸ عیار', 12.6, 76283000], ['1398-11-7', '۱۸ عیار', -3.6, 47573000], ['1399-1-3', 'ربی', 2, 76283000], ['1399-3-20', 'جدید', 1, 76283000]], 
-          news: [{loc: 'لس‌آنجلس', flag: false, title: 'اوراق فدرال', date: '2026-09-03 15:00:00', text: 'امروز شاهد جلسه خاص و تکاندهنده به حدفاصل در ازنای طوفان قاتل در حال دیگر بار'},
-            {loc: 'اوکراین', flag: true, title: 'گندم اوکراین در آتش', date: '2026-09-03 17:00:00', text: 'نگری اقناع تعامل تاریخ گسترش کسب‌وکار همگرایی اقناع تاریخ شناخت جهانی تنوع داروسازی؟ معماری تجدد انتخاب تحول قانون اقتدار کتابهای ثبات ابداع کسب‌وکار پزشکی'},
-            {loc: 'پکن', flag: true, title: 'چین خرید محصولات ایران', date: '2026-09-03 20:00:00', text: 'ارتباطات فناوری پرستاری طبیعت راهکارها ایپسوم نوسازی تحول بهبود نشر کاربری منطق مکان انتخاب. تجدیدپذیر علمی صنعت گرافیک الگوریتم'},
-            {loc: 'تهران', flag: false, title: 'افزایش سود بانکی', date: '2026-09-03 09:00:00', text: 'تاریخ خاطره محصول نوآوری اینترنت استدلال لحظه! رقابت دیجیتال ظرفیت تحقیقات استفاده کاربردهای اخلاق چاپگرها متاورس پویایی. الگوریتم اشیا ثبات'},], newi: 0,
+          trades: [['1398-10-3', '۱۸ عیار', 12.6, 76283000], ['1398-11-7', '۱۸ عیار', -3.6, 47573000], ['1399-1-3', 'ربی', 2, 76283000], ['1399-3-20', 'جدید', 1, 76283000]], 
+          news: [], newi: 0,
           view: [{'': 'postList', 'login': 'login', 'jewelry': 'explore', 'explore': 'explore', 'asset': 'chartAsset', 'news': 'news', 'trade': 'trade', 'wiki': 'wiki', 'pr': 'wiki'}[window.pathname]], snap: 0,
-        }; // if (this.state.view[0] == 'login' || this.state.view[0] == 'trade' || this.state.view[0] == 'news' || this.state.view[0] == 'wiki') this.state.view = ['postList', this.state.view[0]];
+        };  // if (this.state.view[0] == 'login' || this.state.view[0] == 'trade' || this.state.view[0] == 'news' || this.state.view[0] == 'wiki') this.state.view = ['postList', this.state.view[0]];
         window.onpopstate = () => {this.state.view.pop(); this.setState({view: this.state.view})}
       } async fetchExplore (tag) {  // #2 age tag por bud categories biad tah tar
-        let wiki = await fetch(window.prefix + '/wiki/-'); wiki = await wiki.json()
+        let wiki = await fetch(window.prefix + '/wiki/-'); wiki = await wiki.json(); window.wiki = wiki
         for (var i = 0; i < wiki.length; i ++) wiki[i].mark = cookie(wiki[i].title) == '' ? true : false;
         if (window.pathname == 'wiki' && window._id) for (var i = 0; i < wiki.length; i ++) if (wiki[i].title.trim() == decodeURI(window._id).trim()) {this.state.wiki = wiki[i]; break}
-        let pr = await fetch(window.prefix + '/pr/-'); pr = await pr.json()
+        let pr = await fetch(window.prefix + '/pr/-'); pr = await pr.json(); window.pr = pr
         for (var i = 0; i < pr.length; i ++) pr[i].mark = cookie(pr[i].detail['کد محصول']) == '' ? true : false;
         if (window.pathname == 'pr' && window._id) for (var i = 0; i < pr.length; i ++) if (pr[i].detail['کد محصول'].trim() == window._id.trim()) {this.state.wiki = pr[i]; break}
         let categories = ['زنانه', 'مردانه', 'بچگانه', 'هدیه', 'بین‌الملل', 'انگشتر', 'گوشواره', 'گردنبند', 'دستبند', 'آویز', 'ونکلیف', 'رولکس', 'امگا', 'اسپرت', 'دستمزدصفر', 'نقره']
@@ -547,7 +543,24 @@
           this.state.list[ivid ++] = {vid: vid, res: posts[vid][0][0], mark: cookie(vid) == '' ? true : false, markers: posts[vid][2]}
         }
         await this.fetchExplore({})
-        this.setState({chart, list: this.state.list, explore: this.state.explore});
+        let ln = await fetch(window.prefix + '/facts', {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); ln = await ln.json();
+        let trades = await fetch(window.prefix + '/trades/' + window.phone, {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); trades = await trades.json();
+        for (var i = 0; i < trades.length; i ++)
+          for (var j = 0; j < chart.length; j ++) 
+            if (trades[i][1] == chart[j][0]) {
+              trades[i].push(Math.floor(chart[j][1] * trades[i][2]));
+              break;
+            }
+        let asset = this.state.asset, minAsset = this.state.minAsset;
+        for (var i = 0; i < trades.length; i ++) {
+          if (!(trades[i][1] in asset)) asset[trades[i][1]] = [0.0, 0.0]
+          asset[trades[i][1]][0] += trades[i][2]
+          asset[trades[i][1]][1] += trades[i][3]
+        } for (var a in asset) {
+          if (a == 'نقره 925') minAsset['نقره'] = asset[a];
+          else { minAsset['طلا'][0] += (a in window.weights) ? asset[a][0] * window.weights[a] : asset[a][0]; minAsset['طلا'][1] += asset[a][1]; }
+        } console.log (minAsset);
+        this.setState({chart, list: this.state.list, explore: this.state.explore, news: ln, trades, asset, minAsset});
       } dialog (payload) {
         return <div class="dialog-full" style={{height: '100dvh'}}>
           <div class="dialog-back touchable" style={{}} onClick={() => {if (this.state.view.length == 1) {this.setState({view: ['postList']}); window.history.replaceState({urlPath: window.prefix}, '', window.prefix)} else window.history.back()}}>
@@ -585,8 +598,8 @@
           </div>
         </div>
       } 
-      login () { return this.dialog(this.state.login) } 
-      trade () { return this.dialog(this.state.trade) } 
+      login () { return this.dialog(this.state.login) }
+      trade () { return this.dialog(this.state.trade) }
       nav () {
         let ks = [], navColor = 'var(--ink)';
         if(this.state.view[this.state.view.length - 1] == 'postList' && this.state.snap == 0 && this.state.list.length > 0 && !('vid' in this.state.list[0])) ks = ['جواهرات', 'اقساط'];
@@ -624,6 +637,31 @@
                 <table class="footable" data-paging="false" data-sorting="true">
                   <thead>
                     <tr>
+                      <th data-breakpoints="" style={{paddingRight: 1}}>دارایی</th>
+                      <th data-breakpoints="">مقدار(گرم)</th>
+                      <th data-breakpoints="xs">قیمت(تومان)</th>
+                      <th data-breakpoints="xs sm" style={{paddingLeft: 1}}>اعمال</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.keys(this.state.asset).map((key, ki) => <tr>
+                      <td>{key}{key in window.coins ? <span class="coin" style={{width: 14 - window.coins[key] * 2, height: 14 - window.coins[key] * 2, top: 4 - window.coins[key]}}></span> : null}</td>
+                      <td><span class="priority priority-high">{this.state.asset[key][0].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</span></td>
+                      <td>{this.state.asset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>
+                      <td><span class="status status-beta">فروش</span></td>
+                    </tr>)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="table-container">
+            <p style={{float: 'right'}} class="table-title">معاملات شما</p>
+            <div class="table-card">
+              <div class="footable-wrapper">
+                <table class="footable" data-paging="false" data-sorting="true">
+                  <thead>
+                    <tr>
                       <th data-breakpoints="" style={{paddingRight: 1}}>تاریخ</th>
                       <th data-breakpoints="">دارایی</th>
                       <th data-breakpoints="xs">مقدار(گرم)</th>
@@ -631,7 +669,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.asset.map((row, ri) => <tr>
+                    {this.state.trades.map((row, ri) => <tr>
                       <td class="yekan"><span>{row[0].split('-')[2].farsify()}</span><span>{['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'][row[0].split('-')[1] - 1]}</span></td>
                       <td>{row[1]}{row[1] in window.coins ? <span class="coin" style={{width: 14 - window.coins[row[1]] * 2, height: 14 - window.coins[row[1]] * 2, top: 4 - window.coins[row[1]]}}></span> : null}</td>
                       <td><span class={`priority ${row[2] >= 0.0 ? '' : 'priority-high'}`} >{row[2] >= 0.0 ? '+' : ''}{row[2].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</span></td>
@@ -700,18 +738,18 @@
                 <table class="footable" data-paging="false" data-sorting="true">
                   <thead>
                     <tr>
-                      <th data-breakpoints="">اموال</th>
-                      <th data-breakpoints="xs">ارزش(تومان)</th>
+                      <th data-breakpoints="" style={{paddingRight: 1}}>اموال</th>
                       <th data-breakpoints="">مقدار(گرم)</th>
-                      <th data-breakpoints="xs sm">وصول شده</th>
+                      <th data-breakpoints="xs">ارزش(تومان)</th>
+                      <th data-breakpoints="xs sm" style={{paddingLeft: 1}}>اعمال</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.minAsset.map((row, ri) => <tr>
-                      <td>{row[0]}</td>
-                      <td>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>
-                      <td><span class='mono' >{row[2].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} gr</span></td>
-                      <td><span class="status status-inactive">{row[3].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} gr</span></td>
+                    {Object.keys(this.state.minAsset).map((key, ki) => <tr>
+                      <td>{key}</td>
+                      <td><span class='mono'>{this.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} gr</span></td>
+                      <td>{this.state.minAsset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>
+                      <td><span class="status status-active">ترید</span></td>
                     </tr>)}
                   </tbody>
                 </table>
@@ -720,12 +758,16 @@
           </div>
         </div>
       } post (p, pi) {
+        let hasMore = /^[A-Z][A-Z][A-Z]-\d*_.*$/.test(p.vid) || p.vid.includes('wiki_');
         return <div class="post" style={{marginTop: 0}}>
           <Player vid={p.vid} res={p.res} markers={p.markers} style={{height: '100dvh'}}/>
-          <div style={{cursor: 'pointer', lineHeight: 0, height: 24, width: 24, alignSelf: 'end', position: 'relative', marginTop: -64, right: 12, bottom: 88}} onClick={() => {p.mark = 'mark' in p ? true : !p.mark; p.mark ? setCookie(p.vid) : delCookie(p.vid); this.setState({list: this.state.list})}}>
+          <div style={{cursor: 'pointer', lineHeight: 0, height: 24, width: 24, alignSelf: 'end', position: 'relative', marginTop: hasMore ? -64 : -44, right: 12, bottom: hasMore ? 84 : 64}} onClick={() => {p.mark = 'mark' in p ? true : !p.mark; p.mark ? setCookie(p.vid) : delCookie(p.vid); this.setState({list: this.state.list})}}>
             <svg width="24px" height="24px" viewBox="0 0 24 24" fill={p.mark ? "#f00" : "none"}><path d="M5 6.2C5 5.07989 5 4.51984 5.21799 4.09202C5.40973 3.71569 5.71569 3.40973 6.09202 3.21799C6.51984 3 7.07989 3 8.2 3H15.8C16.9201 3 17.4802 3 17.908 3.21799C18.2843 3.40973 18.5903 3.71569 18.782 4.09202C19 4.51984 19 5.07989 19 6.2V21L12 16L5 21V6.2Z" stroke={p.mark ? "#f00" : "#fff"} stroke-width="2" stroke-linejoin="round"/></svg>
           </div>
-          <div class="touchable" style={{alignSelf: 'end', position: 'relative', color: 'white', height: 20, fontWeight: 600, right: 12, bottom: 64, fontSize: '.85em'}} onClick={() => { window.history.pushState({urlPath: `${window.prefix}/wiki`}, "", `${window.prefix}/wiki`); this.state.view.push('wiki'); this.setState({view: this.state.view}) }}>بیشتر</div>
+          { hasMore && <div class="touchable" style={{alignSelf: 'end', position: 'relative', color: 'white', height: 20, fontWeight: 600, right: 12, bottom: 64, fontSize: '.85em'}} onClick={() => { 
+            if (p.vid.includes('wiki_')) for (var i = 0; i < window.wiki.length; i ++) if (window.wiki[i].title.trim() == p.vid.split('wiki_')[1].trim()) {this.state.wiki = window.wiki[i]; window.history.pushState({urlPath: `${window.prefix}/wiki/${window.wiki[i].title}`}, "", `${window.prefix}/wiki/${window.wiki[i].title}`); break}
+            if (window.pathname == 'pr' && window._id) for (var i = 0; i < window.pr.length; i ++) if (window.pr[i].detail['کد محصول'].trim() == p.vid.split('_')[1].trim()) {this.state.wiki = window.pr[i]; window.history.pushState({urlPath: `${window.prefix}/pr/${window.pr[i].detail['کد محصول']}`}, "", `${window.prefix}/pr/${window.pr[i].detail['کد محصول']}`); break}
+            this.state.view.push('wiki'); this.setState({view: this.state.view}) }}>بیشتر</div> }
           <div class="touchable" style={{alignSelf: 'end', position: 'relative', color: 'white', height: 20, fontSize: '.9em', right: 12, bottom: 44}}>{p.vid.split('_')[p.vid.split('_').length - 1]}</div>
         </div>
       } postList () {

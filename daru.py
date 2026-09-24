@@ -1,6 +1,7 @@
+import os.path, sys
 from sanic import Blueprint, response
 from static import template, load_template
-blu = Blueprint('exchange_' + __name__)
+blu = Blueprint('daru_' + __name__)
 
 @blu.get("/")
-async def laziz_page(r, ): return response.html(await load_template(f'Daru.html'))
+async def page(r, ): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Daru.html")

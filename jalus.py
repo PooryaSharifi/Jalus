@@ -32,7 +32,6 @@ app.blueprint(laziz_delicious, url_prefix='/laziz/delicious')
 app.blueprint(laziz_order, url_prefix='/laziz/order')
 app.blueprint(laziz, url_prefix='/laziz')
 app.blueprint(naqareh, url_prefix='/barnameh')
-app.blueprint(talafi, url_prefix='/talafi')
 app.add_route(lambda _: response.file(f'{os.path.dirname(os.path.abspath(__file__))}/static/icon/jalus_app_tent-8.png'), '/favicon.ico', name='redirect_ico')
 app.add_route(lambda _: response.redirect('/dome'), '/zome', name='zome_dome')
 min_files = {'plyr.js': 'plyr.js', 'plyr.css': 'plyr.min.css'}
@@ -43,8 +42,7 @@ async def upload_static_file(r, path):
     path = f'{os.path.dirname(os.path.abspath(__file__))}/static/{path}'
     if 'override' not in r.args and os.path.exists(path): return response.json({'OK': True})
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    async with aiofiles.open(path, 'wb') as f: await f.write(r.files["file"][0].body)
-    f.close()
+    async with aiofiles.open(path, 'wb') as f: await f.write(r.files["file"][0].body); f.close()
     return response.json({'OK': True})
 @app.get('/static/<layer:(lyrb|lyrr|lyry)>/<file>')
 async def tile(r, layer, file):
@@ -90,7 +88,7 @@ async def init_ones(sanic, loop):
     # await sanic.config['db']['days'].delete_many({})
 
 @app.listener('after_server_stop')
-async def close_connection(app, loop): app.config['db'].close()
+async def close_connection(app, loop): pass  # app.config['db'].close
 @app.post('/key/<home>/<sim>/<head>/<tail>/<value:int>')  # inja be name khodesh tooye db vase in home reserver mikone deghat beshe ke vase har home, phone maa faghat ye reserve darim.
 async def save_key(r, home, sim, head, tail, value):
     sim = int(sim[3:] if sim[:3] == '+98' else sim[1:] if sim[0] == '0' else sim)
