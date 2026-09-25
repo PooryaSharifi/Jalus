@@ -475,7 +475,8 @@
     window._id = pathname.split('/')[pathname.split('/').length - 1]; window.pathname = pathname.includes('/wiki') ? 'wiki' : pathname.includes('/pr') ? 'pr' : window._id;
     class Player extends React.Component {
       constructor(props) {super(props); this.node = React.createRef()} async componentDidMount() { 
-        this.player = new Plyr(this.node.current, {controls: ['play', 'progress', 'current-time', 'play-large'], markers: {enabled: true, points: this.props.markers.map(marker => ({time: marker, label: ''}))}}); 
+        this.player = new Plyr(this.node.current, {controls: ['play', 'progress', 'current-time', 'play-large'], markers: {enabled: true, points: this.props.markers.map(marker => ({time: marker, label: ''}))}, autopause: true}); 
+        this.player.on('play', () => {window.playing = this.player});
       } componentWillUnmount() {
         this.player.destroy();
       } render () { return <div><video ref={this.node} style={this.props.style} playsinline data-poster={`${window.prefix}/post/${this.props.vid}.jpg`}>
@@ -772,7 +773,7 @@
         </div>
       } postList () {
         return <div style={{minHeight: '100dvh', maxHeight: '100dvh', overflowY: 'hidden'}}>
-          <div ref={(node) => window.listElem = node} style={{flexBasis: '100vw', minHeight: '100%', maxHeight: '100dvh', overflowY: 'scroll', scrollSnapType: 'y mandatory'}} onScroll={(e) => {this.setState({snap: Math.floor(e.target.scrollTop / (window.listElem.clientHeight - 1))})}}>
+          <div ref={(node) => window.listElem = node} style={{flexBasis: '100vw', minHeight: '100%', maxHeight: '100dvh', overflowY: 'scroll', scrollSnapType: 'y mandatory'}} onScroll={(e) => {let snap = Math.floor(e.target.scrollTop / (window.listElem.clientHeight - 1)); if (snap != this.state.snap) {this.setState({snap}); if (window.playing) window.playing.stop()}}}>
             {this.state.list.map((post, pi) => 'vid' in post ? this.post(post, pi) : this.chartPrice())}
           </div>
         </div>
