@@ -509,6 +509,7 @@ var Player = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function () {
       var _componentDidMount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
+        var _this2 = this;
         return _regenerator().w(function (_context) {
           while (1) switch (_context.n) {
             case 0:
@@ -522,7 +523,11 @@ var Player = /*#__PURE__*/function (_React$Component) {
                       label: ''
                     };
                   })
-                }
+                },
+                autopause: true
+              });
+              this.player.on('play', function () {
+                window.playing = _this2.player;
               });
             case 1:
               return _context.a(2);
@@ -556,10 +561,10 @@ var Player = /*#__PURE__*/function (_React$Component) {
 }(React.Component);
 var App = /*#__PURE__*/function (_React$Component2) {
   function App(props) {
-    var _this2;
+    var _this3;
     _classCallCheck(this, App);
-    _this2 = _callSuper(this, App, [props]);
-    window.app = _this2;
+    _this3 = _callSuper(this, App, [props]);
+    window.app = _this3;
     window.phone = '9133657623';
     window.locations = {
       'لس‌آنجلس': ['8vw', '12vw'],
@@ -589,9 +594,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/jewelry")
                 }, "", "".concat(window.prefix, "/jewelry"));
-                _this2.state.view.push('explore');
-                _this2.setState({
-                  view: _this2.state.view
+                _this3.state.view.push('explore');
+                _this3.setState({
+                  view: _this3.state.view
                 });
               case 1:
                 return _context2.a(2);
@@ -611,9 +616,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/")
                 }, "", "".concat(window.prefix, "/"));
-                _this2.state.view.push('postList');
-                _this2.setState({
-                  view: _this2.state.view,
+                _this3.state.view.push('postList');
+                _this3.setState({
+                  view: _this3.state.view,
                   snap: 0
                 }, function () {
                   return window.listElem.scrollTo({
@@ -652,9 +657,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/jewelry")
                 }, "", "".concat(window.prefix, "/jewelry"));
-                _this2.state.view.push('explore');
-                _this2.setState({
-                  view: _this2.state.view
+                _this3.state.view.push('explore');
+                _this3.setState({
+                  view: _this3.state.view
                 });
               case 1:
                 return _context5.a(2);
@@ -674,9 +679,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/jewelry")
                 }, "", "".concat(window.prefix, "/jewelry"));
-                _this2.state.view.push('explore');
-                _this2.setState({
-                  view: _this2.state.view
+                _this3.state.view.push('explore');
+                _this3.setState({
+                  view: _this3.state.view
                 });
               case 1:
                 return _context6.a(2);
@@ -696,9 +701,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/jewelry")
                 }, "", "".concat(window.prefix, "/jewelry"));
-                _this2.state.view.push('explore');
-                _this2.setState({
-                  view: _this2.state.view
+                _this3.state.view.push('explore');
+                _this3.setState({
+                  view: _this3.state.view
                 });
               case 1:
                 return _context7.a(2);
@@ -718,9 +723,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/jewelry")
                 }, "", "".concat(window.prefix, "/jewelry"));
-                _this2.state.view.push('explore');
-                _this2.setState({
-                  view: _this2.state.view
+                _this3.state.view.push('explore');
+                _this3.setState({
+                  view: _this3.state.view
                 });
               case 1:
                 return _context8.a(2);
@@ -740,9 +745,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 window.history.pushState({
                   urlPath: "".concat(window.prefix, "/jewelry")
                 }, "", "".concat(window.prefix, "/jewelry"));
-                _this2.state.view.push('explore');
-                _this2.setState({
-                  view: _this2.state.view
+                _this3.state.view.push('explore');
+                _this3.setState({
+                  view: _this3.state.view
                 });
               case 1:
                 return _context9.a(2);
@@ -755,7 +760,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
         return مردانه;
       }()
     };
-    _this2.state = {
+    _this3.state = {
       login: {
         title: 'ورود | ثبت‌نام',
         text: 'لطفا شماره موبایل خود را وارد کنید',
@@ -822,7 +827,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
         }]
       },
       list: [{
-        'post': _this2.chartPrice
+        'post': _this3.chartPrice
       }],
       explore: [],
       minAsset: {
@@ -848,12 +853,12 @@ var App = /*#__PURE__*/function (_React$Component2) {
       snap: 0
     }; // if (this.state.view[0] == 'login' || this.state.view[0] == 'trade' || this.state.view[0] == 'news' || this.state.view[0] == 'wiki') this.state.view = ['postList', this.state.view[0]];
     window.onpopstate = function () {
-      _this2.state.view.pop();
-      _this2.setState({
-        view: _this2.state.view
+      _this3.state.view.pop();
+      _this3.setState({
+        view: _this3.state.view
       });
     };
-    return _this2;
+    return _this3;
   }
   _inherits(App, _React$Component2);
   return _createClass(App, [{
@@ -1126,7 +1131,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "dialog",
     value: function dialog(payload) {
-      var _this3 = this;
+      var _this4 = this;
       return /*#__PURE__*/React.createElement("div", {
         "class": "dialog-full",
         style: {
@@ -1136,8 +1141,8 @@ var App = /*#__PURE__*/function (_React$Component2) {
         "class": "dialog-back touchable",
         style: {},
         onClick: function onClick() {
-          if (_this3.state.view.length == 1) {
-            _this3.setState({
+          if (_this4.state.view.length == 1) {
+            _this4.setState({
               view: ['postList']
             });
             window.history.replaceState({
@@ -1209,9 +1214,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
         value: payload.input,
         onChange: function onChange(e) {
           payload.input = e.target.value;
-          _this3.setState({
-            login: _this3.state.login,
-            trade: _this3.state.trade
+          _this4.setState({
+            login: _this4.state.login,
+            trade: _this4.state.trade
           });
         }
       }))), /*#__PURE__*/React.createElement("p", {
@@ -1279,7 +1284,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "chartHeader",
     value: function chartHeader() {
-      var _this4 = this;
+      var _this5 = this;
       return /*#__PURE__*/React.createElement("div", {
         "class": "header"
       }, /*#__PURE__*/React.createElement("div", {
@@ -1305,9 +1310,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
           window.history.pushState({
             urlPath: "".concat(window.prefix, "/login")
           }, "", "".concat(window.prefix, "/login"));
-          _this4.state.view.push('login');
-          _this4.setState({
-            view: _this4.state.view
+          _this5.state.view.push('login');
+          _this5.setState({
+            view: _this5.state.view
           });
         }
       }, "\u062A\u0627\u0632\u0647 \u0648\u0627\u0631\u062F"), /*#__PURE__*/React.createElement("div", {
@@ -1355,7 +1360,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "chartAsset",
     value: function chartAsset() {
-      var _this5 = this;
+      var _this6 = this;
       return /*#__PURE__*/React.createElement("div", null, this.chartHeader(), /*#__PURE__*/React.createElement("div", {
         "class": "table-container"
       }, /*#__PURE__*/React.createElement("div", {
@@ -1390,7 +1395,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
           }
         }) : null), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "priority priority-high"
-        }, _this5.state.asset[key][0].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,'))), /*#__PURE__*/React.createElement("td", null, _this5.state.asset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+        }, _this6.state.asset[key][0].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,'))), /*#__PURE__*/React.createElement("td", null, _this6.state.asset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "status status-beta"
         }, "\u0641\u0631\u0648\u0634")));
       })))))), /*#__PURE__*/React.createElement("div", {
@@ -1440,7 +1445,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "news",
     value: function news() {
-      var _this6 = this;
+      var _this7 = this;
       return /*#__PURE__*/React.createElement("div", {
         "class": "post",
         style: {
@@ -1458,8 +1463,8 @@ var App = /*#__PURE__*/function (_React$Component2) {
           alignSelf: 'end'
         },
         onClick: function onClick() {
-          if (_this6.state.view.length == 1) {
-            _this6.setState({
+          if (_this7.state.view.length == 1) {
+            _this7.setState({
               view: ['postList']
             });
             window.history.replaceState({
@@ -1495,7 +1500,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
             width: 0,
             height: 0
           }
-        }, ni == _this6.state.newi ? /*#__PURE__*/React.createElement("div", {
+        }, ni == _this7.state.newi ? /*#__PURE__*/React.createElement("div", {
           "class": "touchable",
           style: {
             boxShadow: "inset 0 0 0 11px ".concat(n.flag ? '#00af57c0' : '#ef4056c0', ", 0 0 0 3px ").concat(n.flag ? '#00af57c0' : '#ef4056c0'),
@@ -1509,7 +1514,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
           }
         }) : /*#__PURE__*/React.createElement("div", {
           onClick: function onClick() {
-            return _this6.setState({
+            return _this7.setState({
               newi: ni
             });
           },
@@ -1559,7 +1564,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "chartPrice",
     value: function chartPrice() {
-      var _this7 = this;
+      var _this8 = this;
       return /*#__PURE__*/React.createElement("div", {
         "class": "post",
         style: {
@@ -1624,9 +1629,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
           window.history.pushState({
             urlPath: "".concat(window.prefix, "/trade")
           }, "", "".concat(window.prefix, "/trade"));
-          _this7.state.view.push('trade');
-          _this7.setState({
-            view: _this7.state.view
+          _this8.state.view.push('trade');
+          _this8.setState({
+            view: _this8.state.view
           });
         }
       }, "\u062E\u0631\u06CC\u062F \u0648 \u0641\u0631\u0648\u0634"), /*#__PURE__*/React.createElement("div", {
@@ -1638,9 +1643,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
           window.history.pushState({
             urlPath: "".concat(window.prefix, "/asset")
           }, "", "".concat(window.prefix, "/asset"));
-          _this7.state.view.push('chartAsset');
-          _this7.setState({
-            view: _this7.state.view
+          _this8.state.view.push('chartAsset');
+          _this8.setState({
+            view: _this8.state.view
           });
         }
       }, "\u062C\u0632\u0626\u06CC\u0627\u062A"), /*#__PURE__*/React.createElement("div", {
@@ -1652,9 +1657,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
           window.history.pushState({
             urlPath: "".concat(window.prefix, "/news")
           }, "", "".concat(window.prefix, "/news"));
-          _this7.state.view.push('news');
-          _this7.setState({
-            view: _this7.state.view
+          _this8.state.view.push('news');
+          _this8.setState({
+            view: _this8.state.view
           });
         }
       }, "\u062A\u062D\u0644\u06CC\u0644")), /*#__PURE__*/React.createElement("div", {
@@ -1682,7 +1687,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
       }, "\u0627\u0639\u0645\u0627\u0644"))), /*#__PURE__*/React.createElement("tbody", null, Object.keys(this.state.minAsset).map(function (key, ki) {
         return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, key), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "mono"
-        }, _this7.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'), " gr")), /*#__PURE__*/React.createElement("td", null, _this7.state.minAsset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+        }, _this8.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'), " gr")), /*#__PURE__*/React.createElement("td", null, _this8.state.minAsset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "status status-active"
         }, "\u062A\u0631\u06CC\u062F")));
       })))))));
@@ -1690,7 +1695,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "post",
     value: function post(p, pi) {
-      var _this8 = this;
+      var _this9 = this;
       var hasMore = /^[A-Z][A-Z][A-Z]-\d*_.*$/.test(p.vid) || p.vid.includes('wiki_');
       return /*#__PURE__*/React.createElement("div", {
         "class": "post",
@@ -1719,8 +1724,8 @@ var App = /*#__PURE__*/function (_React$Component2) {
         onClick: function onClick() {
           p.mark = 'mark' in p ? true : !p.mark;
           p.mark ? setCookie(p.vid) : delCookie(p.vid);
-          _this8.setState({
-            list: _this8.state.list
+          _this9.setState({
+            list: _this9.state.list
           });
         }
       }, /*#__PURE__*/React.createElement("svg", {
@@ -1747,22 +1752,22 @@ var App = /*#__PURE__*/function (_React$Component2) {
         },
         onClick: function onClick() {
           if (p.vid.includes('wiki_')) for (var i = 0; i < window.wiki.length; i++) if (window.wiki[i].title.trim() == p.vid.split('wiki_')[1].trim()) {
-            _this8.state.wiki = window.wiki[i];
+            _this9.state.wiki = window.wiki[i];
             window.history.pushState({
               urlPath: "".concat(window.prefix, "/wiki/").concat(window.wiki[i].title)
             }, "", "".concat(window.prefix, "/wiki/").concat(window.wiki[i].title));
             break;
           }
           if (window.pathname == 'pr' && window._id) for (var i = 0; i < window.pr.length; i++) if (window.pr[i].detail['کد محصول'].trim() == p.vid.split('_')[1].trim()) {
-            _this8.state.wiki = window.pr[i];
+            _this9.state.wiki = window.pr[i];
             window.history.pushState({
               urlPath: "".concat(window.prefix, "/pr/").concat(window.pr[i].detail['کد محصول'])
             }, "", "".concat(window.prefix, "/pr/").concat(window.pr[i].detail['کد محصول']));
             break;
           }
-          _this8.state.view.push('wiki');
-          _this8.setState({
-            view: _this8.state.view
+          _this9.state.view.push('wiki');
+          _this9.setState({
+            view: _this9.state.view
           });
         }
       }, "\u0628\u06CC\u0634\u062A\u0631"), /*#__PURE__*/React.createElement("div", {
@@ -1781,7 +1786,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "postList",
     value: function postList() {
-      var _this9 = this;
+      var _this0 = this;
       return /*#__PURE__*/React.createElement("div", {
         style: {
           minHeight: '100dvh',
@@ -1800,18 +1805,22 @@ var App = /*#__PURE__*/function (_React$Component2) {
           scrollSnapType: 'y mandatory'
         },
         onScroll: function onScroll(e) {
-          _this9.setState({
-            snap: Math.floor(e.target.scrollTop / (window.listElem.clientHeight - 1))
-          });
+          var snap = Math.floor(e.target.scrollTop / (window.listElem.clientHeight - 1));
+          if (snap != _this0.state.snap) {
+            _this0.setState({
+              snap: snap
+            });
+            if (window.playing) window.playing.stop();
+          }
         }
       }, this.state.list.map(function (post, pi) {
-        return 'vid' in post ? _this9.post(post, pi) : _this9.chartPrice();
+        return 'vid' in post ? _this0.post(post, pi) : _this0.chartPrice();
       })));
     }
   }, {
     key: "explore",
     value: function explore() {
-      var _this0 = this;
+      var _this1 = this;
       // age category nabud wiki va ela
       return /*#__PURE__*/React.createElement("div", null, this.state.explore.map(function (p, ip) {
         return /*#__PURE__*/React.createElement("div", {
@@ -1826,35 +1835,35 @@ var App = /*#__PURE__*/function (_React$Component2) {
               while (1) switch (_context12.n) {
                 case 0:
                   if ('کد محصول' in p.detail) {
-                    _this0.state.view.push('wiki');
+                    _this1.state.view.push('wiki');
                     url = "".concat(window.prefix, "/pr/").concat(p.detail['کد محصول']);
                     window.history.pushState({
                       urlPath: url
                     }, '', url);
-                    _this0.setState({
-                      view: _this0.state.view,
+                    _this1.setState({
+                      view: _this1.state.view,
                       wiki: p,
                       snap: 0
                     });
                   } else if ('content' in p) {
-                    _this0.state.view.push('wiki');
+                    _this1.state.view.push('wiki');
                     _url = "".concat(window.prefix, "/wiki/").concat(p.title);
                     window.history.pushState({
                       urlPath: _url
                     }, '', _url);
-                    _this0.setState({
-                      view: _this0.state.view,
+                    _this1.setState({
+                      view: _this1.state.view,
                       wiki: p,
                       snap: 0
                     });
                   } else {
-                    _this0.state.view.push('explore');
+                    _this1.state.view.push('explore');
                     _url2 = "".concat(window.prefix, "/jewelry");
                     window.history.pushState({
                       urlPath: _url2
                     }, '', _url2);
-                    _this0.setState({
-                      view: _this0.state.view,
+                    _this1.setState({
+                      view: _this1.state.view,
                       snap: 0
                     });
                   }
@@ -1871,7 +1880,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "wiki",
     value: function wiki() {
-      var _this1 = this;
+      var _this10 = this;
       return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
         "class": "square",
         style: {
@@ -1888,11 +1897,11 @@ var App = /*#__PURE__*/function (_React$Component2) {
           margin: 6
         },
         onClick: function onClick() {
-          _this1.state.wiki.mark = 'mark' in _this1.state.wiki ? !_this1.state.wiki.mark : true;
-          var cook = 'کد محصول' in _this1.state.wiki.detail ? _this1.state.wiki.detail['کد محصول'] : _this1.state.wiki.title;
-          _this1.state.wiki.mark ? setCookie(cook) : delCookie(cook);
-          _this1.setState({
-            wiki: _this1.state.wiki
+          _this10.state.wiki.mark = 'mark' in _this10.state.wiki ? !_this10.state.wiki.mark : true;
+          var cook = 'کد محصول' in _this10.state.wiki.detail ? _this10.state.wiki.detail['کد محصول'] : _this10.state.wiki.title;
+          _this10.state.wiki.mark ? setCookie(cook) : delCookie(cook);
+          _this10.setState({
+            wiki: _this10.state.wiki
           });
         }
       }, /*#__PURE__*/React.createElement("svg", {
@@ -1914,8 +1923,8 @@ var App = /*#__PURE__*/function (_React$Component2) {
           margin: 6
         },
         onClick: function onClick() {
-          if (_this1.state.view.length == 1) {
-            _this1.setState({
+          if (_this10.state.view.length == 1) {
+            _this10.setState({
               view: ['postList']
             });
             window.history.replaceState({
@@ -1966,7 +1975,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
           "class": "ttl"
         }, key), /*#__PURE__*/React.createElement("div", {
           "class": "val en"
-        }, _this1.state.wiki.detail[key]));
+        }, _this10.state.wiki.detail[key]));
       })), !'content' in this.state.wiki && /*#__PURE__*/React.createElement("div", {
         "class": "link-con"
       }, /*#__PURE__*/React.createElement("a", {
@@ -1994,9 +2003,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
           window.history.pushState({
             urlPath: "".concat(window.prefix, "/trade")
           }, "", "".concat(window.prefix, "/trade"));
-          _this1.state.view.push('trade');
-          _this1.setState({
-            'view': _this1.state.view
+          _this10.state.view.push('trade');
+          _this10.setState({
+            'view': _this10.state.view
           });
           e.preventDefault();
         }
@@ -2029,7 +2038,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
         return /*#__PURE__*/React.createElement("div", {
           "class": "square",
           style: {
-            backgroundImage: "url('/static".concat(window.prefix).concat('کد محصول' in _this1.state.wiki.detail ? '/pr' : '', "/").concat(im, ".jpg')")
+            backgroundImage: "url('/static".concat(window.prefix).concat('کد محصول' in _this10.state.wiki.detail ? '/pr' : '', "/").concat(im, ".jpg')")
           }
         });
       })));
