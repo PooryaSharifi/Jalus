@@ -149,7 +149,7 @@
         text-align: center;
         direction: ltr !important;
         font-size: 1.05em;
-        padding: 9px 14px;
+        padding: 9px 8px;
         border-bottom: 1px solid var(--divider);
         color: var(--ink);
         vertical-align: middle;
@@ -718,7 +718,9 @@
                   <tbody>
                     {this.state.chart.map((row, ri) => <tr>
                       <td>{row[0]}{row[0] in window.coins ? <span class="coin" style={{width: 14 - window.coins[row[0]] * 2, height: 14 - window.coins[row[0]] * 2, top: 4 - window.coins[row[0]]}}></span> : null}</td>
-                      <td>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>
+                      {row[0] in window.coins ? 
+                      <td>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].substr(0, row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].length - 3)}<span style={{fontSize: '.8em'}}>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].substr(-3)}</span></td>
+                      : <td>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>}
                       <td><span class={`priority ${row[2] >= 0.0 ? 'priority-high' : ''}`}>{row[2] >= 0.0 ? '+' : ''}{row[2].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}%</span></td>
                       <td><span className={`status ${row[3] >= 0.0 ? 'status-active' : 'status-review'}`}>{row[3] >= 0.0 ? '+' : ''}{row[3].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}%</span></td>
                     </tr>)}
