@@ -39,7 +39,7 @@ async def last_price(r):
                 print(lp)
                 lp = [lp[0][0], lp[0][1], lp[0][2], lp[0][3], lp[1][1], lp[1][2], lp[1][3], lp[3][1], lp[3][2], lp[3][3], lp[4][1], lp[4][2], lp[4][3], lp[5][1], lp[5][2], lp[5][3], lp[6][1], lp[6][2], lp[6][3], lp[7][1], lp[7][2], lp[7][3], lp[8][1], lp[8][2], lp[2][1] if len(lp[2]) > 1 else f'{float(lp[1][1]) / float(lp[8][1]) * 30.8412:.1f}', lp[2][2] if len(lp[2]) > 2 else f'{float(lp[8][2]) - float(lp[0][3]):.2f}']
                 lp[0] = str(datetime.now()).split('.')[0]
-                # async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/price.csv', 'a') as f: await f.write(','.join(lp) + '\n')
+                async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/price.csv', 'a') as f: await f.write(','.join(lp) + '\n')
     return response.json(lp)
 @app.get('/facts')
 async def last_news(r):
