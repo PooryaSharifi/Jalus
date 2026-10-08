@@ -35,10 +35,11 @@ async def last_price(r):
                 r = lxml.html.fromstring(r)
                 trs = r.xpath(f"//body//div[contains(concat(' ', @class, ' '), ' table-container ')][1]//tr")
                 trs = [tr.xpath('./td/text()') for tr in trs]; trs = [tr for tr in trs if tr]
-                lp = [[td.strip().replace(',', '').replace('%', '').replace('+', '').replace('inf', '0.0') for td in tr] for tr in trs]
-                lp = [lp[0][0], lp[0][1], lp[0][2], lp[0][3], lp[1][1], lp[1][2], lp[1][3], lp[3][1], lp[3][2], lp[3][3], lp[4][1], lp[4][2], lp[4][3], lp[5][1], lp[5][2], lp[5][3], lp[6][1], lp[6][2], lp[6][3], lp[7][1], lp[7][2], lp[7][3], lp[8][1], lp[8][3], lp[2][1] if len(lp[2]) > 1 and lp[2][1] else f'{float(lp[1][1]) / float(lp[8][1]) * 30.8412:.1f}', lp[2][3] if len(lp[2]) > 3 and lp[2][3] else f'{float(lp[8][3]) - float(lp[0][3]):.2f}']
+                lp = [[td.strip().replace(',', '').replace('%', '').replace('+', '').replace('inf', '0.0') for td in tr] for tr in trs]; lp = [[td for td in tr if td] for tr in lp]
+                print(lp)
+                lp = [lp[0][0], lp[0][1], lp[0][2], lp[0][3], lp[1][1], lp[1][2], lp[1][3], lp[3][1], lp[3][2], lp[3][3], lp[4][1], lp[4][2], lp[4][3], lp[5][1], lp[5][2], lp[5][3], lp[6][1], lp[6][2], lp[6][3], lp[7][1], lp[7][2], lp[7][3], lp[8][1], lp[8][2], lp[2][1] if len(lp[2]) > 1 else f'{float(lp[1][1]) / float(lp[8][1]) * 30.8412:.1f}', lp[2][2] if len(lp[2]) > 2 else f'{float(lp[8][2]) - float(lp[0][3]):.2f}']
                 lp[0] = str(datetime.now()).split('.')[0]
-                async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/price.csv', 'a') as f: await f.write(','.join(lp) + '\n')
+                # async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/price.csv', 'a') as f: await f.write(','.join(lp) + '\n')
     return response.json(lp)
 @app.get('/facts')
 async def last_news(r):
