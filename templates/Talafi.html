@@ -130,6 +130,17 @@
         border: 1.5px solid var(--divider);
         border-radius: var(--radius-lg);
         overflow: hidden;
+      } .table-card .sub {
+        position: relative;
+        margin-top: -10px;
+        right: 32px;
+        margin-bottom: -10px;
+        font-size: .9em;
+        width: 10px
+      } .table-card .sub span {
+        background-color: white;
+        position: relative;
+        padding: 0 3px;
       } .footable-wrapper { padding: 0 4px 0 4px; }
       table.footable {
         width: 100%;
@@ -501,14 +512,15 @@
         }; this.state = {
           login: { title: 'ورود | ثبت‌نام', text: 'لطفا شماره موبایل خود را وارد کنید', input: '', error: 'لطفا این قسمت را خالی نگذارید', button: 'ورود', action: async () => {}}, 
           trade: { title: 'سفارش خرید', text: 'لطفا کد روبرو را وارد کنید و سپس تماس بگیرید', input: '', error: 'لطفا این قسمت را خالی نگذارید', button: 'تماس', action: async () => {}},
+          deliver: { title: 'تحویل حضوری', text: 'لطفا شماره موبایل خود را وارد کنید', input: '', error: 'لطفا این قسمت را خالی نگذارید', button: 'تماس', action: async () => {}},
           wiki: {title: 'گوشواره طلا زنانه نخودچی', tail: ['طلافی', 'بچگانه', 'گوشواره', 'گوشواره طلا زنانه نخودچی'], detail: {'وزن': '0.97 gr', 'اجرت': '24%', 'جنس': 'طلا، سنگ', 'نوع پوشش': 'براق', 'کالکشن': 'کلکسیون قند', 'مناسب برای': 'خانم ها و کودکان', 'قیمت روز طلا ۱۸ عیار': '19,996,000 T'},
             images: ['aliceblue', 'aqua', 'azure', 'khaki', 'antiquewhite'], content: [{title: 'تاریخچه', image: 'khaki', text: 'در هوای بهاری شامل احوال فضایی می‌شود در حضور هر حالی به حال ما گریه کرد چرا که در هر شرایطی'}, {title: 'اصول', image: 'aqua', text: 'لورم ایپسوم متنی فضایی در بستر هوایی'}]}, 
           list: [{'post': this.chartPrice}], 
-          explore: [], minAsset: {'طلا': [0, 0], 'نقره': [0, 0]}, asset: {},
-          chart: [['۱۸ عیار', 19125998, -3.26, +0.68], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68], ['قدیم', 25558600, +2.734, -.35], ['نیمی', 19125998, -3.26, +0.68], ['ربی', 25558600, +2.734, -.35], ['نقره 925', 19125998, -3.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]], 
+          explore: [], minAsset: {'طلا': [0, 0], 'نقره': [0, 0], 'مس': [0, 0]}, asset: {},
+          chart: [['۱۸ عیار', 19125998, -3.26, +0.68], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68], ['قدیم', 25558600, +2.734, -.35], ['نیمی', 19125998, -3.26, +0.68], ['ربی', 25558600, +2.734, -.35], ['نقره 925', 19125998, -3.26, +0.68], ['مس 99', 912212, -2.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]], 
           trades: [['1398-10-3', '۱۸ عیار', 12.6, 76283000], ['1398-11-7', '۱۸ عیار', -3.6, 47573000], ['1399-1-3', 'ربی', 2, 76283000], ['1399-3-20', 'جدید', 1, 76283000]], 
           news: [], newi: 0, branches: [['naghsheJahan', 'نقش جهان'], ['cityCenter', 'سیتی‌سنتر'], ['kosar', 'کوثر']], branchIdx: 0,
-          view: [{'': 'postList', 'login': 'login', 'jewelry': 'explore', 'explore': 'explore', 'asset': 'chartAsset', 'news': 'news', 'trade': 'trade', 'wiki': 'wiki', 'pr': 'wiki'}[window.pathname]], snap: 0,
+          view: [{'': 'postList', 'login': 'login', 'jewelry': 'explore', 'explore': 'explore', 'asset': 'chartAsset', 'news': 'news', 'trade': 'trade', 'wiki': 'wiki', 'pr': 'wiki', 'deliver': 'deliver'}[window.pathname]], snap: 0,
         };  // if (this.state.view[0] == 'login' || this.state.view[0] == 'trade' || this.state.view[0] == 'news' || this.state.view[0] == 'wiki') this.state.view = ['postList', this.state.view[0]];
         window.onpopstate = () => {this.state.view.pop(); this.setState({view: this.state.view})}
       } async fetchExplore (tag) {  // #2 age tag por bud categories biad tah tar
@@ -532,6 +544,7 @@
       } async componentDidMount() {
         let lp = await fetch(window.prefix + '/price', {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}})
         lp = await lp.json(); let chart = this.state.chart;
+        // TODO inja bayad mess ro miangin geref tala ro mesghal neshun dad
         chart[0][1] = lp[1] * 1; chart[0][2] = lp[2] * 1; chart[0][3] = lp[3] * 1;
         chart[1][1] = lp[4] * 1; chart[1][2] = lp[5] * 1; chart[1][3] = lp[6] * 1;
         chart[2][1] = lp[7] * 1; chart[2][2] = lp[8] * 1; chart[2][3] = lp[9] * 1;
@@ -539,20 +552,21 @@
         chart[4][1] = lp[13] * 1; chart[4][2] = lp[14] * 1; chart[4][3] = lp[15] * 1;
         chart[5][1] = lp[16] * 1; chart[5][2] = lp[17] * 1; chart[5][3] = lp[18] * 1;
         chart[6][1] = lp[19] * 1; chart[6][2] = lp[20] * 1; chart[6][3] = lp[21] * 1;
-        chart[7][1] = lp[22] * 1; chart[7][3] = lp[23] * 1; chart[8][1] = lp[24] * 1; chart[8][3] = lp[25] * 1;
+        chart[7][1] = (chart[0][1] * 0.00009806 + chart[6][1] * 0.005235602) / 2; chart[7][2]; chart[7][2] = (chart[0][2] + chart[6][2]) / 2; chart[7][3] = (chart[0][3] + chart[6][3]) / 2
+        chart[8][1] = lp[22] * 1; chart[8][3] = lp[23] * 1; chart[9][1] = lp[24] * 1; chart[9][3] = lp[25] * 1;
         let posts = await fetch(window.prefix + '/post/-', {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); posts = await posts.json()
         var ivid = 1;
         for (var vid in posts) {
           if (this.state.list.length <= ivid) this.state.list.push(null)
           this.state.list[ivid ++] = {vid: vid, res: posts[vid][0][0], mark: cookie(vid) == '' ? true : false, markers: posts[vid][2]}
-        }
-        await this.fetchExplore({})
+        } await this.fetchExplore({})
         let ln = await fetch(window.prefix + '/facts', {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); ln = await ln.json();
         let trades = await fetch(window.prefix + '/trades/' + window.phone, {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}}); trades = await trades.json();
         for (var i = 0; i < trades.length; i ++)
           for (var j = 0; j < chart.length; j ++) 
             if (trades[i][1] == chart[j][0]) {
               trades[i].push(Math.floor(chart[j][1] * trades[i][2]));
+              if (trades[i][1] == 'مس 99') trades[i][trades[i].length - 1] *= 1000.
               break;
             }
         let asset = this.state.asset, minAsset = this.state.minAsset;
@@ -562,6 +576,7 @@
           asset[trades[i][1]][1] += trades[i][3]
         } for (var a in asset) {
           if (a == 'نقره 925') minAsset['نقره'] = asset[a];
+          if (a == 'مس 99') minAsset['مس'] = asset[a];
           else { minAsset['طلا'][0] += (a in window.weights) ? asset[a][0] * window.weights[a] : asset[a][0]; minAsset['طلا'][1] += asset[a][1]; }
         } console.log (minAsset);
         this.setState({chart, list: this.state.list, explore: this.state.explore, news: ln, trades, asset, minAsset});
@@ -605,6 +620,7 @@
       } 
       login () { return this.dialog(this.state.login) }
       trade () { return this.dialog(this.state.trade) }
+      deliver () { return this.dialog(this.state.deliver) }
       nav () {
         let ks = [], navColor = 'var(--ink)';
         if(this.state.view[this.state.view.length - 1] == 'postList' && this.state.snap == 0 && this.state.list.length > 0 && !('vid' in this.state.list[0])) ks = ['جواهرات', 'اقساط'];
@@ -718,22 +734,23 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.chart.map((row, ri) => <tr>
+                    {this.state.chart.map((row, ri) => <><tr>
                       <td>{row[0]}{row[0] in window.coins ? <span class="coin" style={{width: 14 - window.coins[row[0]] * 2, height: 14 - window.coins[row[0]] * 2, top: 4 - window.coins[row[0]]}}></span> : null}</td>
                       {row[0] in window.coins ? 
                       <td>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].substr(0, row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].length - 3)}<span style={{fontSize: '.8em'}}>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].substr(-3)}</span></td>
-                      : <td>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>}
+                      : <td>{(ri < 2 ? row[1] * 4.608 : row[1]).toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>}
                       <td><span class={`priority ${row[2] >= 0.0 ? 'priority-high' : ''}`}>{row[2] >= 0.0 ? '+' : ''}{row[2].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}%</span></td>
                       <td><span className={`status ${row[3] >= 0.0 ? 'status-active' : 'status-review'}`}>{row[3] >= 0.0 ? '+' : ''}{row[3].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}%</span></td>
-                    </tr>)}
+                    </tr>{ri == 0 && <div class="sub"><div style={{width: 162, display: 'inline-block'}}><span>گرم ۱۸ عیار</span><span style={{float: 'left', top: 2}}>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</span></div></div>}</>)}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
           <div class="table-container">
-            <p style={{float: 'right'}} class="table-title">دارایی شما نزد ماوخودتان</p>
+            <p style={{float: 'right'}} class="table-title">دارایی شما نزد ما</p>
             <div style={{float: 'left', fontSize: '.9em', marginLeft: 'var(--radius-lg)'}}>
+              <div class="inline-button touchable" style={{background: '#dab903'}} onClick={() => {window.history.pushState({urlPath: `${window.prefix}/deliver`}, "", `${window.prefix}/deliver`); this.state.view.push('deliver'); this.setState({view: this.state.view})}}>تحویل</div>
               <div class="inline-button touchable" style={{background: 'var(--orange)'}} onClick={() => {window.history.pushState({urlPath: `${window.prefix}/trade`}, "", `${window.prefix}/trade`); this.state.view.push('trade'); this.setState({view: this.state.view})}}>خرید و فروش</div>
               <div class="inline-button touchable" style={{background: 'var(--green)'}} onClick={() => {window.history.pushState({urlPath: `${window.prefix}/asset`}, "", `${window.prefix}/asset`); this.state.view.push('chartAsset'); this.setState({view: this.state.view})}}>جزئیات</div>
               <div class="inline-button touchable" style={{background: 'var(--ink-mid)'}} onClick={() => {window.history.pushState({urlPath: `${window.prefix}/news`}, "", `${window.prefix}/news`); this.state.view.push('news'); this.setState({view: this.state.view})}}>تحلیل</div>
@@ -741,18 +758,18 @@
             <div class="table-card">
               <div class="footable-wrapper">
                 <table class="footable" data-paging="false" data-sorting="true">
-                  <thead>
+                  {/*<thead>
                     <tr>
                       <th data-breakpoints="" style={{paddingRight: 1}}>اموال</th>
                       <th data-breakpoints="">مقدار(گرم)</th>
                       <th data-breakpoints="xs">ارزش(تومان)</th>
                       <th data-breakpoints="xs sm" style={{paddingLeft: 1}}>اعمال</th>
                     </tr>
-                  </thead>
+                  </thead>*/}
                   <tbody>
                     {Object.keys(this.state.minAsset).map((key, ki) => <tr>
                       <td>{key}</td>
-                      <td><span class='mono'>{this.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} gr</span></td>
+                      <td><span class='mono'>{this.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} {key.includes('مس') ? 'kg' : 'gr'}</span></td>
                       <td>{this.state.minAsset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>
                       <td><span class="status status-active">ترید</span></td>
                     </tr>)}

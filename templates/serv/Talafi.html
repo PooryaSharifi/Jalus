@@ -130,6 +130,17 @@
         border: 1.5px solid var(--divider);
         border-radius: var(--radius-lg);
         overflow: hidden;
+      } .table-card .sub {
+        position: relative;
+        margin-top: -10px;
+        right: 32px;
+        margin-bottom: -10px;
+        font-size: .9em;
+        width: 10px
+      } .table-card .sub span {
+        background-color: white;
+        position: relative;
+        padding: 0 3px;
       } .footable-wrapper { padding: 0 4px 0 4px; }
       table.footable {
         width: 100%;
@@ -806,6 +817,27 @@ var App = /*#__PURE__*/function (_React$Component2) {
           return action;
         }()
       },
+      deliver: {
+        title: 'تحویل حضوری',
+        text: 'لطفا شماره موبایل خود را وارد کنید',
+        input: '',
+        error: 'لطفا این قسمت را خالی نگذارید',
+        button: 'تماس',
+        action: function () {
+          var _action3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10() {
+            return _regenerator().w(function (_context10) {
+              while (1) switch (_context10.n) {
+                case 0:
+                  return _context10.a(2);
+              }
+            }, _callee10);
+          }));
+          function action() {
+            return _action3.apply(this, arguments);
+          }
+          return action;
+        }()
+      },
       wiki: {
         title: 'گوشواره طلا زنانه نخودچی',
         tail: ['طلافی', 'بچگانه', 'گوشواره', 'گوشواره طلا زنانه نخودچی'],
@@ -835,10 +867,11 @@ var App = /*#__PURE__*/function (_React$Component2) {
       explore: [],
       minAsset: {
         'طلا': [0, 0],
-        'نقره': [0, 0]
+        'نقره': [0, 0],
+        'مس': [0, 0]
       },
       asset: {},
-      chart: [['۱۸ عیار', 19125998, -3.26, +0.68], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68], ['قدیم', 25558600, +2.734, -.35], ['نیمی', 19125998, -3.26, +0.68], ['ربی', 25558600, +2.734, -.35], ['نقره 925', 19125998, -3.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]],
+      chart: [['۱۸ عیار', 19125998, -3.26, +0.68], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68], ['قدیم', 25558600, +2.734, -.35], ['نیمی', 19125998, -3.26, +0.68], ['ربی', 25558600, +2.734, -.35], ['نقره 925', 19125998, -3.26, +0.68], ['مس 99', 912212, -2.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]],
       trades: [['1398-10-3', '۱۸ عیار', 12.6, 76283000], ['1398-11-7', '۱۸ عیار', -3.6, 47573000], ['1399-1-3', 'ربی', 2, 76283000], ['1399-3-20', 'جدید', 1, 76283000]],
       news: [],
       newi: 0,
@@ -853,7 +886,8 @@ var App = /*#__PURE__*/function (_React$Component2) {
         'news': 'news',
         'trade': 'trade',
         'wiki': 'wiki',
-        'pr': 'wiki'
+        'pr': 'wiki',
+        'deliver': 'deliver'
       }[window.pathname]],
       snap: 0
     }; // if (this.state.view[0] == 'login' || this.state.view[0] == 'trade' || this.state.view[0] == 'news' || this.state.view[0] == 'wiki') this.state.view = ['postList', this.state.view[0]];
@@ -869,71 +903,71 @@ var App = /*#__PURE__*/function (_React$Component2) {
   return _createClass(App, [{
     key: "fetchExplore",
     value: function () {
-      var _fetchExplore = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(tag) {
+      var _fetchExplore = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(tag) {
         var wiki, i, pr, categories, iex, explore;
-        return _regenerator().w(function (_context10) {
-          while (1) switch (_context10.n) {
+        return _regenerator().w(function (_context11) {
+          while (1) switch (_context11.n) {
             case 0:
-              _context10.n = 1;
+              _context11.n = 1;
               return fetch(window.prefix + '/wiki/-');
             case 1:
-              wiki = _context10.v;
-              _context10.n = 2;
+              wiki = _context11.v;
+              _context11.n = 2;
               return wiki.json();
             case 2:
-              wiki = _context10.v;
+              wiki = _context11.v;
               window.wiki = wiki;
               for (i = 0; i < wiki.length; i++) wiki[i].mark = cookie(wiki[i].title) == '' ? true : false;
               if (!(window.pathname == 'wiki' && window._id)) {
-                _context10.n = 5;
+                _context11.n = 5;
                 break;
               }
               i = 0;
             case 3:
               if (!(i < wiki.length)) {
-                _context10.n = 5;
+                _context11.n = 5;
                 break;
               }
               if (!(wiki[i].title.trim() == decodeURI(window._id).trim())) {
-                _context10.n = 4;
+                _context11.n = 4;
                 break;
               }
               this.state.wiki = wiki[i];
-              return _context10.a(3, 5);
+              return _context11.a(3, 5);
             case 4:
               i++;
-              _context10.n = 3;
+              _context11.n = 3;
               break;
             case 5:
-              _context10.n = 6;
+              _context11.n = 6;
               return fetch(window.prefix + '/pr/-');
             case 6:
-              pr = _context10.v;
-              _context10.n = 7;
+              pr = _context11.v;
+              _context11.n = 7;
               return pr.json();
             case 7:
-              pr = _context10.v;
+              pr = _context11.v;
               window.pr = pr;
               for (i = 0; i < pr.length; i++) pr[i].mark = cookie(pr[i].detail['کد محصول']) == '' ? true : false;
               if (!(window.pathname == 'pr' && window._id)) {
-                _context10.n = 10;
+                _context11.n = 10;
                 break;
               }
               i = 0;
             case 8:
               if (!(i < pr.length)) {
-                _context10.n = 10;
+                _context11.n = 10;
                 break;
               }
               if (!(pr[i].detail['کد محصول'].trim() == window._id.trim())) {
-                _context10.n = 9;
+                _context11.n = 9;
                 break;
               }
               this.state.wiki = pr[i];
-              return _context10.a(3, 10);
+              return _context11.a(3, 10);
             case 9:
               i++;
-              _context10.n = 8;
+              _context11.n = 8;
               break;
             case 10:
               categories = ['زنانه', 'مردانه', 'بچگانه', 'هدیه', 'بین‌الملل', 'انگشتر', 'گوشواره', 'گردنبند', 'دستبند', 'آویز', 'ونکلیف', 'رولکس', 'امگا', 'اسپرت', 'دستمزدصفر', 'نقره'];
@@ -966,9 +1000,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 }
               }
             case 11:
-              return _context10.a(2);
+              return _context11.a(2);
           }
-        }, _callee10, this);
+        }, _callee11, this);
       }));
       function fetchExplore(_x) {
         return _fetchExplore.apply(this, arguments);
@@ -978,13 +1012,13 @@ var App = /*#__PURE__*/function (_React$Component2) {
   }, {
     key: "componentDidMount",
     value: function () {
-      var _componentDidMount2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
+      var _componentDidMount2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12() {
         var _this4 = this;
         var lp, chart, posts, ivid, vid, ln, trades, i, j, asset, minAsset, a;
-        return _regenerator().w(function (_context11) {
-          while (1) switch (_context11.n) {
+        return _regenerator().w(function (_context12) {
+          while (1) switch (_context12.n) {
             case 0:
-              _context11.n = 1;
+              _context12.n = 1;
               return fetch(window.prefix + '/price', {
                 headers: {
                   'Accept': 'application/json',
@@ -992,12 +1026,12 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 }
               });
             case 1:
-              lp = _context11.v;
-              _context11.n = 2;
+              lp = _context12.v;
+              _context12.n = 2;
               return lp.json();
             case 2:
-              lp = _context11.v;
-              chart = this.state.chart;
+              lp = _context12.v;
+              chart = this.state.chart; // TODO inja bayad mess ro miangin geref tala ro mesghal neshun dad
               chart[0][1] = lp[1] * 1;
               chart[0][2] = lp[2] * 1;
               chart[0][3] = lp[3] * 1;
@@ -1019,11 +1053,15 @@ var App = /*#__PURE__*/function (_React$Component2) {
               chart[6][1] = lp[19] * 1;
               chart[6][2] = lp[20] * 1;
               chart[6][3] = lp[21] * 1;
-              chart[7][1] = lp[22] * 1;
-              chart[7][3] = lp[23] * 1;
-              chart[8][1] = lp[24] * 1;
-              chart[8][3] = lp[25] * 1;
-              _context11.n = 3;
+              chart[7][1] = (chart[0][1] * 0.00009806 + chart[6][1] * 0.005235602) / 2;
+              chart[7][2];
+              chart[7][2] = (chart[0][2] + chart[6][2]) / 2;
+              chart[7][3] = (chart[0][3] + chart[6][3]) / 2;
+              chart[8][1] = lp[22] * 1;
+              chart[8][3] = lp[23] * 1;
+              chart[9][1] = lp[24] * 1;
+              chart[9][3] = lp[25] * 1;
+              _context12.n = 3;
               return fetch(window.prefix + '/post/-', {
                 headers: {
                   'Accept': 'application/json',
@@ -1031,11 +1069,11 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 }
               });
             case 3:
-              posts = _context11.v;
-              _context11.n = 4;
+              posts = _context12.v;
+              _context12.n = 4;
               return posts.json();
             case 4:
-              posts = _context11.v;
+              posts = _context12.v;
               ivid = 1;
               for (vid in posts) {
                 if (this.state.list.length <= ivid) this.state.list.push(null);
@@ -1046,10 +1084,10 @@ var App = /*#__PURE__*/function (_React$Component2) {
                   markers: posts[vid][2]
                 };
               }
-              _context11.n = 5;
+              _context12.n = 5;
               return this.fetchExplore({});
             case 5:
-              _context11.n = 6;
+              _context12.n = 6;
               return fetch(window.prefix + '/facts', {
                 headers: {
                   'Accept': 'application/json',
@@ -1057,12 +1095,12 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 }
               });
             case 6:
-              ln = _context11.v;
-              _context11.n = 7;
+              ln = _context12.v;
+              _context12.n = 7;
               return ln.json();
             case 7:
-              ln = _context11.v;
-              _context11.n = 8;
+              ln = _context12.v;
+              _context12.n = 8;
               return fetch(window.prefix + '/trades/' + window.phone, {
                 headers: {
                   'Accept': 'application/json',
@@ -1070,36 +1108,37 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 }
               });
             case 8:
-              trades = _context11.v;
-              _context11.n = 9;
+              trades = _context12.v;
+              _context12.n = 9;
               return trades.json();
             case 9:
-              trades = _context11.v;
+              trades = _context12.v;
               i = 0;
             case 10:
               if (!(i < trades.length)) {
-                _context11.n = 14;
+                _context12.n = 14;
                 break;
               }
               j = 0;
             case 11:
               if (!(j < chart.length)) {
-                _context11.n = 13;
+                _context12.n = 13;
                 break;
               }
               if (!(trades[i][1] == chart[j][0])) {
-                _context11.n = 12;
+                _context12.n = 12;
                 break;
               }
               trades[i].push(Math.floor(chart[j][1] * trades[i][2]));
-              return _context11.a(3, 13);
+              if (trades[i][1] == 'مس 99') trades[i][trades[i].length - 1] *= 1000.;
+              return _context12.a(3, 13);
             case 12:
               j++;
-              _context11.n = 11;
+              _context12.n = 11;
               break;
             case 13:
               i++;
-              _context11.n = 10;
+              _context12.n = 10;
               break;
             case 14:
               asset = this.state.asset, minAsset = this.state.minAsset;
@@ -1109,7 +1148,8 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 asset[trades[i][1]][1] += trades[i][3];
               }
               for (a in asset) {
-                if (a == 'نقره 925') minAsset['نقره'] = asset[a];else {
+                if (a == 'نقره 925') minAsset['نقره'] = asset[a];
+                if (a == 'مس 99') minAsset['مس'] = asset[a];else {
                   minAsset['طلا'][0] += a in window.weights ? asset[a][0] * window.weights[a] : asset[a][0];
                   minAsset['طلا'][1] += asset[a][1];
                 }
@@ -1130,9 +1170,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                 });
               }, 5000);
             case 15:
-              return _context11.a(2);
+              return _context12.a(2);
           }
-        }, _callee11, this);
+        }, _callee12, this);
       }));
       function componentDidMount() {
         return _componentDidMount2.apply(this, arguments);
@@ -1264,6 +1304,11 @@ var App = /*#__PURE__*/function (_React$Component2) {
     key: "trade",
     value: function trade() {
       return this.dialog(this.state.trade);
+    }
+  }, {
+    key: "deliver",
+    value: function deliver() {
+      return this.dialog(this.state.deliver);
     }
   }, {
     key: "nav",
@@ -1604,7 +1649,7 @@ var App = /*#__PURE__*/function (_React$Component2) {
           paddingLeft: 1
         }
       }, "\u062F\u0631\u0635\u062F \u062A\u063A\u06CC\u06CC\u0631\u0627\u062A"))), /*#__PURE__*/React.createElement("tbody", null, this.state.chart.map(function (row, ri) {
-        return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, row[0], row[0] in window.coins ? /*#__PURE__*/React.createElement("span", {
+        return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, row[0], row[0] in window.coins ? /*#__PURE__*/React.createElement("span", {
           "class": "coin",
           style: {
             width: 14 - window.coins[row[0]] * 2,
@@ -1615,11 +1660,23 @@ var App = /*#__PURE__*/function (_React$Component2) {
           style: {
             fontSize: '.8em'
           }
-        }, row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].substr(-3))) : /*#__PURE__*/React.createElement("td", null, row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+        }, row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0].substr(-3))) : /*#__PURE__*/React.createElement("td", null, (ri < 2 ? row[1] * 4.608 : row[1]).toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "priority ".concat(row[2] >= 0.0 ? 'priority-high' : '')
         }, row[2] >= 0.0 ? '+' : '', row[2].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,'), "%")), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           className: "status ".concat(row[3] >= 0.0 ? 'status-active' : 'status-review')
-        }, row[3] >= 0.0 ? '+' : '', row[3].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'), "%")));
+        }, row[3] >= 0.0 ? '+' : '', row[3].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'), "%"))), ri == 0 && /*#__PURE__*/React.createElement("div", {
+          "class": "sub"
+        }, /*#__PURE__*/React.createElement("div", {
+          style: {
+            width: 162,
+            display: 'inline-block'
+          }
+        }, /*#__PURE__*/React.createElement("span", null, "\u06AF\u0631\u0645 \u06F1\u06F8 \u0639\u06CC\u0627\u0631"), /*#__PURE__*/React.createElement("span", {
+          style: {
+            "float": 'left',
+            top: 2
+          }
+        }, row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]))));
       })))))), /*#__PURE__*/React.createElement("div", {
         "class": "table-container"
       }, /*#__PURE__*/React.createElement("p", {
@@ -1627,13 +1684,27 @@ var App = /*#__PURE__*/function (_React$Component2) {
           "float": 'right'
         },
         "class": "table-title"
-      }, "\u062F\u0627\u0631\u0627\u06CC\u06CC \u0634\u0645\u0627 \u0646\u0632\u062F \u0645\u0627\u0648\u062E\u0648\u062F\u062A\u0627\u0646"), /*#__PURE__*/React.createElement("div", {
+      }, "\u062F\u0627\u0631\u0627\u06CC\u06CC \u0634\u0645\u0627 \u0646\u0632\u062F \u0645\u0627"), /*#__PURE__*/React.createElement("div", {
         style: {
           "float": 'left',
           fontSize: '.9em',
           marginLeft: 'var(--radius-lg)'
         }
       }, /*#__PURE__*/React.createElement("div", {
+        "class": "inline-button touchable",
+        style: {
+          background: '#dab903'
+        },
+        onClick: function onClick() {
+          window.history.pushState({
+            urlPath: "".concat(window.prefix, "/deliver")
+          }, "", "".concat(window.prefix, "/deliver"));
+          _this9.state.view.push('deliver');
+          _this9.setState({
+            view: _this9.state.view
+          });
+        }
+      }, "\u062A\u062D\u0648\u06CC\u0644"), /*#__PURE__*/React.createElement("div", {
         "class": "inline-button touchable",
         style: {
           background: 'var(--orange)'
@@ -1683,24 +1754,10 @@ var App = /*#__PURE__*/function (_React$Component2) {
         "class": "footable",
         "data-paging": "false",
         "data-sorting": "true"
-      }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
-        "data-breakpoints": "",
-        style: {
-          paddingRight: 1
-        }
-      }, "\u0627\u0645\u0648\u0627\u0644"), /*#__PURE__*/React.createElement("th", {
-        "data-breakpoints": ""
-      }, "\u0645\u0642\u062F\u0627\u0631(\u06AF\u0631\u0645)"), /*#__PURE__*/React.createElement("th", {
-        "data-breakpoints": "xs"
-      }, "\u0627\u0631\u0632\u0634(\u062A\u0648\u0645\u0627\u0646)"), /*#__PURE__*/React.createElement("th", {
-        "data-breakpoints": "xs sm",
-        style: {
-          paddingLeft: 1
-        }
-      }, "\u0627\u0639\u0645\u0627\u0644"))), /*#__PURE__*/React.createElement("tbody", null, Object.keys(this.state.minAsset).map(function (key, ki) {
+      }, /*#__PURE__*/React.createElement("tbody", null, Object.keys(this.state.minAsset).map(function (key, ki) {
         return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, key), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "mono"
-        }, _this9.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'), " gr")), /*#__PURE__*/React.createElement("td", null, _this9.state.minAsset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+        }, _this9.state.minAsset[key][0].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'), " ", key.includes('مس') ? 'kg' : 'gr')), /*#__PURE__*/React.createElement("td", null, _this9.state.minAsset[key][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
           "class": "status status-active"
         }, "\u062A\u0631\u06CC\u062F")));
       })))))));
@@ -1842,10 +1899,10 @@ var App = /*#__PURE__*/function (_React$Component2) {
             backgroundImage: "url(/static".concat(window.prefix).concat('کد محصول' in p.detail ? '/pr' : '', "/").concat(p.images[0], ".jpg)"),
             width: [3, 4, 7, 8].includes(ip % 10) ? '25vw' : '50vw'
           },
-          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12() {
+          onClick: /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
             var url, _url, _url2;
-            return _regenerator().w(function (_context12) {
-              while (1) switch (_context12.n) {
+            return _regenerator().w(function (_context13) {
+              while (1) switch (_context13.n) {
                 case 0:
                   if ('کد محصول' in p.detail) {
                     _this10.state.view.push('wiki');
@@ -1881,9 +1938,9 @@ var App = /*#__PURE__*/function (_React$Component2) {
                     });
                   }
                 case 1:
-                  return _context12.a(2);
+                  return _context13.a(2);
               }
-            }, _callee12);
+            }, _callee13);
           }))
         }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
           "class": "title"

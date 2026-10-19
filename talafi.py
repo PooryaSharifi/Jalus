@@ -18,7 +18,7 @@ async def upload_static_file(r, path):
     return response.json({'OK': True})
 @app.get("/")
 async def page(r, ): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Talafi.html")
-@app.get("/<page:(news|login|jewelry|asset|trade|wiki|pr|)>")
+@app.get("/<page:(news|login|jewelry|asset|trade|wiki|pr|deliver|)>")
 async def specific_page(r, page): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Talafi.html")
 @app.get("/<page:(pr|wiki)>/<_id>")
 async def wiki_pr_page(r, page, _id): return await response.file(f"{os.path.dirname(__file__)}/templates{'' if '-d' in sys.argv else '/serv'}/Talafi.html")
@@ -30,6 +30,7 @@ async def last_price(r):
     lp = lp.decode().split('\n')[0].strip().split(',')
     if not lp[0] or datetime.now() - datetime.fromisoformat(lp[0]) > timedelta(seconds = 120):
         async with aiohttp.ClientSession() as session:
+            # try:
             async with session.get('https://moj3.ir/price') as r:
                 r = (await r.read()).decode()
                 r = lxml.html.fromstring(r)
@@ -40,6 +41,7 @@ async def last_price(r):
                 lp = [lp[0][0], lp[0][1], lp[0][2], lp[0][3], lp[1][1], lp[1][2], lp[1][3], lp[3][1], lp[3][2], lp[3][3], lp[4][1], lp[4][2], lp[4][3], lp[5][1], lp[5][2], lp[5][3], lp[6][1], lp[6][2], lp[6][3], lp[7][1], lp[7][2], lp[7][3], lp[8][1], lp[8][2], lp[2][1] if len(lp[2]) > 1 else f'{float(lp[1][1]) / float(lp[8][1]) * 30.8412:.1f}', lp[2][2] if len(lp[2]) > 2 else f'{float(lp[8][2]) - float(lp[0][3]):.2f}']
                 lp[0] = str(datetime.now()).split('.')[0]
                 async with aiofiles.open(f'{os.path.dirname(__file__)}{static_path}/price.csv', 'a') as f: await f.write(','.join(lp) + '\n')
+            # except: pass
     return response.json(lp)
 @app.get('/facts')
 async def last_news(r):
