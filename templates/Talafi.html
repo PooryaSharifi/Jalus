@@ -153,7 +153,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: .6px;
-        padding: 12px 16px;
+        padding: 11px 16px;
         border-bottom: 1px solid var(--divider);
         white-space: nowrap;
       } table.footable > tbody > tr > td {
@@ -164,6 +164,8 @@
         border-bottom: 1px solid var(--divider);
         color: var(--ink);
         vertical-align: middle;
+      } table.short.footable > tbody > tr > td {
+        padding: 7px 8px;
       } table.footable > tbody > tr > td.yekan {direction: rtl !important;}
       table.footable > tbody > tr > td:last-child {padding-left: 0}
       table.footable > tbody > tr > td:first-child {padding-right: 0}
@@ -517,7 +519,7 @@
             images: ['aliceblue', 'aqua', 'azure', 'khaki', 'antiquewhite'], content: [{title: 'تاریخچه', image: 'khaki', text: 'در هوای بهاری شامل احوال فضایی می‌شود در حضور هر حالی به حال ما گریه کرد چرا که در هر شرایطی'}, {title: 'اصول', image: 'aqua', text: 'لورم ایپسوم متنی فضایی در بستر هوایی'}]}, 
           list: [{'post': this.chartPrice}], 
           explore: [], minAsset: {'طلا': [0, 0], 'نقره': [0, 0], 'مس': [0, 0]}, asset: {},
-          chart: [['۱۸ عیار', 19125998, -3.26, +0.68], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68], ['قدیم', 25558600, +2.734, -.35], ['نیمی', 19125998, -3.26, +0.68], ['ربی', 25558600, +2.734, -.35], ['نقره 925', 19125998, -3.26, +0.68], ['مس 99', 912212, -2.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]], 
+          chart: [['۱۸ عیار', 19125998, -3.26, +0.68, 26033045], ['۲۴ عیار', 25558600, +2.734, -.35], ['جدید', 19125998, -3.26, +0.68, 264300000], ['قدیم', 25558600, +2.734, -.35, 256300000], ['نیمی', 19125998, -3.26, +0.68, 139300000], ['ربی', 25558600, +2.734, -.35, 74100000], ['نقره 925', 19125998, -3.26, +0.68], ['مس 99', 912212, -2.26, +0.68], ['انس طلا', 25558600, 0, -.35], ['دلار', 19125998, 0, +0.68]], 
           trades: [['1398-10-3', '۱۸ عیار', 12.6, 76283000], ['1398-11-7', '۱۸ عیار', -3.6, 47573000], ['1399-1-3', 'ربی', 2, 76283000], ['1399-3-20', 'جدید', 1, 76283000]], 
           news: [], newi: 0, branches: [['naghsheJahan', 'نقش جهان'], ['cityCenter', 'سیتی‌سنتر'], ['kosar', 'کوثر']], branchIdx: 0,
           view: [{'': 'postList', 'login': 'login', 'jewelry': 'explore', 'explore': 'explore', 'asset': 'chartAsset', 'news': 'news', 'trade': 'trade', 'wiki': 'wiki', 'pr': 'wiki', 'deliver': 'deliver'}[window.pathname]], snap: 0,
@@ -545,12 +547,12 @@
         let lp = await fetch(window.prefix + '/price', {headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}})
         lp = await lp.json(); let chart = this.state.chart;
         // TODO inja bayad mess ro miangin geref tala ro mesghal neshun dad
-        chart[0][1] = lp[1] * 1; chart[0][2] = lp[2] * 1; chart[0][3] = lp[3] * 1;
+        chart[0][1] = lp[1] * 1; chart[0][2] = lp[2] * 1; chart[0][3] = lp[3] * 1; chart[0][4] = chart[0][1] * .995
         chart[1][1] = lp[4] * 1; chart[1][2] = lp[5] * 1; chart[1][3] = lp[6] * 1;
-        chart[2][1] = lp[7] * 1; chart[2][2] = lp[8] * 1; chart[2][3] = lp[9] * 1;
-        chart[3][1] = lp[10] * 1; chart[3][2] = lp[11] * 1; chart[3][3] = lp[12] * 1;
-        chart[4][1] = lp[13] * 1; chart[4][2] = lp[14] * 1; chart[4][3] = lp[15] * 1;
-        chart[5][1] = lp[16] * 1; chart[5][2] = lp[17] * 1; chart[5][3] = lp[18] * 1;
+        chart[2][1] = lp[7] * 1; chart[2][2] = lp[8] * 1; chart[2][3] = lp[9] * 1; chart[2][4] = chart[2][1] * .995
+        chart[3][1] = lp[10] * 1; chart[3][2] = lp[11] * 1; chart[3][3] = lp[12] * 1; chart[3][4] = chart[3][1] * .995
+        chart[4][1] = lp[13] * 1; chart[4][2] = lp[14] * 1; chart[4][3] = lp[15] * 1; chart[4][4] = chart[4][1] * .995
+        chart[5][1] = lp[16] * 1; chart[5][2] = lp[17] * 1; chart[5][3] = lp[18] * 1; chart[5][4] = chart[5][1] * .995
         chart[6][1] = lp[19] * 1; chart[6][2] = lp[20] * 1; chart[6][3] = lp[21] * 1;
         chart[7][1] = (chart[0][1] * 0.00009806 + chart[6][1] * 0.005235602) / 2; chart[7][2]; chart[7][2] = (chart[0][2] + chart[6][2]) / 2; chart[7][3] = (chart[0][3] + chart[6][3]) / 2
         chart[8][1] = lp[22] * 1; chart[8][3] = lp[23] * 1; chart[9][1] = lp[24] * 1; chart[9][3] = lp[25] * 1;
@@ -631,7 +633,7 @@
         return <div class="left-nav"> {ks.map((k) => <div class="touchable" onClick={window.nav[k]} style={{color: navColor}}>{k}</div>)} </div>
       } chartHeader () {
         return <div class="header">
-          <div style={{display: 'inline-block', direction: 'rtl', padding: '8px 12px 16px 0', verticalAlign: 'top'}}>
+          <div style={{display: 'inline-block', direction: 'rtl', padding: '8px 12px 8px 0', verticalAlign: 'top'}}>
             <div style={{fontWeight: 700, fontSize: '1.1em', paddingLeft: 5}}><span style={{fontSize: '1.4em'}}>طلای </span> فیناستیان</div>
             <div>
               <div class="login touchable" onClick={() => {window.history.pushState({urlPath: `${window.prefix}/login`}, "", `${window.prefix}/login`); this.state.view.push('login'); this.setState({view: this.state.view})}}>تازه وارد</div>
@@ -643,7 +645,7 @@
               </div>
             </div>
           </div>
-          <div style={{backgroundImage: `url('../static${window.prefix}/${this.state.branches[this.state.branchIdx][0]}.webp')`, backgroundPosition: 'center', backgroundSize: 'cover', height: 92, width: 162, display: 'inline-block', verticalAlign: 'top', marginRight: 3}}>
+          <div style={{backgroundImage: `url('../static${window.prefix}/${this.state.branches[this.state.branchIdx][0]}.webp')`, backgroundPosition: 'center', backgroundSize: 'cover', height: 80, width: 162, display: 'inline-block', verticalAlign: 'top', marginRight: 3}}>
             <span style={{color: 'white', position: 'relative', top: 47, right: 6}}>{this.state.branches[this.state.branchIdx][1]}</span>
           </div>
         </div>
@@ -741,7 +743,10 @@
                       : <td>{(ri < 2 ? row[1] * 4.608 : row[1]).toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</td>}
                       <td><span class={`priority ${row[2] >= 0.0 ? 'priority-high' : ''}`}>{row[2] >= 0.0 ? '+' : ''}{row[2].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}%</span></td>
                       <td><span className={`status ${row[3] >= 0.0 ? 'status-active' : 'status-review'}`}>{row[3] >= 0.0 ? '+' : ''}{row[3].toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}%</span></td>
-                    </tr>{ri == 0 && <div class="sub"><div style={{width: 162, display: 'inline-block'}}><span>گرم ۱۸ عیار</span><span style={{float: 'left', top: 2}}>{row[1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</span></div></div>}</>)}
+                    </tr>
+                    {row.length > 4 && <div class="sub"><div style={{width: 168, display: 'inline-block'}}><span>فروش</span><span style={{float: 'left', top: 2}}>{(ri < 2 ? row[4] * 4.608 : row[4]).toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</span></div></div>}
+                    {ri == 1 && <div class="sub"><div style={{width: 168, display: 'inline-block'}}><span>گرم ۱۸ عیار</span><span style={{float: 'left', top: 2}}>{this.state.chart[0][1].toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,').split('.')[0]}</span></div></div>}
+                    </>)}
                   </tbody>
                 </table>
               </div>
@@ -757,7 +762,7 @@
             </div>
             <div class="table-card">
               <div class="footable-wrapper">
-                <table class="footable" data-paging="false" data-sorting="true">
+                <table class="short footable" data-paging="false" data-sorting="true">
                   {/*<thead>
                     <tr>
                       <th data-breakpoints="" style={{paddingRight: 1}}>اموال</th>
